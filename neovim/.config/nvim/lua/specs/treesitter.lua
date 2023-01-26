@@ -11,7 +11,7 @@ return {
       auto_install = true,
       highlight = {
         enable = true,
-        
+
         -- Uncomment to disable slow treesitter highlight for large files.
         --[[
         disable = function(lang, buf)
@@ -22,7 +22,7 @@ return {
             end
         end,
         --]]
-        
+
         -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
         -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
         -- Using this option may slow down your editor, and you may see some duplicate highlights.

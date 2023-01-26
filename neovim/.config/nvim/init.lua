@@ -1,42 +1,86 @@
-vim.g.mapleader = ' '
+local lazy = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
-local lazy = {}
-local lazy_directory = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-
--- The specs from the module and any top-level sub-modules should be merged 
--- together in the final spec, so it should not needed to add require calls in 
--- our main plugin file to the other files. Unfortunately, this doesn't appears
--- to work reliably, so we default to a spec table for convenience. 
-
-table.insert(lazy, require("specs.autopairs"))
-table.insert(lazy, require("specs.cmp"))
-table.insert(lazy, require("specs.colorscheme"))
-table.insert(lazy, require("specs.devicons"))
-table.insert(lazy, require("specs.editorconfig"))
-table.insert(lazy, require("specs.hop"))
-table.insert(lazy, require("specs.indent"))
-table.insert(lazy, require("specs.lsp"))
-table.insert(lazy, require("specs.lspkind"))
-table.insert(lazy, require("specs.telescope"))
-table.insert(lazy, require("specs.tree"))
-table.insert(lazy, require("specs.treesitter"))
-
-vim.api.nvim_set_keymap('n', '<C-b>', ':NvimTreeToggle<CR>', {noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<C-h>', ':HopWord<CR>', {noremap = true, silent = true})
-
-if not vim.loop.fs_stat(lazy_directory) then
-  vim.fn.system({"git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazy_directory})
+if not vim.loop.fs_stat(lazy) then
+  vim.fn.system({"git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazy})
 end
 
-vim.opt.shortmess      = vim.opt.shortmess + 'A' -- ignore annoying swapfile messages
-vim.opt.shortmess      = vim.opt.shortmess + 'I' -- no splash screen
-vim.opt.shortmess      = vim.opt.shortmess + 'O' -- file-read message overwrites previous
-vim.opt.shortmess      = vim.opt.shortmess + 'T' -- truncate non-file messages in middle
-vim.opt.shortmess      = vim.opt.shortmess + 'W' -- don't echo "[w]"/"[written]" when writing
-vim.opt.shortmess      = vim.opt.shortmess + 'a' -- use abbreviations in messages eg. `[RO]` instead of `[readonly]`
-vim.opt.shortmess      = vim.opt.shortmess + 'c' -- completion messages
-vim.opt.shortmess      = vim.opt.shortmess + 'o' -- overwrite file-written messages
-vim.opt.shortmess      = vim.opt.shortmess + 't' -- truncate file messages at start
+-- Fix (disable) F1 built-in help key
+vim.keymap.set('n', '<F1>', '<Nop>')
+
+-- Fix vim awful leader
+vim.g.mapleader = ' '
+vim.keymap.set('n', '<Space>', '<Nop>')
+
+-- Fix vim awful line motions
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+
+-- Fix vim awful join line
+vim.keymap.set("n", "J", "mzJ`z")
+
+-- Fix vim awful page scroll
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
+
+-- Fix vim awful indent
+vim.keymap.set("v", "<", "<gv")
+vim.keymap.set("v", ">", ">gv")
+
+-- Fix vim awful search
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "N", "Nzzzv")
+
+-- Fix vim awful search highlight
+vim.keymap.set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>")
+
+-- Fix vim awful delete
+vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
+
+-- Fix vim awful paste
+vim.keymap.set("x", "<leader>p", [["_dP]])
+
+-- Fix vim split resize
+vim.keymap.set("n",    "<C-Up>",  "<cmd>resize -2<CR>")
+vim.keymap.set("n",  "<C-Down>",  "<cmd>resize +2<CR>")
+vim.keymap.set("n",  "<C-Left>",  "<cmd>vertical resize -2<CR>")
+vim.keymap.set("n", "<C-Right>",  "<cmd>vertical resize +2<CR>")
+
+-- Plugins
+vim.api.nvim_set_keymap('n', '<C-b>', ':NvimTreeToggle<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<C-h>', ':HopWord<CR>', {noremap = true, silent = true})
+local opts = { noremap=true, silent=true }
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
+vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
+local on_attach = function(client, bufnr)
+  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+  local bufopts = { noremap=true, silent=true, buffer=bufnr }
+  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+  vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+  vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+  vim.keymap.set('n', '<space>wl', function()
+    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+  end, bufopts)
+  vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
+  vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
+  vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
+  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+  vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+  local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+  function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+    opts = opts or {}
+    opts.border = opts.border or borders
+    return orig_util_open_floating_preview(contents, syntax, opts, ...)
+  end
+end
+
+vim.opt.cursorline     = true
+vim.opt.swapfile       = false
 vim.opt.autowrite      = true
 vim.opt.autowriteall   = true
 vim.opt.cdhome         = true
@@ -44,6 +88,7 @@ vim.opt.relativenumber = true
 vim.opt.laststatus     = 0
 vim.opt.encoding       = 'utf-8'
 vim.opt.fileencoding   = 'utf-8'
+vim.scriptencoding     = 'utf-8'
 vim.opt.mouse          = 'a'
 vim.opt.backup         = false
 vim.opt.writebackup    = false
@@ -67,9 +112,27 @@ vim.opt.breakindent    = true
 vim.opt.virtualedit    = 'block'
 vim.opt.completeopt    = { 'menu', 'noinsert', 'noselect', 'preview' }
 vim.opt.clipboard      = "unnamedplus"
-vim.opt.rtp:prepend(lazy_directory)
+vim.opt.shortmess      = vim.opt.shortmess + 'A' -- ignore annoying swapfile messages
+vim.opt.shortmess      = vim.opt.shortmess + 'I' -- no splash screen
+vim.opt.shortmess      = vim.opt.shortmess + 'O' -- file-read message overwrites previous
+vim.opt.shortmess      = vim.opt.shortmess + 'T' -- truncate non-file messages in middle
+vim.opt.shortmess      = vim.opt.shortmess + 'W' -- don't echo "[w]"/"[written]" when writing
+vim.opt.shortmess      = vim.opt.shortmess + 'a' -- use abbreviations in messages eg. `[RO]` instead of `[readonly]`
+vim.opt.shortmess      = vim.opt.shortmess + 'c' -- completion messages
+vim.opt.shortmess      = vim.opt.shortmess + 'o' -- overwrite file-written messages
+vim.opt.shortmess      = vim.opt.shortmess + 't' -- truncate file messages at start
+vim.opt.formatoptions:append( 'q' ) -- Allow formatting comments with "gq".
+vim.opt.formatoptions:remove( 't' ) -- Don't auto-wrap text.
+vim.opt.formatoptions:append( 'c' ) -- Auto-wrap comments using textwidth, inserting the current comment leader automatically.
+vim.opt.formatoptions:append( 'j' ) -- Where it makes sense, remove a comment leader when joining lines.
+vim.opt.formatoptions:append( 'p' ) -- Don't break lines at single spaces that follow periods.
+vim.opt.formatoptions:append( '1' ) -- Don't break a line after a one-letter word (do it before).
+vim.opt.formatoptions:remove( 'l' ) -- Long lines are broken in insert mode.
+vim.opt.formatoptions:remove( 'o' ) -- Don't automatically insert the current comment leader after hitting 'o' or 'O' in Normal mode.
+vim.opt.formatoptions:append( 'r' ) -- Automatically insert the current comment leader after hitting <Enter> in Insert mode.
+vim.opt.rtp:prepend(lazy)
 
---  Automatically restore the cursor at our last position.
+-- Remember and restore the cursor at our last position.
 local ignore_buftype = { "quickfix", "nofile", "help" }
 local ignore_filetype = { "gitcommit", "gitrebase", "svn", "hgcommit" }
 local function run()
@@ -102,30 +165,8 @@ vim.api.nvim_create_autocmd({'BufWinEnter', 'FileType'}, {
   callback = run
 })
 
--- Automatically set up our configuration after cloning lazy.nvim
--- This must be added at the end.
-require("lazy").setup(lazy, {
-  rtp = {
-    reset = true,
-    disabled_plugins = {
-      "netrw",
-      "netrwPlugin",
-      "netrwSettings",
-      "netrwFileHandlers",
-      "gzip",
-      "zip",
-      "zipPlugin",
-      "tar",
-      "tarPlugin",
-      "getscript",
-      "getscriptPlugin",
-      "vimball",
-      "vimballPlugin",
-      "2html_plugin",
-      "logipat",
-      "rrhelper",
-      "spellfile_plugin",
-      "matchit"
-    },
-  },
-})
+-- Instead of passing a spec table to setup(), we use a Lua module. The specs
+-- from the module and any top-level sub-modules will be merged together in
+-- the final spec, so it is not needed to add require calls in our main plugin file to the other files.
+require("lazy").setup("specs")
+
