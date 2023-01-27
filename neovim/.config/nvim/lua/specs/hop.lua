@@ -1,5 +1,5 @@
 return {
  "phaazon/hop.nvim",
-  cmd = { "Hop" },
+  event = "VeryLazy",
   config = true
 }
