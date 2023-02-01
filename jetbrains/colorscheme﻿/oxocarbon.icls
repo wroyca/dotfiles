@@ -1,9 +1,9 @@
 <scheme name="Oxocarbon" version="142" parent_scheme="Darcula">
   <metaInfo>
-    <property name="created">2023-01-31T19:32:06</property>
+    <property name="created">2023-01-31T20:03:46</property>
     <property name="ide">CLion</property>
     <property name="ideVersion">2022.3.2.0.0</property>
-    <property name="modified">2023-01-31T19:32:23</property>
+    <property name="modified">2023-01-31T20:03:53</property>
     <property name="originalScheme">Oxocarbon</property>
   </metaInfo>
   <colors>
@@ -15,8 +15,8 @@
     <option name="DELETED_LINES_COLOR" value="868a91" />
     <option name="DIFF_SEPARATORS_BACKGROUND" value="2b2d30" />
     <option name="DOCUMENTATION_COLOR" value="2b2d30" />
-    <option name="DOC_COMMENT_GUIDE" value="" />
-    <option name="DOC_COMMENT_LINK" value="" />
+    <option name="DOC_COMMENT_GUIDE" value="77a8fd" />
+    <option name="DOC_COMMENT_LINK" value="77a8fd" />
     <option name="ERROR_HINT" value="402929" />
     <option name="IGNORED_ADDED_LINES_BORDER_COLOR" value="549159" />
     <option name="IGNORED_DELETED_LINES_BORDER_COLOR" value="868a91" />
@@ -71,7 +71,9 @@
       </value>
     </option>
     <option name="DEFAULT_BLOCK_COMMENT">
-      <value />
+      <value>
+        <option name="FOREGROUND" value="d0b7eb" />
+      </value>
     </option>
     <option name="DEFAULT_CLASS_REFERENCE">
       <value />
@@ -83,21 +85,41 @@
       <value />
     </option>
     <option name="DEFAULT_DOC_COMMENT">
-      <value />
+      <value>
+        <option name="FOREGROUND" value="d0b7eb" />
+        <option name="FONT_TYPE" value="2" />
+      </value>
     </option>
     <option name="DEFAULT_DOC_COMMENT_TAG">
       <value>
+        <option name="FOREGROUND" value="d0b7eb" />
+        <option name="FONT_TYPE" value="3" />
         <option name="EFFECT_TYPE" value="1" />
       </value>
     </option>
     <option name="DEFAULT_DOC_COMMENT_TAG_VALUE">
-      <value />
+      <value>
+        <option name="FOREGROUND" value="d0b7eb" />
+        <option name="FONT_TYPE" value="2" />
+      </value>
     </option>
     <option name="DEFAULT_DOC_MARKUP">
-      <value />
+      <value>
+        <option name="FOREGROUND" value="d0b7eb" />
+        <option name="FONT_TYPE" value="2" />
+      </value>
+    </option>
+    <option name="DEFAULT_FUNCTION_CALL">
+      <value>
+        <option name="FOREGROUND" value="fd7db5" />
+        <option name="FONT_TYPE" value="1" />
+      </value>
     </option>
     <option name="DEFAULT_FUNCTION_DECLARATION">
-      <value />
+      <value>
+        <option name="FOREGROUND" value="fd7db5" />
+        <option name="FONT_TYPE" value="1" />
+      </value>
     </option>
     <option name="DEFAULT_HIGHLIGHTED_REFERENCE">
       <value>
@@ -112,17 +134,25 @@
     </option>
     <option name="DEFAULT_INVALID_STRING_ESCAPE">
       <value>
+        <option name="FOREGROUND" value="bc93fc" />
+        <option name="FONT_TYPE" value="1" />
         <option name="EFFECT_TYPE" value="2" />
       </value>
     </option>
     <option name="DEFAULT_KEYWORD">
-      <value />
+      <value>
+        <option name="FOREGROUND" value="77a8fd" />
+      </value>
     </option>
     <option name="DEFAULT_LINE_COMMENT">
-      <value />
+      <value>
+        <option name="FOREGROUND" value="d0b7eb" />
+      </value>
     </option>
     <option name="DEFAULT_METADATA">
-      <value />
+      <value>
+        <option name="FOREGROUND" value="77a8fd" />
+      </value>
     </option>
     <option name="DEFAULT_NUMBER">
       <value />
@@ -151,13 +181,25 @@
       </value>
     </option>
     <option name="DEFAULT_STRING">
-      <value />
+      <value>
+        <option name="FOREGROUND" value="bc93fc" />
+      </value>
     </option>
     <option name="DEFAULT_TEMPLATE_LANGUAGE_COLOR">
       <value />
     </option>
     <option name="DEFAULT_VALID_STRING_ESCAPE">
-      <value />
+      <value>
+        <option name="FOREGROUND" value="bc93fc" />
+        <option name="FONT_TYPE" value="1" />
+      </value>
+    </option>
+    <option name="ERRORS_ATTRIBUTES">
+      <value>
+        <option name="FOREGROUND" value="ec5295" />
+        <option name="EFFECT_COLOR" value="ec5295" />
+        <option name="EFFECT_TYPE" value="2" />
+      </value>
     </option>
     <option name="FOLLOWED_HYPERLINK_ATTRIBUTES">
       <value>
@@ -174,10 +216,14 @@
       </value>
     </option>
     <option name="OC.CONDITIONALLY_NOT_COMPILED">
-      <value />
+      <value>
+        <option name="FOREGROUND" value="6f737a" />
+      </value>
     </option>
     <option name="OC.MACRONAME">
-      <value />
+      <value>
+        <option name="FOREGROUND" value="bc93fc" />
+      </value>
     </option>
     <option name="OC.OVERLOADED_OPERATOR">
       <value />
@@ -204,6 +250,13 @@
       <value>
         <option name="BACKGROUND" value="3d3322" />
         <option name="ERROR_STRIPE_COLOR" value="be9117" />
+        <option name="EFFECT_TYPE" value="2" />
+      </value>
+    </option>
+    <option name="WRONG_REFERENCES_ATTRIBUTES">
+      <value>
+        <option name="FOREGROUND" value="ec5295" />
+        <option name="EFFECT_COLOR" value="ec5295" />
         <option name="EFFECT_TYPE" value="2" />
       </value>
     </option>
