@@ -1,0 +1,20 @@
+[init]
+  defaultBranch = main
+  
+[user]
+  email = wroy@proton.me
+  name = William Roy
+  
+[credential]
+  helper = 
+  helper = /usr/share/gcm-core/git-credential-manager-core
+  helper = 
+  helper = /home/wroy/.dotnet/tools/git-credential-manager
+  credentialStore = cache
+  
+[core]
+  whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+
+[alias]
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+
