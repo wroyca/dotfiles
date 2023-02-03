@@ -9,6 +9,6 @@ set keymap vi
 set vi-ins-mode-string "+"
 set vi-cmd-mode-string ":"
 
-alias b="b -vn |& compiledb && sed -i 's/c++23/gnu++2b/g' compile_commands.json"
+alias b="b -vn |& tee compiledb && sed -i 's/c++23/gnu++2b/g' compile_commands.json"
 
 
