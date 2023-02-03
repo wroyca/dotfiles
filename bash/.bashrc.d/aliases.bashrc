@@ -10,6 +10,6 @@ set vi-ins-mode-string "+"
 set vi-cmd-mode-string ":"
 
 alias bb="b -vn |& tee compiledb && sed -i 's/c++23/gnu++2b/g' compile_commands.json"
-alias bc="b -vn clean"
+alias bc="b clean"
 alias bd="bdep init -C @gcc cc config.cxx=g++"
 
