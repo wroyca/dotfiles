@@ -1,6 +1,5 @@
 return {
  "neovim/nvim-lspconfig",
-  event = "VeryLazy",
   dependencies = {
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
@@ -8,9 +7,7 @@ return {
   config = function()
     local mason = require('mason')
     local mason_lspconfig = require('mason-lspconfig')
-
     local opts = { noremap=true, silent=true }
-
     vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
     vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
     vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
@@ -44,20 +41,20 @@ return {
     mason.setup({
       ui = {
         icons = {
-          package_installed   = "|",
-          package_pending     = "|",
+          package_installed = "|",
+          package_pending = "|",
           package_uninstalled = "|"
         }
       }
     })
-
+    
     mason_lspconfig.setup({
       ensure_installed = {
         "clangd"
       },
       automatic_installation = true
     })
-
+    
     mason_lspconfig.setup_handlers({
       function(name)
         local handler = require('lspconfig')[name]
@@ -67,14 +64,14 @@ return {
         }
       end,
     })
-
+    
     local signs = {
       Error = "|",
-      Warn  = "|",
-      Hint  = "|",
-      Info  = "|"
+      Warn = "|",
+      Hint = "|",
+      Info = "|"
     }
-
+    
     for type, icon in pairs(signs) do
       local sign = "DiagnosticSign" .. type
       vim.fn.sign_define(sign, {
@@ -85,7 +82,7 @@ return {
     vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
       border = "rounded"
     })
-
+    
     vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
       border = "rounded"
     })
@@ -101,6 +98,6 @@ return {
       update_in_insert = true,
       virtual_text = true
     })
-  end,
+  end
 }
 

@@ -1,6 +1,5 @@
 return {
  "nvim-tree/nvim-tree.lua",
-  event = "VeryLazy",
   cmd = "NvimTreeToggle",
   opts = {
     auto_reload_on_write = true,
