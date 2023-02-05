@@ -1,4 +1,0 @@
-# oxocarbon
-
-![image](oxocarbon.png)
-
