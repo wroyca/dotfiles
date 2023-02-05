@@ -4,40 +4,27 @@ if not vim.loop.fs_stat(lazy) then
   vim.fn.system({"git", "clone", "--filter=blob:none", "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazy})
 end
 
--- Fix (disable) F1 built-in help key
+-- Disable F1 built-in help key
 vim.keymap.set('n', '<F1>', '<Nop>')
 
--- Fix vim awful leader
+-- Fix vim leader
 vim.g.mapleader = ' '
 vim.keymap.set('n', '<Space>', '<Nop>')
 
--- Fix vim awful line motions
+-- Fix vim line motions
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
--- Fix vim awful join line
-vim.keymap.set("n", "J", "mzJ`z")
-
--- Fix vim awful page scroll
-vim.keymap.set("n", "<C-d>", "<C-d>zz")
-vim.keymap.set("n", "<C-u>", "<C-u>zz")
-
--- Fix vim awful indent
+-- Fix vim indent
 vim.keymap.set("v", "<", "<gv")
 vim.keymap.set("v", ">", ">gv")
 
--- Fix vim awful search
+-- Fix vim search
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
--- Fix vim awful search highlight
+-- Fix vim search highlight
 vim.keymap.set({ "i", "n" }, "<esc>", "<cmd>noh<cr><esc>")
-
--- Fix vim awful delete
-vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
-
--- Fix vim awful paste
-vim.keymap.set("x", "<leader>p", [["_dP]])
 
 -- Fix vim split resize
 vim.keymap.set("n",    "<C-Up>",  "<cmd>resize -2<CR>")
@@ -48,36 +35,6 @@ vim.keymap.set("n", "<C-Right>",  "<cmd>vertical resize +2<CR>")
 -- Plugins
 vim.api.nvim_set_keymap('n', '<C-b>', ':NvimTreeToggle<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<C-h>', ':HopWord<CR>', {noremap = true, silent = true})
-local opts = { noremap=true, silent=true }
-vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
-local on_attach = function(client, bufnr)
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-  local bufopts = { noremap=true, silent=true, buffer=bufnr }
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-  vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>wl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, bufopts)
-  vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-  vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', '<space>f', function() vim.lsp.buf.format { async = true } end, bufopts)
-  local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
-  function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
-    opts = opts or {}
-    opts.border = opts.border or borders
-    return orig_util_open_floating_preview(contents, syntax, opts, ...)
-  end
-end
 
 vim.opt.cursorline     = true
 vim.opt.swapfile       = false
