@@ -5,39 +5,6 @@ return {
     "williamboman/mason-lspconfig.nvim",
   },
   config = function()
-    local mason = require('mason')
-    local mason_lspconfig = require('mason-lspconfig')
-
-    mason.setup({
-      ui = {
-        icons = {
-          package_installed = "|",
-          package_pending = "|",
-          package_uninstalled = "|"
-        }
-      },
-       ensure_installed = {
-        "clangd",
-        "clang-format",
-        "codelldb"
-      },
-    })
-    mason_lspconfig.setup({
-      ensure_installed = {
-        "clangd",
-      },
-      automatic_installation = true
-    })
-    mason_lspconfig.setup_handlers({
-      function(name)
-        local handler = require('lspconfig')[name]
-        handler.setup {
-          on_attach = on_attach,
-          capabilities = require('cmp_nvim_lsp').default_capabilities()
-        }
-      end,
-    })
-
     local diagnostic_signs = { Error = "|", Warn = "|", Hint = "|", Info = "|" }
     for type, icon in pairs(diagnostic_signs) do
       local sign = "DiagnosticSign" .. type vim.fn.sign_define(sign, { text = icon, texthl = "DiagnosticSign" .. type, numhl = "DiagnosticSign" .. type })
@@ -75,6 +42,37 @@ return {
         return orig_util_open_floating_preview(contents, syntax, opts, ...)
       end
     end
+    local mason = require('mason')
+    local mason_lspconfig = require('mason-lspconfig')
+    mason.setup({
+      ui = {
+        icons = {
+          package_installed = "|",
+          package_pending = "|",
+          package_uninstalled = "|"
+        }
+      },
+       ensure_installed = {
+        "clangd",
+        "clang-format",
+        "codelldb"
+      },
+    })
+    mason_lspconfig.setup({
+      ensure_installed = {
+        "clangd",
+      },
+      automatic_installation = true
+    })
+    mason_lspconfig.setup_handlers({
+      function(name)
+        local handler = require('lspconfig')[name]
+        handler.setup {
+          on_attach = on_attach,
+          capabilities = require('cmp_nvim_lsp').default_capabilities()
+        }
+      end,
+    })
   end
 }
 
