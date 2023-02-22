@@ -1,6 +1,3 @@
-[submodule "ble.sh"]
-	path = bash/blesh/
-	url = https://github.com/akinomyoga/ble.sh.git
 [submodule "bash/blesh"]
 	path = bash/blesh
 	url = https://github.com/akinomyoga/ble.sh.git

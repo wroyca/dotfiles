@@ -28,4 +28,7 @@ fi
 
 unset rc
 
+# Add .NET Core SDK tools
+export PATH="$PATH:/home/wroy/.dotnet/tools"
+
 [[ ${BLE_VERSION-} ]] && ble-attach
