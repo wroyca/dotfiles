@@ -12,19 +12,19 @@ end
 
 vim.g.mapleader = ' '
 
-vim.api.nvim_set_keymap('n',          '<Space>',   '<Nop>',                       { noremap = true, silent = true }) -- prevent mapleader from triggering unintended actions.
-vim.api.nvim_set_keymap('n',          '<Up>',      '<cmd>vsp<cr>',                { noremap = true })                -- split window vertically and open new file above
-vim.api.nvim_set_keymap('n',          '<Down>',    '<cmd>sp<cr>',                 { noremap = true })                -- split window horizontally and open new file below
-vim.api.nvim_set_keymap('n',          '<Left>',    '<cmd>vsp<cr>',                { noremap = true })                -- split window vertically and open new file to the left
-vim.api.nvim_set_keymap('n',          '<Right>',   '<cmd>sp<cr>',                 { noremap = true })                -- split window horizontally and open new file to the right
-vim.api.nvim_set_keymap('n',          '<C-Up>',    '<cmd>resize -2<CR>',          { noremap = true })                -- decrease window height by 2 rows
-vim.api.nvim_set_keymap('n',          '<C-Down>',  '<cmd>resize +2<CR>',          { noremap = true })                -- increase window height by 2 rows
-vim.api.nvim_set_keymap('n',          '<C-Left>',  '<cmd>vertical resize -2<CR>', { noremap = true })                -- decrease window width by 2 columns
-vim.api.nvim_set_keymap('n',          '<C-Right>', '<cmd>vertical resize +2<CR>', { noremap = true })                -- increase window width by 2 columns
-vim.api.nvim_set_keymap('i', '<esc>', '<cmd>noh<cr><esc>',                        { noremap = true, silent = true }) -- disable search highlight and exit insert mode or cancel any pending command in normal mode.
-vim.api.nvim_set_keymap('n', '<esc>', '<cmd>noh<cr><esc>',                        { noremap = true, silent = true }) -- ^ 
-vim.api.nvim_set_keymap('n', '<C-b>', ':NvimTreeToggle<CR>',                      { noremap = true, silent = true }) -- toggle NvimTree file explorer
-vim.api.nvim_set_keymap('n', '<C-h>', ':HopWord<CR>',                             { noremap = true, silent = true }) -- use HopWord to jump between words quickly
+vim.api.nvim_set_keymap('n', '<Space>',   '<Nop>',                       { noremap = true, silent = true }) -- prevent mapleader from triggering unintended actions.
+vim.api.nvim_set_keymap('n', '<Up>',      '<cmd>vsp<cr>',                { noremap = true })                -- split window vertically and open new file above
+vim.api.nvim_set_keymap('n', '<Down>',    '<cmd>sp<cr>',                 { noremap = true })                -- split window horizontally and open new file below
+vim.api.nvim_set_keymap('n', '<Left>',    '<cmd>vsp<cr>',                { noremap = true })                -- split window vertically and open new file to the left
+vim.api.nvim_set_keymap('n', '<Right>',   '<cmd>sp<cr>',                 { noremap = true })                -- split window horizontally and open new file to the right
+vim.api.nvim_set_keymap('n', '<C-Up>',    '<cmd>resize -2<CR>',          { noremap = true })                -- decrease window height by 2 rows
+vim.api.nvim_set_keymap('n', '<C-Down>',  '<cmd>resize +2<CR>',          { noremap = true })                -- increase window height by 2 rows
+vim.api.nvim_set_keymap('n', '<C-Left>',  '<cmd>vertical resize -2<CR>', { noremap = true })                -- decrease window width by 2 columns
+vim.api.nvim_set_keymap('n', '<C-Right>', '<cmd>vertical resize +2<CR>', { noremap = true })                -- increase window width by 2 columns
+vim.api.nvim_set_keymap('i', '<esc>',     '<cmd>noh<cr><esc>',           { noremap = true, silent = true }) -- disable search highlight and exit insert mode or cancel any pending command in normal mode.
+vim.api.nvim_set_keymap('n', '<esc>',     '<cmd>noh<cr><esc>',           { noremap = true, silent = true }) -- ^ 
+vim.api.nvim_set_keymap('n', '<C-b>',     ':NvimTreeToggle<CR>',         { noremap = true, silent = true }) -- toggle NvimTree file explorer
+vim.api.nvim_set_keymap('n', '<C-h>',     ':HopWord<CR>',                { noremap = true, silent = true }) -- use HopWord to jump between words quickly
 
 vim.opt.cursorline     = true                                          -- highlight the line the cursor is on
 vim.opt.swapfile       = false                                         -- disable swapfile creation
