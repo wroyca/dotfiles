@@ -70,6 +70,6 @@ return {
     -- they are not. As a workaround, we disable highlighting for NvimTreeExecFile 
     -- until the bug is fixed.
     --
-    vim.cmd[[hi NvimTreeExecFile guifg=white guibg=none gui=NONE]]
+    vim.cmd[[hi NvimTreeExecFile guifg=#e0e0e0 guibg=none gui=NONE]]
   end
 }

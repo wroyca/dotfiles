@@ -57,7 +57,7 @@ return {
       end, with_desc(bufopts, 'List workspace folders'))
       vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, with_desc(bufopts, 'Rename'))
       vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, with_desc(bufopts, 'Code actions'))
-      vim.keymap.set('n', '<leader>f', vim.lsp.buf.formatting, with_desc(bufopts, 'Format'))
+      vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, with_desc(bufopts, 'Format'))
     end
 
     local mason = require('mason')

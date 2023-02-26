@@ -20,7 +20,10 @@ vim.api.nvim_set_keymap('n', '<C-Right>', '<cmd>vertical resize +2<CR>', { norem
 vim.api.nvim_set_keymap('i', '<esc>',     '<cmd>noh<cr><esc>',           { noremap = true, silent = true }) -- disable search highlight and exit insert mode or cancel any pending command in normal mode.
 vim.api.nvim_set_keymap('n', '<esc>',     '<cmd>noh<cr><esc>',           { noremap = true, silent = true }) -- ^ 
 
-vim.opt.cursorline     = true                                          -- highlight the line the cursor is on
+vim.opt.foldmethod     = "indent"                                      -- fold based on indentation
+vim.opt.foldlevel      = 20                                            -- show code up to 20 levels deep
+vim.opt.foldclose      = "all"                                         -- close all folds by default
+vim.opt.cursorline     = false                                         -- highlight the line the cursor is on
 vim.opt.swapfile       = false                                         -- disable swapfile creation
 vim.opt.autowrite      = true                                          -- automatically save the buffer before executing certain commands
 vim.opt.autowriteall   = true                                          -- automatically save all modified buffers when exiting Vim
