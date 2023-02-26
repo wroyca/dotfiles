@@ -133,7 +133,7 @@ vim.api.nvim_create_autocmd({ "VimResized" }, {
   group = vim.api.nvim_create_augroup("nvim-resizesplits", {}),
   callback = function()
     vim.cmd("tabdo wincmd =")
-  end,
+  end
 })
 
 -- With lazy.nvim, we can avoid passing a spec table to the setup() function by 
