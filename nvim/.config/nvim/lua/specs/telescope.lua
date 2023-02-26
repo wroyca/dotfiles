@@ -128,8 +128,37 @@ return {
   },
   opts = {
     defaults = {
-      prompt_prefix = " ",
-      selection_caret = " ",
+      layout_strategy = "vertical",
+      layout_config = {
+        width = 0.99,
+        height = 0.3,
+        preview_cutoff = 20,
+        prompt_position = "bottom",
+        horizontal = {
+          preview_width = 0.65,
+        },
+        vertical = {
+          preview_width = 0.99,
+          width = 0.99,
+          height = 100,
+          preview_height = 0.6,
+        },
+        center = {
+          height = 0.30,
+          preview_cutoff = 40,
+          prompt_position = "top",
+          width = 0.99,
+        },
+        flex = {
+          preview_width = 0.65,
+          horizontal = {},
+        },
+        bottom_pane = {
+          height = 0.3,
+          preview_cutoff = 130,
+          prompt_position = "top",
+        },
+      },
       mappings = {
         i = {
           ["<c-t>"] = function(...)
