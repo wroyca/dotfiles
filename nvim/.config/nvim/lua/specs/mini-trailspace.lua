@@ -1,9 +1,8 @@
 return {
  "echasnovski/mini.trailspace",
-  version = false,
-  event = "VeryLazy",
+  event = "InsertEnter",
   config = function(_, opts)
     require("mini.trailspace").setup(opts)
-  end,
+  end
 }
 

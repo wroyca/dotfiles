@@ -1,5 +1,5 @@
 return {
  "onsails/lspkind.nvim",
-  version = false,
+  event = { "CmdLineEnter", "InsertEnter" }
 }
 

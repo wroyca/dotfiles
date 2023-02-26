@@ -19,8 +19,6 @@ vim.api.nvim_set_keymap('n', '<C-Left>',  '<cmd>vertical resize -2<CR>', { norem
 vim.api.nvim_set_keymap('n', '<C-Right>', '<cmd>vertical resize +2<CR>', { noremap = true })                -- increase window width by 2 columns
 vim.api.nvim_set_keymap('i', '<esc>',     '<cmd>noh<cr><esc>',           { noremap = true, silent = true }) -- disable search highlight and exit insert mode or cancel any pending command in normal mode.
 vim.api.nvim_set_keymap('n', '<esc>',     '<cmd>noh<cr><esc>',           { noremap = true, silent = true }) -- ^ 
-vim.api.nvim_set_keymap('n', '<C-b>',     ':NvimTreeToggle<CR>',         { noremap = true, silent = true }) -- toggle NvimTree file explorer
-vim.api.nvim_set_keymap('n', '<C-h>',     ':HopWord<CR>',                { noremap = true, silent = true }) -- use HopWord to jump between words quickly
 
 vim.opt.cursorline     = true                                          -- highlight the line the cursor is on
 vim.opt.swapfile       = false                                         -- disable swapfile creation

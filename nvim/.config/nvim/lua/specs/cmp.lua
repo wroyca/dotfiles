@@ -1,12 +1,21 @@
+-- There seems to be a bug with the event triggers "CmdLineEnter" and
+-- "InsertEnter". Specifically, "CmdLineEnter" appears to only function when
+-- something is typed, in contrast to the documentation stating that it should
+-- function with non-interactive use of ":" in a mapping.
+--
 return {
  "hrsh7th/nvim-cmp",
-  event = "VeryLazy",
   version = false,
+  event = { "CmdLineEnter", "InsertEnter" },
   dependencies = {
     "hrsh7th/cmp-nvim-lsp",
     "hrsh7th/cmp-buffer",
     "hrsh7th/cmp-path",
     "hrsh7th/cmp-cmdline",
+    "hrsh7th/cmp-nvim-lsp-signature-help",
+    "hrsh7th/cmp-nvim-lsp-document-symbol",
+    -- Out of all the available options, I have found that "hrsh7th/cmp-vsnip"
+    -- and "hrsh7th/vim-vsnip" provides me with the most consistent results.
     "hrsh7th/cmp-vsnip",
     "hrsh7th/vim-vsnip",
   },
@@ -15,7 +24,7 @@ return {
     cmp.setup({
       formatting = {
         format = require('lspkind').cmp_format({
-          mode = 'symbol',
+          mode = 'symbol_text',
           maxwidth = 50,
           ellipsis_char = '...',
           before = function (entry, vim_item)
@@ -23,58 +32,47 @@ return {
           end
         })
       },
-      snippet = {
-        expand = function(args)
-          vim.fn["vsnip#anonymous"](args.body)
-        end,
-      },
-      window = {
-        completion = cmp.config.window.bordered(),
-        documentation = cmp.config.window.bordered(),
-      },
       mapping = cmp.mapping.preset.insert({
         ['<C-b>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<C-Space>'] = cmp.mapping.complete(),
         ['<C-e>'] = cmp.mapping.abort(),
-        -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
         ['<CR>'] = cmp.mapping.confirm({ select = true }),
         ["<Tab>"] = cmp.mapping( function(fallback) if cmp.visible() then cmp.select_next_item() else fallback() end end, {"i", "s"}),
         ["<S-Tab>"] = cmp.mapping( function(fallback) if cmp.visible() then cmp.select_prev_item() else fallback() end end, {"i", "s"}),
       }),
+      snippet = {
+        expand = function(args)
+          vim.fn["vsnip#anonymous"](args.body)
+        end
+      },
       sources = cmp.config.sources({
         { name = 'nvim_lsp' },
+        { name = 'nvim_lsp_signature_help' },
+        { name = 'nvim_lua' },
         { name = 'vsnip' },
-      }, {
         { name = 'buffer' },
-      })
+      }),
+      window = {
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
+      },
+      experimental = {
+        ghost_text = {
+          hl_group = "LspCodeLens",
+        },
+      },
     })
-
-    -- Set configuration for specific filetype.
     cmp.setup.filetype('gitcommit', {
-      sources = cmp.config.sources({
-        { name = 'cmp_git' },
-      }, {
-        { name = 'buffer' },
-      })
+      sources = cmp.config.sources({{ name = 'cmp_git' }}, {{ name = 'buffer' }})
     })
-
-    -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
     cmp.setup.cmdline({ '/', '?' }, {
       mapping = cmp.mapping.preset.cmdline(),
-      sources = {
-        { name = 'buffer' }
-      }
+      sources = {{ name = 'nvim_lsp_document_symbol' }, { name = 'buffer' }}
     })
-
-    -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
     cmp.setup.cmdline(':', {
       mapping = cmp.mapping.preset.cmdline(),
-      sources = cmp.config.sources({
-        { name = 'path' }
-      }, {
-        { name = 'cmdline' }
-      })
+      sources = cmp.config.sources({{ name = 'path' }}, {{ name = 'cmdline' }})
     })
   end
 }
