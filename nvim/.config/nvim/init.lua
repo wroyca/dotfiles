@@ -20,9 +20,21 @@ vim.api.nvim_set_keymap('n', '<C-Right>', '<cmd>vertical resize +2<CR>', { norem
 vim.api.nvim_set_keymap('i', '<esc>',     '<cmd>noh<cr><esc>',           { noremap = true, silent = true }) -- disable search highlight and exit insert mode or cancel any pending command in normal mode.
 vim.api.nvim_set_keymap('n', '<esc>',     '<cmd>noh<cr><esc>',           { noremap = true, silent = true }) -- ^ 
 
-vim.opt.foldmethod     = "indent"                                      -- fold based on indentation
-vim.opt.foldlevel      = 20                                            -- show code up to 20 levels deep
-vim.opt.foldclose      = "all"                                         -- close all folds by default
+-- Time in milliseconds to wait for which-key.
+--
+-- Determining the appropriate time delay for which-key to display is tricky.
+-- We want the feature to be readily available when required, but we also don't want
+-- it to be intrusive during our workflow. So far, 300ms delay strikes an optimal balance.
+--
+vim.opt.timeoutlen = 300
+
+-- FIXME: We're running into some issues with foldmethod and C++ namespace.
+-- Unfortunately, nvim_treesitter#foldexpr() isn't cutting it either.
+--
+-- vim.opt.foldmethod  = "indent"                                      -- fold based on indentation
+-- vim.opt.foldlevel   = 20                                            -- show code up to 20 levels deep
+-- vim.opt.foldclose   = "all"                                         -- close all folds by default
+
 vim.opt.cursorline     = false                                         -- highlight the line the cursor is on
 vim.opt.swapfile       = false                                         -- disable swapfile creation
 vim.opt.autowrite      = true                                          -- automatically save the buffer before executing certain commands
@@ -128,8 +140,8 @@ vim.api.nvim_create_autocmd({'BufWinEnter', 'FileType'}, {
 
 -- Automatically resize splits in response to the VimResized event.
 --
--- This function is an autocmd callback that simply calls the Vim command 
--- tabdo wincmd =, which resizes all of the splits in the current tab to be 
+-- This function is an autocmd callback that simply calls the Vim command
+-- tabdo wincmd =, which resizes all of the splits in the current tab to be
 -- evenly distributed.
 --
 vim.api.nvim_create_autocmd({ "VimResized" }, {

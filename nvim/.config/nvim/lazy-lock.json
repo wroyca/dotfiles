@@ -24,7 +24,6 @@
   "nvim-treesitter": { "branch": "master", "commit": "50709361378fa37d455b21fb716169416888314f" },
   "nvim-web-devicons": { "branch": "master", "commit": "b8d173b330cff94258482ccfe8c024bd8051da6e" },
   "oxocarbon.nvim": { "branch": "main", "commit": "5ef9263e87391ffe503934c9e5d8df02485ee9f7" },
-  "playground": { "branch": "master", "commit": "4044b53c4d4fcd7a78eae20b8627f78ce7dc6f56" },
   "plenary.nvim": { "branch": "master", "commit": "253d34830709d690f013daf2853a9d21ad7accab" },
   "telescope-fzf-native.nvim": { "branch": "main", "commit": "580b6c48651cabb63455e97d7e131ed557b8c7e2" },
   "telescope.nvim": { "branch": "master", "commit": "a3f17d3baf70df58b9d3544ea30abe52a7a832c2" },
