@@ -35,13 +35,14 @@ vim.opt.timeoutlen = 300
 -- vim.opt.foldlevel   = 20                                            -- show code up to 20 levels deep
 -- vim.opt.foldclose   = "all"                                         -- close all folds by default
 
+vim.opt.so             = 10                                            --
 vim.opt.cursorline     = false                                         -- highlight the line the cursor is on
 vim.opt.swapfile       = false                                         -- disable swapfile creation
 vim.opt.autowrite      = true                                          -- automatically save the buffer before executing certain commands
 vim.opt.autowriteall   = true                                          -- automatically save all modified buffers when exiting Vim
 vim.opt.cdhome         = true                                          -- change the current directory to the user's home directory
 vim.opt.relativenumber = true                                          -- show line numbers relative to the current line
-vim.opt.laststatus     = 0                                             -- disable the status line in inactive windows
+vim.opt.laststatus     = 3                                             -- disable the status line in inactive windows
 vim.opt.encoding       = 'utf-8'                                       -- set the character encoding to UTF-8
 vim.opt.fileencoding   = 'utf-8'                                       -- set the file encoding to UTF-8
 vim.scriptencoding     = 'utf-8'                                       -- set the script encoding to UTF-8
