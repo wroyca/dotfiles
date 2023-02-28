@@ -87,7 +87,7 @@ sudo dnf install -y clang-tools-extra
 # The dotnet-sdk-6.0 package and the git-credential-manager tool are installed
 # to provide support for GCM.
 #
-sudo dnf --enablerepo=updates-testing install dotnet-sdk-6.0-6.0.114-1.fc37.x86_64
+sudo dnf --enablerepo=updates-testing install -y dotnet-sdk-6.0-6.0.114-1.fc37.x86_64
 dotnet tool install -g git-credential-manager
 
 # Install Flathub, which is the best way to get Flatpak apps
@@ -110,11 +110,20 @@ flatpak install -y com.mattjakeman.ExtensionManager
 # platform. The installed applications include Discord, Slack, Riot, KeePassXC, 
 # and Builder.
 #
-flatpak install -y com.discordapp.Discord
-flatpak install -y com.slack.Slack
-flatpak install -y im.riot.Riot
+# NOTE: XWayland is broken with Electron. I recommand PWAS instead.
+# https://addons.mozilla.org/en-CA/firefox/addon/pwas-for-firefox/
+#
+# flatpak install -y com.discordapp.Discord
+# flatpak install -y com.slack.Slack
+# flatpak install -y im.riot.Riot
+#
 flatpak install -y org.keepassxc.KeePassXC
 flatpak install -y org.gnome.Builder
+
+# Let us all bow down and worship this god, who makes coding a pleasure and not a mere slog.
+# For Neovim doth rule with an iron fist, and woe betide any who would choose another text editor to persist.
+#
+sudo dnf install neovim
 
 # Install and use GNU Stow as a symlink farm manager
 # 
