@@ -20,21 +20,7 @@ vim.api.nvim_set_keymap('n', '<C-Right>', '<cmd>vertical resize +2<CR>', { norem
 vim.api.nvim_set_keymap('i', '<esc>',     '<cmd>noh<cr><esc>',           { noremap = true, silent = true }) -- disable search highlight and exit insert mode or cancel any pending command in normal mode.
 vim.api.nvim_set_keymap('n', '<esc>',     '<cmd>noh<cr><esc>',           { noremap = true, silent = true }) -- ^ 
 
--- Time in milliseconds to wait for which-key.
---
--- Determining the appropriate time delay for which-key to display is tricky.
--- We want the feature to be readily available when required, but we also don't want
--- it to be intrusive during our workflow. So far, 300ms delay strikes an optimal balance.
---
-vim.opt.timeoutlen = 300
-
--- FIXME: We're running into some issues with foldmethod and C++ namespace.
--- Unfortunately, nvim_treesitter#foldexpr() isn't cutting it either.
---
--- vim.opt.foldmethod  = "indent"                                      -- fold based on indentation
--- vim.opt.foldlevel   = 20                                            -- show code up to 20 levels deep
--- vim.opt.foldclose   = "all"                                         -- close all folds by default
-
+vim.opt.timeoutlen     = 300                                           -- Time in milliseconds to wait for which-key.
 vim.opt.so             = 10                                            --
 vim.opt.cursorline     = false                                         -- highlight the line the cursor is on
 vim.opt.swapfile       = false                                         -- disable swapfile creation
@@ -42,7 +28,7 @@ vim.opt.autowrite      = true                                          -- automa
 vim.opt.autowriteall   = true                                          -- automatically save all modified buffers when exiting Vim
 vim.opt.cdhome         = true                                          -- change the current directory to the user's home directory
 vim.opt.relativenumber = true                                          -- show line numbers relative to the current line
-vim.opt.laststatus     = 3                                             -- disable the status line in inactive windows
+vim.opt.laststatus     = 0                                             -- disable the status line in inactive windows
 vim.opt.encoding       = 'utf-8'                                       -- set the character encoding to UTF-8
 vim.opt.fileencoding   = 'utf-8'                                       -- set the file encoding to UTF-8
 vim.scriptencoding     = 'utf-8'                                       -- set the script encoding to UTF-8

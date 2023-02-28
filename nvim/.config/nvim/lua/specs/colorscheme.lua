@@ -1,8 +1,8 @@
 return {
   {
-   "wroyca/oxocarbon.nvim",
+   "Mofiqul/vscode.nvim",
     config = function()
-      vim.cmd[[colorscheme oxocarbon]]
+      vim.cmd[[colorscheme vscode]]
     end
   }
 }
