@@ -18,7 +18,7 @@ vim.api.nvim_set_keymap('n', '<C-Down>',  '<cmd>resize +2<CR>',          { norem
 vim.api.nvim_set_keymap('n', '<C-Left>',  '<cmd>vertical resize -2<CR>', { noremap = true })                -- decrease window width by 2 columns
 vim.api.nvim_set_keymap('n', '<C-Right>', '<cmd>vertical resize +2<CR>', { noremap = true })                -- increase window width by 2 columns
 vim.api.nvim_set_keymap('i', '<esc>',     '<cmd>noh<cr><esc>',           { noremap = true, silent = true }) -- disable search highlight and exit insert mode or cancel any pending command in normal mode.
-vim.api.nvim_set_keymap('n', '<esc>',     '<cmd>noh<cr><esc>',           { noremap = true, silent = true }) -- ^ 
+vim.api.nvim_set_keymap('n', '<esc>',     '<cmd>noh<cr><esc>',           { noremap = true, silent = true }) -- ^
 
 vim.opt.timeoutlen     = 300                                           -- Time in milliseconds to wait for which-key.
 vim.opt.so             = 10                                            --
@@ -28,7 +28,7 @@ vim.opt.autowrite      = true                                          -- automa
 vim.opt.autowriteall   = true                                          -- automatically save all modified buffers when exiting Vim
 vim.opt.cdhome         = true                                          -- change the current directory to the user's home directory
 vim.opt.relativenumber = true                                          -- show line numbers relative to the current line
-vim.opt.laststatus     = 0                                             -- disable the status line in inactive windows
+vim.opt.laststatus     = 3                                             -- disable the status line in inactive windows
 vim.opt.encoding       = 'utf-8'                                       -- set the character encoding to UTF-8
 vim.opt.fileencoding   = 'utf-8'                                       -- set the file encoding to UTF-8
 vim.scriptencoding     = 'utf-8'                                       -- set the script encoding to UTF-8
@@ -76,14 +76,14 @@ vim.opt.formatoptions  : append( 'r' )                                 -- automa
 vim.opt.rtp            : prepend(lazy)
 
 -- Automatically move the cursor to the last position when opening a file.
--- 
--- This function is an autocmd callback that is triggered on `BufWinEnter` 
--- and `FileType` events. It checks if the buffer type and filetype are not 
+--
+-- This function is an autocmd callback that is triggered on `BufWinEnter`
+-- and `FileType` events. It checks if the buffer type and filetype are not
 -- ignored, and if the cursor is at the beginning of the file.
 --
--- If the cursor is not at the beginning of the file, or the buffer type or 
--- filetype is ignored, this function does nothing. Otherwise, it moves the 
--- cursor to the last position where it was before the buffer was last closed, 
+-- If the cursor is not at the beginning of the file, or the buffer type or
+-- filetype is ignored, this function does nothing. Otherwise, it moves the
+-- cursor to the last position where it was before the buffer was last closed,
 -- or to the center of the screen if it was not previously opened.
 --
 local function run()
@@ -138,9 +138,9 @@ vim.api.nvim_create_autocmd({ "VimResized" }, {
   end
 })
 
--- With lazy.nvim, we can avoid passing a spec table to the setup() function by 
--- creating a separate Lua module. The module's specs, along with any top-level 
--- sub-modules, will be merged automatically into the final spec, eliminating 
+-- With lazy.nvim, we can avoid passing a spec table to the setup() function by
+-- creating a separate Lua module. The module's specs, along with any top-level
+-- sub-modules, will be merged automatically into the final spec, eliminating
 -- the need to add require() calls to the other files in our main plugin file.
 --
 require("lazy").setup("specs")

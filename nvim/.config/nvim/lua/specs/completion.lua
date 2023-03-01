@@ -2,7 +2,7 @@ return {
   {
    "hrsh7th/nvim-cmp",
     version = false,
-    dependencies = 
+    dependencies =
     {
       "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-buffer",
@@ -10,14 +10,7 @@ return {
       "hrsh7th/cmp-cmdline",
       "hrsh7th/cmp-nvim-lsp-signature-help",
       "hrsh7th/cmp-nvim-lsp-document-symbol",
-      -- Among the various choices, I have discovered that "hrsh7th/cmp-vsnip" 
-      -- and "hrsh7th/vim-vsnip" yield the most reliable outcomes. Conversely, 
-      -- "saadparwaiz1/cmp_luasnip" has superior snippets, but its suggestion 
-      -- mechanism is overly forceful, prompting snippets instead of 
-      -- source-based completions when the latter is desired.
-      -- 
-      "hrsh7th/cmp-vsnip",
-      "hrsh7th/vim-vsnip",
+      "saadparwaiz1/cmp_luasnip",
     },
     config = function()
       local cmp = require('cmp')
@@ -43,29 +36,21 @@ return {
         }),
         snippet = {
           expand = function(args)
-            vim.fn["vsnip#anonymous"](args.body)
-          end
+            require("luasnip").lsp_expand(args.body)
+          end,
         },
         sources = cmp.config.sources({
           { name = 'nvim_lsp' },
           { name = 'nvim_lsp_signature_help' },
           { name = 'nvim_lua' },
-          { name = 'vsnip' },
+          { name = 'luasnip' },
           { name = 'buffer' },
         }),
         window = {
           completion = cmp.config.window.bordered(),
           documentation = cmp.config.window.bordered(),
         },
-        -- Despite its overall appeal, ghost_text is rendered impractical in 
-        -- nvim due to its "normal" highlight, which encompasses most "normal" 
-        -- text such as cmp, doc, and others.
-        --
-        experimental = {
-          ghost_text = {
-            -- hl_group = "LspCodeLens",
-          },
-        },
+        experimental,
       })
       cmp.setup.filetype('gitcommit', {
         sources = cmp.config.sources({{ name = 'cmp_git' }}, {{ name = 'buffer' }})
