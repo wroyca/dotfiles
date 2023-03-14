@@ -1,4 +1,0 @@
-# nvim
-
-![image](nvim.png)
-
