@@ -1,0 +1,62 @@
+#!/bin/bash
+
+sudo dnf group install -y \
+  development-libs
+
+sudo dnf group install -y \
+  development-tools
+
+sudo dnf group install -y \
+  gnome-software-development
+
+sudo dnf install -y \
+  gcc
+
+sudo dnf install -y \
+  clang
+
+sudo dnf install -y \
+  clang-tools-extra 
+
+pip install \
+  git+https://github.com/wroyca/compiledb@support-cl-clang-cl # https://github.com/build2/build2/issues/96
+
+sudo dnf install -y \
+  build2
+
+sudo dnf install -y \
+  meson
+
+sudo dnf install -y \
+  cargo
+  
+sudo dnf install -y \
+  cmake
+  
+sudo dnf install -y \
+  flatpak-builder
+  
+# GCM can be installed using the Fedora dotnet tools package. However, there
+# are instances where GCM updates its minimum dotnet tool version requirements,
+# resulting in Fedora's version becoming obsolete and, consequently, causing
+# installation issues. Should it happen, the more dependable method is to
+# install it directly from source.
+#
+# Note also that GH can be employed as an alternative to GCM; refer to the 
+# git config for further details.
+
+sudo dnf config-manager --add-repo \
+  https://cli.github.com/packages/rpm/gh-cli.repo
+
+sudo dnf install -y \
+  gh # https://cli.github.com/
+  
+sudo dnf install -y \
+  dotnet-sdk-7.0
+
+dotnet tool install -g git-credential-manager || true
+if ! command -v {{ .chezmoi.homeDir }}/.dotnet/tools/git-credential-manager > /dev/null 2>&1; then
+  if ! command -v git-credential-manager > /dev/null 2>&1; then
+    (curl -l https://aka.ms/gcm/linux-install-source.sh | sh) && git-credential-manager configure
+  fi
+fi

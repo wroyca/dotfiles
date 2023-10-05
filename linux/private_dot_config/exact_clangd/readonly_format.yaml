@@ -1,0 +1,38 @@
+BasedOnStyle: GNU
+---
+AllowAllArgumentsOnNextLine: true
+AllowShortLambdasOnASingleLine: None
+AlwaysBreakAfterReturnType: All
+BinPackArguments: false
+BinPackParameters: false
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterClass: true
+  AfterControlStatement: Always
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterObjCDeclaration: true
+  AfterStruct: true
+  AfterUnion: true
+  AfterExternBlock: true
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: true
+  BeforeWhile: true
+  IndentBraces: true
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+BreakBeforeBinaryOperators: None
+BreakBeforeBraces: Custom
+ContinuationIndentWidth: 8
+Cpp11BracedListStyle: true
+FixNamespaceComments: false
+IndentPPDirectives: AfterHash
+Language: Cpp
+NamespaceIndentation: All
+PointerAlignment: Right
+SortIncludes: Never
+Standard: Latest
+---

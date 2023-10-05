@@ -1,0 +1,8 @@
+#!/bin/bash
+
+sudo sed -i \
+  's/#FastConnectable = false/FastConnectable = true/' /etc/bluetooth/main.conf
+sudo sed -i \
+  's/#ReconnectAttempts/ReconnectAttempts/' /etc/bluetooth/main.conf
+sudo sed -i \
+  's/#ReconnectIntervals/ReconnectIntervals/' /etc/bluetooth/main.conf

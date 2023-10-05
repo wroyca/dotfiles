@@ -1,0 +1,71 @@
+# .bashrc
+
+# Start blesh if shell is interactive
+#
+[[ $- == *i* ]] && source ~/.local/share/blesh/ble.sh --noattach
+
+# Source global definitions
+#
+if [ -f /etc/bashrc ]; then
+  . /etc/bashrc
+fi
+
+# User specific environment
+#
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
+  PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+export EDITOR="$(command -v nvim)"
+export PS1="\[\033[00m\][\u@\h \W\$(branch)]$ "
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+#
+if [ -d ~/.config/bash/bashrc.d ]; then
+  for rc in ~/.config/bash/bashrc.d/*; do
+    if [ -f "$rc" ]; then
+      . "$rc"
+    fi
+  done
+fi
+unset rc
+
+# https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
+#
+shopt -s      \
+  cdable_vars \
+  cdspell     \
+  \
+  extglob     \
+  failglob    \
+  globstar    \
+  \
+  histappend  \
+  histreedit  \
+  histverify  \
+  \
+  checkhash   \
+  checkjobs   \
+
+# HISTCONTROL
+# - Ignore commands starting with space.
+# - Ignore duplicate commands.
+#
+# HISTIGNORE
+# - Command patterns to exclude from history storage.
+#
+# HISTSIZE
+# HISTFILESIZE
+# - Increase Bash history size to 32³ entries; the default is 500.
+#
+export HISTCONTROL='ignoreboth:erasedups'
+export HISTIGNORE="clear:history:[bf]g:exit:date:* --help"
+export HISTSIZE='32768'
+export HISTFILESIZE="${HISTSIZE}"
+
+# Bash Line Editor (ble.sh)
+#
+[[ ${BLE_VERSION-} ]] && ble-attach

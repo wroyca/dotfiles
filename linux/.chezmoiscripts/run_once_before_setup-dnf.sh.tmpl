@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if ! grep -q "fastestmirror=1" /etc/dnf/dnf.conf; then
+  # In the rare event that, due to geo-chronological factors, there is no
+  # mirror offering a speed exceeding 1 MB/sec, we could find ourselves caught
+  # in a mirror-changing loop. In such instances, we have the option to pass
+  # --setopt=minrate=50k with dnf. Still, such occurrences are extremely
+  # uncommon, and should practically never happen.
+  #
+  echo -e "fastestmirror=1\nminrate=1M\nmax_parallel_downloads=10" | sudo tee -a /etc/dnf/dnf.conf > /dev/null
+fi
+

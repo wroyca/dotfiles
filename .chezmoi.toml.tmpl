@@ -1,0 +1,20 @@
+{{- $osid := .chezmoi.os -}}
+{{- if hasKey .chezmoi.osRelease "id" -}}
+{{-   $osid = printf "%s-%s" .chezmoi.os .chezmoi.osRelease.id -}}
+{{- end -}}
+
+{{ if eq .chezmoi.os "windows" -}}
+sourceDir = "{{- .chezmoi.workingTree -}}/windows"
+{{ else -}}
+sourceDir = "{{- .chezmoi.workingTree -}}/linux"
+{{ end }}
+encryption = "age"
+
+[data]
+  name = "William Roy"
+  email = "wroy@proton.me"
+  osid = {{ $osid | quote }}
+  
+[age]
+  identity = "{{ .chezmoi.homeDir }}{{- .chezmoi.pathSeparator -}}.config{{- .chezmoi.pathSeparator -}}age{{- .chezmoi.pathSeparator -}}key.txt"
+  recipient = "age15zwzfmgglhwqa8htgrw868yl4hg3ug45lu8d95ne9th0r6r37dns4h9hmz"

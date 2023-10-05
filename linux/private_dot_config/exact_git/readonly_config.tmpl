@@ -1,0 +1,38 @@
+; https://git-scm.com/docs/git-config
+
+[user]
+  name = {{ .name | quote }}
+  email = {{ .email | quote }}
+
+[credential]
+  credentialStore = cache
+  helper = cache --timeout 86400
+{{ if (lookPath "git-credential-manager") -}}
+[credential]
+  helper = !{{- output "which" "git-credential-manager" | trim }}
+{{- end }}
+{{ if (lookPath "gh") -}}
+[credential "https://github.com"]
+  helper = !{{- output "which" "gh" | trim }} auth git-credential
+[credential "https://gist.github.com"]
+  helper = !{{- output "which" "gh" | trim }} auth git-credential
+{{- end }}
+
+[init]
+  defaultBranch = main
+
+[pack]
+  writeReverseIndex = true
+
+[submodule]
+  fetchJobs = 0
+
+; Manually enable on a per-repository basis, as libgit2 lacks support for
+; split-index and sparse-index, thereby breaking dependent components. (e.g.
+; cargo).
+;
+; https://github.com/libgit2/libgit2/issues/6132
+; https://github.com/rust-lang/cargo/issues/10150
+;
+[feature]
+  manyFiles = false

@@ -1,0 +1,12 @@
+# .bash_profile
+
+# Get the aliases and functions
+#
+if [ -f ~/.config/bash/bashrc ]; then
+  . ~/.config/bash/bashrc
+fi
+
+# User specific environment and startup programs
+#
+{{ if (lookPath "cargo")  -}} export PATH="$PATH:/home/wroy/.cargo/bin"    {{- end }}
+{{ if (lookPath "dotnet") -}} export PATH="$PATH:/home/wroy/.dotnet/tools" {{- end }}

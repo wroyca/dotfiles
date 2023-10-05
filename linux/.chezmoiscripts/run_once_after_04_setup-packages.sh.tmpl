@@ -1,0 +1,19 @@
+#!/bin/bash
+
+sudo dnf remove -y \
+  gnome-terminal
+
+sudo dnf install -y \
+  gnome-console
+
+sudo dnf4 copr enable -y \
+  agriffis/neovim-nightly
+
+sudo dnf install -y \
+  neovim
+  
+# Command line editor written in pure Bash which replaces the default
+# GNU Readline.
+#
+make -C \
+  bin/blesh/ble.sh install PREFIX=~/.local
