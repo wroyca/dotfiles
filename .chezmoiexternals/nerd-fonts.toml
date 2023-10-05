@@ -1,0 +1,9 @@
+[".local/share/fonts/Symbols"]
+  type = "archive"
+  url = "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/NerdFontsSymbolsOnly.zip"
+  refreshPeriod = "168h"
+    
+[".local/share/fonts/JetBrainsMono"]
+  type = "archive"
+  url = "https://github.com/JetBrains/JetBrainsMono/releases/latest/download/JetBrainsMono-2.304.zip"
+  refreshPeriod = "168h"

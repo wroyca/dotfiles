@@ -1,0 +1,59 @@
+# .bashrc
+
+# Source global definitions
+#
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
+
+# User specific environment
+#
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+export EDITOR="$(command -v nvim)"
+export PS1="\[\033[00m\][\u@\h \W\$(branch)]$ "
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+#
+if [ -d ~/.bashrc.d ]; then
+    for rc in ~/.bashrc.d/*; do
+        if [ -f "$rc" ]; then
+            . "$rc"
+        fi
+    done
+fi
+unset rc
+
+# Bash Line Editor (ble.sh)
+#
+source ~/.local/share/blesh/ble.sh
+
+# Setting shell options:
+#
+# - Make bash append rather than overwrite the history on disk.
+# - Allows edit of failed hist exp.
+# - Allows results verification of hist exp.
+# - When changing directory small typos can be ignored by bash.
+# - Do not complete when readline buf is empty.
+# - Extended glob (3.5.8.1) & find-all-glob with **.
+# - Hashtable the commands!
+# - Winsize.
+#
+shopt -s \
+    histappend \
+    histreedit \
+    histverify \
+    cdspell \
+    no_empty_cmd_completion \
+    extglob \
+    globstar \
+    checkhash \
+    checkwinsize
+HISTIGNORE='&:[bf]g:exit'
+HISTCONTROL='ignorespace'
+

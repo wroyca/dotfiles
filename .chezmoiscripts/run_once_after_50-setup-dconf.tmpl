@@ -1,0 +1,4 @@
+#! /usr/bin/env bash
+
+dconf load / < {{ joinPath .chezmoi.sourceDir "private_dot_config/dconf/dconf.ini" | quote }}
+
