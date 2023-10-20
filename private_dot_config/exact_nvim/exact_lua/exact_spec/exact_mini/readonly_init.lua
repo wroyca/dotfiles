@@ -32,6 +32,5 @@ return {
   { import = [[spec.mini.mini-tabline]] },
   { import = [[spec.mini.mini-test]] },
   { import = [[spec.mini.mini-trailspace]] },
-  { import = [[spec.mini.mini-pick]] },
+  { import = [[spec.mini.mini-pick]] }
 }
-

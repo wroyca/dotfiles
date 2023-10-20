@@ -1,4 +1,6 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.tabline]]
+  [[echasnovski/mini.tabline]],
+  event = [[BufAdd]],
+  config = true
 }

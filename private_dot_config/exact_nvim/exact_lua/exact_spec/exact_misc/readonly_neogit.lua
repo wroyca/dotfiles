@@ -1,5 +1,6 @@
 ---@type LazyPluginSpec
 return {
-  [[jay-babu/mason-nvim-dap.nvim]],
+  [[neogitorg/neogit]],
+  cmd = [[Neogit]],
   config = true
 }

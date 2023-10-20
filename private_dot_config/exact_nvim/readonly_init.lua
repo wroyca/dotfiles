@@ -1,9 +1,16 @@
+local _ = string.format([[
+     .-.      _______                             .  '  *   .  . '
+    {}``; |==|_______D                                  . *  -+-  .
+    / ('        /|\                                 . '   * .    '  *
+(  /  |        / | \                                    * .  ' .  .-+-
+ \(_)_%s      /  |  \                                *   *  .   .]], "]]")
+
 vim.g.mapleader      = [[ ]]
 vim.g.localmapleader = [[,]]
 vim.o.clipboard      = [[unnamedplus]]
 vim.o.fileencoding   = [[utf-8]]
 vim.o.whichwrap      = [[b,s,<,>,h,l]]
-vim.o.signcolumn     = [[no]]
+vim.o.signcolumn     = [[yes:1]]
 vim.o.virtualedit    = [[onemore]]
 vim.o.titlestring    = [[%t]]
 vim.o.splitkeep      = [[screen]]
@@ -25,10 +32,10 @@ vim.o.smartindent    = true
 vim.o.smarttab       = true
 vim.o.preserveindent = true
 vim.o.cursorline     = true
-vim.o.winblend       = 10
+vim.o.winblend       = 0
 vim.o.tabstop        = 2
 vim.o.shiftwidth     = 2
-vim.o.scrolloff      = 0
+vim.o.scrolloff      = 4
 vim.o.pumheight      = 5
 vim.o.cmdheight      = 0
 vim.o.synmaxcol      = 0
@@ -37,12 +44,9 @@ vim.o.foldlevel      = 99
 vim.o.foldlevelstart = 99
 vim.o.foldenable     = true
 vim.o.list           = true
+vim.opt.suffixes     = vim.opt.suffixes - [[.h]]
 vim.opt.cinkeys      : remove([[:]])
 vim.opt.indentkeys   : remove([[:]])
-vim.opt.suffixes     = vim.opt.suffixes - [[.h]]
-
-require [[cfg.keys]].setup()
-require [[cfg.cmds]].setup()
 
 local lazypath = vim.fn.stdpath([[data]]) .. [[/lazy/lazy.nvim]]
 if not vim.loop.fs_stat(lazypath) then
@@ -57,7 +61,19 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require([[lazy]]).setup([[spec]], {
+require [[lazy]].setup({
+  spec = {
+    {
+      [[neogitorg/neogit]],
+      cmd = [[Neogit]],
+      config = true
+    },
+
+    {
+      import = [[spec]]
+    }
+  },
+
   performance = {
     rtp = {
       disabled_plugins = {
@@ -101,8 +117,17 @@ require([[lazy]]).setup([[spec]], {
     version = false,
   },
 
+  install = {
+    colorscheme = { [[randomhue]] },
+  },
+
+  ui = {
+    border = [[double]]
+  },
+
   change_detection = {
     enabled = false
   }
 })
 
+-- vim:fileencoding=utf-8:foldmethod=marker

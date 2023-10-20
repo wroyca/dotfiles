@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[williamboman/mason.nvim]]
+  [[williamboman/mason.nvim]],
+  config = true
 }

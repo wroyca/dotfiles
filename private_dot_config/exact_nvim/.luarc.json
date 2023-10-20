@@ -68,6 +68,7 @@
     "/home/wroy/.local/share/chezmoi/private_dot_config/exact_nvim",
     "/home/wroy/.local/share/chezmoi/private_dot_config/exact_nvim/exact_lua",
     "/home/wroy/.local/share/chezmoi/private_dot_config/exact_nvim/exact_lua/exact_spec",
+    "/home/wroy/.local/share/chezmoi/private_dot_config/exact_nvim/exact_lua/exact_spec/exact_mini",
     "${3rd}/luv/library",
     "${3rd}/luassert/library"
   ],
