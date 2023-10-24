@@ -61,19 +61,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
-require [[lazy]].setup({
-  spec = {
-    {
-      [[neogitorg/neogit]],
-      cmd = [[Neogit]],
-      config = true
-    },
-
-    {
-      import = [[spec]]
-    }
-  },
-
+require [[lazy]].setup([[spec]], {
   performance = {
     rtp = {
       disabled_plugins = {
