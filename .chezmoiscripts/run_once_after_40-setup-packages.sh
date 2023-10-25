@@ -12,6 +12,15 @@ for pkgs in "${flatpak_pkgs[@]}"; do
   flatpak install -y flathub "$pkgs"
 done
 
+sudo dnf install -y \
+  kitty
+  
+sudo dnf install -y \
+  gnome-tweaks
+  
+sudo dnf install -y \
+  adw-gtk3-theme
+
 sudo dnf groupinstall -y \
   development-libs
  
@@ -21,6 +30,38 @@ sudo dnf groupinstall -y \
 sudo dnf groupinstall -y \
   gnome-software-development
 
+sudo dnf install -y \
+  neovim
+
+sudo dnf install -y \
+  npm
+
+# https://copr.fedorainfracloud.org/coprs/agriffis/neovim-nightly/
+sudo dnf copr enable -y \
+  agriffis/neovim-nightly 
+
+sudo npm install -g \
+  neovim
+
+# https://github.com/neovim/pynvim/issues/478
+pip install \
+  pynvim
+
+sudo dnf install -y \
+  ruby
+
+sudo dnf install -y \
+  ruby-devel
+
+gem install \
+  neovim
+
+sudo dnf install -y \
+  cpan
+
+sudo cpan shell perl -MCPAN -e shell install \
+  Neovim::Ext
+  
 sudo dnf install -y \
   make
 
@@ -35,7 +76,7 @@ sudo dnf install -y \
 
 sudo dnf install -y \
   clang-tools-extra
-  
+
 # build2 | C/C++ Build Toolchain
 # 
 if ! command -v b > /dev/null 2>&1; then
