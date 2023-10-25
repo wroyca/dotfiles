@@ -30,15 +30,15 @@ sudo dnf groupinstall -y \
 sudo dnf groupinstall -y \
   gnome-software-development
 
+# https://copr.fedorainfracloud.org/coprs/agriffis/neovim-nightly/
+sudo dnf copr enable -y \
+  agriffis/neovim-nightly 
+
 sudo dnf install -y \
   neovim
 
 sudo dnf install -y \
   npm
-
-# https://copr.fedorainfracloud.org/coprs/agriffis/neovim-nightly/
-sudo dnf copr enable -y \
-  agriffis/neovim-nightly 
 
 sudo npm install -g \
   neovim
