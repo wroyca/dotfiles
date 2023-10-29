@@ -1,18 +1,18 @@
 ---@type LazyPluginSpec
 return {
   [[kevinhwang91/nvim-fundo]],
-  lazy = false,
-  build = function()
-    require [[fundo]].install()
-  end,
+  name = [[fundo]],
+  event = [[BufReadPost]],
 
   opts = {
     limit_archives_size = 9999
   },
 
-  -- BUG: Normally, lazy.nvim handles this automatically, but with fundo, it
-  -- doesn't work as expected unless we explicitly provide 'opts' during
-  -- setup.
+  build = function()
+    require [[fundo]].install()
+  end,
+
+  -- BUG: Lazy.nvim doesn't automatically pass opts for this plugin.
   config = function(_, opts)
     require [[fundo]].setup(opts)
   end

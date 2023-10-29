@@ -1,10 +1,14 @@
 ---@type LazyPluginSpec
 return {
   [[nvimdev/lspsaga.nvim]],
+  name = [[lspsaga]],
   event = [[LspAttach]],
 
   opts = {
     lightbulb = {
+      enable = false
+    },
+    symbol_in_winbar = {
       enable = false
     },
     ui = {
@@ -125,7 +129,6 @@ return {
       [[<cmd>Lspsaga show_workspace_diagnostics<cr>]],
       desc = [[Show Workspace Diagnostics]]
     },
-
     -- BUG: crash clangd.
     --
     --{
@@ -133,7 +136,6 @@ return {
     --  [[<cmd>Lspsaga incoming_calls<cr>]],
     --  desc = [[Incoming Calls]]
     --},
-
     {
       [[<leader>lC]],
       [[<cmd>Lspsaga outgoing_calls<cr>]],

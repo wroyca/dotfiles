@@ -1,4 +1,4 @@
-if vim.g.clangd then
+if vim.g.clangd_c then
   return
 end
 
@@ -71,7 +71,7 @@ vim.schedule(function()
     end
   }
 
-  require [[detail.util]].try_add_wrapper(lsp_config.clangd, [[cpp]])
+  require [[detail.util]].try_add_wrapper(lsp_config.clangd, [[c]])
 end)
 
-vim.g.clangd = true
+vim.g.clangd_c = true

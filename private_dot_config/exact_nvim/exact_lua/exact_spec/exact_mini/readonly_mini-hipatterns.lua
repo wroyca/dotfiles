@@ -12,6 +12,11 @@ return {
           group = 'MiniHipatternsFixme'
         },
 
+        bug = {
+          pattern = '%f[%w]()BUG()%f[%W]',
+          group = 'MiniHipatternsFixme'
+        },
+
         hack = {
           pattern = '%f[%w]()HACK()%f[%W]',
           group = 'MiniHipatternsHack'

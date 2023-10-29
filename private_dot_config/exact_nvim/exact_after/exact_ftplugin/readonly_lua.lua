@@ -2,8 +2,8 @@ if vim.g.lua_ls then
   return
 end
 
--- Initiating third-party process is a potentially blocking task, so await
--- event loop availability.
+-- Third-party process are potentially blocking, so await event loop
+-- availability.
 --
 vim.schedule(function()
   local lsp_config = require [[lspconfig]]
@@ -20,9 +20,9 @@ vim.schedule(function()
     vim.api.nvim_create_autocmd([[LspAttach]], {
       callback = function()
         require [[neodev]].setup()
+        require [[neogen]].setup()
         vim.api.nvim_create_autocmd([[InsertCharPre]], {
           callback = function()
-            require [[neogen]].setup({})
             require [[cmp_nvim_lua]]
             require [[cmp_nvim_lsp_document_symbol]]
             require [[cmp_nvim_lsp_signature_help]]

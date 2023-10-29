@@ -32,6 +32,7 @@ vim.o.smartindent    = true
 vim.o.smarttab       = true
 vim.o.preserveindent = true
 vim.o.cursorline     = true
+vim.o.conceallevel   = 3
 vim.o.winblend       = 0
 vim.o.tabstop        = 2
 vim.o.shiftwidth     = 2
@@ -56,7 +57,7 @@ if not vim.loop.fs_stat(lazypath) then
     [[--filter=blob:none]],
     [[https://github.com/folke/lazy.nvim.git]],
     [[--branch=stable]], -- latest stable release
-    lazypath,
+    lazypath
   })
 end
 vim.opt.rtp:prepend(lazypath)
@@ -102,11 +103,13 @@ require [[lazy]].setup([[spec]], {
 
   defaults = {
     lazy = true,
-    version = false,
+    version = false
   },
 
   install = {
-    colorscheme = { [[randomhue]] },
+    colorscheme = {
+      [[randomhue]]
+    }
   },
 
   ui = {
@@ -117,5 +120,3 @@ require [[lazy]].setup([[spec]], {
     enabled = false
   }
 })
-
--- vim:fileencoding=utf-8:foldmethod=marker

@@ -1,5 +1,6 @@
 ---@type LazyPluginSpec
 return {
+  ---@diagnostic disable-next-line: assign-type-mismatch
   {
     [[echasnovski/mini.pick]],
     enabled = false

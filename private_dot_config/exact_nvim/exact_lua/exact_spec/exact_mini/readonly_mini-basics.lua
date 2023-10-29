@@ -11,7 +11,7 @@ return {
     },
 
     mappings = {
-      basic = true,
+      basic = false,
       option_toggle_prefix = [[\]],
       windows = true
     },

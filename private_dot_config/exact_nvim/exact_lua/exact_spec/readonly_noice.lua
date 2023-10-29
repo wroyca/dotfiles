@@ -1,11 +1,12 @@
 ---@type LazyPluginSpec
 return {
   [[folke/noice.nvim]],
-  event = [[VeryLazy]],
+  name = [[noice]],
+  event = [[LspAttach]],
 
   opts = {
     cmdline = {
-      enabled = false,
+      enabled = false
     },
 
     messages = {

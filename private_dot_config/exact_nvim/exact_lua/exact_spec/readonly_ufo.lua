@@ -1,12 +1,17 @@
 ---@type LazyPluginSpec
 return {
   [[kevinhwang91/nvim-ufo]],
-  event = [[VeryLazy]],
+  name = [[ufo]],
+  event = [[BufReadPost]],
+
   opts = {
     provider_selector = function(_, _, _)
-      -- NOTE: LSP folding range requests are very slow, whereas treesitter
-      -- is instantaneous, even with larger files.
-      return { [[treesitter]], [[indent]] }
+      -- PERF: Prefer treesiter over LSP's folding range requests.
+      --
+      return {
+        [[treesitter]],
+        [[indent]]
+      }
     end
   }
 }
