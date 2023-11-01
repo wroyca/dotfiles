@@ -5,6 +5,20 @@ local _ = string.format([[
 (  /  |        / | \                                    * .  ' .  .-+-
  \(_)_%s      /  |  \                                *   *  .   .]], "]]")
 
+vim.api.nvim_create_autocmd([[colorscheme]], {
+  pattern = "*",
+  callback = function()
+    -- This only run when event loop is available.
+    vim.schedule(function()
+      -- Force undercurl diagnostics on every colorscheme.
+      vim.cmd [[highlight DiagnosticUnderlineError gui=undercurl]]
+      vim.cmd [[highlight DiagnosticUnderlineWarn  gui=undercurl]]
+      vim.cmd [[highlight DiagnosticUnderlineInfo  gui=undercurl]]
+      vim.cmd [[highlight DiagnosticUnderlineHint  gui=undercurl]]
+    end)
+  end
+})
+
 vim.g.mapleader      = [[ ]]
 vim.g.localmapleader = [[,]]
 vim.o.clipboard      = [[unnamedplus]]

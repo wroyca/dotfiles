@@ -3,7 +3,7 @@ return {
 --{ import = [[spec.mini.mini-ai]] },
 --{ import = [[spec.mini.mini-align]] },
 --{ import = [[spec.mini.mini-animate]] },
---{ import = [[spec.mini.mini-base16]] },
+  { import = [[spec.mini.mini-base16]] },
   { import = [[spec.mini.mini-basics]] },
 --{ import = [[spec.mini.mini-bracketed]] },
 --{ import = [[spec.mini.mini-bufremove]] },
