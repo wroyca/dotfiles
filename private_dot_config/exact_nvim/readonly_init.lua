@@ -63,6 +63,16 @@ vim.opt.suffixes     = vim.opt.suffixes - [[.h]]
 vim.opt.cinkeys      : remove([[:]])
 vim.opt.indentkeys   : remove([[:]])
 
+if vim.g.neovide then
+  vim.o.guifont = [[MonoLisa:h14]]
+  vim.o.linespace = 15
+  vim.g.neovide_scale_factor = [[1.3]]
+  vim.g.neovide_underline_automatic_scaling = true
+  vim.api.nvim_set_keymap([[n]], [[<C-+>]], [[:lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1<CR>]], { silent = true })
+  vim.api.nvim_set_keymap([[n]], [[<C-->]], [[:lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.1<CR>]], { silent = true })
+  vim.api.nvim_set_keymap([[n]], [[<C-0>]], [[:lua vim.g.neovide_scale_factor = 1<CR>]], { silent = true })
+end
+
 local lazypath = vim.fn.stdpath([[data]]) .. [[/lazy/lazy.nvim]]
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({

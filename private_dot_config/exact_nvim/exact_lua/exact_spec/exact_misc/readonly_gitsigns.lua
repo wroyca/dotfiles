@@ -13,7 +13,7 @@ return {
           text = [[┃]]
         },
         untracked = {
-          text = [[┃]]
+          text = [[]]
         },
         change = {
           text = [[┃]]
