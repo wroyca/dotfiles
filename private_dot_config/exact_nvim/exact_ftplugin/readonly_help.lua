@@ -1,3 +1,3 @@
--- Treesitter highlight for vimhelp.
---
-vim.treesitter.start()
+if pcall(require, [[nvim-treesitter]]) then
+  vim.treesitter.start()
+end

@@ -2,13 +2,10 @@
 return {
   [[nvim-treesitter/nvim-treesitter]],
   name = [[treesitter]],
+  event = [[VeryLazy]],
 
   opts = {
-    auto_install = true,
-    ensure_installed = {
-      [[markdown]],
-      [[markdown_inline]]
-    },
+    ensure_installed = [[all]],
     indent = {
       enable = false
     },
@@ -18,11 +15,8 @@ return {
   },
 
   init = function(plugin)
-    ---PERF: Some plugins load treesitter when they only
-    ---require query predicates.
-    ---
-    require("lazy.core.loader").add_to_rtp(plugin)
-    require("nvim-treesitter.query_predicates")
+    require [[lazy.core.loader]].add_to_rtp(plugin)
+    require [[nvim-treesitter.query_predicates]]
   end,
 
   config = function(_, opts)

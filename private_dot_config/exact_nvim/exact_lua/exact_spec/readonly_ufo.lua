@@ -6,8 +6,6 @@ return {
 
   opts = {
     provider_selector = function(_, _, _)
-      -- PERF: Prefer treesiter over LSP's folding range requests.
-      --
       return {
         [[treesitter]],
         [[indent]]

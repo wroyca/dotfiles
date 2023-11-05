@@ -10,10 +10,5 @@ return {
 
   build = function()
     require [[fundo]].install()
-  end,
-
-  -- BUG: Lazy.nvim doesn't automatically pass opts for this plugin.
-  config = function(_, opts)
-    require [[fundo]].setup(opts)
   end
 }

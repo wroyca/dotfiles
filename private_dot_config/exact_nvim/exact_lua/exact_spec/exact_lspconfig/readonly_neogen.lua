@@ -1,4 +1,4 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.hues]]
+  [[danymat/neogen]]
 }

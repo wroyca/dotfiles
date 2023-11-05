@@ -19,6 +19,8 @@ vim.api.nvim_create_autocmd([[colorscheme]], {
   end
 })
 
+vim.cmd [[colorscheme noir]]
+
 vim.g.mapleader      = [[ ]]
 vim.g.localmapleader = [[,]]
 vim.o.clipboard      = [[unnamedplus]]
@@ -59,18 +61,18 @@ vim.o.foldlevel      = 99
 vim.o.foldlevelstart = 99
 vim.o.foldenable     = true
 vim.o.list           = true
+vim.o.guifont        = [[MonoLisa:h14]]
+vim.o.linespace      = 15
 vim.opt.suffixes     = vim.opt.suffixes - [[.h]]
 vim.opt.cinkeys      : remove([[:]])
 vim.opt.indentkeys   : remove([[:]])
 
 if vim.g.neovide then
-  vim.o.guifont = [[MonoLisa:h14]]
-  vim.o.linespace = 15
   vim.g.neovide_scale_factor = [[1.3]]
   vim.g.neovide_underline_automatic_scaling = true
-  vim.api.nvim_set_keymap([[n]], [[<C-+>]], [[:lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1<CR>]], { silent = true })
-  vim.api.nvim_set_keymap([[n]], [[<C-->]], [[:lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.1<CR>]], { silent = true })
-  vim.api.nvim_set_keymap([[n]], [[<C-0>]], [[:lua vim.g.neovide_scale_factor = 1<CR>]], { silent = true })
+  vim.api.nvim_set_keymap([[n]], [[<C-ScrollWheelUp>]],   [[:lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1<CR>]], { silent = true })
+  vim.api.nvim_set_keymap([[n]], [[<C-ScrollWheelDown>]], [[:lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.1<CR>]], { silent = true })
+  vim.api.nvim_set_keymap([[n]], [[<C-MiddleMouse>]],     [[:lua vim.g.neovide_scale_factor = 1.3<CR>]], { silent = true })
 end
 
 local lazypath = vim.fn.stdpath([[data]]) .. [[/lazy/lazy.nvim]]
@@ -86,6 +88,8 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+require [[cfg.keys]].setup()
+require [[cfg.cmds]].setup()
 require [[lazy]].setup([[spec]], {
   performance = {
     rtp = {
@@ -132,12 +136,12 @@ require [[lazy]].setup([[spec]], {
 
   install = {
     colorscheme = {
-      [[randomhue]]
+      [[noir]]
     }
   },
 
   ui = {
-    border = [[double]]
+    border = [[single]]
   },
 
   change_detection = {

@@ -3,12 +3,12 @@ return {
 --{ import = [[spec.mini.mini-ai]] },
 --{ import = [[spec.mini.mini-align]] },
 --{ import = [[spec.mini.mini-animate]] },
-  { import = [[spec.mini.mini-base16]] },
+--{ import = [[spec.mini.mini-base16]] },
   { import = [[spec.mini.mini-basics]] },
 --{ import = [[spec.mini.mini-bracketed]] },
 --{ import = [[spec.mini.mini-bufremove]] },
-  { import = [[spec.mini.mini-clue]] },
-  { import = [[spec.mini.mini-colors]] },
+--{ import = [[spec.mini.mini-clue]] },
+--{ import = [[spec.mini.mini-colors]] },
   { import = [[spec.mini.mini-comment]] },
 --{ import = [[spec.mini.mini-completion]] },
 --{ import = [[spec.mini.mini-cursorword]] },
@@ -16,7 +16,7 @@ return {
   { import = [[spec.mini.mini-files]] },
 --{ import = [[spec.mini.mini-fuzzy]] },
   { import = [[spec.mini.mini-hipatterns]] },
-  { import = [[spec.mini.mini-hues]] },
+--{ import = [[spec.mini.mini-hues]] },
 --{ import = [[spec.mini.mini-indentscope]] },
 --{ import = [[spec.mini.mini-jump]] },
 --{ import = [[spec.mini.mini-jump2d]] },
@@ -32,5 +32,5 @@ return {
   { import = [[spec.mini.mini-tabline]] },
 --{ import = [[spec.mini.mini-test]] },
 --{ import = [[spec.mini.mini-trailspace]] },
-  { import = [[spec.mini.mini-pick]] }
+--{ import = [[spec.mini.mini-pick]] }
 }

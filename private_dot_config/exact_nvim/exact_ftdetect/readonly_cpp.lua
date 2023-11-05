@@ -9,12 +9,7 @@ vim.api.nvim_create_autocmd({
     "*.hxx",
     "*.ixx",
     "*.txx",
-    "*.mxx",
-    "*.cxx.in",
-    "*.hxx.in",
-    "*.ixx.in",
-    "*.txx.in",
-    "*.mxx.in",
+    "*.mxx"
   },
   callback = function()
     vim.cmd [[set filetype=cpp]]

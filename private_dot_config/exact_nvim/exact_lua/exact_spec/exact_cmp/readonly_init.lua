@@ -9,6 +9,7 @@ return {
 --{ import = [[spec.cmp.cmp-git]] },
 --{ import = [[spec.cmp.cmp-latex-symbols]] },
 --{ import = [[spec.cmp.cmp-look]] },
+--{ import = [[spec.cmp.cmp-luasnip]] },
   { import = [[spec.cmp.cmp-nvim-lsp]] },
   { import = [[spec.cmp.cmp-nvim-lsp-document-symbol]] },
   { import = [[spec.cmp.cmp-nvim-lsp-signature-help]] },

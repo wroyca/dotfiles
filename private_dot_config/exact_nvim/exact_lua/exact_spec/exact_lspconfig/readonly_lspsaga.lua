@@ -2,15 +2,16 @@
 return {
   [[nvimdev/lspsaga.nvim]],
   name = [[lspsaga]],
-  event = [[LspAttach]],
 
   opts = {
     lightbulb = {
       enable = false
     },
+
     symbol_in_winbar = {
       enable = false
     },
+
     ui = {
       border = [[double]]
     }

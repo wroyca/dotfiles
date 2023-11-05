@@ -7,7 +7,7 @@ return {
     options = {
       basic = false,
       extra_ui = false,
-      win_borders = [[double]]
+      win_borders = [[single]]
     },
 
     mappings = {
