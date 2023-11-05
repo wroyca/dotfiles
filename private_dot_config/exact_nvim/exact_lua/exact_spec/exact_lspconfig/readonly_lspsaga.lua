@@ -173,7 +173,8 @@ return {
         vim.lsp.buf.format {
           async = true
         }
-      end
+      end,
+      mode = {[[n]], [[v]]}
     }
   }
 }
