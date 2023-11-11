@@ -48,9 +48,10 @@ sudo dnf install -y \
 
 # build2 | C/C++ Build Toolchain
 #
-cd ~
-mkdir Projects && cd Projects
 if ! command -v b > /dev/null 2>&1; then
+  cd ~
+  mkdir Projects && cd Projects
+
   # Parse href to obtain the most recent version.
   #
   v=$(curl -s  'https://stage.build2.org/0/' | \
