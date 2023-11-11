@@ -29,4 +29,3 @@ sudo dnf install -y \
 
 sudo dnf group upgrade -y \
   Multimedia --with-optional --allowerasing
-

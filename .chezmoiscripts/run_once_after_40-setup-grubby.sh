@@ -11,4 +11,4 @@
 # See also 
 # https://www.spinics.net/lists/fedora-devel/msg314320.html
 #
-sudo grubby --args="preempt=full" --update-kernel=ALL 
+sudo grubby --args="preempt=full" --update-kernel=ALL

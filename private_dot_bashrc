@@ -41,7 +41,7 @@ source ~/.local/share/blesh/ble.sh
 # - When changing directory small typos can be ignored by bash.
 # - Do not complete when readline buf is empty.
 # - Extended glob (3.5.8.1) & find-all-glob with **.
-# - Hashtable the commands!
+# - Hashtable commands.
 # - Winsize.
 #
 shopt -s \
@@ -55,5 +55,4 @@ shopt -s \
     checkhash \
     checkwinsize
 HISTIGNORE='&:[bf]g:exit'
-HISTCONTROL='ignorespace'
-
+HISTCONTROL='ignoreboth:erasedups'

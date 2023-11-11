@@ -28,4 +28,16 @@ if ! grep -q "XWAYLAND_NO_GLAMOR=1" /etc/environment; then
   echo "XWAYLAND_NO_GLAMOR=1" | sudo tee -a /etc/environment > /dev/null
 fi
 
+# There have been issues lately with Fedora "default" mirror, so let's adjust
+# dnf's minimum rate appropriately.
+#
+if ! grep -q "fastestmirror=1" /etc/dnf/dnf.conf; then
+  echo "fastestmirror=1" |\
+    sudo tee -a /etc/dnf/dnf.conf > /dev/null
 
+  echo "minrate=30k" |\
+    sudo tee -a /etc/dnf/dnf.conf > /dev/null
+
+  echo "max_parallel_downloads=10" |\
+    sudo tee -a /etc/dnf/dnf.conf > /dev/null
+fi
