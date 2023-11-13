@@ -5,7 +5,7 @@ return {
   opts = function()
     return {
       preview_config = {
-        border = [[double]]
+        border = [[single]]
       },
 
       signs = {
@@ -25,7 +25,7 @@ return {
           text = [[┃]]
         },
         changedelete = {
-          text = [[╋]]
+          text = [[┃]]
         }
       },
 
