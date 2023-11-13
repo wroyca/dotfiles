@@ -5,20 +5,6 @@ local _ = string.format([[
 (  /  |        / | \                                    * .  ' .  .-+-
  \(_)_%s      /  |  \                                *   *  .   .]], "]]")
 
-vim.api.nvim_create_autocmd([[colorscheme]], {
-  pattern = "*",
-  callback = function()
-    -- This only run when event loop is available.
-    vim.schedule(function()
-      -- Force undercurl diagnostics on every colorscheme.
-      vim.cmd [[highlight DiagnosticUnderlineError gui=undercurl]]
-      vim.cmd [[highlight DiagnosticUnderlineWarn  gui=undercurl]]
-      vim.cmd [[highlight DiagnosticUnderlineInfo  gui=undercurl]]
-      vim.cmd [[highlight DiagnosticUnderlineHint  gui=undercurl]]
-    end)
-  end
-})
-
 vim.cmd [[colorscheme noir]]
 
 vim.g.mapleader      = [[ ]]
@@ -70,6 +56,9 @@ vim.opt.indentkeys   : remove([[:]])
 if vim.g.neovide then
   vim.g.neovide_scale_factor = [[1.3]]
   vim.g.neovide_underline_automatic_scaling = true
+  vim.g.neovide_no_idle = true
+  vim.g.neovide_refresh_rate_idle = 60
+  vim.g.neovide_floating_shadow = false
   vim.api.nvim_set_keymap([[n]], [[<C-ScrollWheelUp>]],   [[:lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1<CR>]], { silent = true })
   vim.api.nvim_set_keymap([[n]], [[<C-ScrollWheelDown>]], [[:lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.1<CR>]], { silent = true })
   vim.api.nvim_set_keymap([[n]], [[<C-MiddleMouse>]],     [[:lua vim.g.neovide_scale_factor = 1.3<CR>]], { silent = true })
