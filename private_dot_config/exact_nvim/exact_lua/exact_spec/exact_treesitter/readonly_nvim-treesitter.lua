@@ -2,10 +2,9 @@
 return {
   [[nvim-treesitter/nvim-treesitter]],
   name = [[treesitter]],
-  event = [[VeryLazy]],
+  build = [[:TSInstall all]],
 
   opts = {
-    ensure_installed = [[all]],
     indent = {
       enable = false
     },
