@@ -14,11 +14,11 @@ return {
   ---@diagnostic disable-next-line: assign-type-mismatch
   config = {
     set_dark_mode = function()
-      vim.cmd([[Colorscheme noir]])
+      vim.cmd([[Colorscheme dark]])
     end,
 
     set_light_mode = function()
-      vim.cmd([[Colorscheme blanc]])
+      vim.cmd([[Colorscheme light]])
     end
   }
 }

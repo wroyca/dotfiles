@@ -5,7 +5,19 @@ local _ = string.format([[
 (  /  |        / | \                                    * .  ' .  .-+-
  \(_)_%s      /  |  \                                *   *  .   .]], "]]")
 
-vim.cmd [[colorscheme noir]]
+if vim.loop.os_uname().sysname == "Linux" then
+  local handle = io.popen("gdbus call --session"
+  .. " --dest=org.freedesktop.portal.Desktop"
+  .. " --object-path=/org/freedesktop/portal/desktop"
+  .. " --method=org.freedesktop.portal.Settings.Read"
+  .. " org.freedesktop.appearance color-scheme")
+  if string.match(handle:read('*a'), ' %d') == " 1" then
+    vim.cmd [[colorscheme dark]]
+  else
+    vim.cmd [[colorscheme light]]
+  end
+  handle:close()
+end
 
 vim.g.mapleader      = [[ ]]
 vim.g.localmapleader = [[,]]
@@ -47,8 +59,7 @@ vim.o.foldlevel      = 99
 vim.o.foldlevelstart = 99
 vim.o.foldenable     = true
 vim.o.list           = true
-vim.o.guifont        = [[MonoLisa:h14]]
-vim.o.linespace      = 15
+vim.o.guifont        = [[MonoLisa Source:h14]]
 vim.opt.suffixes     = vim.opt.suffixes - [[.h]]
 vim.opt.cinkeys      : remove([[:]])
 vim.opt.indentkeys   : remove([[:]])
@@ -121,12 +132,6 @@ require [[lazy]].setup([[spec]], {
   defaults = {
     lazy = true,
     version = false
-  },
-
-  install = {
-    colorscheme = {
-      [[noir]]
-    }
   },
 
   ui = {
