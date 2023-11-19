@@ -25,11 +25,17 @@ end
 ---@param client string
 ---@param ft string
 function M.try_add_wrapper(client, ft)
+  if type(ft) == "string" then
+    ft = {ft}
+  end
   for _, buf in pairs(vim.api.nvim_list_bufs()) do
     if vim.api.nvim_buf_is_loaded(buf) then
       local ftype = vim.api.nvim_get_option_value([[filetype]], { buf = buf })
-      if ftype == ft then
-        client.manager:try_add_wrapper(buf)
+      for _, t in ipairs(ft) do
+        if ftype == t then
+          client.manager:try_add_wrapper(buf)
+          break
+        end
       end
     end
   end

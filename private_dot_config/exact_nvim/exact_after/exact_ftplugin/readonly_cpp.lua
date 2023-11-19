@@ -15,7 +15,6 @@ vim.schedule(function()
     -- setup process.
     vim.api.nvim_create_autocmd([[LspAttach]], {
       callback = function()
-        require [[neogen]].setup()
         vim.api.nvim_create_autocmd([[InsertCharPre]], {
           callback = function()
             require [[cmp_nvim_lua]]
@@ -64,7 +63,7 @@ vim.schedule(function()
   }
 
   -- Manual setup as FileType event is behind BufReadPost event
-  require [[detail.util]].try_add_wrapper(lsp_config.clangd, [[cpp]])
+  require [[detail.util]].try_add_wrapper(lsp_config.clangd, {[[cpp]], [[c]]})
 end)
 
 vim.g.clangd = true
