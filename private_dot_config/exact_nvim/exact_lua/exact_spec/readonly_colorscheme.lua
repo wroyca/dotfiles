@@ -1,6 +1,7 @@
 ---@type LazyPluginSpec
 return {
   [[f-person/auto-dark-mode.nvim]],
+  name = [[colorscheme]],
   lazy = false,
   priority = 1000,
 

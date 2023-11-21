@@ -10,5 +10,9 @@ return {
 
   build = function()
     require [[fundo]].install()
+  end,
+
+  config = function(_, opts)
+    require [[fundo]].setup(opts)
   end
 }
