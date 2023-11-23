@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[hrsh7th/cmp-omni]]
+  [[hrsh7th/cmp-omni]],
+  enabled = false
 }

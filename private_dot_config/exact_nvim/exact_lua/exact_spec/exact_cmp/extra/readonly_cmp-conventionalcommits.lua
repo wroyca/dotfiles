@@ -1,5 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[hrsh7th/cmp-git]],
+  [[davidsierradz/cmp-conventionalcommits]],
   ft = [[gitcommit]]
 }

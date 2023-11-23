@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[hrsh7th/cmp-cmdline]]
+  [[hrsh7th/cmp-cmdline]],
+  event = [[CmdLineEnter]]
 }

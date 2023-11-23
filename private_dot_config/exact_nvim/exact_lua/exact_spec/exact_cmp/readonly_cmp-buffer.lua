@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[hrsh7th/cmp-buffer]]
+  [[hrsh7th/cmp-buffer]],
+  event = [[InsertCharPre]]
 }

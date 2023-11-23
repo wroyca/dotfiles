@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[hrsh7th/cmp-latex-symbols]]
+  [[hrsh7th/cmp-latex-symbols]],
+  enabled = false
 }
