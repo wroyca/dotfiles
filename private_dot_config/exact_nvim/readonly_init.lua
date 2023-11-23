@@ -5,18 +5,21 @@ local _ = string.format([[
 (  /  |        / | \                                    * .  ' .  .-+-
  \(_)_%s      /  |  \                                *   *  .   .]], "]]")
 
-if vim.loop.os_uname().sysname == "Linux" then
-  local handle = io.popen("gdbus call --session"
-  .. " --dest=org.freedesktop.portal.Desktop"
-  .. " --object-path=/org/freedesktop/portal/desktop"
-  .. " --method=org.freedesktop.portal.Settings.Read"
-  .. " org.freedesktop.appearance color-scheme")
-  if string.match(handle:read('*a'), ' %d') == " 1" then
+local h = io.popen([[
+gdbus call --session \
+           --dest=org.freedesktop.portal.Desktop \
+           --object-path=/org/freedesktop/portal/desktop \
+           --method=org.freedesktop.portal.Settings.Read org.freedesktop.appearance color-scheme
+]])
+
+if h ~= nil then
+  if string.match(h:read('*a'), ' %d') == " 1" then
+    h:close()
     vim.cmd [[colorscheme dark]]
   else
+    h:close()
     vim.cmd [[colorscheme light]]
   end
-  handle:close()
 end
 
 vim.g.mapleader      = [[ ]]
@@ -59,21 +62,9 @@ vim.o.foldlevel      = 99
 vim.o.foldlevelstart = 99
 vim.o.foldenable     = true
 vim.o.list           = true
-vim.o.guifont        = [[MonoLisa Source:h14]]
 vim.opt.suffixes     = vim.opt.suffixes - [[.h]]
 vim.opt.cinkeys      : remove([[:]])
 vim.opt.indentkeys   : remove([[:]])
-
-if vim.g.neovide then
-  vim.g.neovide_scale_factor = [[1.3]]
-  vim.g.neovide_underline_automatic_scaling = true
-  vim.g.neovide_no_idle = true
-  vim.g.neovide_refresh_rate_idle = 60
-  vim.g.neovide_floating_shadow = false
-  vim.api.nvim_set_keymap([[n]], [[<C-ScrollWheelUp>]],   [[:lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1<CR>]], { silent = true })
-  vim.api.nvim_set_keymap([[n]], [[<C-ScrollWheelDown>]], [[:lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.1<CR>]], { silent = true })
-  vim.api.nvim_set_keymap([[n]], [[<C-MiddleMouse>]],     [[:lua vim.g.neovide_scale_factor = 1.3<CR>]], { silent = true })
-end
 
 local lazypath = vim.fn.stdpath([[data]]) .. [[/lazy/lazy.nvim]]
 if not vim.loop.fs_stat(lazypath) then
@@ -132,10 +123,6 @@ require [[lazy]].setup([[spec]], {
   defaults = {
     lazy = true,
     version = false
-  },
-
-  ui = {
-    border = [[single]]
   },
 
   change_detection = {
