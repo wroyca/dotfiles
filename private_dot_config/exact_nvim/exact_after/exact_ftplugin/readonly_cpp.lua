@@ -10,12 +10,18 @@ vim.schedule(function()
   -- Prefer Mason, except in cases where the LSP server is locally accessible.
   if vim.fn.executable(lsp_default) == 0 then require [[mason]] end
   if vim.fn.executable(lsp_default) == 1 then
+    -- Neoconf requires setup before passing parameters to LSP setup, distinct
+    -- from directly calling LSP setup—though closely related, they are not the
+    -- same.
+    require [[neoconf]].setup()
+
     -- Prefer on_attach for server-specific settings and LspAttach for tightly
-    -- coupled modules. Note that "LspAttach" event is sent before lspconfig
-    -- setup process.
+    -- coupled modules.
     vim.api.nvim_create_autocmd([[LspAttach]], {
+      once = true,
       callback = function()
         vim.api.nvim_create_autocmd([[InsertCharPre]], {
+          once = true,
           callback = function()
             require [[cmp_nvim_lua]]
             require [[cmp_nvim_lsp_document_symbol]]
@@ -55,14 +61,16 @@ vim.schedule(function()
       [[--header-insertion=never]],
       [[--limit-references=0]],
       [[--limit-results=0]],
-      [[--malloc-trim]],
       [[--parse-forwarding-functions]],
       [[--pch-storage=memory]],
-      [[--rename-file-limit=0]]
+      [[--rename-file-limit=0]],
+
+      -- crashes on MacOS and unsupported on Windows.
+      vim.fn.has("unix") and [[--malloc-trim]] or nil
     }
   }
 
-  -- Manual setup as FileType event is behind BufReadPost event
+  -- Force manual setup as nvim's FileType event is behind BufReadPost
   require [[detail.util]].try_add_wrapper(lsp_config.clangd, {[[cpp]], [[c]]})
 end)
 
