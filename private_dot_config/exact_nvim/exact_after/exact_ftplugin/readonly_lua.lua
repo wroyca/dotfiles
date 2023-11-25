@@ -2,25 +2,29 @@ if vim.g.lua_ls then return end
 
 -- Third-party process are potentially blocking, so await event loop
 -- availability.
+--
 vim.schedule(function()
   local lsp_config = require [[lspconfig]]
   local lsp_default = lsp_config.lua_ls.document_config.default_config.cmd[1]
   local lsp_capabilities = vim.lsp.protocol.make_client_capabilities
 
-  -- Prefer Mason, except in cases where the LSP server is locally accessible.
+  -- Prefer Mason, unless LSP server is provided by the
+  -- system package manager.
+  --
   if vim.fn.executable(lsp_default) == 0 then require [[mason]] end
   if vim.fn.executable(lsp_default) == 1 then
-    -- Neoconf requires setup before passing parameters to LSP setup, distinct
-    -- from directly calling LSP setup—though closely related, they are not the
-    -- same.
+    -- Load context-sensitive modules prior to any LSP event.
+    --
+    require [[lspsaga]]
+    require [[neodev]].setup()
     require [[neoconf]].setup()
 
     -- Prefer on_attach for server-specific settings and LspAttach for tightly
     -- coupled modules.
+    --
     vim.api.nvim_create_autocmd([[LspAttach]], {
       once = true,
       callback = function()
-        require [[neodev]].setup()
         vim.api.nvim_create_autocmd([[InsertCharPre]], {
           once = true,
           callback = function()
@@ -31,7 +35,7 @@ vim.schedule(function()
         })
       end
     })
-  end
+  end -- lspconfig has its own error propagation should it fail
 
   lsp_config.lua_ls.setup {
     capabilities = vim.tbl_deep_extend(
@@ -40,10 +44,12 @@ vim.schedule(function()
 
       -- Gets new ClientCapabilities object describing LSP client
       -- capabilities.
+      --
       lsp_capabilities(),
 
       -- Provide completion candidates during textDocument/completion
       -- request.
+      --
       require [[cmp_nvim_lsp]].default_capabilities()
     ),
 
@@ -60,7 +66,9 @@ vim.schedule(function()
     }
   }
 
-  -- Force manual setup as nvim's FileType event is behind BufReadPost
+  -- Try to attach to available buffers as nvim's FileType event is behind
+  -- BufReadPost
+  --
   require [[detail.util]].try_add_wrapper(lsp_config.lua_ls, [[lua]])
 end)
 
