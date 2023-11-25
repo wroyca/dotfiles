@@ -1,6 +1,7 @@
 ---@type LazyPluginSpec
 return {
   [[echasnovski/mini.files]],
+
   keys = {
     {
       [[<leader>e]],
@@ -19,75 +20,57 @@ return {
     }
   },
 
-  init = function()
-    vim.api.nvim_create_autocmd([[user]], {
-      pattern = [[MiniFilesWindowOpen]],
+  config = function()
+    local b = true
+
+    local f_s = function(fs_entry) return true end
+    local f_h = function(fs_entry) return fs_entry.name ~= [[.DS_Store]] and fs_entry.name ~= [[.git]] and fs_entry.name ~= [[.direnv]] end
+    local s_s = function(fs_entry) return require [[mini.files]].default_sort(fs_entry) end
+    local s_h = function(fs_entry)
+      local p = table.concat(vim.tbl_map(function(t) return t.path end, fs_entry), '\n')
+      local i = nil
+      local o = {}
+
+      i = vim.fn.jobstart({ [[git]], [[check-ignore]], [[--stdin]] }, {
+        stdout_buffered = true, on_stdout = function(_, out) o = out end
+      })
+
+      if i < 1 then return fs_entry end
+
+      vim.fn.chansend(i, p)
+      vim.fn.chanclose(i, [[stdin]])
+      vim.fn.jobwait({ i })
+
+      return require [[mini.files]].default_sort(vim.tbl_filter(function(t)
+        return not vim.tbl_contains(o, t.path)
+      end, fs_entry))
+    end
+
+    local toggle_gitignore = function()
+      b = not b
+      local f = b and f_h or f_s
+      local s = b and s_h or s_s
+      require [[mini.files]].refresh({
+        content = {
+          sort = s,
+          filter = f
+        }
+      })
+    end
+
+    vim.api.nvim_create_autocmd([[User]], {
+      pattern = [[MiniFilesBufferCreate]],
       callback = function(args)
-        local win_id = args.data.win_id
-        vim.api.nvim_win_set_config(win_id, { border = [[single]] })
+        local buf_id = args.data.buf_id
+        vim.keymap.set([[n]], [[g.]], toggle_gitignore, { buffer = buf_id })
       end
     })
 
-    vim.api.nvim_create_autocmd([[BufEnter]], {
-      callback = vim.schedule_wrap(function()
-        local ft = vim.bo.filetype
-        if ft == [[minifiles]] or ft == [[minifiles-help]] then return end
-        require [[mini.files]].close()
-        pcall(vim.api.nvim_set_current_win, vim.api.nvim_get_current_win())
-      end)
+    require [[mini.files]].setup ({
+        content = {
+          filter = f_h,
+          sort = s_h
+        }
     })
-  end,
-
-  opts = {
-    options = {
-      permanent_delete = false,
-      use_as_default_explorer = true,
-    },
-
-    windows = {
-      max_number = 1
-    },
-
-    content = {
-      filter = function(entry)
-        return entry.name ~= [[.DS_Store]]
-            and entry.name ~= [[.git]]
-            and entry.name ~= [[.direnv]]
-      end,
-
-      sort = function(entries)
-        local all_paths = table.concat(vim.tbl_map(function(entry)
-            return entry.path
-          end, entries),
-          '\n'
-        )
-
-        local output_lines = {}
-        local job_id = vim.fn.jobstart({
-          [[git]],
-          [[check-ignore]],
-          [[--stdin]]
-        }, {
-          stdout_buffered = true,
-          on_stdout = function(_, data)
-            output_lines = data
-          end
-        })
-
-        if job_id < 1 then
-          return entries
-        end
-
-        vim.fn.chansend(job_id, all_paths)
-        vim.fn.chanclose(job_id, [[stdin]])
-        vim.fn.jobwait({ job_id })
-
-        return require [[mini.files]].default_sort(vim.tbl_filter(
-          function(entry)
-            return not vim.tbl_contains(output_lines, entry.path)
-          end,
-          entries))
-      end
-    }
-  }
+  end
 }
