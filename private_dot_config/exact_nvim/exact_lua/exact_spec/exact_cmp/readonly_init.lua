@@ -17,6 +17,5 @@ return {
   { import = [[spec.cmp.cmp-path]] },
   { import = [[spec.cmp.cmp-vsnip]] },
 
-  { import = [[spec.cmp.extra.cmp-conventionalcommits]] },
-  { import = [[spec.cmp.extra.cmp-luasnip]] }
+  { import = [[spec.cmp.extra.cmp-conventionalcommits]] }
 }

@@ -16,20 +16,6 @@ return {
       })
     end
 
-    local luasnip_next = cmp.mapping(function(fallback)
-      local luasnip = require [[luasnip]]
-      if luasnip.locally_jumpable(1) then
-        luasnip.jump(1)
-      end
-    end)
-
-    local luasnip_previous = cmp.mapping(function(fallback)
-      local luasnip = require [[luasnip]]
-      if luasnip.locally_jumpable(-1) then
-        luasnip.jump(-1)
-      end
-    end)
-
     return {
       --- List completion sources and their priority.
       sources = cmp.config.sources({
@@ -37,7 +23,6 @@ return {
         { name = [[nvim_lsp_document_symbol]] },
         { name = [[nvim_lsp_signature_help]] },
 
-        { name = [[luasnip]] },
         { name = [[buffer]] }
       }),
 
@@ -71,14 +56,12 @@ return {
 
       snippet = {
         expand = function(args)
-          require [[luasnip]].lsp_expand(args.body)
+          vim.snippet.expand(args.body)
         end
       },
 
       mapping = key.collector():map(
         {
-          { [[@cmp.snip_next]],        luasnip_next, },
-          { [[@cmp.snip_previous]],    luasnip_previous, },
           { [[@cmp.abort]],            cmp.mapping.abort() },
           { [[@cmp.complete]],         cmp.mapping.complete() },
           { [[@cmp.confirm_insert]],   confirm(cmp.ConfirmBehavior.Insert) },
@@ -90,7 +73,6 @@ return {
         }
       ):collect_lhs_table(),
 
-
       formatting = {
         fields = {
           [[abbr]],
@@ -100,11 +82,24 @@ return {
 
         format = function(entry, vim_item)
           pcall(function()
-            local completion_item = entry:get_completion_item() --[[@as lsp.CompletionItem]]
-            if completion_item.detail then
-              vim_item.detail = completion_item.detail
+            local cmp_item = entry:get_completion_item()
+            if entry.source.source.client.name == [[clangd]] and cmp_item.detail then
+              vim_item.menu = cmp_item.detail
             end
           end)
+
+          local item_abbr = vim_item.abbr
+          local win_width = vim.api.nvim_win_get_width(0)
+          local pum_width = 40
+          local max_width = pum_width - 10 or math.floor(win_width * 0.2)
+
+          if #item_abbr > max_width then
+            vim_item.abbr = vim.fn.strcharpart(item_abbr, 0, max_width - 3) .. "..."
+          else
+            vim_item.abbr = item_abbr .. (" "):rep(max_width - #item_abbr)
+          end
+
+          vim.o.pumwidth = pum_width
           return vim_item
         end
       }
