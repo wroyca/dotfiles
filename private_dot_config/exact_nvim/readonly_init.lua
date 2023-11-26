@@ -66,17 +66,6 @@ vim.opt.suffixes     = vim.opt.suffixes - [[.h]]
 vim.opt.cinkeys      : remove([[:]])
 vim.opt.indentkeys   : remove([[:]])
 
-if vim.g.neovide then
-  vim.g.neovide_scale_factor = [[0.3]]
-  vim.g.neovide_underline_automatic_scaling = true
-  vim.g.neovide_no_idle = true
-  vim.g.neovide_refresh_rate_idle = 59
-  vim.g.neovide_floating_shadow = false
-  vim.api.nvim_set_keymap([[n]], [[<C-ScrollWheelUp>]],   [[:lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1<CR>]], { silent = true })
-  vim.api.nvim_set_keymap([[n]], [[<C-ScrollWheelDown>]], [[:lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.1<CR>]], { silent = true })
-  vim.api.nvim_set_keymap([[n]], [[<C-MiddleMouse>]],     [[:lua vim.g.neovide_scale_factor = 1.3<CR>]], { silent = true })
-end
-
 local lazypath = vim.fn.stdpath([[data]]) .. [[/lazy/lazy.nvim]]
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
@@ -92,6 +81,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require [[cfg.keys]].setup()
 require [[cfg.cmds]].setup()
+
 require [[lazy]].setup([[spec]], {
   performance = {
     rtp = {
