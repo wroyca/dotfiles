@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.align]]
+  [[echasnovski/mini.align]],
+  enabled = false
 }

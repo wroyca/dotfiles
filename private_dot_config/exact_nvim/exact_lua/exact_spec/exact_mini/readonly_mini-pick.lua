@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.pick]]
+  [[echasnovski/mini.pick]],
+  enabled = false
 }

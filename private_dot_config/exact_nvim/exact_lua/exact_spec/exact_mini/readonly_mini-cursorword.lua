@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.cursorword]]
+  [[echasnovski/mini.cursorword]],
+  enabled = false
 }

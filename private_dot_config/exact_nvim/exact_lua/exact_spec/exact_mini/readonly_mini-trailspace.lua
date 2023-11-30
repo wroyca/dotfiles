@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.trailspace]]
+  [[echasnovski/mini.trailspace]],
+  enabled = false
 }

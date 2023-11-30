@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.surround]]
+  [[echasnovski/mini.surround]],
+  enabled = false
 }

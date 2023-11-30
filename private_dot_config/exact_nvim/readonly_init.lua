@@ -30,7 +30,7 @@ vim.api.nvim_create_autocmd([[User]], {
   callback = function()
     vim.o.shada = shada
     pcall(vim.cmd.rshada, { bang = true })
-  end
+  end,
 })
 
 vim.g.mapleader      = [[ ]]
@@ -93,7 +93,6 @@ vim.opt.rtp:prepend(lazypath)
 
 require [[cfg.keys]].setup()
 require [[cfg.cmds]].setup()
-
 require [[lazy]].setup([[spec]], {
   performance = {
     rtp = {

@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.ai]]
+  [[echasnovski/mini.ai]],
+  enabled = false
 }

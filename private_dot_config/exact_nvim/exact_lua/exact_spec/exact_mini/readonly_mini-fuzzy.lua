@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.fuzzy]]
+  [[echasnovski/mini.fuzzy]],
+  enabled = false
 }

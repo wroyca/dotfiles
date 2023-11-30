@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.indentscope]]
+  [[echasnovski/mini.indentscope]],
+  enabled = false
 }

@@ -1,5 +1,5 @@
 ---@type LazyPluginSpec
 return {
   [[hrsh7th/cmp-calc]],
-  event = [[InsertCharPre]]
+  enabled = false
 }

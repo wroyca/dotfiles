@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.doc]]
+  [[echasnovski/mini.doc]],
+  enabled = false
 }

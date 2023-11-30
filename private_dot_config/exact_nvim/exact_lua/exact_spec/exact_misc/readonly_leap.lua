@@ -2,6 +2,7 @@
 ---@diagnostic disable: missing-fields, assign-type-mismatch
 return {
   [[ggandor/leap.nvim]],
+  name = [[leap]],
   keys = {
     {
       [[s]],

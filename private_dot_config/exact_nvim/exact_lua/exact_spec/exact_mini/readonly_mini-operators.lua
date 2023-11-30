@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.operators]]
+  [[echasnovski/mini.operators]],
+  enabled = false
 }

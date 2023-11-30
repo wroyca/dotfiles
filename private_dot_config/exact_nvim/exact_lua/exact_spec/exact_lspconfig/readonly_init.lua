@@ -1,7 +1,4 @@
----@type LazySpec
+---@type LazyPluginSpec
 return {
-  { import = [[spec.lspconfig.lspconfig]] },
-  { import = [[spec.lspconfig.extra.lspsaga]] },
-  { import = [[spec.lspconfig.extra.neoconf]] },
-  { import = [[spec.lspconfig.extra.neodev]] }
+  { import = [[spec.lspconfig.extra]] }
 }

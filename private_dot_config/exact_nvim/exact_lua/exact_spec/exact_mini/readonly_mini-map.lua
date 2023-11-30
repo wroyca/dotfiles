@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.map]]
+  [[echasnovski/mini.map]],
+  enabled = false
 }

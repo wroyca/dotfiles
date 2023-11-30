@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[kevinhwang91/promise-async]]
+  [[kevinhwang91/promise-async]],
+  name = [[promise-async]]
 }

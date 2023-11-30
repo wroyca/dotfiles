@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.splitjoin]]
+  [[echasnovski/mini.splitjoin]],
+  enabled = false
 }
