@@ -23,6 +23,15 @@ return {
     }
   },
 
+  -- https://github.com/shaun-mathew/Chameleon.nvim/pull/3
+  {
+    [[wroyca/Chameleon.nvim]],
+    name = [[chameleon]],
+    event = [[VeryLazy]],
+    cond = vim.fn.expand('$TERM') == [[xterm-kitty]] and not vim.g.neovide,
+    config = true
+  },
+
   -- Every now and then, I might desire a change of pace.
   {
     [[miikanissi/modus-themes.nvim]],
