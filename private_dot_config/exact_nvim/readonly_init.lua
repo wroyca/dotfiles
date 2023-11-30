@@ -78,16 +78,16 @@ vim.opt.cinkeys      : remove [[:]]
 vim.opt.indentkeys   : remove [[:]]
 vim.opt.shortmess    : append [[sI]]
 
-local lazypath = vim.fn.stdpath([[data]]) .. [[/lazy/lazy.nvim]]
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
+local lazypath = vim.fn.stdpath [[data]] .. [[/lazy/lazy.nvim]]
+if not vim.uv.fs_stat(lazypath) then
+  vim.system({
     [[git]],
     [[clone]],
     [[--filter=blob:none]],
     [[https://github.com/folke/lazy.nvim.git]],
     [[--branch=stable]], -- latest stable release
     lazypath
-  })
+  }, { text = true }):wait()
 end
 vim.opt.rtp:prepend(lazypath)
 
