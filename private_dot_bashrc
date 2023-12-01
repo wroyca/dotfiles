@@ -55,5 +55,13 @@ shopt -s \
     globstar \
     checkhash \
     checkwinsize
-HISTIGNORE='&:[bf]g:exit'
-HISTCONTROL='ignoreboth:erasedups'
+
+# HISTCONTROL
+#  - Ignore commands that start with a space.
+#  - Ignore duplicate commands.
+#
+# HISTIGNORE
+#  - Command patterns which should not be stored in history.
+#
+export HISTIGNORE="clear:history:[bf]g:exit:date:* --help"
+export HISTCONTROL='ignoreboth:erasedups'
