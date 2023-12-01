@@ -12,6 +12,7 @@ if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
 export PATH
+export PATH="$HOME/.config/emacs/bin:$PATH"
 export EDITOR="$(command -v nvim)"
 export PS1="\[\033[00m\][\u@\h \W\$(branch)]$ "
 
