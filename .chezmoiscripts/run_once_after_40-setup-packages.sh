@@ -28,6 +28,9 @@ sudo dnf groupinstall -y \
 sudo dnf install -y \
   kitty
 
+sudo dnf copr enable -y \
+  agriffis/neovim-nightly
+
 sudo dnf install -y \
   neovim
 
@@ -71,3 +74,9 @@ fi
 if ! command -v cargo > /dev/null 2>&1; then
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 fi
+
+# Download and install neovide.
+#
+if ! command -v neovide > /dev/null 2>&1; then
+  cargo install --git https://github.com/neovide/neovide
+end
