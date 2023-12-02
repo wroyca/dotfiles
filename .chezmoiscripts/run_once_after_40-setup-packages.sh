@@ -79,4 +79,4 @@ fi
 #
 if ! command -v neovide > /dev/null 2>&1; then
   cargo install --git https://github.com/neovide/neovide
-end
+fi
