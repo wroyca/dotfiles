@@ -15,13 +15,16 @@ gdbus call --session \
 if h ~= nil then
   if string.match(h:read('*a'), ' %d') == " 1" then
     h:close()
-    vim.cmd [[colorscheme dark]]
+    vim.o.background=[[dark]]
   else
     h:close()
-    vim.cmd [[colorscheme light]]
+    vim.o.background=[[light]]
   end
 end
-vim.cmd[[set guicursor=n-v-c-sm:block-Cursor,i-ci-ve:ver25-Cursor,r-cr-o:hor20-Cursor]]
+
+if vim.fn.expand([[$TERM]]) == [[xterm-kitty]] and not vim.g.neovide
+  vim.api.nvim_exec2([[set guicursor=n-v-c-sm:block-Cursor,i-ci-ve:ver25-Cursor,r-cr-o:hor20-Cursor]], {})
+end
 
 local shada = vim.o.shada
 vim.o.shada = [[]]
@@ -30,7 +33,7 @@ vim.api.nvim_create_autocmd([[User]], {
   callback = function()
     vim.o.shada = shada
     pcall(vim.cmd.rshada, { bang = true })
-  end,
+  end
 })
 
 vim.g.mapleader      = [[ ]]
