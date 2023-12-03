@@ -18,7 +18,7 @@ sudo dnf install -y \
 
 sudo dnf groupinstall -y \
   development-libs
- 
+
 sudo dnf groupinstall -y \
   development-tools
 
@@ -61,7 +61,7 @@ if ! command -v b > /dev/null 2>&1; then
       grep -oP '(?<=href=")0\.\K\d+\.\d+'    | \
       sort -nr                               | \
       head -1)
-  
+
   # Download and install build2 toolchain with debug symbols.
   #
   curl -O \
@@ -70,13 +70,7 @@ if ! command -v b > /dev/null 2>&1; then
 fi
 
 # Download and install rust toolchain.
-# 
+#
 if ! command -v cargo > /dev/null 2>&1; then
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-fi
-
-# Download and install neovide.
-#
-if ! command -v neovide > /dev/null 2>&1; then
-  cargo install --git https://github.com/neovide/neovide
 fi

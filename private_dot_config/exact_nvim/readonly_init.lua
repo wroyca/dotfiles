@@ -22,7 +22,7 @@ if h ~= nil then
   end
 end
 
-if vim.fn.expand([[$TERM]]) == [[xterm-kitty]] and not vim.g.neovide
+if vim.fn.expand([[$TERM]]) == [[xterm-kitty]] and not vim.g.neovide then
   vim.api.nvim_exec2([[set guicursor=n-v-c-sm:block-Cursor,i-ci-ve:ver25-Cursor,r-cr-o:hor20-Cursor]], {})
 end
 
