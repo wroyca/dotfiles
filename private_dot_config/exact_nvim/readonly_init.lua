@@ -15,10 +15,10 @@ gdbus call --session \
 if h ~= nil then
   if string.match(h:read('*a'), ' %d') == " 1" then
     h:close()
-    vim.o.background=[[dark]]
+    vim.api.nvim_exec2([[colorscheme dark]], {})
   else
     h:close()
-    vim.o.background=[[light]]
+    vim.api.nvim_exec2([[colorscheme light]], {})
   end
 end
 
