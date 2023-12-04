@@ -1,18 +1,19 @@
 ---@type LazyPluginSpec
 return {
   [[hrsh7th/nvim-cmp]],
+  name = [[cmp]],
   event = [[InsertEnter]],
   opts = function()
     local cmp = require [[cmp]]
     local key = require [[detail.key]]
     return {
-      --- List completion sources and their priority.
+      ---@diagnostic disable-next-line: undefined-field
       sources = cmp.config.sources({
         { name = [[nvim_lsp]] },
         { name = [[nvim_lsp_document_symbol]] },
         { name = [[nvim_lsp_signature_help]] },
         { name = [[buffer]] },
-        { name = [[luasnip]] },
+        { name = [[luasnip]] }
       }),
 
       snippet = {
@@ -32,23 +33,32 @@ return {
       mapping = key.collector():map({
         {
           [[@cmp.complete]],
+          ---@diagnostic disable-next-line: undefined-field
           cmp.mapping.complete()
         },
         {
           [[@cmp.confirm_insert]],
+          ---@diagnostic disable-next-line: undefined-field
           cmp.mapping.confirm({
-            behavior = cmp.ConfirmBehavior.Insert, select = true
+            ---@diagnostic disable-next-line: undefined-field
+            behavior = cmp.ConfirmBehavior.Insert,
+            select = true
           })
         },
         {
           [[@cmp.confirm_replace]],
+          ---@diagnostic disable-next-line: undefined-field
           cmp.mapping.confirm({
-            behavior = cmp.ConfirmBehavior.Replace, select = true
+            ---@diagnostic disable-next-line: undefined-field
+            behavior = cmp.ConfirmBehavior.Replace,
+            select = true
           })
         },
         {
           [[@cmp.select_prev_item]],
+          ---@diagnostic disable-next-line: undefined-field
           cmp.mapping.select_prev_item({
+            ---@diagnostic disable-next-line: undefined-field
             behavior = cmp.SelectBehavior.Select
           })
         },

@@ -19,15 +19,15 @@ return {
         end)
       end
     end,
-    config = function(_, opts)
-      local ufo = require [[ufo]]
-      ufo.setup(opts)
-      vim.keymap.set([[n]], [[K]], function()
-        local winid = ufo.peekFoldedLinesUnderCursor()
-        if not winid then
-          vim.lsp.buf.hover()
-        end
-      end)
-    end
-  }
+  },
+  config = function(_, opts)
+    local ufo = require [[ufo]]
+    ufo.setup(opts)
+    vim.keymap.set([[n]], [[K]], function()
+      local winid = ufo.peekFoldedLinesUnderCursor()
+      if not winid then
+        vim.lsp.buf.hover()
+      end
+    end)
+  end
 }
