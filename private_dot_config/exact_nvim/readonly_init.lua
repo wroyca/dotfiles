@@ -22,10 +22,6 @@ if h ~= nil then
   end
 end
 
-if vim.fn.expand([[$TERM]]) == [[xterm-kitty]] and not vim.g.neovide then
-  vim.api.nvim_exec2([[set guicursor=n-v-c-sm:block-Cursor,i-ci-ve:ver25-Cursor,r-cr-o:hor20-Cursor]], {})
-end
-
 local shada = vim.o.shada
 vim.o.shada = [[]]
 vim.api.nvim_create_autocmd([[User]], {
@@ -80,6 +76,7 @@ vim.opt.suffixes     = vim.opt.suffixes - [[.h]]
 vim.opt.cinkeys      : remove [[:]]
 vim.opt.indentkeys   : remove [[:]]
 vim.opt.shortmess    : append [[sI]]
+vim.opt.guicursor    : append [[n-v-c-sm:block-Cursor,i-ci-ve:ver25-Cursor,r-cr-o:hor20-Cursor]]
 
 local lazypath = vim.fn.stdpath [[data]] .. [[/lazy/lazy.nvim]]
 if not vim.uv.fs_stat(lazypath) then

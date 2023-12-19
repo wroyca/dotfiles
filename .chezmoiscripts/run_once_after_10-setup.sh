@@ -30,10 +30,10 @@ sudo dnf install -y \
   xorg-x11-drv-nvidia-cuda
 
 sudo dnf install -y \
-  gstreamer1-plugins-{bad-\*,good-\*,base} 
+  gstreamer1-plugins-{bad-\*,good-\*,base}
 
 sudo dnf install -y \
-  gstreamer1-plugin-openh264 
+  gstreamer1-plugin-openh264
 
 sudo dnf install -y \
   gstreamer1-libav --exclude=gstreamer1-plugins-bad-free-devel

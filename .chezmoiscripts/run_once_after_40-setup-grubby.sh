@@ -6,9 +6,9 @@
 #
 # This allows applications to run smoothly even when the system is under load,
 # at the cost of slighly lower throughput and a slight runtime overhead to
-# kernel code. 
+# kernel code.
 #
-# See also 
+# See also
 # https://www.spinics.net/lists/fedora-devel/msg314320.html
 #
 sudo grubby --args="preempt=full" --update-kernel=ALL

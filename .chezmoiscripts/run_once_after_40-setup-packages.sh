@@ -66,7 +66,7 @@ if ! command -v b > /dev/null 2>&1; then
   #
   curl -O \
     "https://stage.build2.org/0/0.$v-a.0/build2-install-0.$v-a.0-stage.sh"
-  sh build2-install-0.$v-a.0-stage.sh --local --debug
+  sh build2-install-0.$v-a.0-stage.sh --cxx clang++
 fi
 
 # Download and install rust toolchain.
