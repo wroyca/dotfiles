@@ -2,6 +2,7 @@ return {
   [[kevinhwang91/nvim-ufo]],
   name = [[ufo]],
   event = [[VeryLazy]],
+
   opts = {
     provider_selector = function(_, filetype, buftype)
       local function handleFallbackException(bufnr, err, providerName)
@@ -20,6 +21,7 @@ return {
       end
     end,
   },
+
   config = function(_, opts)
     local ufo = require [[ufo]]
     ufo.setup(opts)

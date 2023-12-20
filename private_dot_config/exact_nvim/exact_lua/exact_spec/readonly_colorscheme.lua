@@ -1,6 +1,6 @@
+---@diagnostic disable: assign-type-mismatch
 ---@type LazyPluginSpec
 return {
-  ---@diagnostic disable-next-line: assign-type-mismatch
   {
     [[raddari/last-color.nvim]],
     name = [[colorscheme-last-color]],
@@ -15,13 +15,11 @@ return {
     end
   },
 
-  ---@diagnostic disable-next-line: assign-type-mismatch
   {
     [[f-person/auto-dark-mode.nvim]],
     name = [[colorscheme]],
     event = [[VeryLazy]],
 
-    ---@diagnostic disable-next-line: assign-type-mismatch
     config = {
       set_dark_mode = function()
         vim.o.background = [[dark]]
@@ -30,8 +28,5 @@ return {
         vim.o.background = [[light]]
       end
     }
-  },
-
-  { [[folke/tokyonight.nvim]], name = [[colorscheme-tokyonight]] },
-  { [[catppuccin/nvim]],       name = [[colorscheme-catppuccin]] }
+  }
 }

@@ -1,16 +1,17 @@
+---@diagnostic disable: undefined-field
 ---@type LazyPluginSpec
 return {
   [[hrsh7th/nvim-cmp]],
   name = [[cmp]],
   event = [[InsertEnter]],
+
   opts = function()
     local cmp = require [[cmp]]
-    local key = require [[detail.key]]
     return {
-      ---@diagnostic disable-next-line: undefined-field
       sources = cmp.config.sources({
         { name = [[nvim_lsp]] },
         { name = [[nvim_lsp_document_symbol]] },
+        -- TODO: We just want the signature; we don't need the documentation along with it.
         { name = [[nvim_lsp_signature_help]] },
         { name = [[buffer]] },
         { name = [[luasnip]] }
@@ -30,45 +31,14 @@ return {
         max_view_entries = 64
       },
 
-      mapping = key.collector():map({
-        {
-          [[@cmp.complete]],
-          ---@diagnostic disable-next-line: undefined-field
-          cmp.mapping.complete()
-        },
-        {
-          [[@cmp.confirm_insert]],
-          ---@diagnostic disable-next-line: undefined-field
-          cmp.mapping.confirm({
-            ---@diagnostic disable-next-line: undefined-field
-            behavior = cmp.ConfirmBehavior.Insert,
-            select = true
-          })
-        },
-        {
-          [[@cmp.confirm_replace]],
-          ---@diagnostic disable-next-line: undefined-field
-          cmp.mapping.confirm({
-            ---@diagnostic disable-next-line: undefined-field
-            behavior = cmp.ConfirmBehavior.Replace,
-            select = true
-          })
-        },
-        {
-          [[@cmp.select_prev_item]],
-          ---@diagnostic disable-next-line: undefined-field
-          cmp.mapping.select_prev_item({
-            ---@diagnostic disable-next-line: undefined-field
-            behavior = cmp.SelectBehavior.Select
-          })
-        },
-        {
-          [[@cmp.select_next_item]],
-          cmp.mapping.select_next_item({
-            behavior = cmp.SelectBehavior.Select
-          })
-        }
-      }):collect_lhs_table(),
+      mapping = {
+        ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), { 'i' }),
+        ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), { 'i' }),
+        ['<Tab>'] = cmp.mapping.confirm({
+          behavior = cmp.ConfirmBehavior.Insert,
+          select = true
+        })
+      },
 
       formatting = {
         fields = { [[abbr]], [[menu]], [[kind]] },

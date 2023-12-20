@@ -84,15 +84,13 @@ if not vim.uv.fs_stat(lazypath) then
     [[git]],
     [[clone]],
     [[--filter=blob:none]],
-    [[https://github.com/folke/lazy.nvim.git]],
+    [[https://github.com/wroyca/lazy.nvim.git]],
     [[--branch=stable]], -- latest stable release
     lazypath
   }, { text = true }):wait()
 end
 vim.opt.rtp:prepend(lazypath)
 
-require [[cfg.keys]].setup()
-require [[cfg.cmds]].setup()
 require [[lazy]].setup([[spec]], {
   performance = {
     rtp = {
