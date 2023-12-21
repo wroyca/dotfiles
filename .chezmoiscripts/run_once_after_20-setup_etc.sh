@@ -27,3 +27,9 @@ sudo sed -i \
 if ! grep -q "XWAYLAND_NO_GLAMOR=1" /etc/environment; then
   echo "XWAYLAND_NO_GLAMOR=1" | sudo tee -a /etc/environment > /dev/null
 fi
+
+# Force Qt to request wayland plugin by default.
+#
+if ! grep -q "QT_QPA_PLATFORM=wayland" /etc/environment; then
+  echo "QT_QPA_PLATFORM=wayland" | sudo tee -a /etc/environment > /dev/null
+fi
