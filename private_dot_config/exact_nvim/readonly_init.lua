@@ -85,7 +85,6 @@ if not vim.uv.fs_stat(lazypath) then
     [[clone]],
     [[--filter=blob:none]],
     [[https://github.com/wroyca/lazy.nvim.git]],
-    [[--branch=stable]], -- latest stable release
     lazypath
   }, { text = true }):wait()
 end
