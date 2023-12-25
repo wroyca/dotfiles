@@ -3,12 +3,10 @@
 return {
   [[williamboman/mason.nvim]],
   name = [[mason]],
-  config = true,
 
   build = function()
     local m  = require [[mason]]
     local mr = require [[mason-registry]]
-
     local function ensure_installed()
       for _, tool in ipairs({
         [[clangd]],
@@ -21,11 +19,20 @@ return {
         end
       end
     end
-
     if mr.refresh then
       mr.refresh(ensure_installed)
     else
       ensure_installed()
     end
-  end
+  end,
+
+  opts = {
+    max_concurrent_installers = 10,
+    pip = {
+      upgrade_pip = true
+    },
+    ui = {
+      border = [[single]]
+    }
+  }
 }

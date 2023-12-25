@@ -136,5 +136,14 @@ require [[lazy]].setup([[spec]], {
 
   change_detection = {
     enabled = false
+  },
+
+  ui = {
+    title = [[Lazy]],
+    border = [[single]],
+    size = {
+      width = 0.86,
+      height = 0.86
+    }
   }
 })
