@@ -1,0 +1,24 @@
+{
+  "Main function template":
+  {
+    "prefix": "main",
+    "description": "Designated start of the program in hosted environment.",
+    "body":
+    [
+      "int",
+      "main (int argc, char *argv[])",
+      "{",
+        "\t$1",
+      "}"
+    ]
+  },
+
+  "#include <>":
+  {
+    "prefix": "#include <>",
+    "description": "Source file inclusion",
+    "body": [
+      "#include <$0>"
+    ]
+  }
+}

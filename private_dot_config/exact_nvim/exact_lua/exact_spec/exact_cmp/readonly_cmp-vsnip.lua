@@ -4,8 +4,8 @@ return {
   enabled = false,
   dependencies = {
     {
+      [[hrsh7th/vim-vsnip]],
       name = [[cmp-vim-vsnip]],
-      [[hrsh7th/vim-vsnip]]
     }
   }
 }

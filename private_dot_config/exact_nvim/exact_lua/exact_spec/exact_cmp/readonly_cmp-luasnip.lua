@@ -6,13 +6,8 @@ return {
   dependencies = {
     {
       [[L3MON4D3/LuaSnip]],
-      name = [[cmp-luasnip-core]]
-    },
-    {
-      [[rafamadriz/friendly-snippets]],
-      name = [[cmp-luasnip-snippets]],
+      name = [[cmp-luasnip-engine]],
       config = function()
-        require [[luasnip]].filetype_extend([[cpp]], { [[license]] })
         require [[luasnip.loaders.from_vscode]].lazy_load()
       end
     }
