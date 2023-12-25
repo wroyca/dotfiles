@@ -9,13 +9,17 @@ return {
     local cmp = require [[cmp]]
     return {
       sources = cmp.config.sources({
-        { name = [[nvim_lsp]] },
-        { name = [[nvim_lsp_document_symbol]] },
-        -- TODO: We just want the signature; we don't need the documentation along with it.
-        { name = [[nvim_lsp_signature_help]] },
         { name = [[buffer]] },
-        { name = [[luasnip]] }
-      }),
+        { name = [[luasnip]] },
+        {
+          name = [[nvim_lsp]],
+          entry_filter = function(entry)
+            return cmp.lsp.CompletionItemKind.Snippet ~= entry:get_kind()
+          end
+        },
+        { name = [[nvim_lsp_document_symbol]] },
+        { name = [[nvim_lsp_signature_help]] }
+       }),
 
       snippet = {
         expand = function(args)
