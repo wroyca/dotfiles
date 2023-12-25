@@ -1,4 +1,4 @@
 return {
- [[JoosepAlviste/nvim-ts-context-commentstring]],
- name = [[treesitter-context-commentstring]]
+  [[JoosepAlviste/nvim-ts-context-commentstring]],
+  name = [[treesitter-context-commentstring]]
 }
