@@ -1,3 +1,21 @@
+local fd_opts = {
+  fd_cmd = { 'fd', '-p', '-H', '-L', '-td', '-tf', '-tl', '-d4', '--mount', '-c=never',
+  '-E=*$*',         '-E=*%*',                   '-E=*.bkp',     '-E=*.bz2',     '-E=*.db',     '-E=*.jar',
+  '-E=*.directory', '-E=*.dll',                 '-E=*.doc',     '-E=*.docx',    '-E=*.drawio', '-E=*.otf',
+  '-E=*.gif',       '-E=*.git/',                '-E=*.gz',      '-E=*.ico',     '-E=*.iso',    '-E=*.pptx',
+  '-E=*.jpeg',      '-E=*.jpg',                 '-E=*.mp3',     '-E=*.mp4',     '-E=*.o',      '-E=*.ttf',
+  '-E=*.out',       '-E=*.pdf',                 '-E=*.pickle',  '-E=*.png',     '-E=*.ppt',    '-E=*\\~',
+  '-E=*.pyc',       '-E=*.rar',                 '-E=*.so',      '-E=*.svg',     '-E=*.tar',
+  '-E=*.venv/',     '-E=*.xls',                 '-E=*.xlsx',    '-E=*.zip',     '-E=*Cache*/',
+  '-E=*cache*/',    '-E=.*Cache*/',             '-E=.*cache*/', '-E=.*wine/',   '-E=.cargo/',
+  '-E=.conda/',     '-E=.dot/',                 '-E=.fonts/',   '-E=.ipython/', '-E=.java/',
+  '-E=.jupyter/',   '-E=.luarocks/',            '-E=.mozilla/', '-E=.npm/',     '-E=.nvm/',
+  '-E=.steam*/',    '-E=.thunderbird/',         '-E=.tmp/',     '-E=__pycache__/',
+  '-E=dosdevices/', '-E=events.out.tfevents.*', '-E=node_modules/',
+  '-E=vendor/',     '-E=venv/'
+  }
+}
+
 ---@diagnostic disable: undefined-field
 ---@type LazyPluginSpec
 return {
@@ -19,7 +37,22 @@ return {
         },
         { name = [[nvim_lsp_document_symbol]] },
         { name = [[nvim_lsp_signature_help]] }
-       }),
+      }),
+
+      cmp.setup.cmdline(':', {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = cmp.config.sources({
+          {
+            name = [[fuzzy_path]],
+            option = {
+              fd_timeout_msec = 1500,
+              option = fd_opts
+            }
+          }
+        }, {
+          { name = [[cmdline]] }
+        })
+      }),
 
       snippet = {
         expand = function(args)
@@ -28,11 +61,12 @@ return {
       },
 
       window = {
+        -- https://github.com/clangd/clangd/issues/529
         documentation = false
       },
 
       performance = {
-        max_view_entries = 64
+        max_view_entries = vim.o.pumheight
       },
 
       mapping = {
@@ -47,28 +81,23 @@ return {
       formatting = {
         fields = { [[abbr]], [[menu]], [[kind]] },
         format = function(entry, cmp_item)
-          -- Retrieve completion detail from LSP if available.
           pcall(function()
-            local lsp_item = entry:get_completion_item()
-            if lsp_item.detail then
-              cmp_item.menu = lsp_item.detail
+            local compl_item = entry:get_completion_item()
+            if entry.source.source.client.name == [[clangd]] and compl_item.detail then
+              cmp_item.menu = compl_item.detail
             end
           end)
 
-          -- Trim leading whitespace (e.g. from clangd)
+          cmp_item.dup  = 0
           cmp_item.abbr = string.gsub(cmp_item.abbr, [[^%s+]], [[]])
-
-          -- Remove duplicates
-          cmp_item.dup = 0
+          cmp_item.kind = cmp_item.kind .. [[ ]]
 
           ---@param field string
           ---@param min_width integer
           ---@param max_width integer
           ---@return nil
           local function clamp(field, min_width, max_width)
-            if not cmp_item[field] or not type(cmp_item) == [[string]] then
-              return
-            end
+            if not cmp_item[field] or not type(cmp_item) == [[string]] then return end
             -- In case that min_width > max_width
             if min_width > max_width then
               min_width, max_width = max_width, min_width
@@ -87,8 +116,10 @@ return {
               cmp_item[field] = string.format([[%-]] .. min_width .. [[s]], field_str)
             end
           end
+
           clamp([[abbr]], vim.go.pw, math.max(60, math.ceil(vim.o.columns * 0.4)))
           clamp([[menu]], 0, math.max(16, math.ceil(vim.o.columns * 0.2)))
+
           return cmp_item
         end
       }

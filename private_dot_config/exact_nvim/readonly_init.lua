@@ -64,7 +64,7 @@ vim.o.winblend       = 0
 vim.o.tabstop        = 2
 vim.o.shiftwidth     = 2
 vim.o.scrolloff      = 4
-vim.o.pumheight      = 5
+vim.o.pumheight      = 8
 vim.o.cmdheight      = 1
 vim.o.synmaxcol      = 0
 vim.o.laststatus     = 0
@@ -77,6 +77,7 @@ vim.opt.cinkeys      : remove [[:]]
 vim.opt.indentkeys   : remove [[:]]
 vim.opt.shortmess    : append [[sI]]
 vim.opt.guicursor    : append [[n-v-c-sm:block-Cursor,i-ci-ve:ver25-Cursor,r-cr-o:hor20-Cursor]]
+vim.diagnostic       . config ({ signs = false, virtual_text = false })
 
 local lazypath = vim.fn.stdpath [[data]] .. [[/lazy/lazy.nvim]]
 if not vim.uv.fs_stat(lazypath) then

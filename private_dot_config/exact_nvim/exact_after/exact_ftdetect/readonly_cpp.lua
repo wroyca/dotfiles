@@ -12,6 +12,6 @@ vim.api.nvim_create_autocmd({
     "*.mxx"
   },
   callback = function()
-    vim.cmd [[set filetype=cpp]]
+    vim.api.nvim_exec2 ([[set filetype=cpp]], {})
   end
 })
