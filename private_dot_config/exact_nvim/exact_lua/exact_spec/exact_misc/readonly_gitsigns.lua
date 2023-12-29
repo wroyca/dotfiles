@@ -1,8 +1,7 @@
 local function revision() return vim.fn.input([[(gitsigns) Revision {base}: ]]) end
 local function bufnr() return vim.fn.input([[(gitsigns) Buffer {bufnr}: ]]) end
 local function reset_buffer_index()
-  local choice = vim.fn.confirm(("(gitsigns) this runs an `git reset` on current buffers file. Continue?"),
-    "&Yes\n&No\n&Cancel", 1, "Question")
+  local choice = vim.fn.confirm(("(gitsigns) This runs an `git reset` on current buffers file. Continue?"), "&Yes\n&No\n&Cancel", 1, "Question")
   if choice == 1 then -- Yes
     require [[gitsigns]].reset_buffer_index()
   end

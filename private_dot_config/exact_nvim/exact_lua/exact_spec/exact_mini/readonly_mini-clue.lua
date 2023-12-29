@@ -27,6 +27,16 @@ return {
     },
 
     clues = {
+      { mode = [[n]], keys = [[<leader>l]],    desc = [[Lsp]] },
+      { mode = [[x]], keys = [[<leader>l]],    desc = [[Lsp]] },
+      { mode = [[n]], keys = [[<leader>lw]],   desc = [[Workspace folder]] },
+      { mode = [[x]], keys = [[<leader>lw]],   desc = [[Workspace folder]] },
+      { mode = [[n]], keys = [[<leader>le]],  desc = [[Extract]] },
+      { mode = [[x]], keys = [[<leader>le]],  desc = [[Extract]] },
+      { mode = [[n]], keys = [[<leader>li]],  desc = [[Inline]] },
+      { mode = [[x]], keys = [[<leader>li]],  desc = [[Inline]] },
+
+
       -- Git (sign, neo)
       { mode = [[n]], keys = [[<leader>g]],    desc = [[Git]] },
       { mode = [[x]], keys = [[<leader>g]],    desc = [[Git]] },
@@ -48,8 +58,6 @@ return {
       { mode = [[x]], keys = [[<leader>ghbr]], desc = [[Reset]] },
       { mode = [[n]], keys = [[<leader>ghl]],  desc = [[Line]] },
       { mode = [[x]], keys = [[<leader>ghl]],  desc = [[Line]] },
-
-
 
       -- mini.bufremove
       { mode = [[n]], keys = [[<leader>b]],    desc = [[Buffer]] },
