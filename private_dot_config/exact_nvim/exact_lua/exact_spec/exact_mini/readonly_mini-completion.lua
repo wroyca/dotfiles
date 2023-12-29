@@ -1,5 +1,6 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.completion]],
+  [[mini.completion]],
+  dev = true,
   enabled = false
 }

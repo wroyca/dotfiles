@@ -1,5 +1,6 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.jump2d]],
+  [[mini.jump2d]],
+  dev = true,
   enabled = false
 }

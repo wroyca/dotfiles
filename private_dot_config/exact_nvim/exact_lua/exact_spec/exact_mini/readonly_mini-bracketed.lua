@@ -1,5 +1,7 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.bracketed]],
-  enabled = false
+  [[mini.bracketed]],
+  dev = true,
+  event = [[VeryLazy]],
+  config = true
 }

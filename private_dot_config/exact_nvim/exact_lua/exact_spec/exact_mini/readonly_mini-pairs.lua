@@ -1,5 +1,7 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.pairs]],
-  enabled = false
+  [[mini.pairs]],
+  dev = true,
+  event = [[VeryLazy]],
+  config = true
 }

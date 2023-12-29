@@ -1,6 +1,7 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.ai]],
+  [[mini.ai]],
+  dev = true,
   event = [[VeryLazy]],
 
   opts = function()
@@ -14,7 +15,7 @@ return {
 
         f = ai.gen_spec.treesitter({
           a = { [[@function.outer]] },
-          i = { [[@function.inner]] },
+          i = { [[@function.inner]] }
         }, {}),
 
         c = ai.gen_spec.treesitter({

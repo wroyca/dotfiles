@@ -1,5 +1,6 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.extra]],
+  [[mini.extra]],
+  dev = true,
   config = true
 }

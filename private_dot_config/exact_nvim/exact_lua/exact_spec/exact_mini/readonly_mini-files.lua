@@ -3,17 +3,17 @@ local f
 
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.files]],
-
+  [[mini.files]],
+  dev = true,
   keys = {
     {
-      [[<leader>e]],
+      [[<leader>f]],
       function()
         require [[mini.files]].open(vim.api.nvim_buf_get_name(0))
         require [[mini.files]].reveal_cwd()
         require [[mini.files]].refresh { content = { sort = s, filter = f } }
       end,
-      desc = [[Mini Files]]
+      desc = [[Files]]
     }
   },
 
@@ -23,15 +23,13 @@ return {
         local p = table.concat(vim.iter(fs_entries):map(function(e) return e.path end):totable(), '\n')
         local o = {}
         local i = vim.fn.jobstart({ [[git]], [[check-ignore]], [[--stdin]] }, {
-          stdout_buffered = true,
-          on_stdout = function(_, out)
-            o = out
-          end
+          stdout_buffered = true, on_stdout = function(_, out) o = out end
         })
 
         vim.fn.chansend(i, p)
         vim.fn.chanclose(i, [[stdin]])
         vim.fn.jobwait { i }
+
         return require([[mini.files]]).default_sort(vim.iter(fs_entries):filter(function(e)
           return not vim.tbl_contains(o, e.path)
         end):totable())
@@ -42,8 +40,8 @@ return {
       end
     },
 
-    options = { permanent_delete = false, use_as_default_explorer = true },
-    windows = { max_number = 1 } -- Miller columns suck, sorry.
+    windows = { max_number = 1 },
+    options = { permanent_delete = false, use_as_default_explorer = true }
   },
 
   config = function(_, opts)

@@ -1,5 +1,6 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.hues]],
+  [[mini.hues]],
+  dev = true,
   enabled = false
 }

@@ -1,6 +1,7 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.misc]],
+  [[mini.misc]],
+  dev = true,
   event = [[VeryLazy]],
 
   config = function()

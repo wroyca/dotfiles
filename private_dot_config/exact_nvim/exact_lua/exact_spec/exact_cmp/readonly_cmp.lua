@@ -65,9 +65,9 @@ return {
         documentation = false
       },
 
-      performance = {
-        max_view_entries = vim.o.pumheight
-      },
+      -- performance = {
+      --   max_view_entries = vim.o.pumheight
+      -- },
 
       mapping = {
         ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), { 'i' }),

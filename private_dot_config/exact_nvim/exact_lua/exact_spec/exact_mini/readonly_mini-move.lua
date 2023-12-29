@@ -1,6 +1,7 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.move]],
+  [[mini.move]],
+  dev = true,
   event = [[VeryLazy]],
   config = true
 }

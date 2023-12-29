@@ -1,5 +1,6 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.test]],
+  [[mini.test]],
+  dev = true,
   enabled = false
 }

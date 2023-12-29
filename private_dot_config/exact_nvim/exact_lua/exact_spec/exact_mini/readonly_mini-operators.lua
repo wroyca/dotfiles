@@ -1,5 +1,7 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.operators]],
-  enabled = false
+  [[mini.operators]],
+  dev = true,
+  event = [[VeryLazy]],
+  config = true
 }

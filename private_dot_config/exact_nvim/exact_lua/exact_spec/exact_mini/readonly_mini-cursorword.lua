@@ -1,5 +1,9 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.cursorword]],
-  enabled = false
+  [[mini.cursorword]],
+  dev = true,
+  event = [[VeryLazy]],
+  opts = {
+    delay = 2000
+  }
 }

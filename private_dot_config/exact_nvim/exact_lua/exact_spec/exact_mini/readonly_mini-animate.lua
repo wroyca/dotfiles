@@ -1,5 +1,6 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.animate]],
+  [[mini.animate]],
+  dev = true,
   enabled = false
 }

@@ -1,5 +1,7 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.align]],
-  enabled = false
+  [[mini.align]],
+  dev = true,
+  event = [[VeryLazy]],
+  config = true
 }

@@ -1,5 +1,7 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.statusline]],
-  enabled = false
+  [[mini.statusline]],
+  dev = true,
+  lazy = false,
+  config = true
 }

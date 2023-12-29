@@ -1,4 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.colors]]
+  [[echasnovski/mini.colors]],
+  optional = true
 }

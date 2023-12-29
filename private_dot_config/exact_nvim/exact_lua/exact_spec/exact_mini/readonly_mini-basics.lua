@@ -1,5 +1,26 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.basics]],
-  enabled = false
+  [[mini.basics]],
+  dev = true,
+  event = [[VeryLazy]],
+
+  opts = {
+    options = {
+      basic = true,
+      extra_ui = true,
+      win_borders = [[single]]
+    },
+
+    mappings = {
+      basic = true,
+      option_toggle_prefix = [[\]],
+      windows = true,
+      move_with_alt = true
+    },
+
+    autocommands = {
+      basic = true,
+      relnum_in_visual_mode = true
+    }
+  }
 }
