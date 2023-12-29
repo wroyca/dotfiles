@@ -2,51 +2,104 @@
 return {
   [[echasnovski/mini.clue]],
   event = [[VeryLazy]],
-  opts = function()
-    local miniclue = require [[mini.clue]]
-    return {
-      triggers = {
-        -- Leader triggers
-        { mode = [[n]], keys = [[<Leader>]] },
-        { mode = [[x]], keys = [[<Leader>]] },
 
-        -- Built-in completion
-        { mode = [[i]], keys = [[<C-x>]] },
+  opts = {
+    triggers = {
+      { mode = [[n]], keys = [[<Leader>]] },
+      { mode = [[x]], keys = [[<Leader>]] },
+      { mode = [[v]], keys = [[a]] },
+      { mode = [[x]], keys = [[a]] },
+      { mode = [[v]], keys = [[i]] },
+      { mode = [[x]], keys = [[i]] },
+    },
 
-        -- `g` key
-        { mode = [[n]], keys = [[g]] },
-        { mode = [[x]], keys = [[g]] },
+    clues = {
+      { mode = [[v]], keys = [[a ]],          desc = "Around Whitespace" },
+      { mode = [[v]], keys = [[a"]],          desc = 'Around Balanced "' },
+      { mode = [[v]], keys = [[a']],          desc = "Around Balanced '" },
+      { mode = [[v]], keys = [[a`]],          desc = "Around Balanced `" },
+      { mode = [[v]], keys = [[a(]],          desc = "Around Balanced (" },
+      { mode = [[v]], keys = [[a)]],          desc = "Around Balanced ) including white-space" },
+      { mode = [[v]], keys = [[a>]],          desc = "Around Balanced > including white-space" },
+      { mode = [[v]], keys = [[a<lt>]],       desc = "Around Balanced <" },
+      { mode = [[v]], keys = 'a]',            desc = "Around Balanced ] including white-space" },
+      { mode = [[v]], keys = 'a[',            desc = "Around Balanced [" },
+      { mode = [[v]], keys = [[a}]],          desc = "Around Balanced } including white-space" },
+      { mode = [[v]], keys = [[a{]],          desc = "Around Balanced {" },
+      { mode = [[v]], keys = [[a?]],          desc = "Around User Prompt" },
+      { mode = [[v]], keys = [[a_]],          desc = "Around Underscore" },
+      { mode = [[v]], keys = [[aa]],          desc = "Around Argument" },
+      { mode = [[v]], keys = [[ab]],          desc = "Around Balanced ), ], }" },
+      { mode = [[v]], keys = [[ac]],          desc = "Around Class" },
+      { mode = [[v]], keys = [[af]],          desc = "Around Function" },
+      { mode = [[v]], keys = [[ao]],          desc = "Around Block, conditional, loop" },
+      { mode = [[v]], keys = [[aq]],          desc = "Around Quote `, \", '" },
+      { mode = [[v]], keys = [[at]],          desc = "Around Tag" },
+      { mode = [[x]], keys = [[a ]],          desc = "Around Whitespace" },
+      { mode = [[x]], keys = [[a"]],          desc = 'Around Balanced "' },
+      { mode = [[x]], keys = [[a']],          desc = "Around Balanced '" },
+      { mode = [[x]], keys = [[a`]],          desc = "Around Balanced `" },
+      { mode = [[x]], keys = [[a(]],          desc = "Around Balanced (" },
+      { mode = [[x]], keys = [[a)]],          desc = "Around Balanced ) including white-space" },
+      { mode = [[x]], keys = [[a>]],          desc = "Around Balanced > including white-space" },
+      { mode = [[x]], keys = [[a<lt>]],       desc = "Around Balanced <" },
+      { mode = [[x]], keys = 'a]',            desc = "Around Balanced ] including white-space" },
+      { mode = [[x]], keys = 'a[',            desc = "Around Balanced [" },
+      { mode = [[x]], keys = [[a}]],          desc = "Around Balanced } including white-space" },
+      { mode = [[x]], keys = [[a{]],          desc = "Around Balanced {" },
+      { mode = [[x]], keys = [[a?]],          desc = "Around User Prompt" },
+      { mode = [[x]], keys = [[a_]],          desc = "Around Underscore" },
+      { mode = [[x]], keys = [[aa]],          desc = "Around Argument" },
+      { mode = [[x]], keys = [[ab]],          desc = "Around Balanced ), ], }" },
+      { mode = [[x]], keys = [[ac]],          desc = "Around Class" },
+      { mode = [[x]], keys = [[af]],          desc = "Around Function" },
+      { mode = [[x]], keys = [[ao]],          desc = "Around Block, conditional, loop" },
+      { mode = [[x]], keys = [[aq]],          desc = "Around Quote `, \", '" },
+      { mode = [[x]], keys = [[at]],          desc = "Around Tag" },
+      { mode = [[v]], keys = [[i ]],          desc = "Inside Whitespace" },
+      { mode = [[v]], keys = [[i"]],          desc = 'Inside Balanced "' },
+      { mode = [[v]], keys = [[i']],          desc = "Inside Balanced '" },
+      { mode = [[v]], keys = [[i`]],          desc = "Inside Balanced `" },
+      { mode = [[v]], keys = [[i(]],          desc = "Inside Balanced (" },
+      { mode = [[v]], keys = [[i)]],          desc = "Inside Balanced ) including white-space" },
+      { mode = [[v]], keys = [[i>]],          desc = "Inside Balanced > including white-space" },
+      { mode = [[v]], keys = [[i<lt>]],       desc = "Inside Balanced <" },
+      { mode = [[v]], keys = 'i]',            desc = "Inside Balanced ] including white-space" },
+      { mode = [[v]], keys = 'i[',            desc = "Inside Balanced [" },
+      { mode = [[v]], keys = [[i}]],          desc = "Inside Balanced } including white-space" },
+      { mode = [[v]], keys = [[i{]],          desc = "Inside Balanced {" },
+      { mode = [[v]], keys = [[i?]],          desc = "Inside User Prompt" },
+      { mode = [[v]], keys = [[i_]],          desc = "Inside Underscore" },
+      { mode = [[v]], keys = [[ia]],          desc = "Inside Argument" },
+      { mode = [[v]], keys = [[ib]],          desc = "Inside Balanced ), ], }" },
+      { mode = [[v]], keys = [[ic]],          desc = "Inside Class" },
+      { mode = [[v]], keys = [[if]],          desc = "Inside Function" },
+      { mode = [[v]], keys = [[io]],          desc = "Inside Block, conditional, loop" },
+      { mode = [[v]], keys = [[iq]],          desc = "Inside Quote `, \", '" },
+      { mode = [[v]], keys = [[it]],          desc = "Inside Tag" },
+      { mode = [[x]], keys = [[i ]],          desc = "Inside Whitespace" },
+      { mode = [[x]], keys = [[i"]],          desc = 'Inside Balanced "' },
+      { mode = [[x]], keys = [[i']],          desc = "Inside Balanced '" },
+      { mode = [[x]], keys = [[i`]],          desc = "Inside Balanced `" },
+      { mode = [[x]], keys = [[i(]],          desc = "Inside Balanced (" },
+      { mode = [[x]], keys = [[i)]],          desc = "Inside Balanced ) including white-space" },
+      { mode = [[x]], keys = [[i>]],          desc = "Inside Balanced > including white-space" },
+      { mode = [[x]], keys = [[i<lt>]],       desc = "Inside Balanced <" },
+      { mode = [[x]], keys = 'i]',            desc = "Inside Balanced ] including white-space" },
+      { mode = [[x]], keys = 'i[',            desc = "Inside Balanced [" },
+      { mode = [[x]], keys = [[i}]],          desc = "Inside Balanced } including white-space" },
+      { mode = [[x]], keys = [[i{]],          desc = "Inside Balanced {" },
+      { mode = [[x]], keys = [[i?]],          desc = "Inside User Prompt" },
+      { mode = [[x]], keys = [[i_]],          desc = "Inside Underscore" },
+      { mode = [[x]], keys = [[ia]],          desc = "Inside Argument" },
+      { mode = [[x]], keys = [[ib]],          desc = "Inside Balanced ), ], }" },
+      { mode = [[x]], keys = [[ic]],          desc = "Inside Class" },
+      { mode = [[x]], keys = [[if]],          desc = "Inside Function" },
+      { mode = [[x]], keys = [[io]],          desc = "Inside Block, conditional, loop" },
+      { mode = [[x]], keys = [[iq]],          desc = "Inside Quote `, \", '" },
+      { mode = [[x]], keys = [[it]],          desc = "Inside Tag" },
+    },
 
-        -- Marks
-        { mode = [[n]], keys = [[']] },
-        { mode = [[n]], keys = [[`]] },
-        { mode = [[x]], keys = [[']] },
-        { mode = [[x]], keys = [[`]] },
-
-        -- Registers
-        { mode = [[n]], keys = [["]] },
-        { mode = [[x]], keys = [["]] },
-        { mode = [[i]], keys = [[<C-r>]] },
-        { mode = [[c]], keys = [[<C-r>]] },
-
-        -- Window commands
-        { mode = [[n]], keys = [[<C-w>]] },
-
-        -- `z` key
-        { mode = [[n]], keys = [[z]] },
-        { mode = [[x]], keys = [[z]] }
-      },
-
-      clues = {
-        --miniclue.gen_clues.builtin_completion(),
-        --miniclue.gen_clues.g(),
-        --miniclue.gen_clues.marks(),
-        --miniclue.gen_clues.registers(),
-        --miniclue.gen_clues.windows(),
-        --miniclue.gen_clues.z()
-      },
-
-      window = { config = { width = 50 }, delay = 500 }
-    }
-  end
+    window = { config = { width = 50 }, delay = 500 }
+  }
 }
