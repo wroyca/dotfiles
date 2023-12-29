@@ -14,6 +14,28 @@ return {
     },
 
     clues = {
+      { mode = [[n]], keys = [[<leader>v]],   desc = [[Visits]] },
+      { mode = [[n]], keys = [[<leader>va]],  desc = [[Add]] },
+
+      { mode = [[n]], keys = [[<leader>p]],   desc = [[Pick]] },
+      { mode = [[n]], keys = [[<leader>pB]],  desc = [[Buffer Lines]] },
+      { mode = [[n]], keys = [[<leader>pG]],  desc = [[Git]] },
+      { mode = [[n]], keys = [[<leader>pGb]], desc = [[Git branches]] },
+      { mode = [[n]], keys = [[<leader>pGf]], desc = [[Git files]] },
+      { mode = [[n]], keys = [[<leader>pGh]], desc = [[Git hunks]] },
+      { mode = [[n]], keys = [[<leader>pH]],  desc = [[Highlights]] },
+      { mode = [[n]], keys = [[<leader>pHp]], desc = [[Patterns]] },
+      { mode = [[n]], keys = [[<leader>pL]],  desc = [[List]] },
+      { mode = [[n]], keys = [[<leader>pd]],  desc = [[Diagnostic]] },
+      { mode = [[n]], keys = [[<leader>pg]],  desc = [[Grep]] },
+      { mode = [[n]], keys = [[<leader>ph]],  desc = [[History]] },
+      { mode = [[n]], keys = [[<leader>pk]],  desc = [[Keymaps]] },
+      { mode = [[n]], keys = [[<leader>pl]],  desc = [[Lsp]] },
+      { mode = [[n]], keys = [[<leader>pls]], desc = [[Symbol]] },
+      { mode = [[n]], keys = [[<leader>pm]],  desc = [[Marks]] },
+      { mode = [[n]], keys = [[<leader>po]],  desc = [[Options]] },
+      { mode = [[n]], keys = [[<leader>pv]],  desc = [[Vists]] },
+
       { mode = [[v]], keys = [[a ]],          desc = "Around Whitespace" },
       { mode = [[v]], keys = [[a"]],          desc = 'Around Balanced "' },
       { mode = [[v]], keys = [[a']],          desc = "Around Balanced '" },
