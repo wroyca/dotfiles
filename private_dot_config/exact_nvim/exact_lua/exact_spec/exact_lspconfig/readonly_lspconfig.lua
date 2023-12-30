@@ -2,14 +2,13 @@
 return {
   [[neovim/nvim-lspconfig]],
   config = function()
-    -- Global mappings.
     vim.keymap.set([[n]], [[<space>lf]], vim.diagnostic.open_float, { desc = [[Diagnostic]] })
     vim.keymap.set([[n]], [[<space>ll]], vim.diagnostic.setloclist, { desc = [[Location list]] })
+
+    -- See `:help vim.lsp.*` for documentation on any of the below functions
     vim.api.nvim_create_autocmd([[LspAttach]], {
       group = vim.api.nvim_create_augroup([[UserLspConfig]], {}),
       callback = function(ev)
-        -- Buffer local mappings.
-        -- See `:help vim.lsp.*` for documentation on any of the below functions
         vim.keymap.set({ [[n]]        }, [[<space>lD]],                                      vim.lsp.buf.declaration,                    { buffer = ev.buf, desc = [[Declaration]] })
         vim.keymap.set({ [[n]]        }, [[<space>ld]],                                      vim.lsp.buf.definition,                     { buffer = ev.buf, desc = [[Definition]] })
         vim.keymap.set({ [[n]]        }, [[<space>lh]],                                      vim.lsp.buf.hover,                          { buffer = ev.buf, desc = [[Hover]] })

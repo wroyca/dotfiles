@@ -5,7 +5,7 @@ return {
   dependencies = {
     {
       [[hrsh7th/vim-vsnip]],
-      name = [[cmp-vim-vsnip]],
+      name = [[cmp-vim-vsnip]]
     }
   }
 }

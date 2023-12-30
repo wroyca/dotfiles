@@ -1,5 +1,6 @@
 ---@type LazyPluginSpec
 return {
   [[folke/neoconf.nvim]],
-  name = [[neoconf]]
+  name = [[neoconf]],
+  config = true
 }
