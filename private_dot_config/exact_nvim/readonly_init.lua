@@ -109,7 +109,6 @@ vim.opt.indentkeys   : remove [[:]]
 vim.opt.shortmess    : append [[sI]]
 vim.opt.guicursor    : append [[n-v-c-sm:block-Cursor,i-ci-ve:ver25-Cursor,r-cr-o:hor20-Cursor]]
 vim.diagnostic       . config ({ signs = false, virtual_text = false })
-vim.keymap           . set    ([[n]], [[<leader>?]], [[<cmd>:Lazy<cr>]], { desc = [[Lazy]] })
 
 local lazypath = vim.fn.stdpath [[data]] .. [[/lazy/lazy.nvim]]
 if not vim.uv.fs_stat(lazypath) then
@@ -117,7 +116,7 @@ if not vim.uv.fs_stat(lazypath) then
     [[git]],
     [[clone]],
     [[--filter=blob:none]],
-    [[https://github.com/wroyca/lazy.nvim.git]],
+    [[https://github.com/folke/lazy.nvim]],
     lazypath
   }, { text = true }):wait()
 end
