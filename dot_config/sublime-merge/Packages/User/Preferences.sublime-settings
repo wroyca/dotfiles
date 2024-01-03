@@ -2,4 +2,6 @@
   "theme": "auto",
   "hardware_acceleration": "opengl",
   "ui_scale": 1.5,
+  "render_commit_dialog_message_at_top": false,
+  "side_bar_layout": "tabs",
 }
