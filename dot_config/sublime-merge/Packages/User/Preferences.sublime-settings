@@ -1,0 +1,5 @@
+{
+  "theme": "auto",
+  "hardware_acceleration": "opengl",
+  "ui_scale": 1.5,
+}

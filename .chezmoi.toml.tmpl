@@ -1,61 +1,9 @@
-{{- $force := or (has "--force" .chezmoi.args) (has "--force=true" .chezmoi.args) -}}
-{{- $interactive := and stdinIsATTY (not $force) -}}
-
-{{- $name:= or (env "USER_FULLNAME") "William Roy" -}}
-{{- if and (hasKey . "name") .name -}}
-{{-   $name = .name -}}
+{{- $osid := .chezmoi.os -}}
+{{- if and .chezmoi.osRelease (hasKey .chezmoi.osRelease "id") -}}
+{{-   $osid = printf "%s-%s" .chezmoi.os .chezmoi.osRelease.id -}}
 {{- end -}}
-
-{{- $email:= or (env "USER_EMAIL") "wroy@proton.me" -}}
-{{- if and (hasKey . "email") .email -}}
-{{-   $email = .email -}}
-{{- end -}}
-
-{{- if $interactive -}}
-{{-   range $i := until 99 -}}
-{{-     $question := "Full name" -}}
-{{-     $answer := "" -}}
-{{-     if $name -}}
-{{-       $answer = promptString $question $name -}}
-{{-     else -}}
-{{-       $answer = promptString $question -}}
-{{-     end -}}
-{{-     if regexMatch "^[A-Z][-' a-zA-Z]+$" $answer -}}
-{{-       $name = $answer -}}
-{{-       break -}}
-{{-     end -}}
-{{-     writeToStdout (printf "'%s' is an invalid name\n" $answer) -}}
-{{-     if eq $i 98 -}}
-{{-       writeToStdout "ERROR: maximum tries exceeded\n" -}}
-{{-       exit 1 -}}
-{{-     end -}}
-{{-   end -}}
-{{- end -}}
-{{- writeToStdout (printf "Name set as '%s'\n" $name) -}}
-
-{{- if $interactive -}}
-{{-   range $i := until 99 -}}
-{{-     $question := "Email" -}}
-{{-     $answer := "" -}}
-{{-     if $email -}}
-{{-       $answer = promptString $question $email -}}
-{{-     else -}}
-{{-       $answer = promptString $question -}}
-{{-     end -}}
-{{-     $answer = lower $answer -}}
-{{-     if regexMatch "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$" $answer -}}
-{{-       $email = $answer -}}
-{{-       break -}}
-{{-     end -}}
-{{-     writeToStdout (printf "'%s' is an invalid email\n" $answer) -}}
-{{-     if eq $i 98 -}}
-{{-       writeToStdout "ERROR: maximum tries exceeded\n" -}}
-{{-       exit 1 -}}
-{{-     end -}}
-{{-   end -}}
-{{- end -}}
-{{- writeToStdout (printf "Email set as '%s'\n" $email) -}}
 
 [data]
-  name = {{ $name | quote}}
-  email = {{ $email | quote }}
+  name = "William Roy"
+  email = "wroy@proton.me"
+  osid = {{ $osid | quote }}

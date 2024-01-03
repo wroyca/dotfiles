@@ -1,0 +1,5 @@
+#!/bin/bash
+
+{{ if eq .osid "linux-fedora" }}
+  sudo grubby --args="preempt=full" --update-kernel=ALL
+{{ end }}

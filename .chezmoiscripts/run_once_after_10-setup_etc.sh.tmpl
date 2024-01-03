@@ -1,0 +1,5 @@
+#!/bin/bash
+
+{{ if eq .osid "linux-fedora" }}
+  sudo sed -i 's/#FastConnectable = false/FastConnectable = true/; s/#ReconnectAttempts/ReconnectAttempts/; s/#ReconnectIntervals/ReconnectIntervals/' /etc/bluetooth/main.conf
+{{ end }}

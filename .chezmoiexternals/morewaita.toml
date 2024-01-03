@@ -1,6 +1,0 @@
-[".local/share/icons/morewaita"]
-  type = "archive"
-  url = "https://github.com/somepaulo/morewaita/archive/refs/heads/main.zip"
-  exact = true
-  stripComponents = 1
-  refreshPeriod = "672h"
