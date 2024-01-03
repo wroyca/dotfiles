@@ -1,0 +1,51 @@
+{
+  "name": "Light",
+  "author": "William Roy",
+
+  "variables":
+  {
+    "white": "hsl(0, 0%, 84%)",
+    "black": "hsl(0, 0%, 18%)",
+    "grey": "hsl(0, 0%, 60%)",
+    "grey2": "hsl(0, 0%, 71%)",
+    "grey3": "hsl(0, 0%, 38%)"
+  },
+
+  "globals":
+  {
+      "foreground": "var(black)",
+      "background": "var(white)",
+      "highlight": "var(grey2)",
+      "line_highlight": "var(grey2)",
+      "find_highlight": "var(black)",
+      "find_highlight_foreground": "var(white)",
+      "selection": "var(grey)",
+      "selection_border": "var(grey)",
+  },
+
+  "rules":
+  [
+    {
+      "name": "Comment",
+      "scope": "comment, punctuation.definition.comment",
+      "foreground": "var(grey3)"
+    },
+    {
+      "name": "Entity name",
+      "scope": "entity.name.function",
+      "font_style": "bold"
+    },
+    {
+      "name": "Keyword",
+      "scope": "keyword - keyword.operator, keyword.operator.word",
+      "font_style": "bold"
+    },
+    
+    // https://github.com/sublimehq/Packages/issues/1842
+    {
+      "name": "Keyword",
+      "scope": "meta.preprocessor.include keyword.control.import.include",
+      "font_style": "normal"
+    }
+  ]
+}
