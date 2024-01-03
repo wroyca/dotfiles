@@ -1,33 +1,32 @@
 {
-  "name": "Light",
+  "name": "Dark",
   "author": "William Roy",
 
   "variables":
   {
-    "white":  "hsl(0, 0%, 83.53%)",
-    "black":  "hsl(0, 0%, 18.43%)",
-    "grey":   "hsl(0, 0%, 71.37%)",
-    "grey2":  "hsl(0, 0%, 60%)",
-    "grey3":  "hsl(0, 0%, 38.43%)",
-    "red":    "hsl(338.05, 60.29%, 26.67%)",
+    "white": "hsl(0, 0%, 77.65%)",
+    "black": "hsl(0, 0%, 13.33%)",
+    "grey":  "hsl(0, 0%, 23.53%)",
+    "grey2": "hsl(0, 0%, 33.73%)",
+    "grey3": "hsl(0, 0%, 54.9%%)",
 
-    // TODO: Figure out proper lightness
-    "yellow": "hsl(0, 0%, 18.43%)",
-    "blue":   "hsl(0, 0%, 18.43%)",
-    "green":  "hsl(0, 0%, 18.43%)",
+    "red": "hsl(323.16, 60%, 81.37%)",
+    "yellow": "hsl(32.97, 66.42%, 73.14%)",
+    "blue": "hsl(211.69, 89.9%, 80.59%)",
+    "green": "hsl(148.57, 44.06%, 71.96%)",
   },
 
   "globals":
   {
-      "foreground": "var(black)",
-      "background": "var(white)",
-      "caret": "var(black)",
-      "block_caret": "color(var(black) a(0.5))",
+      "foreground": "var(white)",
+      "background": "var(black)",
+      "caret": "var(white)",
+      "block_caret": "color(var(white) a(0.5))",
       "line_highlight": "var(grey)",
-      "find_highlight": "var(black)",
-      "find_highlight_foreground": "var(white)",
+      "find_highlight": "var(white)",
+      "find_highlight_foreground": "var(black)",
       "selection": "var(grey2)",
-      "selection_border": "var(grey2)",
+      "selection_border": "var(grey2)"
   },
 
   "rules":
@@ -49,7 +48,7 @@
       "scope": "keyword - keyword.operator, keyword.operator.word",
       "font_style": "bold"
     },
-    
+
     {
       "name": "Keyword",
       "scope": "meta.semantic-token.namespace meta.preprocessor.include keyword.control.import.include",

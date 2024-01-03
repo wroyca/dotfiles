@@ -10,8 +10,8 @@
   "color_scheme": "auto",
 
   // Controls the "color_scheme" when set to "auto"
-  "light_color_scheme": "Breakers.sublime-color-scheme",
-  "dark_color_scheme": "Mariana.sublime-color-scheme",
+  "light_color_scheme": "Light.sublime-color-scheme",
+  "dark_color_scheme": "Dark.sublime-color-scheme",
 
   // Note that the font_face and font_size are overridden in the platform
   // specific settings file, for example, "Preferences (Linux).sublime-settings".
