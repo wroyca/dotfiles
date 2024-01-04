@@ -583,11 +583,11 @@
   // bars, etc)
   // The value "auto" will switch between the "light_theme" and "dark_theme"
   // based on the operating system appearance.
-  "theme": "Adaptive.sublime-theme",
+  "theme": "auto",
 
   // Controls the "theme" when to "auto"
   "light_theme": "Adaptive.sublime-theme",
-  "dark_theme": "Default.sublime-theme",
+  "dark_theme": "Adaptive-Dark.sublime-theme",
 
   // Adaptive theme only: controls if a custom or default title bar is used.
   // Note that on Windows, the hamburger menu is used whenever this is
