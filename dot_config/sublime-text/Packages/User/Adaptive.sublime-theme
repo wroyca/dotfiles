@@ -2,12 +2,6 @@
 {
   "variables":
   {
-    "white": "hsl(0, 0%, 84%)",
-    "black": "hsl(0, 0%, 18%)",
-    "grey": "hsl(0, 0%, 60%)",
-    "grey1": "hsl(0, 0%, 71%)",
-    "grey2": "hsl(0, 0%, 69%)",
-    "grey3": "hsl(0, 0%, 61%)"
   },
 
   "rules":
@@ -16,7 +10,6 @@
       "class": "sidebar_container",
       "content_margin": [0, -2.9, 0, 0],
     },
-
     {
       "class": "sidebar_tree",
       "indent": 8,
@@ -25,29 +18,57 @@
     {
       "class": "tree_row",
       "layer0.inner_margin": [8, 4],
-      "layer0.opacity": 1,
+      "layer0.opacity": 0,
       "layer0.texture": "Assets/tree-highlight.png",
-      "layer0.tint": "#56728f00",
       "layer1.inner_margin": [8, 4],
       "layer1.opacity": 0,
       "layer1.texture": "Assets/tree-highlight-border.png",
-      "layer1.tint": "var(grey2)",
     },
     {
       "class": "tree_row",
-      "attributes": [ "selectable", "hover" ],
-      "layer0.tint": "var(grey2)",
-      "layer1.opacity": 1
+      "attributes": ["!hover"],
+      "layer0.opacity": 0.0
     },
     {
       "class": "tree_row",
-      "attributes": [ "selectable", "selected" ],
-      "layer0.tint": "var(grey1)",
+      "attributes": ["selectable", "hover"],
+      "layer0.tint": "color(white a(0.06))",
+      "layer0.opacity": 1.0
     },
     {
       "class": "tree_row",
-      "attributes": [ "selectable", "selected", "hover" ],
-      "layer0.tint": "var(grey2)",
+      "attributes": ["selectable", "hover"],
+      "parents": [{"class": "window", "attributes": ["file_medium"]}],
+      "layer0.tint": "color(white a(0.08))"
     },
+    {
+      "class": "tree_row",
+      "attributes": ["selectable", "hover"],
+      "parents": [{"class": "window", "attributes": ["file_light"]}],
+      "layer0.tint": "color(white a(0.3))"
+    },
+    {
+      "class": "tree_row",
+      "attributes": ["selected"],
+      "layer0.tint": "color(white a(0.18))",
+      "layer0.opacity": 0.6
+    },
+    {
+      "class": "tree_row",
+      "attributes": ["selected"],
+      "parents": [{"class": "window", "attributes": ["file_medium"]}],
+      "layer0.tint": "color(white a(0.16))"
+    },
+    {
+      "class": "tree_row",
+      "attributes": ["selected"],
+      "parents": [{"class": "window", "attributes": ["file_light"]}],
+      "layer0.tint": "color(white a(0.5))"
+    },
+    {
+      "class": "tree_row",
+      "attributes": ["highlighted"],
+      "layer0.opacity": 1.0
+    }
   ]
 }
