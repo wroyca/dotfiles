@@ -16,6 +16,10 @@
       "indent_offset": 2,
     },
     {
+      "class": "sidebar_label",
+      "font.face": "Source Code Pro"
+    },
+    {
       "class": "tree_row",
       "layer0.inner_margin": [8, 4],
       "layer0.opacity": 0,
