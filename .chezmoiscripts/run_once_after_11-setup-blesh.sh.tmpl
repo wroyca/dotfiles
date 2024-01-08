@@ -1,0 +1,5 @@
+#!/bin/bash
+
+{{ if eq .osid "linux-fedora" }}
+  make -C bin/blesh/ble.sh install PREFIX=~/.local
+{{ end }}

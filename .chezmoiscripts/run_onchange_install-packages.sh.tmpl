@@ -1,6 +1,21 @@
 #!/bin/bash
 
 {{ if eq .osid "linux-fedora" }}
+  sudo dnf install -y \
+    gnome-tweaks
+
+  sudo dnf install -y \
+    adw-gtk3-theme
+
+  sudo dnf install -y \
+    kitty
+
+  sudo dnf copr enable -y \
+    agriffis/neovim-nightly
+
+  sudo dnf install -y \
+    neovim
+
   sudo dnf groupinstall -y \
     development-libs
 
@@ -9,9 +24,12 @@
 
   sudo dnf groupinstall -y \
     gnome-software-development
-  
+
   sudo dnf install -y \
     gcc
+
+  sudo dnf copr enable -y \
+    @fedora-llvm-team/llvm-snapshots
 
   sudo dnf install -y \
     clang
@@ -24,9 +42,6 @@
 
   dotnet tool install -g \
     git-credential-manager || true
-
-  make -C \
-    bin/blesh/ble.sh install PREFIX=~/.local
 
   # Cross-platform build toolchain for developing and packaging C/C++ projects.
   #
