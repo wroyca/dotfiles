@@ -3,5 +3,15 @@ return {
   [[mini.pairs]],
   dev = true,
   event = [[VeryLazy]],
-  config = true
+  opts = {
+    mappings = {
+      ['`'] = { action = 'closeopen', pair = [[``]], neigh_pattern = '[^%S][^%S]', register = { cr = false } },
+      ["'"] = { action = 'closeopen', pair = [['']], neigh_pattern = '[^%S][^%S]', register = { cr = false } },
+      ['"'] = { action = 'closeopen', pair = [[""]], neigh_pattern = '[^%S][^%S]', register = { cr = false } },
+      ['{'] = { action = 'closeopen', pair = [[{}]], neigh_pattern = '[^%S][^%S]', register = { cr = false } },
+      ['<'] = { action = 'closeopen', pair = [[<>]], neigh_pattern = '[^%S][^%S]', register = { cr = false } },
+      ['('] = { action = 'closeopen', pair = [[()]], neigh_pattern = '[^%S][^%S]', register = { cr = false } },
+      ['['] = { action = 'closeopen', pair =  '[]',  neigh_pattern = '[^%S][^%S]', register = { cr = false } },
+    }
+  }
 }
