@@ -1,21 +1,3 @@
-local fd_opts = {
-  fd_cmd = { 'fd', '-p', '-H', '-L', '-td', '-tf', '-tl', '-d4', '--mount', '-c=never',
-  '-E=*$*',         '-E=*%*',                   '-E=*.bkp',     '-E=*.bz2',     '-E=*.db',     '-E=*.jar',
-  '-E=*.directory', '-E=*.dll',                 '-E=*.doc',     '-E=*.docx',    '-E=*.drawio', '-E=*.otf',
-  '-E=*.gif',       '-E=*.git/',                '-E=*.gz',      '-E=*.ico',     '-E=*.iso',    '-E=*.pptx',
-  '-E=*.jpeg',      '-E=*.jpg',                 '-E=*.mp3',     '-E=*.mp4',     '-E=*.o',      '-E=*.ttf',
-  '-E=*.out',       '-E=*.pdf',                 '-E=*.pickle',  '-E=*.png',     '-E=*.ppt',    '-E=*\\~',
-  '-E=*.pyc',       '-E=*.rar',                 '-E=*.so',      '-E=*.svg',     '-E=*.tar',
-  '-E=*.venv/',     '-E=*.xls',                 '-E=*.xlsx',    '-E=*.zip',     '-E=*Cache*/',
-  '-E=*cache*/',    '-E=.*Cache*/',             '-E=.*cache*/', '-E=.*wine/',   '-E=.cargo/',
-  '-E=.conda/',     '-E=.dot/',                 '-E=.fonts/',   '-E=.ipython/', '-E=.java/',
-  '-E=.jupyter/',   '-E=.luarocks/',            '-E=.mozilla/', '-E=.npm/',     '-E=.nvm/',
-  '-E=.steam*/',    '-E=.thunderbird/',         '-E=.tmp/',     '-E=__pycache__/',
-  '-E=dosdevices/', '-E=events.out.tfevents.*', '-E=node_modules/',
-  '-E=vendor/',     '-E=venv/'
-  }
-}
-
 ---@diagnostic disable: undefined-field
 ---@type LazyPluginSpec
 return {
@@ -61,8 +43,7 @@ return {
       },
 
       window = {
-        -- https://github.com/clangd/clangd/issues/529
-        documentation = false
+        documentation = false -- https://github.com/clangd/clangd/issues/529
       },
 
       mapping = {
