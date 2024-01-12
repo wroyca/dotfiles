@@ -2,5 +2,5 @@
 return {
   [[mini.base16]],
   dev = true,
-  optional = true
+  enabled = false
 }

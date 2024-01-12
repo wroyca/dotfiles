@@ -1,5 +1,6 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.colors]],
-  optional = true
+  [[mini.colors]],
+  dev = true,
+  enabled = false
 }

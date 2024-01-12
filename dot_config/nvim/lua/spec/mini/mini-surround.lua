@@ -2,6 +2,5 @@
 return {
   [[mini.surround]],
   dev = true,
-  event = [[VeryLazy]],
-  config = true
+  enabled = false
 }

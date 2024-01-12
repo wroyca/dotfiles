@@ -1,7 +1,7 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.visits]],
-  event = [[VeryLazy]],
+  [[mini.visits]],
+  dev = true,
   config = true,
   keys = {
     { [[<leader>vl]],  function() require [[mini.extra]].pickers.visit_labels() end, desc = [[Labels]] },

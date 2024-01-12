@@ -3,5 +3,5 @@ return {
   [[mini.notify]],
   dev = true,
   config = true,
-  event = [[VeryLazy]]
+  event = [[LspAttach]]
 }

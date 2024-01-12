@@ -1,5 +1,6 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.sessions]],
+  [[mini.sessions]],
+  dev = true,
   enabled = false
 }

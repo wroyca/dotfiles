@@ -68,7 +68,7 @@ return {
     { [[<leader>pHpa]], function() require [[mini.extra]].pickers.hipatterns({ scope = [[all]] }) end,       desc = [[All]] },
     { [[<leader>pHpc]], function() require [[mini.extra]].pickers.hipatterns({ scope = [[current]] }) end,   desc = [[Current]] },
     { [[<leader>pt]],   function() require [[mini.extra]].pickers.treesitter() end,                          desc = [[Treesitter]] },
-    { [[<leader>ps]],   function() require [[mini.extra]].pickers.spellsuggest() end,                        desc = [[Spell suggest]] },
+    { [[<leader>ps]],   function() require [[mini.extra]].pickers.spellsuggest() end,                        desc = [[Spell suggest]] }
   },
 
   config = function(_, opts)
