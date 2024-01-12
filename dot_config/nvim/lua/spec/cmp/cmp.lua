@@ -3,13 +3,17 @@
 return {
   [[hrsh7th/nvim-cmp]],
   name = [[cmp]],
-  event = [[InsertEnter]],
+
+  event = {
+    [[InsertEnter]],
+    [[CmdLineEnter]]
+  },
 
   opts = function()
     local cmp = require [[cmp]]
     return {
       sources = cmp.config.sources({
-        { name = [[buffer]] },
+   --   { name = [[buffer]] },
         { name = [[luasnip]] },
         {
           name = [[nvim_lsp]],
@@ -21,20 +25,22 @@ return {
         { name = [[nvim_lsp_signature_help]] }
       }),
 
-      cmp.setup.cmdline(':', {
+      cmp.setup.cmdline({ [[/]], [[?]] }, {
+        mapping = cmp.mapping.preset.cmdline(),
+        sources = {
+          { name = [[buffer]] }
+        }
+      }),
+
+      cmp.setup.cmdline([[:]], {
         mapping = cmp.mapping.preset.cmdline(),
         sources = cmp.config.sources({
-          {
-            name = [[fuzzy_path]],
-            option = {
-              fd_timeout_msec = 1500,
-              option = fd_opts
-            }
-          }
+          { name = [[path]] }
         }, {
           { name = [[cmdline]] }
         })
       }),
+
 
       snippet = {
         expand = function(args)

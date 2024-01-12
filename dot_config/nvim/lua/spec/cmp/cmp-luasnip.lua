@@ -6,7 +6,7 @@ return {
   dependencies = {
     {
       [[L3MON4D3/LuaSnip]],
-      name = [[cmp-luasnip-engine]],
+      name = [[cmp-luasnip-loaders]],
       config = function()
         require [[luasnip.loaders.from_vscode]].lazy_load()
       end
