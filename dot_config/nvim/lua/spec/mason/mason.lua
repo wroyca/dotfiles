@@ -1,26 +1,27 @@
----@diagnostic disable: undefined-field, unused-local
 ---@type LazyPluginSpec
 return {
   [[williamboman/mason.nvim]],
   name = [[mason]],
 
   build = function()
-    local m  = require [[mason]]
-    local mr = require [[mason-registry]]
+    local _ = require [[mason]]
+    local r = require [[mason-registry]]
+
     local function ensure_installed()
       for _, tool in ipairs({
         [[clangd]],
         [[lua-language-server]]
       })
       do
-        local p = mr.get_package(tool)
+        local p = r.get_package(tool)
         if not p:is_installed() then
           p:install()
         end
       end
     end
-    if mr.refresh then
-      mr.refresh(ensure_installed)
+
+    if r.refresh then
+      r.refresh(ensure_installed)
     else
       ensure_installed()
     end

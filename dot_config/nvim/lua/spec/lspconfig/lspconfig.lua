@@ -21,7 +21,7 @@ return {
         vim.keymap.set({ [[n]]        }, [[<space>lr]],                                      vim.lsp.buf.rename,                         { buffer = ev.buf, desc = [[Rename]] })
         vim.keymap.set({ [[n]], [[v]] }, [[<space>lc]],                                      vim.lsp.buf.code_action,                    { buffer = ev.buf, desc = [[Code action]] })
         vim.keymap.set({ [[n]]        }, [[<space>lR]],                                      vim.lsp.buf.references,                     { buffer = ev.buf, desc = [[Reference]] })
-        vim.keymap.set({ [[n]]        }, [[<space>l;]],                          function()  vim.lsp.buf.format { async = true } end,    { buffer = ev.buf, desc = [[Format]] })
+        vim.keymap.set({ [[n]], [[v]] }, [[<space>;]],                           function()  vim.lsp.buf.format { async = true } end,    { buffer = ev.buf, desc = [[Format]] })
       end
     })
   end

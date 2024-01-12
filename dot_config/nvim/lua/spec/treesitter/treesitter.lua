@@ -2,7 +2,6 @@
 return {
   [[nvim-treesitter/nvim-treesitter]],
   name = [[treesitter]],
-  cmd = [[TSInstall]],
   build = [[:TSInstall all]],
 
   init = function(plugin)
