@@ -1,9 +1,7 @@
----@diagnostic disable: undefined-field
 ---@type LazyPluginSpec
 return {
   [[hrsh7th/nvim-cmp]],
   name = [[cmp]],
-
   event = {
     [[InsertEnter]],
     [[CmdLineEnter]]
@@ -13,16 +11,20 @@ return {
     local cmp = require [[cmp]]
     return {
       sources = cmp.config.sources({
-   --   { name = [[buffer]] },
+        { name = [[buffer]] },
         { name = [[luasnip]] },
+        { name = [[nvim_lua]] },
+
         {
           name = [[nvim_lsp]],
           entry_filter = function(entry)
+            -- We provide our own snippets; filter out the ones from LSP.
+            --
             return cmp.lsp.CompletionItemKind.Snippet ~= entry:get_kind()
           end
         },
+        { name = [[nvim_lsp_signature_help]] },
         { name = [[nvim_lsp_document_symbol]] },
-        { name = [[nvim_lsp_signature_help]] }
       }),
 
       cmp.setup.cmdline({ [[/]], [[?]] }, {
@@ -41,67 +43,83 @@ return {
         })
       }),
 
-
       snippet = {
         expand = function(args)
           require [[luasnip]].lsp_expand(args.body)
         end
       },
 
-      window = {
-        documentation = false -- https://github.com/clangd/clangd/issues/529
-      },
-
       mapping = {
-        ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), { 'i' }),
-        ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), { 'i' }),
-        ['<Tab>'] = cmp.mapping.confirm({
+        ['<Tab>'] = cmp.mapping(cmp.mapping.confirm({
           behavior = cmp.ConfirmBehavior.Insert,
           select = true
-        })
+        }), { [[i]] }),
+
+        ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item({
+          behavior = cmp.SelectBehavior.Select
+        }), { [[i]] }),
+
+        ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item({
+          behavior = cmp.SelectBehavior.Select
+        }), { [[i]] }),
+
+        -- Documentation might not always be particularly helpful for
+        -- completion, given that many languages have subpar documentation at
+        -- best. However, certain languages, such as Rust, make a commendable
+        -- effort in this regard. Hence, let's provide a way to toggle and
+        -- navigate documentation when necessary.
+        --
+        ['<A-h>'] = cmp.mapping(function()
+          if cmp.visible_docs() then
+            cmp.close_docs()
+          end
+        end, { [[i]] }),
+        ['<A-j>'] = cmp.mapping(cmp.mapping.scroll_docs(4),  { [[i]], [[c]] }),
+        ['<A-k>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { [[i]], [[c]] }),
+        ['<A-l>'] = cmp.mapping(function()
+          if cmp.visible_docs() ~= true then
+            cmp.open_docs()
+          end
+        end, { [[i]] }),
+
+        -- In practical terms, I often find snippets with more than two nodes
+        -- not very useful. However, there are occasional exceptions to this.
+        --
+        ['<A-n>'] = cmp.mapping(function(fallback)
+          if require [[luasnip]].jumpable(1) then
+            require [[luasnip]].jump(1) else fallback()
+          end
+        end, { [[i]] }),
+        ['<A-p>'] = cmp.mapping(function(fallback)
+          if require [[luasnip]].jumpable(-1) then
+            require [[luasnip]].jump(-1) else fallback()
+          end
+        end, { [[i]] }),
       },
 
       formatting = {
         fields = { [[abbr]], [[menu]], [[kind]] },
         format = function(entry, cmp_item)
           pcall(function()
-            local compl_item = entry:get_completion_item()
-            if entry.source.source.client.name == [[clangd]] and compl_item.detail then
-              cmp_item.menu = compl_item.detail
+            local detail = entry:get_completion_item().detail
+            local client_name = entry.source.source.client.name
+            local type_information = {
+              [[clangd]]
+            }
+
+            -- Include type information from LSP clients that support it. Note
+            -- that not every client provides type information for the
+            -- completion item. For example, in Python, it can be either nil
+            -- or "Auto-import."
+            --
+            if vim.tbl_contains(type_information, client_name) and detail then
+              cmp_item.menu = detail
             end
           end)
 
           cmp_item.dup  = 0
           cmp_item.abbr = string.gsub(cmp_item.abbr, [[^%s+]], [[]])
           cmp_item.kind = cmp_item.kind .. [[ ]]
-
-          ---@param field string
-          ---@param min_width integer
-          ---@param max_width integer
-          ---@return nil
-          local function clamp(field, min_width, max_width)
-            if not cmp_item[field] or not type(cmp_item) == [[string]] then return end
-            -- In case that min_width > max_width
-            if min_width > max_width then
-              min_width, max_width = max_width, min_width
-            end
-            local field_str = cmp_item[field]
-            local field_width = vim.fn.strdisplaywidth(field_str)
-            if field_width > max_width then
-              local former_width = math.floor(max_width * 0.6)
-              local latter_width = math.max(0, max_width - former_width - 1)
-              cmp_item[field] = string.format(
-                [[%s…%s]],
-                field_str:sub(1, former_width),
-                field_str:sub(-latter_width)
-              )
-            elseif field_width < min_width then
-              cmp_item[field] = string.format([[%-]] .. min_width .. [[s]], field_str)
-            end
-          end
-
-          clamp([[abbr]], vim.go.pw, math.max(60, math.ceil(vim.o.columns * 0.4)))
-          clamp([[menu]], 0, math.max(16, math.ceil(vim.o.columns * 0.2)))
 
           return cmp_item
         end

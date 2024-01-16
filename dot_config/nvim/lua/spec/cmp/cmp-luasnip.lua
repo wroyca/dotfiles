@@ -2,7 +2,7 @@
 return {
   [[saadparwaiz1/cmp_luasnip]],
   name = [[cmp-luasnip]],
-  event = [[InsertCharPre]],
+
   dependencies = {
     {
       [[L3MON4D3/LuaSnip]],
@@ -11,5 +11,34 @@ return {
         require [[luasnip.loaders.from_vscode]].lazy_load()
       end
     }
-  }
+  },
+
+  opts = function()
+    local types = require [[luasnip.util.types]]
+    return {
+      -- Show cursor-style placeholder in unvisited nodes.
+      ext_opts = {
+        [types.insertNode] = {
+          unvisited = {
+            virt_text = {
+              {
+                [[|]], [[Conceal]]
+              }
+            },
+            virt_text_pos = [[inline]],
+          },
+        },
+        [types.exitNode] = {
+          unvisited = {
+            virt_text = {
+              {
+                [[|]], [[Conceal]]
+              }
+            },
+            virt_text_pos = [[inline]]
+          }
+        }
+      }
+    }
+  end
 }
