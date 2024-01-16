@@ -1,2 +1,10 @@
-vim.api.nvim_exec2 ([[autocmd BufWinEnter <buffer> wincmd L]], {})
-
+vim.api.nvim_create_autocmd({
+  [[BufWinEnter]],
+}, {
+  desc = [[Use vertical split for man pages, and bind q to exit]],
+  callback = function(event)
+    vim.api.nvim_exec2 ([[wincmd L]], {})
+    vim.bo[event.buf].buflisted = false
+    vim.keymap.set([[n]], [[q]], [[<cmd>q<cr>]], { buffer = event.buf, silent = true })
+  end
+})
