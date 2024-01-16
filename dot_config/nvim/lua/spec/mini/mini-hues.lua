@@ -2,5 +2,8 @@
 return {
   [[mini.hues]],
   dev = true,
-  enabled = false
+  lazy = false,
+  config = function()
+    vim.api.nvim_exec2 ([[colorscheme randomhue]], {})
+  end
 }

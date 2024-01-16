@@ -1,6 +1,7 @@
 ---@type LazyPluginSpec
 return {
-  [[echasnovski/mini.pick]],
+  [[mini.pick]],
+  dev = true,
 
   keys = {
     { [[<leader>pvp]],  function() require [[mini.extra]].pickers.visit_labels() end,                        desc = [[Labels]] },
