@@ -1,9 +1,8 @@
-local _ = string.format([[
-     .-.      _______                             .  '  *   .  . '
-    {}``; |==|_______D                                  . *  -+-  .
-    / ('        /|\                                 . '   * .    '  *
-(  /  |        / | \                                    * .  ' .  .-+-
- \(_)_%s      /  |  \                                *   *  .   .]], "]]")
+--      .-.      _______                             .  '  *   .  . '
+--     {}``; |==|_______D                                  . *  -+-  .
+--     / ('        /|\                                 . '   * .    '  *
+-- (  /  |        / | \                                    * .  ' .  .-+-
+--  \(_)_%s      /  |  \                                *   *  .   .
 
 local h = io.popen([[
 gdbus call --session \
@@ -21,38 +20,6 @@ if h ~= nil then
     vim.o.background = [[light]]
   end
 end
-vim.api.nvim_create_autocmd([[VimResized]], {
-  group = vim.api.nvim_create_augroup([[resize_splits]], { clear = true }),
-  callback = function()
-    local current_tab = vim.fn.tabpagenr()
-    vim.cmd([[tabdo wincmd =]])
-    vim.cmd([[tabnext ]] .. current_tab)
-  end
-})
-
-vim.api.nvim_create_autocmd([[FileType]], {
-  group = vim.api.nvim_create_augroup([[close_with_q]], { clear = true }),
-  pattern = {
-    [[PlenaryTestPopup]],
-    [[help]],
-    [[lspinfo]],
-    [[man]],
-    [[notify]],
-    [[qf]],
-    [[query]],
-    [[spectre_panel]],
-    [[startuptime]],
-    [[tsplayground]],
-    [[neotest-output]],
-    [[checkhealth]],
-    [[neotest-summary]],
-    [[neotest-output-panel]],
-  },
-  callback = function(event)
-    vim.bo[event.buf].buflisted = false
-    vim.keymap.set([[n]], [[q]], [[<cmd>close<cr>]], { buffer = event.buf, silent = true })
-  end,
-})
 
 local shada = vim.o.shada
 vim.o.shada = [[]]
@@ -98,7 +65,7 @@ vim.o.scrolloff      = 4
 vim.o.pumheight      = 8
 vim.o.cmdheight      = 1
 vim.o.synmaxcol      = 0
-vim.o.laststatus     = 2
+vim.o.laststatus     = 3
 vim.o.foldlevel      = 99
 vim.o.foldlevelstart = 99
 vim.o.foldenable     = true
@@ -122,6 +89,8 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+require [[cmds]]
+require [[keys]]
 require [[lazy]].setup([[spec]], {
   performance = {
     rtp = {
@@ -168,6 +137,13 @@ require [[lazy]].setup([[spec]], {
 
   change_detection = {
     enabled = false
+  },
+
+  install = {
+    colorscheme = {
+      [[randomhue]],
+      [[default]]
+    }
   },
 
   ui = {
