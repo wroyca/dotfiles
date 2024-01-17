@@ -7,7 +7,6 @@ vim.schedule(function()
 
   if vim.fn.executable(lsp_default) == 0 then require [[mason]] end
   if vim.fn.executable(lsp_default) == 1 then
-    require [[neoconf]]
     vim.api.nvim_create_autocmd([[LspAttach]], {
       once = true,
       callback = function()
