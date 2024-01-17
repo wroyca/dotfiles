@@ -9,6 +9,8 @@ return {
 
   opts = function()
     local cmp = require [[cmp]]
+    local cfg = require [[cmp.config]]
+
     return {
       sources = cmp.config.sources({
         { name = [[buffer]] },
@@ -55,13 +57,30 @@ return {
           select = true
         }), { [[i]] }),
 
-        ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item({
-          behavior = cmp.SelectBehavior.Select
-        }), { [[i]] }),
-
-        ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item({
-          behavior = cmp.SelectBehavior.Select
-        }), { [[i]] }),
+        -- HACK: view.docs.auto_open has a penchant for resetting autonomously,
+        -- thanks to some synchronization quirk. Attempts to gracefully close
+        -- the doc with cmp.close_docs() are thwarted, as it unfolds too early
+        -- in cmp's asynchronous cycle. Now, since we prefer a hands-on
+        -- approach to managing open/close actions, the strategy here is to
+        -- force it to false on each cycle, and pray that it doesn't tank
+        -- performance.
+        --
+        ['<C-n>'] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+            cfg.get().view.docs.auto_open = false
+          else
+            fallback()
+          end
+        end, { [[i]] }),
+        ['<C-p>'] = cmp.mapping(function(fallback)
+          if cmp.visible() then
+            cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+            cfg.get().view.docs.auto_open = false
+          else
+            fallback()
+          end
+        end, { [[i]] }),
 
         -- Documentation might not always be particularly helpful for
         -- completion, given that many languages have subpar documentation at
@@ -74,7 +93,7 @@ return {
             cmp.close_docs()
           end
         end, { [[i]] }),
-        ['<A-j>'] = cmp.mapping(cmp.mapping.scroll_docs(4),  { [[i]], [[c]] }),
+        ['<A-j>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { [[i]], [[c]] }),
         ['<A-k>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { [[i]], [[c]] }),
         ['<A-l>'] = cmp.mapping(function()
           if cmp.visible_docs() ~= true then
@@ -82,17 +101,22 @@ return {
           end
         end, { [[i]] }),
 
-        -- In practical terms, I often find snippets with more than two nodes
-        -- not very useful. However, there are occasional exceptions to this.
+        -- In real-world scenarios, snippets with more than two nodes usually
+        -- aren't very handy. However, there are occasional exceptions, so we
+        -- still need proper mapping to deal with those cases.
         --
         ['<A-n>'] = cmp.mapping(function(fallback)
           if require [[luasnip]].jumpable(1) then
-            require [[luasnip]].jump(1) else fallback()
+            require [[luasnip]].jump(1)
+          else
+            fallback()
           end
         end, { [[i]] }),
         ['<A-p>'] = cmp.mapping(function(fallback)
           if require [[luasnip]].jumpable(-1) then
-            require [[luasnip]].jump(-1) else fallback()
+            require [[luasnip]].jump(-1)
+          else
+            fallback()
           end
         end, { [[i]] }),
       },
