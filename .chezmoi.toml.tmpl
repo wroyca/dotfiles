@@ -3,7 +3,13 @@
 {{-   $osid = printf "%s-%s" .chezmoi.os .chezmoi.osRelease.id -}}
 {{- end -}}
 
+encryption = "age"
+
 [data]
   name = "William Roy"
   email = "wroy@proton.me"
   osid = {{ $osid | quote }}
+
+[age]
+  identity = "~/.config/chezmoi/key.txt"
+  recipient = "age15zwzfmgglhwqa8htgrw868yl4hg3ug45lu8d95ne9th0r6r37dns4h9hmz"

@@ -18,6 +18,12 @@
 
   sudo dnf groupinstall -y \
     development-libs
+      
+  sudo dnf install -y \
+    libpeas-devel
+
+  sudo dnf install -y \
+    libadwaita-devel
 
   sudo dnf groupinstall -y \
     development-tools
@@ -28,14 +34,14 @@
   sudo dnf install -y \
     gcc
 
-  sudo dnf copr enable -y \
-    @fedora-llvm-team/llvm-snapshots
-
   sudo dnf install -y \
     clang
 
   sudo dnf install -y \
     clang-tools-extra
+  
+  pip install \
+    git+https://github.com/wroyca/compiledb@support-cl-clang-cl
 
   sudo dnf install -y \
     dotnet-sdk-7.0
