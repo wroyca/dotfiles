@@ -176,6 +176,9 @@ require [[lazy]].setup(
     { name = [[misc-visual-multi]],            [[mg979/vim-visual-multi]] },
     { name = [[misc-neogit]],                  [[NeogitOrg/neogit]], branch = [[nightly]] },
     { name = [[misc-gitsigns]],                [[lewis6991/gitsigns.nvim]] },
+    { name = [[misc-chameleon]],               [[shaun-mathew/chameleon.nvim]] },
+    { name = [[misc-auto-dark-mode]],          [[f-person/auto-dark-mode.nvim]] },
+    { name = [[misc-last-color]],              [[raddari/last-color.nvim]] },
 
     { name = [[treesitter]],                   [[nvim-treesitter/nvim-treesitter]] },
     { name = [[treesitter-context]],           [[nvim-treesitter/nvim-treesitter-context]] },
