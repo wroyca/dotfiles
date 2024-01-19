@@ -24,3 +24,19 @@ vim.api.nvim_create_autocmd("CmdWinEnter", {
     vim.keymap.set([[n]], [[q]], [[<Cmd>q<CR>]], { buffer = event.buf, silent = true })
   end
 })
+
+vim.api.nvim_create_autocmd([[ColorScheme]], {
+  desc = [[Mini highlights]],
+  callback = function(event)
+    -- https://github.com/echasnovski/mini.nvim/issues/658
+    --
+    vim.cmd [[highlight LeapMatch  gui=underline]]
+
+    -- https://github.com/echasnovski/mini.nvim/issues/538
+    --
+    vim.cmd [[highlight! link DiffAdd    DiagnosticOk]]
+    vim.cmd [[highlight! link DiffChange DiagnosticWarn]]
+    vim.cmd [[highlight! link DiffDelete DiagnosticError]]
+  end
+})
+

@@ -119,6 +119,7 @@ require [[lazy]].setup(
     { name = [[lspconfig]],                    [[neovim/nvim-lspconfig]] },
     { name = [[lspconfig-refactoring]],        [[ThePrimeagen/refactoring.nvim]] },
     { name = [[lspconfig-rulebook]],           [[chrisgrieser/nvim-rulebook]] },
+    { name = [[lspconfig-output-panel]],       [[mhanberg/output-panel.nvim]] },
 
     { name = [[mason]],                        [[williamboman/mason.nvim]] },
     { name = [[mason-dap]],                    [[jay-babu/mason-nvim-dap.nvim]] },
