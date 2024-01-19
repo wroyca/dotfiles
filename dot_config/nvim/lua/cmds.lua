@@ -28,6 +28,10 @@ vim.api.nvim_create_autocmd("CmdWinEnter", {
 vim.api.nvim_create_autocmd([[ColorScheme]], {
   desc = [[Mini highlights]],
   callback = function(event)
+    -- Script variant with Comment
+    --
+    vim.cmd [[highlight Comment  gui=italic]]
+
     -- https://github.com/echasnovski/mini.nvim/issues/658
     --
     vim.cmd [[highlight LeapMatch  gui=underline]]
