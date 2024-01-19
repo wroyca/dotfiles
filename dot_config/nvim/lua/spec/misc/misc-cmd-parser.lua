@@ -1,6 +1,5 @@
 ---@type LazyPluginSpec
 return {
-  [[mini.operators]],
-  event = [[VeryLazy]],
+  [[misc-cmd-parser]],
   config = true
 }

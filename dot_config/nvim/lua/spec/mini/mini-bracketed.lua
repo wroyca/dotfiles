@@ -1,7 +1,6 @@
 ---@type LazyPluginSpec
 return {
   [[mini.bracketed]],
-  dev = true,
   config = true,
   keys = {
     { '[b', desc = [[Buffer first]] },

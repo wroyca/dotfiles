@@ -4,7 +4,6 @@ local f
 ---@type LazyPluginSpec
 return {
   [[mini.files]],
-  dev = true,
   keys = {
     {
       [[<leader>f]],
@@ -20,7 +19,7 @@ return {
   opts = {
     content = {
       sort = function(fs_entries)
-        local p = table.concat(vim.iter(fs_entries):map(function(e) return e.path end):totable(), '\n')
+        local p = table.concat(vim.iter(fs_entries):map(function(fs) return fs.path end):totable(), '\n')
         local o = {}
         local i = vim.fn.jobstart({ [[git]], [[check-ignore]], [[--stdin]] }, {
           stdout_buffered = true, on_stdout = function(_, out) o = out end
@@ -30,13 +29,13 @@ return {
         vim.fn.chanclose(i, [[stdin]])
         vim.fn.jobwait { i }
 
-        return require([[mini.files]]).default_sort(vim.iter(fs_entries):filter(function(e)
-          return not vim.tbl_contains(o, e.path)
+        return require([[mini.files]]).default_sort(vim.iter(fs_entries):filter(function(fs)
+          return not vim.tbl_contains(o, fs.path)
         end):totable())
       end,
 
       filter = function(fs_entry)
-        return not vim.startswith(fs_entry.name, '.')
+        return not vim.startswith(fs_entry.name, [[.]])
       end
     },
 

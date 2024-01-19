@@ -1,7 +1,6 @@
 ---@type LazyPluginSpec
 return {
   [[mini.align]],
-  dev = true,
   config = true,
   keys = {
     { [[ga]], mode = { [[n]], [[v]] }, desc = [[Align]]},

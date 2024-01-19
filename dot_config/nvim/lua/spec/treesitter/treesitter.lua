@@ -1,7 +1,6 @@
 ---@type LazySpec
 return {
-  [[nvim-treesitter/nvim-treesitter]],
-  name = [[treesitter]], 
+  [[treesitter]],
   build = [[:TSInstall all]],
 
   init = function(plugin)

@@ -1,31 +1,16 @@
 ---@type LazyPluginSpec
 return {
   [[mini.ai]],
-  dev = true,
   event = [[VeryLazy]],
-
   opts = function()
-    local ai = require [[mini.ai]]
+    local gen_ai_spec = require [[mini.extra]].gen_ai_spec
     return {
       custom_textobjects = {
-        o = ai.gen_spec.treesitter({
-          a = { [[@block.outer]], [[@conditional.outer]], [[@loop.outer]] },
-          i = { [[@block.inner]], [[@conditional.inner]], [[@loop.inner]] },
-        }, {}),
-
-        f = ai.gen_spec.treesitter({
-          a = { [[@function.outer]] },
-          i = { [[@function.inner]] }
-        }, {}),
-
-        c = ai.gen_spec.treesitter({
-          a = { [[@class.outer]] },
-          i = { [[@class.inner]] }
-        }, {}),
-
-        t = {
-          "<([%p%w]-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$"
-        }
+        B = gen_ai_spec.buffer(),
+        D = gen_ai_spec.diagnostic(),
+        I = gen_ai_spec.indent(),
+        L = gen_ai_spec.line(),
+        N = gen_ai_spec.number()
       }
     }
   end

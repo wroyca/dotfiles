@@ -1,6 +1,6 @@
 ---@type LazyPluginSpec
 return {
-  [[neovim/nvim-lspconfig]],
+  [[lspconfig]],
   config = function()
     vim.keymap.set([[n]], [[<space>lf]], vim.diagnostic.open_float, { desc = [[Diagnostic]] })
     vim.keymap.set([[n]], [[<space>ll]], vim.diagnostic.setloclist, { desc = [[Location list]] })

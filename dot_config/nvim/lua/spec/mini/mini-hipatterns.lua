@@ -1,7 +1,6 @@
 ---@type LazyPluginSpec
 return {
   [[mini.hipatterns]],
-  dev = true,
   event = [[VeryLazy]],
 
   init = function()

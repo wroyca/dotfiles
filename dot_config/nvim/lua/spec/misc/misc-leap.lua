@@ -1,12 +1,13 @@
----@diagnostic disable: undefined-field, missing-fields, assign-type-mismatch
 ---@type LazyPluginSpec
 return {
-  [[ggandor/leap.nvim]],
-  name = [[leap]],
+  [[misc-leap]],
+  dependencies = {
+    [[misc-leap-spooky]], [[misc-leap-flit]]
+  },
 
   keys = {
-    { [[s]],  mode = { [[n]], [[x]], [[o]] }, desc = [[Leap forward to]] },
-    { [[S]],  mode = { [[n]], [[x]], [[o]] }, desc = [[Leap backward to]] },
+    { [[s]],  mode = { [[n]], [[x]], [[o]] }, desc = [[Leap forward to]]   },
+    { [[S]],  mode = { [[n]], [[x]], [[o]] }, desc = [[Leap backward to]]  },
     { [[gs]], mode = { [[n]], [[x]], [[o]] }, desc = [[Leap from windows]] }
   },
 
@@ -20,10 +21,12 @@ return {
   },
 
   config = function(_, opts)
-    local leap = require [[leap]]
-    leap.setup(opts)
-    leap.add_default_mappings(true)
+    require [[leap]].setup(opts)
+    require [[leap]].add_default_mappings(true)
 
+    -- Hide the (real) cursor when leaping, and restore it afterwards.
+    -- https://github.com/neovim/neovim/issues/20793
+    --
     vim.api.nvim_create_autocmd([[user]], {
       pattern = [[LeapEnter]],
       callback = function()
@@ -31,7 +34,6 @@ return {
         vim.opt.guicursor:append { [[a:Cursor/lCursor]] }
       end,
     })
-
     vim.api.nvim_create_autocmd([[User]], {
       pattern = [[LeapLeave]],
       callback = function()
@@ -39,11 +41,6 @@ return {
         vim.opt.guicursor:remove { [[a:Cursor/lCursor]] }
       end
     })
-
-    vim.api.nvim_create_autocmd([[ColorScheme]], {
-      callback = function ()
-        vim.api.nvim_set_hl(0, [[LeapBackdrop]], { link = [[Comment]] })
-      end
-    })
   end
 }
+

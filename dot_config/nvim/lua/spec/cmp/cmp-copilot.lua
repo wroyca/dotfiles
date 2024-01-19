@@ -1,5 +1,0 @@
----@type LazyPluginSpec
-return {
-  [[hrsh7th/cmp-copilot]],
-  enabled = false
-}

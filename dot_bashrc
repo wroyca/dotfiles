@@ -12,7 +12,7 @@ if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
   PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
 export PATH
-export EDITOR="$(command -v subl)"
+export EDITOR="$(command -v neovim)"
 export PS1="\[\033[00m\][\u@\h \W\$(branch)]$ "
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
@@ -61,7 +61,7 @@ shopt -s \
 #
 # HISTIGNORE
 #  - Command patterns which should not be stored in history.
-# 
+#
 # HISTSIZE HISTFILESIZE
 #  - Increase Bash history size for 32³ entries; the default is 500.
 #

@@ -1,15 +1,21 @@
-local function revision() return vim.fn.input([[(gitsigns) Revision {base}: ]]) end
-local function bufnr() return vim.fn.input([[(gitsigns) Buffer {bufnr}: ]]) end
+local function revision()
+  return vim.fn.input([[(gitsigns) Revision {base}: ]])
+end
+
+local function bufnr()
+  return vim.fn.input([[(gitsigns) Buffer {bufnr}: ]])
+end
+
 local function reset_buffer_index()
-  local choice = vim.fn.confirm(("(gitsigns) This runs an `git reset` on current buffers file. Continue?"), "&Yes\n&No\n&Cancel", 1, "Question")
+  local choice = vim.fn.confirm(("(gitsigns) This runs an `git reset` on current buffers file. Continue?"),
+    "&Yes\n&No\n&Cancel", 1, "Question")
   if choice == 1 then -- Yes
     require [[gitsigns]].reset_buffer_index()
   end
 end
 
 return {
-  [[lewis6991/gitsigns.nvim]],
-  name = [[gitsigns]],
+  [[misc-gitsigns]],
   event = [[VeryLazy]],
   keys = {
     { [[<leader>ghts]],  function() require [[gitsigns]].toggle_signs() end,              desc = [[Signs]] },
@@ -39,22 +45,20 @@ return {
     { [[<leader>ghls]],  function() require [[gitsigns]].stage_hunk() end,                desc = [[Stage]] },
   },
 
-  opts = function()
-    return {
-      signs = {
-        add          = { text = [[┃]] },
-        untracked    = { text = [[ ]] },
-        change       = { text = [[┃]] },
-        delete       = { text = [[┃]] },
-        topdelete    = { text = [[┃]] },
-        changedelete = { text = [[┃]] }
-      },
+  opts = {
+    signs = {
+      add          = { text = [[┃]] },
+      untracked    = { text = [[ ]] },
+      change       = { text = [[┃]] },
+      delete       = { text = [[┃]] },
+      topdelete    = { text = [[┃]] },
+      changedelete = { text = [[┃]] }
+    },
 
-      diff_opts = {
-        algorithm = [[histogram]],
-        internal = true,
-        indent_heuristic = true
-      }
+    diff_opts = {
+      algorithm = [[histogram]],
+      internal = true,
+      indent_heuristic = true
     }
-  end
+  }
 }

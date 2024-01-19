@@ -1,7 +1,6 @@
 ---@type LazyPluginSpec
 return {
-  [[williamboman/mason.nvim]],
-  name = [[mason]],
+  [[mason]],
 
   build = function()
     local _ = require [[mason]]
@@ -19,7 +18,6 @@ return {
         end
       end
     end
-
     if r.refresh then
       r.refresh(ensure_installed)
     else
@@ -31,9 +29,6 @@ return {
     max_concurrent_installers = 10,
     pip = {
       upgrade_pip = true
-    },
-    ui = {
-      border = [[single]]
     }
   }
 }

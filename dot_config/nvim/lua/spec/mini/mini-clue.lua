@@ -1,7 +1,6 @@
 ---@type LazyPluginSpec
 return {
   [[mini.clue]],
-  dev = true,
   event = [[VeryLazy]],
 
   opts = {
@@ -27,14 +26,17 @@ return {
     },
 
     clues = {
+      -- Lsp
       { mode = [[n]], keys = [[<leader>l]],    desc = [[Lsp]] },
       { mode = [[x]], keys = [[<leader>l]],    desc = [[Lsp]] },
       { mode = [[n]], keys = [[<leader>lw]],   desc = [[Workspace folder]] },
       { mode = [[x]], keys = [[<leader>lw]],   desc = [[Workspace folder]] },
-      { mode = [[n]], keys = [[<leader>le]],  desc = [[Extract]] },
-      { mode = [[x]], keys = [[<leader>le]],  desc = [[Extract]] },
-      { mode = [[n]], keys = [[<leader>li]],  desc = [[Inline]] },
-      { mode = [[x]], keys = [[<leader>li]],  desc = [[Inline]] },
+      { mode = [[n]], keys = [[<leader>le]],   desc = [[Extract]] },
+      { mode = [[x]], keys = [[<leader>le]],   desc = [[Extract]] },
+      { mode = [[n]], keys = [[<leader>li]],   desc = [[Inline]] },
+      { mode = [[x]], keys = [[<leader>li]],   desc = [[Inline]] },
+      { mode = [[n]], keys = [[<leader>lL]],   desc = [[Lint]] },
+      { mode = [[x]], keys = [[<leader>lL]],   desc = [[Lint]] },
 
 
       -- Git (sign, neo)
@@ -174,6 +176,10 @@ return {
       { mode = [[x]], keys = [[it]],           desc = "Inside Tag" },
     },
 
+    -- Ideally, we'd use 'auto' for the width, but auto calculation is a bit
+    -- too overzealous, so let's use 55 as a sweet spot, which seems to  cover
+    -- basically every case.
+    --
     window = { config = { width = 55 }, delay = 500 }
   }
 }

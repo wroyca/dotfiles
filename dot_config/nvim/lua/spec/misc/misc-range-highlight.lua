@@ -1,7 +1,6 @@
 ---@type LazyPluginSpec
 return {
-  [[kevinhwang91/nvim-bqf]],
-  name = [[bqf]],
+  [[misc-range-highlight]],
   event = [[VeryLazy]],
   config = true
 }

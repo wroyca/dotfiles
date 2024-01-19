@@ -1,12 +1,10 @@
 --@type LazyPluginSpec
 return {
-  [[saadparwaiz1/cmp_luasnip]],
-  name = [[cmp-luasnip]],
+  [[cmp-luasnip]],
 
   dependencies = {
     {
-      [[L3MON4D3/LuaSnip]],
-      name = [[cmp-luasnip-loaders]],
+      [[cmp-luasnip-loaders]],
       config = function()
         require [[luasnip.loaders.from_vscode]].lazy_load()
       end

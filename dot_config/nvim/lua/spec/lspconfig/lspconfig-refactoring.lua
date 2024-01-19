@@ -1,11 +1,7 @@
 ---@type LazyPluginSpec
 return {
-  [[ThePrimeagen/refactoring.nvim]],
-  dependencies = {
-    [[plenary]],
-    [[treesitter]]
-  },
-
+  [[lspconfig-refactoring]],
+  config = true,
   keys = {
     { [[<leader>lef]],  [[:Refactor extract ]],              mode = [[x]],            desc = [[Extract function]] },
     { [[<leader>leF]],  [[:Refactor extract_to_file ]],      mode = [[x]],            desc = [[Extract function to file]] },
@@ -14,7 +10,5 @@ return {
     { [[<leader>lif]],  [[:Refactor inline_func]],           mode = [[n]],            desc = [[Inline function]] },
     { [[<leader>leb]],  [[:Refactor extract_block]],         mode = [[n]],            desc = [[Extract block]] },
     { [[<leader>leB]],  [[:Refactor extract_block_to_file]], mode = [[n]],            desc = [[Extract block to file]] },
-  },
-
-  config = true,
+  }
 }

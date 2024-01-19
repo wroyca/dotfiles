@@ -1,7 +1,6 @@
 ---@type LazyPluginSpec
 return {
-  [[hrsh7th/nvim-cmp]],
-  name = [[cmp]],
+  [[cmp]],
   event = {
     [[InsertEnter]],
     [[CmdLineEnter]]

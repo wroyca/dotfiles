@@ -1,26 +1,23 @@
 ---@type LazyPluginSpec
 return {
   [[mini.basics]],
-  dev = true,
   event = [[VeryLazy]],
-
   opts = {
     options = {
-      basic = true,
-      extra_ui = true,
+      basic = false,
+      extra_ui = false,
       win_borders = [[single]]
     },
-
     mappings = {
-      basic = true,
-      option_toggle_prefix = [[\]],
-      windows = true,
-      move_with_alt = true
+      basic = false,
+      windows = false,
+      option_toggle_prefix = [[]],
+      move_with_alt = false,
     },
-
     autocommands = {
       basic = true,
-      relnum_in_visual_mode = true
+      relnum_in_visual_mode = false
     }
   }
 }
+

@@ -24,5 +24,3 @@ vim.api.nvim_create_autocmd("CmdWinEnter", {
     vim.keymap.set([[n]], [[q]], [[<Cmd>q<CR>]], { buffer = event.buf, silent = true })
   end
 })
-
-

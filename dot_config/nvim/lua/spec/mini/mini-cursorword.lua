@@ -1,9 +1,10 @@
 ---@type LazyPluginSpec
 return {
   [[mini.cursorword]],
-  dev = true,
   event = [[VeryLazy]],
   opts = {
-    delay = 2000
+    -- TODO: Assign a toggle keymap instead.
+    --
+    delay = 3000
   }
 }
