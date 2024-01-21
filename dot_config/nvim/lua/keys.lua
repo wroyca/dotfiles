@@ -51,7 +51,6 @@ vim.keymap.set([[n]],                  [[L]],           [[<Nop>]],              
 vim.keymap.set([[n]],                  [[<C-T>]],       [[<Nop>]],                 { silent = true, desc = [[Jump to previous tag]] })
 vim.keymap.set([[n]],                  [[<C-]>]],       [[<Nop>]],                 { silent = true, desc = [[Jump to tag under cursor]] })
 vim.keymap.set([[n]],                  [[<Tab>]],       [[<Nop>]],                 { silent = true, desc = [[Go to newer entry in jump list]] })
-vim.keymap.set([[n]],                  [[g]],           [[<Nop>]],                 { silent = true, desc = [[Like <C-]> but with :tselect]] })
 vim.keymap.set([[n]],                  [[gf]],          [[<Nop>]],                 { silent = true, desc = [[Open file under cursor]] })
 vim.keymap.set([[n]],                  [[gF]],          [[<Nop>]],                 { silent = true, desc = [[Open file under cursor and go to line number]] })
 vim.keymap.set([[n]],                  [[gd]],          [[<Nop>]],                 { silent = true, desc = [[Go to local declaration]] })

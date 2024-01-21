@@ -20,6 +20,19 @@ CompileFlags:
     - -Wno-c++20-compat
     - -Wno-c++20-compat-pedantic
 
+    # GLib
+    #
+    - -Wno-reserved-identifier
+    - -Wno-unused-variable
+    - -Wno-used-but-marked-unused
+    - -Wno-pre-c2x-compat
+    - -Wno-declaration-after-statement
+    - -Wno-missing-prototypes
+    - -Wno-disabled-macro-expansion
+    - -Wno-cast-function-type-strict
+    - -Wno-unsafe-buffer-usage
+    - -Wno-unused-macros
+
 Diagnostics:
   ClangTidy:
     Add:
@@ -463,7 +476,13 @@ Diagnostics:
       - readability-qualified-auto
       - zircon-temporary-objects
 
-
+      # GLib
+      #
+      - bugprone-reserved-identifier
+      - readability-braces-around-statements
+      - cppcoreguidelines-avoid-non-const-global-variables
+      - performance-no-int-to-ptr
+      - bugprone-assignment-in-if-condition
 
 Index:
   StandardLibrary: Yes
