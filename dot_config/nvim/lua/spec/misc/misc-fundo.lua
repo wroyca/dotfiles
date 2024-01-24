@@ -1,6 +1,7 @@
 ---@type LazyPluginSpec
 return {
   [[misc-fundo]],
+  event = [[VeryLazy]],
 
   build = function()
     require [[fundo]].install()

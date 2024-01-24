@@ -29,6 +29,9 @@ return {
     max_concurrent_installers = 10,
     pip = {
       upgrade_pip = true
+    },
+    ui = {
+      border = [[single]]
     }
   }
 }

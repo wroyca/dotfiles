@@ -61,14 +61,14 @@ vim.o.tabstop        = 2
 vim.o.shiftwidth     = 0
 vim.o.scrolloff      = 5
 vim.o.pumheight      = 9
-vim.o.cmdheight      = 1
-vim.o.laststatus     = 3
+vim.o.cmdheight      = 0
+vim.o.laststatus     = 0
 vim.o.foldlevel      = 99
 vim.o.foldlevelstart = 99
 vim.o.foldenable     = true
 vim.o.list           = true
-vim.opt.suffixes     = vim.opt.suffixes - [[.h]]
-vim.opt.fillchars    : append { diff = "╱" }
+vim.opt.fillchars    : append { diff = [[╱]] }
+vim.opt.suffixes     : remove [[.h]]
 vim.opt.cinkeys      : remove [[:]]
 vim.opt.indentkeys   : remove [[:]]
 vim.opt.shortmess    : append [[sI]]
@@ -91,8 +91,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require [[keys]]
 require [[cmds]]
-require [[lazy]].setup(
-{
+require [[lazy]].setup({
   spec = {
     { import = [[spec]] },
 
@@ -205,7 +204,6 @@ require [[lazy]].setup(
         [[logipat]],
         [[man]],
         [[matchit]],
-        [[matchparen]],
         [[netrwFileHandlers]],
         [[netrwPlugin]],
         [[netrwSettings]],
@@ -236,7 +234,6 @@ require [[lazy]].setup(
     version = false
   },
 
-  -- https://github.com/folke/lazy.nvim/issues/1008
   change_detection = {
     enabled = false
   },
@@ -246,6 +243,10 @@ require [[lazy]].setup(
       [[randomhue]],
       [[default]]
     }
+  },
+
+  ui = {
+    title = [[Lazy]],
+    border = [[single]]
   }
 })
-

@@ -1,6 +1,7 @@
 ---@type LazySpec
 return {
   [[treesitter]],
+  event = [[VeryLazy]],
   build = [[:TSInstall all]],
 
   init = function(plugin)
@@ -13,7 +14,7 @@ return {
       enable = false
     },
     highlight = {
-      enable = false
+      enable = true
     }
   },
 
