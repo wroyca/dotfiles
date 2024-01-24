@@ -8,11 +8,77 @@ return {
 
   opts = function()
     local cmp = require [[cmp]]
-    local cfg = require [[cmp.config]]
+    local cmp_config = require [[cmp.config]]
+    local cmp_core = require [[cmp.core]]
+
+    -- nvim_lsp and nvim_lsp_signature_help source still use deprecated
+    -- vim.lsp.buf_get_clients(), which is slower due to the deprecation and
+    -- version check in that function. Overwrite it using
+    -- `vim.lsp.get_clients()` to improve performance.
+    --
+    function vim.lsp.buf_get_clients(bufnr)
+      return vim.lsp.get_clients({ buffer = bufnr })
+    end
+
+    -- https://github.com/hrsh7th/nvim-cmp/issues/1797
+    --
+    local function fast_cmp_visible()
+      if not (cmp.core.view and cmp.core.view.custom_entries_view) then
+        return false
+      end
+      return cmp.core.view.custom_entries_view:visible()
+    end
+
+    ---@type string?
+    local last_key
+    vim.on_key(function(k)
+      last_key = k
+    end)
+
+    ---@type integer
+    local last_changed = 0
+    local _cmp_on_change = cmp_core.on_change
+
+    ---Spaces/tabs causes higher latency than other keys, e.g. when holding
+    ---down 's' the interval between keystrokes is less than 32ms (80
+    ---repeats/s keyboard), but when holding spaces/tabs the interval
+    ---increases to 100ms, guess is is due ot some other plugins that
+    ---triggers on spaces/tabs Spaces/tabs are not useful in triggering
+    ---completions in insert mode but can be useful in command-line
+    ---autocompletion, so ignore them only when not in command-line mode
+    ---
+    ---@diagnostic disable-next-line: duplicate-set-field
+    ---
+    function cmp_core.on_change(self, trigger_event)
+      if (last_key == ' ' or last_key == '\t') and string.sub(vim.fn.mode(), 1, 1) ~= 'c' then
+        return
+      end
+
+      local now = vim.uv.now()
+      local fast_typing = now - last_changed < 32
+      last_changed = now
+
+      if not fast_typing or trigger_event ~= 'TextChanged' or fast_cmp_visible() then
+        _cmp_on_change(self, trigger_event)
+        return
+      end
+
+      vim.defer_fn(function()
+        if last_changed == now then
+          _cmp_on_change(self, trigger_event)
+        end
+      end, 200)
+    end
 
     return {
       sources = cmp.config.sources({
-        { name = [[buffer]] },
+        {
+          name = [[buffer]],
+          option = {
+            -- Faster than the default one because of its syntactical simplificty.
+            keyword_pattern = [[\k\+]]
+          }
+        },
         { name = [[luasnip]] },
         { name = [[nvim_lua]] },
 
@@ -65,17 +131,17 @@ return {
         -- performance.
         --
         ['<C-n>'] = cmp.mapping(function(fallback)
-          if cmp.visible() then
+          if fast_cmp_visible() then
             cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-            cfg.get().view.docs.auto_open = false
+            cmp_config.get().view.docs.auto_open = false
           else
             fallback()
           end
         end, { [[i]] }),
         ['<C-p>'] = cmp.mapping(function(fallback)
-          if cmp.visible() then
+          if cmp.fast_cmp_visible() then
             cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
-            cfg.get().view.docs.auto_open = false
+            cmp_config.get().view.docs.auto_open = false
           else
             fallback()
           end
