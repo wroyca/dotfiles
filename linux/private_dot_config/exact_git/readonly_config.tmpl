@@ -5,6 +5,7 @@
   email = {{ .email | quote }}
 
 [credential]
+  credentialStore = cache
   helper = cache --timeout 86400
 {{ if (lookPath "gh") -}}
 [credential "https://github.com"]
