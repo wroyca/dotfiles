@@ -1,0 +1,42 @@
+; https://git-scm.com/docs/git-config
+
+[user]
+  name = {{ .name | quote }}
+  email = {{ .email | quote }}
+
+[credential]
+  helper = cache --timeout 86400
+{{ if (lookPath "gh") -}}
+[credential "https://github.com"]
+  helper = !{{- output "which" "gh" | trim }} auth git-credential
+[credential "https://gist.github.com"]
+  helper = !{{- output "which" "gh" | trim }} auth git-credential
+{{- end }}
+{{ if (lookPath "git-credential-manager") -}}
+[credential]
+  helper = !{{- output "which" "git-credential-manager" | trim }}
+{{- end }}
+
+[core]
+  fileMode = false
+  splitIndex = true
+  untrackedCache = true
+
+[push]
+  autoSetupRemote = true
+[pull]
+  ff = true
+  rebase = true
+
+[diff]
+  algorithm = histogram
+  ignoresubmodules = dirty
+[diff "bin"]
+  textconv = hexdump -v -C
+[diff "image"]
+  command = compare $2 $1 png:- | montage -geometry +4+4 $2 - $1 png:- | display -title \"$1\" -
+
+[url "https://github.com/"]
+  insteadOf = git@github.com:
+[url "https://gitlab.com/"]
+  insteadOf = git@gitlab.com:

@@ -1,0 +1,76 @@
+# .bashrc
+
+# Start blesh if the current shell is interactive
+#
+[[ $- == *i* ]] && source ~/.local/share/blesh/ble.sh --noattach
+
+# Source global definitions
+#
+if [ -f /etc/bashrc ]; then
+  . /etc/bashrc
+fi
+
+# User specific environment
+#
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
+  PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
+export EDITOR="$(command -v nvim)"
+export PS1="\[\033[00m\][\u@\h \W\$(branch)]$ "
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+#
+if [ -d ~/.config/bash/bashrc.d ]; then
+  for rc in ~/.config/bash/bashrc.d/*; do
+    if [ -f "$rc" ]; then
+      . "$rc"
+    fi
+  done
+fi
+unset rc
+
+# SHELL OPTIONS:
+# - Append changes to bash history, don't overwrite.
+# - Allow editing failed history expansions.
+# - Verify history expansion results.
+# - Ignore small typos during directory changes.
+# - Disable auto-completion with empty readline buffer.
+# - Enable extended glob and find-all-glob with **.
+# - Optimize command handling using hashtables.
+# - Resolve line-wrapping-over-prompt issues on terminal resize.
+#
+shopt -s \
+    histappend \
+    histreedit \
+    histverify \
+    cdspell \
+    no_empty_cmd_completion \
+    extglob \
+    globstar \
+    checkhash \
+    checkwinsize
+
+# HISTCONTROL
+# - Ignore commands starting with space.
+# - Ignore duplicate commands.
+#
+# HISTIGNORE
+# - Specify command patterns to exclude from history storage.
+#
+# HISTSIZE HISTFILESIZE
+# - Increase Bash history size to 32³ entries; the default is 500.
+#
+export HISTIGNORE="clear:history:[bf]g:exit:date:* --help"
+export HISTCONTROL='ignoreboth:erasedups'
+export HISTSIZE='32768'
+export HISTFILESIZE="${HISTSIZE}"
+
+# Bash Line Editor (ble.sh)
+#
+[[ ${BLE_VERSION-} ]] && ble-attach
+
+

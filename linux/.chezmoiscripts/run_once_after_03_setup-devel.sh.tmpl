@@ -1,0 +1,62 @@
+#!/bin/bash
+
+{{ if eq .osid "linux-fedora" }}
+  sudo dnf group install -y \
+    development-libs
+
+  sudo dnf group install -y \
+    development-tools
+
+  sudo dnf group install -y \
+    gnome-software-development
+
+  sudo dnf install -y \
+    gcc
+
+  sudo dnf install -y \
+    clang
+
+  pip install \
+    git+https://github.com/wroyca/compiledb@support-cl-clang-cl
+
+  sudo dnf install -y \
+    clang-tools-extra
+
+  sudo dnf install -y \
+    dotnet-sdk-7.0
+
+  dotnet tool install -g \
+    git-credential-manager || true
+
+  # Installation is possible through dotnet tools, found in the Fedora
+  # repository (see above). However, GCM occasionally raises its minimum dotnet
+  # tool version requirements, causing the Fedora package to become outdated
+  # and, as a result, making it unable to install GCM. In the end, the more
+  # reliable approach is to install it directly from the source.
+  #
+  if ! command -v git-credential-manager > /dev/null 2>&1; then
+    (curl -l https://aka.ms/gcm/linux-install-source.sh | sh) && git-credential-manager configure
+  fi
+
+  # Cross-platform build toolchain for developing and packaging C/C++ projects.
+  #
+  if ! command -v b > /dev/null 2>&1; then
+    cd ~ && mkdir Projects && cd Projects
+
+    # Version identification.
+    v=$(curl -s  'https://stage.build2.org/0/' | \
+        grep -oP '(?<=href=")0\.\K\d+\.\d+'    | \
+        sort -nr                               | \
+        head -1)
+
+    curl -O \
+      "https://stage.build2.org/0/0.$v-a.0/build2-install-0.$v-a.0-stage.sh"
+    sh build2-install-0.$v-a.0-stage.sh --local --cxx clang++
+  fi
+
+  # Cross-platform build toolchain for developing and packaging Rust projects.
+  #
+  if ! command -v cargo > /dev/null 2>&1; then
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  fi
+{{ end }}

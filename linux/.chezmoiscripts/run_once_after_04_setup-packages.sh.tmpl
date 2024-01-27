@@ -1,0 +1,18 @@
+#!/bin/bash
+
+{{ if eq .osid "linux-fedora" }}
+  sudo dnf install -y \
+    gnome-tweaks
+
+  sudo dnf install -y \
+    adw-gtk3-theme
+
+  sudo dnf install -y \
+    kitty
+
+  sudo dnf copr enable -y \
+    agriffis/neovim-nightly
+
+  sudo dnf install -y \
+    neovim
+{{ end }}

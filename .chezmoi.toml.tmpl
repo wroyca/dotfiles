@@ -3,6 +3,12 @@
 {{-   $osid = printf "%s-%s" .chezmoi.os .chezmoi.osRelease.id -}}
 {{- end -}}
 
+{{ if eq .chezmoi.os "windows" -}}
+sourceDir = "{{- .chezmoi.workingTree -}}/windows"
+{{ else -}}
+sourceDir = "{{- .chezmoi.workingTree -}}/linux"
+{{ end }}
+
 encryption = "age"
 
 [data]

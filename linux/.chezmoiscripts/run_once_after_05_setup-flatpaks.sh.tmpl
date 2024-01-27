@@ -1,0 +1,15 @@
+#!/bin/bash
+
+{{ if eq .osid "linux-fedora" }}
+  flatpaks=(
+    "org.gnome.Builder"
+    "org.gnome.World.Secrets"
+    "org.gnome.World.PikaBackup"
+    "com.github.tchx84.Flatseal"
+    "com.mattjakeman.ExtensionManager"
+  )
+
+  for flatpak in "${flatpaks[@]}"; do
+    flatpak install -y flathub "$flatpak"
+  done
+{{ end }}
