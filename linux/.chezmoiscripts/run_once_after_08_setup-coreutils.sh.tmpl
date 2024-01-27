@@ -1,0 +1,12 @@
+#!/bin/bash
+
+{{ if eq .osid "linux-fedora" }}
+  sudo dnf install -y \
+    bat
+
+  sudo sh \
+    bin/bat-extras/build.sh --install
+
+  sudo dnf install -y \
+    eza
+{{ end }}

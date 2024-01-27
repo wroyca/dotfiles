@@ -1,0 +1,4 @@
+["bin/bat-extras"]
+  type = "git-repo"
+  url = "https://github.com/eth-p/bat-extras.git"
+  refreshPeriod = "672h"
