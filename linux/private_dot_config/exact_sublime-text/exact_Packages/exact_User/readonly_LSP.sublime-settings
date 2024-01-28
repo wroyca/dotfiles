@@ -147,7 +147,7 @@
   // Disable Sublime Text's word completions. When set to `true`, this also disables
   // Sublime Text's internal completion sorting algorithm and instead uses the sorting
   // defined by the relevant language server.
-  "inhibit_word_completions": true,
+  "inhibit_word_completions": false,
 
   // The mode used for inserting completions:
   // - `insert` would insert the completion text in a middle of the word
@@ -160,7 +160,7 @@
   // --- Other --------------------------------------------------------------------------
 
   // Show symbol references in Sublime's quick panel instead of the bottom panel.
-  "show_references_in_quick_panel": false,
+  "show_references_in_quick_panel": true,
 
   // Show code lens:
   // "annotation" - show an annotation on the right when code actions are available
@@ -215,7 +215,7 @@
   // Determines ranges which initially should be folded when a document is opened,
   // provided that the language server has support for this.
   "initially_folded": [
-    "comment",
+    // "comment",
     // "imports",
     // "region",
   ],

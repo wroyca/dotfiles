@@ -1,7 +1,12 @@
 {
   "theme": "auto",
   "hardware_acceleration": "opengl",
-  "ui_scale": 1.5,
-  "render_commit_dialog_message_at_top": false,
+  "always_show_command_status": true,
+
   "side_bar_layout": "tabs",
+  "render_commit_dialog_message_at_top": false,
+
+  "tab_size": 2,
+  "translate_tabs_to_spaces": true,
 }
+

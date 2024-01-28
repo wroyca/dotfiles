@@ -1,13 +1,13 @@
 {
-  "installed_packages":
-  [
-    "EditorConfig",
-    "LSP",
-    "LSP-clangd",
-    "Package Control",
-    "TOML",
-  ],
-  "in_process_packages":
-  [
-  ],
+	"in_process_packages":
+	[
+	],
+	"installed_packages":
+	[
+		"EditorConfig",
+		"LSP",
+		"LSP-clangd",
+		"Package Control",
+		"TOML",
+	],
 }

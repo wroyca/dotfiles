@@ -35,7 +35,8 @@
     {
       "name": "Comment",
       "scope": "comment, punctuation.definition.comment",
-      "foreground": "var(grey3)"
+      "foreground": "var(grey3)",
+      "font_style": "italic"
     },
 
     {

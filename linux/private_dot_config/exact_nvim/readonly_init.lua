@@ -73,10 +73,13 @@ if not vim.uv.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+require [[keys]]
+require [[cmds]]
+
 require [[lazy]].setup({
   spec = {
     { import = [[spec]] },
-    
+
     { name = [[cmp]],                          [[hrsh7th/nvim-cmp]] },
     { name = [[cmp-buffer]],                   [[hrsh7th/cmp-buffer]] },
     { name = [[cmp-calc]],                     [[hrsh7th/cmp-calc]] },
@@ -149,7 +152,7 @@ require [[lazy]].setup({
     { name = [[misc-ufo]],                     [[kevinhwang91/nvim-ufo]] },
     { name = [[misc-bqf]],                     [[kevinhwang91/nvim-bqf]] },
     { name = [[misc-hlslens]],                 [[kevinhwang91/nvim-hlslens]] },
-    
+
     { name = [[misc-leap]],                    [[ggandor/leap.nvim]] },
     { name = [[misc-leap-flit]],               [[ggandor/flit.nvim]] },
     { name = [[misc-leap-spooky]],             [[ggandor/leap-spooky.nvim]] },
@@ -159,6 +162,11 @@ require [[lazy]].setup({
     { name = [[misc-neogit]],                  [[NeogitOrg/neogit]], branch = [[nightly]] },
     { name = [[misc-gitsigns]],                [[lewis6991/gitsigns.nvim]] },
     { name = [[misc-lumen]],                   [[vimpostor/vim-lumen]] },
+    { name = [[misc-last-color]],              [[raddari/last-color.nvim]] },
+    { name = [[misc-chameleon]],               [[shaun-mathew/chameleon.nvim]] },
+
+    { name = [[colorscheme-github]],           [[projekt0n/github-nvim-theme]], lazy = false },
+    { name = [[colorscheme-catppuccin]],       [[catppuccin/nvim]], lazy = false },
 
     { name = [[treesitter]],                   [[nvim-treesitter/nvim-treesitter]] },
     { name = [[treesitter-context]],           [[nvim-treesitter/nvim-treesitter-context]] },
