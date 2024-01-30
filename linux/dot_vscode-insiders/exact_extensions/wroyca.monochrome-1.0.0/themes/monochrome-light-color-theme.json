@@ -1,0 +1,34 @@
+{
+	"name": "Monochrome (Light)",
+	"colors": {
+		"editor.background": "#d5d5d5",
+		"editor.findMatchBackground": "#2f2f2f",
+		"editor.foreground": "#2f2f2f",
+		"editor.rangeHighlightBackground": "#b6b6b6",
+		"editorGroupHeader.tabsBackground": "#c0c0c0",
+		"sideBar.background": "#c0c0c0",
+		"tab.activeBackground": "#d5d5d5",
+		"tab.activeForeground": "#2f2f2f",
+		"tab.border": "#c0c0c0",
+		"tab.inactiveBackground": "#c0c0c0",
+		"titleBar.activeBackground": "#c0c0c0",
+		"titleBar.inactiveBackground": "#c0c0c0",
+    "editor.lineHighlightBackground": "#b6b6b6",
+    "editor.lineHighlightBorder": "#b6b6b6",
+    "editorLineNumber.activeForeground": "#2e2e2e",
+    "editorLineNumber.foreground": "#999999",
+	},
+	"tokenColors": [
+		{ 
+			"name": "Comment",
+			"scope": [
+				"comment",
+				"punctuation.definition.comment"
+			],
+			"settings": {
+				"foreground": "#626262",
+				"fontStyle": "italic",
+			}
+		}
+	]
+}

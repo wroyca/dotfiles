@@ -1,0 +1,51 @@
+#workbench\.parts\.titlebar {
+    height: 43px !important;
+} .split-view-view {
+    top: 3px;
+} .editor-container {
+    height: 80% !important;
+} .monaco-editor-pane-placeholder {
+    padding-top: 5%;
+    height: 100% !important;
+}
+
+.tab {
+    flex-grow: 1;
+    margin: 0px 2.5px;
+    padding-left: 10px;
+    border-radius: 6px;
+    border: none !important;
+    transition: all 0.2s ease-in-out;
+} .tab-label {
+    flex: 0 !important;
+    margin: 0 auto !important;
+    overflow: visible;
+} .tabs-container {
+    margin: 5px 2.5px !important;
+}
+
+/* FIXME: Unwanted padding on vsplit.
+.content .editor-group-container > .title .tabs-container > .tab:only-of-type {
+    display: none;
+} .content .editor-group-container > .title .tabs-container:has(.tab):not(:has(.tab ~ .tab)) {
+    display: none;
+}
+*/
+
+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab > .tab-border-top-container,
+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab > .tab-border-bottom-container                           { display: none; }
+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.active.tab-border-top > .tab-border-top-container,
+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.active.tab-border-bottom > .tab-border-bottom-container,
+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.dirty-border-top > .tab-border-top-container             { display: none; }
+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.active.tab-border-top > .tab-border-top-container        { display: none; }
+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.active.tab-border-bottom > .tab-border-bottom-container  { display: none; }
+.monaco-workbench .part.editor > .content .editor-group-container > .title .tabs-container > .tab.dirty-border-top > .tab-border-top-container             { display: none; }
+
+.monaco-scrollable-element .scrollbar.vertical .slider {
+    width: 6px !important;
+} .monaco-scrollable-element .scrollbar.horizontal .slider {
+    height: 5px !important;
+} .monaco-scrollable-element .scrollbar>.slider {
+    border-radius: 6px !important;
+}
+
