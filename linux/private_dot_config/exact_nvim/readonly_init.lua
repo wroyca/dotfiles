@@ -200,3 +200,5 @@ require [[lazy]].setup({
     pills = false
   }
 })
+
+if vim.o.filetype == [[lazy]] then vim.cmd.close() end
