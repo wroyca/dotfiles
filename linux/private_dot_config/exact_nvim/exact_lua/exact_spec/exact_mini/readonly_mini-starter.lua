@@ -36,6 +36,7 @@ return {
         local stats = require [[lazy]].stats()
         local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
         starter.config.footer = [[Neovim loaded ]] .. stats.count .. [[ plugins in ]] .. ms .. [[ms]]
+        pcall(vim.cmd.rshada, { bang = true })
         pcall(starter.refresh)
       end
     })
