@@ -2,12 +2,17 @@
 return {
   [[mini.sessions]],
   event = [[VimEnter]],
-  
+
   cond = function()
-    if not (vim.fn.argc(-1) == 0) then return false end
-    return os.execute("git rev-parse --is-inside-work-tree > /dev/null 2>&1") ~= nil and true or false
+    if not (vim.fn.argc(-1) == 0) then
+      return false
+    end
+    local cmd = { [[git]], [[rev-parse]], [[--is-inside-work-tree]] }
+    return vim.system(cmd, {
+      cwd = vim.fn.getcwd()
+    }):wait().stdout == "true\n"
   end,
-  
+
   config = function()
     local current_working_directory = vim.fn.getcwd()
     local project_folder_name = current_working_directory:match("^.+/(.+)$")
@@ -35,14 +40,17 @@ return {
       return count
     end
 
-    local MiniSessions = require [[mini.sessions]]
+    local MiniSessions = require([[mini.sessions]])
     MiniSessions.setup({
       autoread = false,
       autowrite = true,
       directory = vim.fn.expand("$HOME") .. "/.cache/nvim/sessions/" .. project_folder_name .. "/",
       file = "",
       force = { read = false, write = true, delete = false },
-      hooks = { pre = { read = nil, write = close_invalid_buffers, delete = nil }, post = { read = nil, write = nil, delete = nil } },
+      hooks = {
+        pre = { read = nil, write = close_invalid_buffers, delete = nil },
+        post = { read = nil, write = nil, delete = nil },
+      },
       verbose = { read = false, write = true, delete = true },
     })
 
@@ -53,7 +61,7 @@ return {
         if number_of_open_buffers > 0 then
           MiniSessions.write(project_folder_name .. [[.nvim]])
         end
-      end
+      end,
     })
-  end
+  end,
 }

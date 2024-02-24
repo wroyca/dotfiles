@@ -2,13 +2,10 @@ return {
   [[misc-gitsigns]],
   event = [[VeryLazy]],
   cond = function()
-    return vim
-      .system({
-        [[git]],
-        [[rev-parse]],
-        [[--is-inside-work-tree]],
-      }, { cwd = vim.fn.getcwd() })
-      :wait().stdout == "true\n"
+    local cmd = { [[git]], [[rev-parse]], [[--is-inside-work-tree]] }
+    return vim.system(cmd, {
+      cwd = vim.fn.getcwd()
+    }):wait().stdout == "true\n"
   end,
   opts = {
     signs = {

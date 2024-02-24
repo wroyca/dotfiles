@@ -1,17 +1,20 @@
 local function git_is_inside_work_tree()
-  return os.execute("git rev-parse --is-inside-work-tree > /dev/null 2>&1") ~= nil and true or false
+  local cmd = { [[git]], [[rev-parse]], [[--is-inside-work-tree]] }
+  return vim.system(cmd, {
+    cwd = vim.fn.getcwd(),
+  }):wait().stdout == "true\n"
 end
 
 ---@type LazyPluginSpec
 return {
   [[mini.starter]],
   event = [[VimEnter]],
-  
-  cond = function() 
-    if not (vim.fn.argc(-1) == 0) then return false end 
+
+  cond = function()
+    if not (vim.fn.argc(-1) == 0) then return false end
     return true
   end,
-  
+
   config = function()
     local starter = require [[mini.starter]]
     local items = {}
