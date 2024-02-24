@@ -6,7 +6,7 @@
 
 [credential]
   credentialStore = cache
-  helper = cache --timeout 86400
+  helper = cache --timeout=86400
 {{ if (lookPath "git-credential-manager") -}}
 [credential]
   helper = !{{- output "which" "git-credential-manager" | trim }}
