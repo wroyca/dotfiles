@@ -2,9 +2,18 @@
 return {
   [[misc-neogit]],
   cmd = [[Neogit]],
+  dependencies = {
+    { name = [[misc-neogit-telescope]], [[nvim-telescope/telescope.nvim]] },
+    { name = [[misc-neogit-diffview]],  [[sindrets/diffview.nvim]] },
+  },
   keys = { { [[<leader>gn]], [[<cmd>Neogit<cr>]], desc = [[Neogit]] } },
   opts = {
     graph_style = [[unicode]],
+    auto_show_console = false,
+    integrations = {
+      telescope = true,
+      diffview = true,
+    },
   },
   config = function(_, opts)
     for _, e in ipairs({
