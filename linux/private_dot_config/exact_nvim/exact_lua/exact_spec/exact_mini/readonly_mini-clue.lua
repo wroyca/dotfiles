@@ -48,6 +48,12 @@ return {
           submode_resize = true,
         }),
         miniclue.gen_clues.z(),
+
+        -- Descriptions for <Leader> mapping groups
+        { mode = [[n]], keys = [[<leader>g]], desc = [[Git]] },
+        { mode = [[x]], keys = [[<leader>g]], desc = [[Git]] },
+        { mode = [[n]], keys = [[<leader>c]], desc = [[Coc]] },
+        { mode = [[x]], keys = [[<leader>c]], desc = [[Coc]] },
       },
 
       window = { config = { width = 55 }, delay = 500 },
