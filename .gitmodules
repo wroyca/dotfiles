@@ -1,0 +1,3 @@
+[submodule "linux/private_dot_config/nvim"]
+	path = linux/private_dot_config/nvim
+	url = https://github.com/wroyca/nvim
