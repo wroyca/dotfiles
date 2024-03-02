@@ -9,4 +9,3 @@ if ! grep -q "fastestmirror=1" /etc/dnf/dnf.conf; then
   #
   echo -e "fastestmirror=1\nminrate=1M\nmax_parallel_downloads=10" | sudo tee -a /etc/dnf/dnf.conf > /dev/null
 fi
-

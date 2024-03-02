@@ -2,11 +2,8 @@
 
 if [ ! -f "{{ .chezmoi.homeDir }}/.config/age/key.txt" ]; then
 
-# chezmoi has builtin support for age encryption which is automatically used if the age command is not found in $PATH.
-#
-mkdir -p 	       "{{ .chezmoi.homeDir }}/.config/age"
-age --decrypt --output "{{ .chezmoi.homeDir }}/.config/age/key.txt" \
-                       "{{ .chezmoi.sourceDir }}/private_dot_config/age/key.txt.age"
+mkdir -p               "{{ .chezmoi.homeDir }}/.config/age"
+age --decrypt --output "{{ .chezmoi.homeDir }}/.config/age/key.txt" --passphrase "{{ .chezmoi.sourceDir }}/private_dot_config/age/key.txt.age"
 chmod 600              "{{ .chezmoi.homeDir }}/.config/age/key.txt"
 
 fi
