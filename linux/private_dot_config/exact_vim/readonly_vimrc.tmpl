@@ -1,4 +1,4 @@
-" Ensure that vim-minimal, system-wide vimrc/gvimrc files, and files specified 
+" Ensure that vim-minimal, system-wide vimrc/gvimrc files, and files specified
 " through the -u argument do not default to vi-compatible mode.
 "
 if &compatible
@@ -36,7 +36,7 @@ set shortmess+=sI
 "
 set mouse=a
 set ttymouse=sgr
-set balloonevalterm
+"set balloonevalterm
 
 {{/* Unavailable with vim-minimal, but installing Vim will take precedence. */}}
 {{- if (lookPath "vim") -}}
@@ -98,3 +98,49 @@ let &t_RT = "\e[23;2t"
 "
 let &t_ut=''
 {{- end }}
+
+" Quick way to move lines of text up or down.
+"
+" Explanation:
+"
+" The command :m .+1 (which can be abbreviated to :m+) moves the current line
+" to after line number .+1 (current line number + 1). That is, the current
+" line is moved down one line.
+"
+" The command :m .-2 (which can be abbreviated to :m-2) moves the current line
+" to after line number .-2 (current line number − 2). That is, the current
+" line is moved up one line.
+"
+" After visually selecting some lines, entering :m '>+1 moves the selected
+" lines to after line number '>+1 (one line after the last selected line; '>
+" is a mark assigned by Vim to identify the selection end). That is, the block
+" of selected lines is moved down one line.
+"
+" The == re-indents the line to suit its new position. For the visual-mode
+" mappings, gv reselects the last visual block and = re-indents that block.
+"
+nnoremap <A-j> :m .+1<CR>==
+nnoremap <A-k> :m .-2<CR>==
+inoremap <A-j> <Esc>:m .+1<CR>==gi
+inoremap <A-k> <Esc>:m .-2<CR>==gi
+vnoremap <A-j> :m '>+1<CR>gv=gv
+vnoremap <A-k> :m '<-2<CR>gv=gv
+
+" Change 'n' and 'N' behaviour to search consistently downwards and upwards
+"
+" Explanation:
+"
+" This uses expression-maps, which maps the lhs of the map to an expression
+" that will be evaluated, everytime the lhs is encountered. See :h
+" map-expression in the help.
+"
+" What happens is, that the v:searchforward variable (which determines the
+" internal state of which direction the last search was, see :h
+" v:searchforward) is used as an index for the string in front of it. So in
+" case of the first map, if the last search direction was forward, the n will
+" be mapped to 'n' (index of 1, meaning return the second character) and if it
+" was backward, the 'n' will be mapped to 'N' (because the v:searchforward
+" variable is 0 and therefore the 'N' will be returned.
+"
+nnoremap <expr> n 'Nn'[v:searchforward]
+nnoremap <expr> N 'nN'[v:searchforward]
