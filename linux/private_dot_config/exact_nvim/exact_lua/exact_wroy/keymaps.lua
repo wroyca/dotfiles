@@ -45,9 +45,9 @@ clean_keys({ 'n', 'v' }, ']', nvo_bracket_keys, '', '<Nop>')
 clean_keys('o', '[', nvo_bracket_keys, '', '<Esc>')
 clean_keys('o', ']', nvo_bracket_keys, '', '<Esc>')
 
--- local nvo_g_keys = "<C-a><C-g><C-h><C-]>#$&'`*+,-08;<?DEHIJNPQRTUV]^_adefFhijkMnopqtuvw@~"
--- clean_keys({ 'n', 'v' }, 'g', nvo_g_keys, '', '<Nop>')
--- clean_keys('o', 'g', nvo_g_keys, '', '<Esc>')
+local nvo_g_keys = "<C-a><C-g><C-h><C-]>#$&'`*+,-08;<?DEHIJNPQRTUV]^_adefFhijkMnopqtuvw@~"
+clean_keys({ 'n', 'v' }, 'g', nvo_g_keys, '', '<Nop>')
+clean_keys('o', 'g', nvo_g_keys, '', '<Esc>')
 
 local nv_zu_keys = 'wgWG'
 clean_keys({ 'n', 'v' }, 'zu', nv_zu_keys, '', '<Nop>')
