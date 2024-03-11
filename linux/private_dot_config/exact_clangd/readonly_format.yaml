@@ -32,7 +32,7 @@ FixNamespaceComments: false
 IndentPPDirectives: AfterHash
 Language: Cpp
 NamespaceIndentation: All
-PointerAlignment: Right
+PointerAlignment: Left
 SortIncludes: Never
 Standard: Latest
 ---
