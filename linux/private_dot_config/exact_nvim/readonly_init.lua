@@ -127,6 +127,8 @@ require [[lazy]].setup({
     { name = [[misc-ufo]],                         [[kevinhwang91/nvim-ufo]]                                                                                                     },
     { name = [[misc-visual-multi]],                [[mg979/vim-visual-multi]]                                                                                                    },
 
+    { name = [[telescope]],                        [[nvim-telescope/telescope.nvim]]                                                                                             },
+
     { name = [[treesitter-context]],               [[nvim-treesitter/nvim-treesitter-context]]                                                                                   },
     { name = [[treesitter-docs]],                  [[nvim-treesitter/nvim-tree-docs]]                                                                                            },
     { name = [[treesitter-refactor]],              [[nvim-treesitter/nvim-treesitter-refactor]]                                                                                  },
