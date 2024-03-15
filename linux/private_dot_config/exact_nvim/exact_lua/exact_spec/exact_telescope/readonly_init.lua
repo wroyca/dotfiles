@@ -1,6 +1,6 @@
 ---@type LazyPluginSpec
 return {
-  [[telescope.nvim]],
+  [[telescope]],
   event = [[VeryLazy]],
   cmd = [[Telescope]],
   dependencies = {
