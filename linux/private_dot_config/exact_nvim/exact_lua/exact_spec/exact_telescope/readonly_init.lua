@@ -5,8 +5,7 @@ return {
   cmd = [[Telescope]],
   dependencies = {
     { [[nvim-telescope/telescope-fzf-native.nvim]], enabled = vim.fn.executable [[make]] == 1, build = [[make]] },
-    { [[nvim-telescope/telescope-frecency.nvim]] },
-  { [[nvim-telescope/telescope-project.nvim]] },
+    { [[nvim-telescope/telescope-project.nvim]] },
   },
   keys = {
     { [[<leader><leader>]], [[<cmd>Telescope builtin include_extensions=true<cr>]],  desc = [[Telescope]] },
@@ -44,7 +43,6 @@ return {
     end
 
     require [[telescope]].load_extension [[fzf]]
-    require [[telescope]].load_extension [[frecency]]
     require [[telescope]].load_extension [[project]]
 
     return {

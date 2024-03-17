@@ -2,15 +2,30 @@
   "coc.preferences.currentFunctionSymbolAutoUpdate": true,
   "coc.preferences.enableLinkedEditing": true,
   "coc.preferences.formatOnType": true,
-  "codeLens.enable": false,
-  "colors.enable": true,
+
+  // It's hit-or-miss whether coc will fresh appropriately in Normal mode,
+  // sometime it never does. In contrast, setting it to refresh in insert mode
+  // is a little more annoying, but much more consistent.
+  //
   "diagnostic.enableSign": false,
   "diagnostic.refreshOnInsertMode": true,
-  "inlayHint.enable": false,
+
+  // In the off chance that above is *still* not enough, let's pull diagnostics
+  // on save.
+  //
   "pullDiagnostic.onSave": true,
-  "semanticTokens.enable": true,
+
+  // I understand the appeal, but extmark are not quite there yet and causes
+  // too many inconsistencies when scrolling, moving, and editing around.
+  //
+  "codeLens.enable": false,
+  "inlayHint.enable": false,
+
+  // Deduplicate completion, always nice to have.
+  //
   "suggest.asciiCharactersOnly": true,
   "suggest.removeDuplicateItems": true,
+
   "clangd.arguments": [
     "--all-scopes-completion=true",
     "--debug-origin=false",
@@ -29,6 +44,7 @@
     "--pch-storage=memory",
     "--rename-file-limit=0",
   ],
+
   "Lua.workspace.checkThirdParty": false,
   "Lua.workspace.library": [
     "/usr/lib/nvim",

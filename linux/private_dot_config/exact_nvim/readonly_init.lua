@@ -21,7 +21,7 @@ vim.o.titlestring    = [[%t]]
 vim.o.virtualedit    = [[onemore]]
 vim.o.whichwrap      = 'b,s,h,l,<,>,~,[,]'
 vim.o.number         = true
-vim.wo.wrap          = false
+vim.wo.wrap          = true
 vim.o.title          = true
 vim.o.confirm        = true
 vim.o.splitbelow     = true
@@ -53,7 +53,55 @@ vim.opt.guicursor    : append [[o:hor50]]
 vim.opt.guicursor    : append [[a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor]]
 vim.opt.guicursor    : append [[sm:block-blinkwait175-blinkoff150-blinkon175]]
 
-require [[wroy]]
+local cache = nil
+
+vim.fn.jobstart({ [[kitty]], [[@]], [[get-colors]] }, {
+  on_stdout = function(_, d, _)
+    for _, result in ipairs(d) do
+      if string.match(result, [[^background]]) then
+        cache = vim.split(result, [[%s+]])[2]
+        break
+      end
+    end
+  end,
+  on_stderr = function(_, d, _)
+    if #d > 1 then
+      vim.api.nvim_err_writeln(
+        [[Error getting background. Make sure kitty remote control is turned on.]]
+      )
+    end
+  end
+})
+
+local set = function(color, sync)
+	local command = [[kitty @ set-colors background=]] .. color
+	if not sync then
+		vim.fn.jobstart(command, {
+			on_stderr = function(_, d, _)
+				if #d > 1 then
+					vim.api.nvim_err_writeln(
+						[[Error changing background. Make sure kitty remote control is turned on.]]
+					)
+				end
+			end
+		})
+	else
+		vim.fn.system(command)
+	end
+end
+
+vim.api.nvim_create_autocmd({[[ColorScheme]], [[VimResume]]}, {
+  pattern = "*",
+  callback = function()
+    set(string.format([[#%06X]], vim.api.nvim_get_hl(0, {name = [[Normal]]}).bg))
+	end
+})
+
+vim.api.nvim_create_autocmd({[[VimLeavePre]], [[VimSuspend]]}, {
+  callback = function()
+		set(cache, true)
+	end
+})
 
 local lazypath = vim.fn.stdpath [[data]] .. [[/lazy/lazy.nvim]]
 if not vim.uv.fs_stat(lazypath) then
@@ -118,9 +166,9 @@ require [[lazy]].setup({
     { name = [[misc-last-color]],                  [[raddari/last-color.nvim]]                                                                                                   },
     { name = [[misc-leap-flit]],                   [[ggandor/flit.nvim]]                                                                                                         },
     { name = [[misc-leap-spooky]],                 [[ggandor/spooky.nvim]]                                                                                                       },
-    { name = [[misc-leap]],                        [[ggandor/leap.nvim]],                                                  commit = [[9857f64c869f83e36bcde036213c758fc435d9b2]] },
+    { name = [[misc-leap]],                        [[ggandor/leap.nvim]],                                                                                                        },
     { name = [[misc-lumen]],                       [[vimpostor/vim-lumen]]                                                                                                       },
-    { name = [[misc-neogit]],                      [[neogitorg/neogit]],                                                   branch = [[nightly]]                                  },
+    { name = [[misc-neogit]],                      [[neogitorg/neogit]],                                                                                                         },
     { name = [[misc-range-highlight-cmd-parser]],  [[winston0410/cmd-parser.nvim]]                                                                                               },
     { name = [[misc-range-highlight]],             [[winston0410/range-highlight.nvim]]                                                                                          },
     { name = [[misc-statuscol]],                   [[luukvbaal/statuscol.nvim]]                                                                                                  },
