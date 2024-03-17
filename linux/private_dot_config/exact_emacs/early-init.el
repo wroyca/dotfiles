@@ -17,6 +17,10 @@
 ;;
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
+;; vc-use-package has been merged into Emacs master, but Emacs 29 is feature
+;; frozen already, so we'll have to wait for Emacs ~30.
+;;
+(setq package-enable-at-startup nil)
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name
@@ -60,8 +64,8 @@
 (setq highlight-nonselected-windows nil)
 
 ;; The cursor normally appears in non-selected windows as a non-blinking hollow
-;; box -- for a bar cursor, it instead appears as a thinner bar. For
-;; performance, we off cursors in non-selected windows.
+;; box—for a bar cursor, it instead appears as a thinner bar; turn off cursors
+;; in non-selected windows for performance.
 ;;
 (setq-default cursor-in-non-selected-windows nil)
 
@@ -91,20 +95,17 @@
 ;; This timeout adds latency to frame operations which are frequently called
 ;; without guard as it's inexpensive in non-PGTK builds. Lowering the timeout
 ;; from the default 0.1 should make childframes and packages that manipulate
-;; them (like `lsp-ui', `company-box', and `posframe') feel much snappier. See
-;; emacs-lsp/lsp-ui#613.
+;; them (like `lsp-ui', `company-box', and `posframe') feel much snappier.
+;;
+;; https://github.com/emacs-lsp/lsp-ui/issues/613
 ;;
 (when (boundp 'pgtk-wait-for-event-timeout)
   (setq pgtk-wait-for-event-timeout 0.001))
 
-(push '(menu-bar-lines . 0)   default-frame-alist)
-(push '(tool-bar-lines . 0)   default-frame-alist)
-(push '(vertical-scroll-bars) default-frame-alist)
-;; And set these to nil so users don't have to toggle the modes twice to
-;; reactivate them.
-(setq menu-bar-mode nil
-      tool-bar-mode nil
-      scroll-bar-mode nil)
-
-(setq mouse-wheel-scroll-amount '(3 ((shift) . 3) ((control) . nil)))
-(setq mouse-wheel-progressive-speed nil)
+;; Hide graphical elements, starting with the frame decoration first.
+;;
+(setq default-frame-alist '((undecorated . t)))
+(push '(menu-bar-lines . 0)     default-frame-alist)
+(push '(tool-bar-lines . 0)     default-frame-alist)
+(push '(vertical-scroll-bars)   default-frame-alist)
+(push '(horizontal-scroll-bars) default-frame-alist)
