@@ -1,4 +1,0 @@
-["bin/blesh/ble.sh"]
-  type = "git-repo"
-  url = "https://github.com/akinomyoga/ble.sh.git"
-  refreshPeriod = "672h"
