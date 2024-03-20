@@ -1,17 +1,12 @@
 # https://EditorConfig.org
 #
-# This is a pseudo-global EditorConfig file. EditorConfig itself does not
-# officially support global configuration, but if a project does not have its
-# own `.editorconfig` file, EditorConfig will recursively search up the
-# directory tree until it encounters one (if any).
+# This is a pseudo-global EditorConfig file.
 #
+# EditorConfig itself doesn't officially support global configuration, but when
+# projects doesn't have their own `.editorconfig` file, EditorConfig will
+# recursively search up the directory tree until it encounters one (if any).
 # Note that this approach is not standard, and its behavior may vary across
-# different EditorConfig implementations. Exercise caution when relying on this
-# configuration method and be prepared for potential inconsistencies.
-#
-# For projects with specific EditorConfig requirements, it is recommended to
-# include a local `.editorconfig` file in the project root to ensure consistent
-# behavior across development environments.
+# different EditorConfig implementations.
 #
 # See also: https://github.com/editorconfig/editorconfig/issues/465
 
@@ -37,7 +32,7 @@ trim_trailing_whitespace = true
 # When you do want to insert a <br /> break tag using Markdown, you end a line
 # with two or more spaces, then type return.
 #
-[*.{markdown,md,mkd,[Mm][Dd],[Mm][Kk][Dd],[Mm][Dd][Oo][Ww][Nn],[Mm][Kk][Dd][Oo][Ww][Nn],[Mm][Aa][Rr][Kk][Dd][Oo][Ww][Nn]}]
+[*.{[Mm][Dd],[Mm][Kk][Dd],[Mm][Dd][Oo][Ww][Nn],[Mm][Kk][Dd][Oo][Ww][Nn],[Mm][Aa][Rr][Kk][Dd][Oo][Ww][Nn]}]
 trim_trailing_whitespace = false
 
 # When using Unix line endings, the label parser will skip over some labels
@@ -54,6 +49,5 @@ trim_trailing_whitespace = false
 # :: main section can trigger the parser into somehow reading the text : main
 # as the label :main
 #
-[*.{bat,cmd,[Bb][Aa][Tt],[Cc][Mm][Dd]}]
+[*.{[Bb][Aa][Tt],[Cc][Mm][Dd]}]
 end_of_line = crlf
-
