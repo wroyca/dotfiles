@@ -1,9 +1,5 @@
 # .bashrc
 
-# Start blesh if shell is interactive
-#
-[[ $- == *i* ]] && source ~/.local/share/blesh/ble.sh --noattach
-
 # Source global definitions
 #
 if [ -f /etc/bashrc ]; then
@@ -33,39 +29,26 @@ if [ -d ~/.config/bash/bashrc.d ]; then
 fi
 unset rc
 
-# https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
+# Disable ‘!’ style history substitution
 #
-shopt -s      \
-  cdable_vars \
-  cdspell     \
-  \
-  extglob     \
-  failglob    \
-  globstar    \
-  \
-  histappend  \
-  histreedit  \
-  histverify  \
-  \
-  checkhash   \
-  checkjobs   \
+set +H
+
+# Change additional shell optional behavior
+#
+shopt -s cdspell histappend histreedit histverify checkhash checkjobs
 
 # HISTCONTROL
-# - Ignore commands starting with space.
-# - Ignore duplicate commands.
+# - Ignore commands starting with space
+# - Ignore duplicate commands
 #
 # HISTIGNORE
-# - Command patterns to exclude from history storage.
+# - Command patterns to exclude from history storage
 #
 # HISTSIZE
 # HISTFILESIZE
-# - Increase Bash history size to 32³ entries; the default is 500.
+# - Increase Bash history size to 32³ entries; the default is 500
 #
 export HISTCONTROL='ignoreboth:erasedups'
 export HISTIGNORE="clear:history:[bf]g:exit:date:* --help"
 export HISTSIZE='32768'
 export HISTFILESIZE="${HISTSIZE}"
-
-# Bash Line Editor (ble.sh)
-#
-[[ ${BLE_VERSION-} ]] && ble-attach
