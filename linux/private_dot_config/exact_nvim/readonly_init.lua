@@ -117,7 +117,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require [[lazy]].setup({
   spec = {
-    { name = [[coc]],                              [[neoclide/coc.nvim]],                                                  branch = [[dev]]                                      },
+    { name = [[coc]],                              [[neoclide/coc.nvim]],                                                                                                        },
     { name = [[neodev]],                           [[folke/neodev.nvim]],                                                                                                        },
 
     { name = [[mini.ai]],                          [[mini.ai]],                                                            dev = true                                            },
