@@ -90,22 +90,29 @@
 ;;
 (setq redisplay-skip-fontification-on-input t)
 
-;; PGTK builds only.
-;;
-;; This timeout adds latency to frame operations which are frequently called
-;; without guard as it's inexpensive in non-PGTK builds. Lowering the timeout
-;; from the default 0.1 should make childframes and packages that manipulate
-;; them (like `lsp-ui', `company-box', and `posframe') feel much snappier.
-;;
-;; https://github.com/emacs-lsp/lsp-ui/issues/613
-;;
-(when (boundp 'pgtk-wait-for-event-timeout)
-  (setq pgtk-wait-for-event-timeout 0.001))
-
 ;; Hide graphical elements, starting with the frame decoration first.
 ;;
 (setq default-frame-alist '((undecorated . t)))
-(push '(menu-bar-lines . 0)     default-frame-alist)
-(push '(tool-bar-lines . 0)     default-frame-alist)
-(push '(vertical-scroll-bars)   default-frame-alist)
-(push '(horizontal-scroll-bars) default-frame-alist)
+(setq-default mode-line-format nil)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+
+;; Fix magit color in terminal mode
+;;
+(custom-set-faces
+ '(default ((((type tty)))
+            (t (:background "#6F4700" :foreground "yellow" :slant normal :weight normal :width normal :foundry "default" :family "monospace"))))
+ '(font-lock-comment-face ((((type tty)) (:foreground "brightgreen"))
+                           (t (:foreground "green1"))))
+ '(font-lock-builtin-face ((((type tty)) (:foreground "color-250"))))
+ '(minibuffer-prompt ((((type tty)) (:foreground "cyan"))))
+ '(font-lock-string-face ((((type tty)) (:foreground "orange")))))
+(custom-set-faces
+ '(magit-diff-added ((((type tty)) (:foreground "green"))))
+ '(magit-diff-added-highlight ((((type tty)) (:foreground "LimeGreen"))))
+ '(magit-diff-context-highlight ((((type tty)) (:foreground "default"))))
+ '(magit-diff-file-heading ((((type tty)) nil)))
+ '(magit-diff-removed ((((type tty)) (:foreground "red"))))
+ '(magit-diff-removed-highlight ((((type tty)) (:foreground "IndianRed"))))
+ '(magit-section-highlight ((((type tty)) nil))))
