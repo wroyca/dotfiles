@@ -30,7 +30,7 @@ ContinuationIndentWidth: 8
 Cpp11BracedListStyle: true
 FixNamespaceComments: false
 IndentPPDirectives: AfterHash
-LambdaBodyIndentationKind: OuterScope
+LambdaBodyIndentation: OuterScope
 Language: Cpp
 NamespaceIndentation: All
 PointerAlignment: Left
