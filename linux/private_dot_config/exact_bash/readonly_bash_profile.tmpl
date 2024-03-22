@@ -8,5 +8,5 @@ fi
 
 # User specific environment and startup programs
 #
-{{ if (lookPath "cargo")  -}} export PATH="$PATH:/home/wroy/.cargo/bin"    {{- end }}
-{{ if (lookPath "dotnet") -}} export PATH="$PATH:/home/wroy/.dotnet/tools" {{- end }}
+export PATH="$PATH:/home/wroy/.cargo/bin"
+export PATH="$PATH:/home/wroy/.dotnet/tools"
