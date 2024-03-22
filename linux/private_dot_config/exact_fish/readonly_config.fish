@@ -25,3 +25,10 @@ bind \cz 'fg 2>/dev/null; commandline -f repaint'
 fish_add_path /home/wroy/bin
 fish_add_path /home/wroy/cargo/bin
 fish_add_path /home/wroy/.dotnet/tools
+
+# Fedora prefix typically resides in /usr rather than /usr/local. However,
+# despite this, numerous scripts persist in defaulting to /usr/local. Now,
+# specifying the correct prefix isn't always straightforward, so let's include
+# /usr/local in path.
+#
+fish_add_path /usr/local/bin

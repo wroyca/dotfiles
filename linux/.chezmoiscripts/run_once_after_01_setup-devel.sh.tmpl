@@ -91,12 +91,6 @@ sudo dnf config-manager --add-repo \
 sudo dnf install -y \
   gh # https://cli.github.com/
 
-sudo dnf install -y \
-  dotnet-sdk-8.0
-
-dotnet tool install -g git-credential-manager || true
-if ! command -v {{ .chezmoi.homeDir }}/.dotnet/tools/git-credential-manager > /dev/null 2>&1; then
-  if ! command -v git-credential-manager > /dev/null 2>&1; then
-    (curl -l https://aka.ms/gcm/linux-install-source.sh | sh) && git-credential-manager configure
-  fi
+if ! command -v git-credential-manager > /dev/null 2>&1; then
+  (curl -l https://aka.ms/gcm/linux-install-source.sh | sh) && git-credential-manager configure
 fi
