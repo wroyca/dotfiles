@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+sudo dnf4 copr enable -y \
+  agriffis/neovim-nightly
+
+sudo dnf install -y \
+  neovim
+
 # https://pagure.io/fedora-workstation/issue/261
 # https://pagure.io/fedora-workstation/issue/417
 #
@@ -15,3 +21,4 @@ sudo dnf install -y \
 #
 sudo dnf install -y \
   adw-gtk3-theme
+
