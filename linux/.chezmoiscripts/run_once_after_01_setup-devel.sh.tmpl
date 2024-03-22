@@ -92,7 +92,7 @@ sudo dnf install -y \
   gh # https://cli.github.com/
 
 sudo dnf install -y \
-  dotnet-sdk-7.0
+  dotnet-sdk-8.0
 
 dotnet tool install -g git-credential-manager || true
 if ! command -v {{ .chezmoi.homeDir }}/.dotnet/tools/git-credential-manager > /dev/null 2>&1; then
