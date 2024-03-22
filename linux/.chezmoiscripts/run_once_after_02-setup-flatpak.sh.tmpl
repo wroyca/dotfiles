@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+flatpaks=(
+  "org.gnome.Builder"
+  "org.gnome.Fractal"
+  "org.gnome.World.Secrets"
+  "org.gnome.World.PikaBackup"
+)
+
+for flatpak in "${flatpaks[@]}"; do
+  flatpak install -y flathub "$flatpak"
+done
+
+# https://gitlab.gnome.org/GNOME/Incubator/Submission/-/issues/11
+#
+flatpak remote-add --if-not-exists gnome-nightly https://nightly.gnome.org/gnome-nightly.flatpakrepo
+flatpak install                    gnome-nightly org.gnome.Ptyxis.Devel

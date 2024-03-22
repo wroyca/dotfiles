@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# https://pagure.io/fedora-workstation/issue/261
+# https://pagure.io/fedora-workstation/issue/417
+#
+sudo dnf remove -y \
+  gnome-terminal
+
+# https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas/-/issues/52
+#
+sudo dnf install -y \
+  rsms-inter-fonts
+
+# https://discussion.fedoraproject.org/t/beautify-fedora-36-and-gnome-42/37943/3
+#
+sudo dnf install -y \
+  adw-gtk3-theme

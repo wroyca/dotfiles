@@ -1,8 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 sudo dnf upgrade -y \
   --refresh
-
+  
 sudo dnf install -y \
   https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
 
@@ -29,13 +29,3 @@ sudo dnf install -y \
 
 sudo dnf group upgrade -y \
   --with-optional Multimedia --allowerasing
-
-# https://gitlab.gnome.org/GNOME/gsettings-desktop-schemas/-/issues/52
-#
-sudo dnf install -y \
-  rsms-inter-fonts
-
-# https://discussion.fedoraproject.org/t/beautify-fedora-36-and-gnome-42/37943/3
-#
-sudo dnf install -y \
-  adw-gtk3-theme
