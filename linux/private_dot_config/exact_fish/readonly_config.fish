@@ -24,4 +24,4 @@ bind \cz 'fg 2>/dev/null; commandline -f repaint'
 #
 fish_add_path /home/wroy/bin
 fish_add_path /home/wroy/cargo/bin
-fish_add_path /home/wroy/cargo/.dotnet/tools
+fish_add_path /home/wroy/.dotnet/tools
