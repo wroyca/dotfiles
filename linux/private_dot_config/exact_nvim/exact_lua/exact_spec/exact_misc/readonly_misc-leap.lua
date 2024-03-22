@@ -3,6 +3,9 @@ return {
   [[misc-leap]],
   keys = { [[s]], [[S]], [[gs]] },
   opts = {
+    safe_labels = [[sfnutSFNLHMUGTZ]],
+    labels = [[sfnjklhodweimbuyvrgtaqpcxzSFNJKLHODWEIMBUYVRGTAQPCXZ]],
+
     -- The idea here is that visual indicator will helps us anticipate whether
     -- we'll need to input an additional label. That is, underlined targets are
     -- guaranteed to be invariant at 2 characters, while non-underlined targets
