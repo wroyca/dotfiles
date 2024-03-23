@@ -15,13 +15,14 @@ vim.g.mapleader      = [[ ]]
 vim.g.localmapleader = [[,]]
 vim.o.clipboard      = [[unnamedplus]]
 vim.o.fileencoding   = [[utf-8]]
-vim.o.signcolumn     = [[yes:1]]
+vim.o.signcolumn     = [[no]]
 vim.o.splitkeep      = [[screen]]
 vim.o.titlestring    = [[%t]]
 vim.o.virtualedit    = [[onemore]]
 vim.o.whichwrap      = 'b,s,h,l,<,>,~,[,]'
-vim.o.number         = true
+vim.o.number         = false
 vim.wo.wrap          = true
+vim.o.list           = true
 vim.o.title          = true
 vim.o.confirm        = true
 vim.o.splitbelow     = true
@@ -43,6 +44,7 @@ vim.o.laststatus     = 0
 vim.o.updatetime     = 300
 vim.o.foldlevel      = 99
 vim.o.foldlevelstart = 99
+vim.opt.fillchars    = {eob = [[ ]]}
 vim.opt.cinkeys      : remove [[:]]
 vim.opt.indentkeys   : remove [[:]]
 vim.opt.suffixes     : remove [[.h]]
@@ -52,14 +54,6 @@ vim.opt.guicursor    : append [[r-cr:hor20]]
 vim.opt.guicursor    : append [[o:hor50]]
 vim.opt.guicursor    : append [[a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor]]
 vim.opt.guicursor    : append [[sm:block-blinkwait175-blinkoff150-blinkon175]]
-
-vim.api.nvim_create_autocmd({[[ColorScheme]], [[VimEnter]]}, {
-  pattern = "*",
-  callback = function()
-    vim.fn.jobstart([[kitty @ set-colors background=]] .. string.format([[#%06X]], vim.api.nvim_get_hl(0, {name = [[Normal]]}).bg))
-    vim.fn.jobstart([[kitty @ set-colors foreground=]] .. string.format([[#%06X]], vim.api.nvim_get_hl(0, {name = [[Normal]]}).fg))
-	end
-})
 
 local lazypath = vim.fn.stdpath [[data]] .. [[/lazy/lazy.nvim]]
 if not vim.uv.fs_stat(lazypath) then
@@ -119,7 +113,6 @@ require [[lazy]].setup({
 
     { name = [[misc-bqf]],                         [[kevinhwang91/nvim-bqf]]                                                                                                     },
     { name = [[misc-fundo]],                       [[kevinhwang91/nvim-fundo]]                                                                                                   },
-    { name = [[misc-gitsigns]],                    [[lewis6991/gitsigns.nvim]]                                                                                                   },
     { name = [[misc-hlslens]],                     [[kevinhwang91/nvim-hlslens]]                                                                                                 },
     { name = [[misc-last-color]],                  [[raddari/last-color.nvim]]                                                                                                   },
     { name = [[misc-leap-flit]],                   [[ggandor/flit.nvim]]                                                                                                         },
@@ -129,7 +122,6 @@ require [[lazy]].setup({
     { name = [[misc-neogit]],                      [[neogitorg/neogit]],                                                                                                         },
     { name = [[misc-range-highlight-cmd-parser]],  [[winston0410/cmd-parser.nvim]]                                                                                               },
     { name = [[misc-range-highlight]],             [[winston0410/range-highlight.nvim]]                                                                                          },
-    { name = [[misc-statuscol]],                   [[luukvbaal/statuscol.nvim]]                                                                                                  },
     { name = [[misc-ufo]],                         [[kevinhwang91/nvim-ufo]]                                                                                                     },
     { name = [[misc-visual-multi]],                [[mg979/vim-visual-multi]]                                                                                                    },
 
