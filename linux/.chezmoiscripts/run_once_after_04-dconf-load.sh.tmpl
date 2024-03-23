@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 # dconf.ini hash: {{ include "private_dot_config/dconf/dconf.ini" | sha256sum }}
-dconf load / < {{ joinPath .chezmoi.sourceDir "private_dot_config/dconf/dconf.ini" | quote }}
+dconf load / < "/home/wroy/.local/share/chezmoi/linux/private_dot_config/dconf/dconf.ini"
