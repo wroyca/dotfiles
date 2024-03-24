@@ -11,40 +11,41 @@ vim.schedule(function()
   pcall(vim.cmd.rshada, { bang = true })
 end)
 
-vim.g.mapleader      = [[ ]]
 vim.g.localmapleader = [[,]]
-vim.o.clipboard      = [[unnamedplus]]
-vim.o.fileencoding   = [[utf-8]]
-vim.o.signcolumn     = [[no]]
-vim.o.splitkeep      = [[screen]]
-vim.o.titlestring    = [[%t]]
-vim.o.virtualedit    = [[onemore]]
-vim.o.whichwrap      = 'b,s,h,l,<,>,~,[,]'
-vim.o.number         = false
-vim.wo.wrap          = true
-vim.o.list           = true
-vim.o.title          = true
-vim.o.confirm        = true
-vim.o.splitbelow     = true
-vim.o.splitright     = true
-vim.o.termguicolors  = true
-vim.o.undofile       = true
-vim.o.expandtab      = true
+vim.g.mapleader      = [[ ]]
 vim.o.breakindent    = true
-vim.o.smartindent    = true
-vim.o.preserveindent = true
-vim.o.cursorline     = true
-vim.o.gdefault       = true
-vim.o.tabstop        = 2
-vim.o.shiftwidth     = 0
-vim.o.scrolloff      = 4
-vim.o.pumheight      = 8
+vim.o.clipboard      = [[unnamedplus]]
 vim.o.cmdheight      = 0
-vim.o.laststatus     = 0
-vim.o.updatetime     = 300
+vim.o.confirm        = true
+vim.o.cursorline     = true
+vim.o.expandtab      = true
+vim.o.fileencoding   = [[utf-8]]
 vim.o.foldlevel      = 99
 vim.o.foldlevelstart = 99
-vim.opt.fillchars    = {eob = [[ ]]}
+vim.o.gdefault       = true
+vim.o.laststatus     = 0
+vim.o.list           = true
+vim.o.number         = false
+vim.o.preserveindent = true
+vim.o.pumheight      = 8
+vim.o.scrolloff      = 4
+vim.o.shiftwidth     = 0
+vim.o.showmode       = false
+vim.o.signcolumn     = [[yes:1]]
+vim.o.smartindent    = true
+vim.o.splitbelow     = true
+vim.o.splitkeep      = [[screen]]
+vim.o.splitright     = true
+vim.o.tabstop        = 2
+vim.o.termguicolors  = true
+vim.o.title          = true
+vim.o.titlestring    = [[%t]]
+vim.o.undofile       = true
+vim.o.updatetime     = 300
+vim.o.virtualedit    = [[onemore]]
+vim.o.whichwrap      = 'b,s,h,l,<,>,~,[,]'
+vim.wo.wrap          = false
+vim.opt.fillchars    = { eob = [[ ]] }
 vim.opt.cinkeys      : remove [[:]]
 vim.opt.indentkeys   : remove [[:]]
 vim.opt.suffixes     : remove [[.h]]
@@ -54,6 +55,63 @@ vim.opt.guicursor    : append [[r-cr:hor20]]
 vim.opt.guicursor    : append [[o:hor50]]
 vim.opt.guicursor    : append [[a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor]]
 vim.opt.guicursor    : append [[sm:block-blinkwait175-blinkoff150-blinkon175]]
+
+local cache = nil
+
+vim.fn.jobstart({ [[kitty]], [[@]], [[get-colors]] }, {
+  on_stdout = function(_, d, _)
+    for _, result in ipairs(d) do
+      if string.match(result, [[^background]]) then
+        cache = vim.split(result, [[%s+]])[2]
+        break
+      end
+    end
+  end,
+  on_stderr = function(_, d, _)
+    if #d > 1 then
+      vim.api.nvim_err_writeln(
+        [[Error getting background. Make sure kitty remote control is turned on.]]
+      )
+    end
+  end
+})
+
+local set = function(color, sync)
+  local command = [[kitty @ set-colors background=]] .. color
+  if not sync then
+    vim.fn.jobstart(command, {
+      on_stderr = function(_, d, _)
+        if #d > 1 then
+          vim.api.nvim_err_writeln(
+            [[Error changing background. Make sure kitty remote control is turned on.]]
+          )
+        end
+      end
+    })
+  else
+    vim.fn.system(command)
+  end
+end
+
+vim.api.nvim_create_autocmd({ [[VimEnter]], [[VimResume]] }, {
+  pattern = "*",
+  callback = function()
+    set(string.format([[#%06X]], vim.api.nvim_get_hl(0, { name = [[Normal]] }).bg))
+  end
+})
+
+vim.api.nvim_create_autocmd([[User]], {
+  pattern = { [[LumenLight]], [[LumenDark]] },
+  callback = function()
+    set(string.format([[#%06X]], vim.api.nvim_get_hl(0, { name = [[Normal]] }).bg))
+  end
+})
+
+vim.api.nvim_create_autocmd({ [[VimLeavePre]], [[VimSuspend]] }, {
+  callback = function()
+    set(cache, true)
+  end
+})
 
 local lazypath = vim.fn.stdpath [[data]] .. [[/lazy/lazy.nvim]]
 if not vim.uv.fs_stat(lazypath) then
@@ -113,6 +171,7 @@ require [[lazy]].setup({
 
     { name = [[misc-bqf]],                         [[kevinhwang91/nvim-bqf]]                                                                                                     },
     { name = [[misc-fundo]],                       [[kevinhwang91/nvim-fundo]]                                                                                                   },
+    { name = [[misc-gitsigns]],                    [[lewis6991/gitsigns.nvim]]                                                                                                   },
     { name = [[misc-hlslens]],                     [[kevinhwang91/nvim-hlslens]]                                                                                                 },
     { name = [[misc-last-color]],                  [[raddari/last-color.nvim]]                                                                                                   },
     { name = [[misc-leap-flit]],                   [[ggandor/flit.nvim]]                                                                                                         },
@@ -122,10 +181,9 @@ require [[lazy]].setup({
     { name = [[misc-neogit]],                      [[neogitorg/neogit]],                                                                                                         },
     { name = [[misc-range-highlight-cmd-parser]],  [[winston0410/cmd-parser.nvim]]                                                                                               },
     { name = [[misc-range-highlight]],             [[winston0410/range-highlight.nvim]]                                                                                          },
+    { name = [[misc-statuscol]],                   [[luukvbaal/statuscol.nvim]]                                                                                                  },
     { name = [[misc-ufo]],                         [[kevinhwang91/nvim-ufo]]                                                                                                     },
     { name = [[misc-visual-multi]],                [[mg979/vim-visual-multi]]                                                                                                    },
-
-    { name = [[telescope]],                        [[nvim-telescope/telescope.nvim]]                                                                                             },
 
     { name = [[treesitter-context]],               [[nvim-treesitter/nvim-treesitter-context]]                                                                                   },
     { name = [[treesitter-docs]],                  [[nvim-treesitter/nvim-tree-docs]]                                                                                            },
@@ -175,7 +233,7 @@ require [[lazy]].setup({
         [[vimballPlugin]],
         [[vimball]],
         [[zipPlugin]],
-        [[zip]]
+        [[zip]],
       }
     }
   },
@@ -196,7 +254,8 @@ require [[lazy]].setup({
   },
 
   ui = {
-    pills = false
+    pills = false,
+    border = [[single]]
   }
 })
 

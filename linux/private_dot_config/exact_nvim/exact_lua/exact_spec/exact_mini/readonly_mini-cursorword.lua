@@ -3,6 +3,6 @@ return {
   [[mini.cursorword]],
   event = [[VeryLazy]],
   opts = {
-    delay = 3000
+    delay = 300
   }
 }

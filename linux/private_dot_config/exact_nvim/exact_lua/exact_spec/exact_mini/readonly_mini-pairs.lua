@@ -1,7 +1,19 @@
 ---@type LazyPluginSpec
 return {
   [[mini.pairs]],
-  event = [[VeryLazy]],
+  keys = {
+    { [[`]], mode = [[i]] },
+    { [[']], mode = [[i]] },
+    { [["]], mode = [[i]] },
+    { [[{]], mode = [[i]] },
+    { [[}]], mode = [[i]] },
+    { [[<]], mode = [[i]] },
+    { [[>]], mode = [[i]] },
+    { [[(]], mode = [[i]] },
+    { [[)]], mode = [[i]] },
+    {  "[",  mode = [[i]] },
+    {  "]",  mode = [[i]] },
+  },
   opts = {
     mappings = {
       ["`"] = { action = [[closeopen]], pair = [[``]], neigh_pattern = "[^%S][^%S]", register = { cr = false } },

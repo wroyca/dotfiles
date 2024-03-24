@@ -19,6 +19,10 @@ return {
       note = {
         pattern = "%f[%w]()[Nn][Oo][Tt][Ee]()%f[%W]:",
         group = [[MiniHipatternsNote]]
+      },
+      bug = {
+        pattern = "%f[%w]()[Bb][Uu][Gg]()%f[%W]:",
+        group = [[MiniHipatternsFixme]]
       }
     }
   },

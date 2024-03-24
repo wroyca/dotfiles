@@ -1,7 +1,10 @@
 ---@type LazyPluginSpec
 return {
   [[mini.ai]],
-  event = [[VeryLazy]],
+  keys = {
+    { [[a]], mode = { [[x]], [[o]] } },
+    { [[i]], mode = { [[x]], [[o]] } },
+  },
   opts = function()
     local gen_ai_spec = require [[mini.extra]].gen_ai_spec
     return {
