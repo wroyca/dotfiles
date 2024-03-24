@@ -36,7 +36,7 @@ set shortmess+=sI
 "
 set mouse=a
 set ttymouse=sgr
-"set balloonevalterm
+set balloonevalterm
 
 {{/* Unavailable with vim-minimal, but installing Vim will take precedence. */}}
 {{- if (lookPath "vim") -}}
@@ -132,10 +132,10 @@ vnoremap <A-k> :m '<-2<CR>gv=gv
 "
 " This uses expression-maps, which maps the lhs of the map to an expression
 " that will be evaluated, everytime the lhs is encountered. See :h
-" map-expression in the help.
+" map-expression.
 "
 " What happens is, that the v:searchforward variable (which determines the
-" internal state of which direction the last search was, see :h
+" internal state of which direction the last search was, see :h "
 " v:searchforward) is used as an index for the string in front of it. So in
 " case of the first map, if the last search direction was forward, the n will
 " be mapped to 'n' (index of 1, meaning return the second character) and if it
