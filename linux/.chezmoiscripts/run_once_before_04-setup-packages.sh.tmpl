@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-sudo dnf4 copr enable -y \
+sudo dnf install -y \
+  kitty
+
+sudo dnf copr enable -y \
   agriffis/neovim-nightly
 
 sudo dnf install -y \
@@ -21,4 +24,3 @@ sudo dnf install -y \
 #
 sudo dnf install -y \
   adw-gtk3-theme
-

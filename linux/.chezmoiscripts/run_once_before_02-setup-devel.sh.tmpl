@@ -27,28 +27,16 @@ sudo dnf install -y \
 sudo dnf install -y \
   yarnpkg
 
-# Build2 is available from Fedora's default package manager. That said, Fedora
-# only ship the release build whereas build2's maintainers lack the resources
-# to support backporting. It's best to stay on the staged version for ongoing
-# maintenance and support.
-#
 if ! command -v b > /dev/null 2>&1; then
-  v=$(curl -s  'https://stage.build2.org/0/' | \
-      grep -oP '(?<=href=")0\.\K\d+\.\d+'    | \
-      sort -nr                               | \
-      head -1)
+  v=$(curl -s  'https://stage.build2.org/0/' | grep -oP '(?<=href=")0\.\K\d+\.\d+' | sort -nr |  head -1)
   curl -O \
     "https://stage.build2.org/0/0.$v-a.0/build2-install-0.$v-a.0-stage.sh"
   sh build2-install-0.$v-a.0-stage.sh --local --yes /usr
 fi
 
-# GCM is available from Fedora's dotnet tools package. That said, Fedora will
-# in some instance ship version(s) that fails to meet GCM requirements.
-# Instead, the more dependable method is to install both dotnet tools package
-# and GCM directly from source.
-#
 if ! command -v git-credential-manager > /dev/null 2>&1; then
   curl -O \
     https://raw.githubusercontent.com/git-ecosystem/git-credential-manager/main/src/linux/Packaging.Linux/install-from-source.sh
   sh install-from-source.sh -y --install-prefix=/usr && git-credential-manager configure
 fi
+

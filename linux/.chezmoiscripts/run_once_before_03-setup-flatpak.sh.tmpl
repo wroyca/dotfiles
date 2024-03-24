@@ -13,5 +13,6 @@ done
 
 # https://gitlab.gnome.org/GNOME/Incubator/Submission/-/issues/11
 #
-flatpak remote-add --if-not-exists gnome-nightly https://nightly.gnome.org/gnome-nightly.flatpakrepo
-flatpak install                    gnome-nightly org.gnome.Ptyxis.Devel
+flatpak remote-add -y --if-not-exists gnome-nightly https://nightly.gnome.org/gnome-nightly.flatpakrepo
+flatpak install    -y                 gnome-nightly org.gnome.Ptyxis.Devel
+flatpak update     -y               # NVIDIA
