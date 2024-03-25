@@ -20,11 +20,16 @@ source ~/.config/fish/fish_aliases.fish
 #
 bind \cz 'fg 2>/dev/null; commandline -f repaint'
 
+# set $EDITOR to nvim
+#
+set EDITOR nvim
+
 # User specific environment and startup programs
 #
 fish_add_path /home/wroy/bin
 fish_add_path /home/wroy/cargo/bin
 fish_add_path /home/wroy/.dotnet/tools
+fish_add_path /home/wroy/.local/bin
 
 # Fedora prefix typically resides in /usr rather than /usr/local. However,
 # despite this, numerous scripts persist in defaulting to /usr/local. Now,
