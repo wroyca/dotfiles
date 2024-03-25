@@ -12,7 +12,7 @@ if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
   PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
 export PATH
-export EDITOR="$(command -v nvim)"
+export EDITOR="$(command -v nvim 2>/dev/null || command -v vi)"
 export PS1="\[\033[00m\][\u@\h \W\$(branch)]$ "
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
