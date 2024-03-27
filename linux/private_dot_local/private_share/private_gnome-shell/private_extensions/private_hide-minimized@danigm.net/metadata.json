@@ -3,9 +3,10 @@
   "description": "Hide minimized in overview",
   "name": "Hide minimized",
   "shell-version": [
-    "45"
+    "45",
+    "46"
   ],
   "url": "https://github.com/danigm/hide-minimized",
   "uuid": "hide-minimized@danigm.net",
-  "version": 9
+  "version": 10
 }
