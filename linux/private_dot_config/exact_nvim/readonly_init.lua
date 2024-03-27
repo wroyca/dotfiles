@@ -11,41 +11,40 @@ vim.schedule(function()
   pcall(vim.cmd.rshada, { bang = true })
 end)
 
-vim.g.localmapleader = [[,]]
 vim.g.mapleader      = [[ ]]
-vim.o.breakindent    = true
+vim.g.localmapleader = [[,]]
 vim.o.clipboard      = [[unnamedplus]]
-vim.o.cmdheight      = 0
-vim.o.confirm        = true
-vim.o.cursorline     = true
-vim.o.expandtab      = true
 vim.o.fileencoding   = [[utf-8]]
-vim.o.foldlevel      = 99
-vim.o.foldlevelstart = 99
-vim.o.gdefault       = true
-vim.o.laststatus     = 0
-vim.o.list           = true
-vim.o.number         = false
-vim.o.preserveindent = true
-vim.o.pumheight      = 8
-vim.o.scrolloff      = 4
-vim.o.shiftwidth     = 0
-vim.o.showmode       = false
 vim.o.signcolumn     = [[yes:1]]
-vim.o.smartindent    = true
-vim.o.splitbelow     = true
 vim.o.splitkeep      = [[screen]]
-vim.o.splitright     = true
-vim.o.tabstop        = 2
-vim.o.termguicolors  = true
-vim.o.title          = true
 vim.o.titlestring    = [[%t]]
-vim.o.undofile       = true
-vim.o.updatetime     = 300
 vim.o.virtualedit    = [[onemore]]
 vim.o.whichwrap      = 'b,s,h,l,<,>,~,[,]'
-vim.wo.wrap          = false
-vim.opt.fillchars    = { eob = [[ ]] }
+vim.o.number         = false
+vim.wo.wrap          = true
+vim.o.list           = true
+vim.o.title          = true
+vim.o.confirm        = true
+vim.o.splitbelow     = true
+vim.o.splitright     = true
+vim.o.termguicolors  = true
+vim.o.undofile       = true
+vim.o.expandtab      = true
+vim.o.breakindent    = true
+vim.o.smartindent    = true
+vim.o.preserveindent = true
+vim.o.cursorline     = true
+vim.o.gdefault       = true
+vim.o.tabstop        = 2
+vim.o.shiftwidth     = 0
+vim.o.scrolloff      = 4
+vim.o.pumheight      = 8
+vim.o.cmdheight      = 0
+vim.o.laststatus     = 0
+vim.o.updatetime     = 300
+vim.o.foldlevel      = 99
+vim.o.foldlevelstart = 99
+vim.opt.fillchars    = {eob = [[ ]]}
 vim.opt.cinkeys      : remove [[:]]
 vim.opt.indentkeys   : remove [[:]]
 vim.opt.suffixes     : remove [[.h]]
@@ -55,6 +54,21 @@ vim.opt.guicursor    : append [[r-cr:hor20]]
 vim.opt.guicursor    : append [[o:hor50]]
 vim.opt.guicursor    : append [[a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor]]
 vim.opt.guicursor    : append [[sm:block-blinkwait175-blinkoff150-blinkon175]]
+
+vim.keymap.set({ [[n]], [[v]]        }, [[<Space>]], [[<Nop>]], { silent = true })
+vim.keymap.set({ [[n]], [[x]], [[i]] }, [[<F1>]],    [[<Nop>]], { silent = true })
+
+local lazypath = vim.fn.stdpath [[data]] .. [[/lazy/lazy.nvim]]
+if not vim.uv.fs_stat(lazypath) then
+  vim.system({
+    [[git]],
+    [[clone]],
+    [[--filter=blob:none]],
+    [[https://github.com/folke/lazy.nvim]],
+    lazypath
+  }):wait()
+end
+vim.opt.rtp:prepend(lazypath)
 
 local cache = nil
 
@@ -112,18 +126,6 @@ vim.api.nvim_create_autocmd({ [[VimLeavePre]], [[VimSuspend]] }, {
     set(cache, true)
   end
 })
-
-local lazypath = vim.fn.stdpath [[data]] .. [[/lazy/lazy.nvim]]
-if not vim.uv.fs_stat(lazypath) then
-  vim.system({
-    [[git]],
-    [[clone]],
-    [[--filter=blob:none]],
-    [[https://github.com/folke/lazy.nvim]],
-    lazypath
-  }):wait()
-end
-vim.opt.rtp:prepend(lazypath)
 
 require [[lazy]].setup({
   spec = {
@@ -184,6 +186,9 @@ require [[lazy]].setup({
     { name = [[misc-statuscol]],                   [[luukvbaal/statuscol.nvim]]                                                                                                  },
     { name = [[misc-ufo]],                         [[kevinhwang91/nvim-ufo]]                                                                                                     },
     { name = [[misc-visual-multi]],                [[mg979/vim-visual-multi]]                                                                                                    },
+    { name = [[misc-focus]],                       [[nvim-focus/focus.nvim]]                                                                                                     },
+
+    { name = [[telescope]],                        [[nvim-telescope/telescope.nvim]]                                                                                             },
 
     { name = [[treesitter-context]],               [[nvim-treesitter/nvim-treesitter-context]]                                                                                   },
     { name = [[treesitter-docs]],                  [[nvim-treesitter/nvim-tree-docs]]                                                                                            },
@@ -233,7 +238,7 @@ require [[lazy]].setup({
         [[vimballPlugin]],
         [[vimball]],
         [[zipPlugin]],
-        [[zip]],
+        [[zip]]
       }
     }
   },
@@ -254,8 +259,7 @@ require [[lazy]].setup({
   },
 
   ui = {
-    pills = false,
-    border = [[single]]
+    pills = false
   }
 })
 
