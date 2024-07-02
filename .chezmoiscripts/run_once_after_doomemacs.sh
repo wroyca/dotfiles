@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
 set -x # Print trace of simple commands.
+set +e # Ignore errors, if any.
+
+if command -v emacs > /dev/null 2>&1; then
+  exit 0
+fi
 
 owd="$(pwd)"
 ret ()
@@ -59,5 +64,3 @@ make install
 
 git clone --depth 1 https://github.com/doomemacs/doomemacs \
   ~/.config/emacs && ~/.config/emacs/bin/doom install
-rm -rf ~/.emacs.d && ~/.config/emacs/bin/doom sync
-
