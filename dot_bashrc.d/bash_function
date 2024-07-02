@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+branch ()
+{
+  local name="$(echo "$(__git_ps1 2>/dev/null)" | sed 's/((/(/; s/))/)/')"
+
+  # No-op outside Git repository.
+  #
+  echo "$name"
+}

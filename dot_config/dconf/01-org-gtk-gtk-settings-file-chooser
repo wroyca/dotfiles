@@ -1,0 +1,7 @@
+# dconf path
+#
+[org/gtk/settings/file-chooser]
+
+# GSettings key names and their corresponding values
+#
+sort-directories-first=true

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [[ -f "/run/.containerenv" ]]; then
+  ${TOOLBOX_PATH:+flatpak-spawn --host} /usr/bin/xdg-open $*
+else
+  /usr/bin/xdg-open "$@"
+fi

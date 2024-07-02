@@ -1,0 +1,6 @@
+# Mutter does not provide wp_viewport support for cursor wl_surfaces.
+#
+# https://gitlab.gnome.org/GNOME/gtk/-/issues/6620
+# https://gitlab.gnome.org/GNOME/mutter/-/issues/2633
+#
+NO_POINTER_VIEWPORT=1

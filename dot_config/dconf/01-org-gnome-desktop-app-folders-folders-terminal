@@ -1,0 +1,8 @@
+# dconf path
+#
+[org/gnome/desktop/app-folders/folders/Terminal]
+
+# GSettings key names and their corresponding values
+#
+name='Terminal'
+apps=['Alacritty.desktop', 'kitty.desktop', 'fish.desktop']

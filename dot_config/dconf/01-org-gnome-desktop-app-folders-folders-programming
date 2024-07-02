@@ -1,0 +1,8 @@
+# dconf path
+#
+[org/gnome/desktop/app-folders/folders/Programming]
+
+# GSettings key names and their corresponding values
+#
+name='Programming'
+apps=['org.gnome.Builder.desktop', 'org.gnome.Sysprof.desktop', 'org.gnome.dspy.desktop', 'org.gnome.Devhelp.desktop']

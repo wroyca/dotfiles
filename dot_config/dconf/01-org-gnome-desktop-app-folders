@@ -1,0 +1,7 @@
+# dconf path
+#
+[org/gnome/desktop/app-folders]
+
+# GSettings key names and their corresponding values
+#
+folder-children=['Utilities', 'YaST', 'Pardus', 'Terminal', 'Office', 'Circle', 'Programming', 'Wine']

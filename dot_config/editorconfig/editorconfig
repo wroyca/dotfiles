@@ -1,0 +1,63 @@
+# https://EditorConfig.org
+#
+# EditorConfig doesn't officially endorse global configuration, but it does
+# search upward through the directory tree until it finds "root=true" (if
+# available), and then applies the settings downward.
+#
+# For more information, see https://github.com/editorconfig/editorconfig/issues/465
+
+root = true
+
+[*]
+indent_size = 2
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Markdown
+#
+# A paragraph is simply one or more consecutive lines of text, separated by one
+# or more blank lines. (A blank line is any line that looks like a blank line —
+# a line containing nothing but spaces or tabs is considered blank.) Normal
+# paragraphs should not be indented with spaces or tabs.
+#
+# The implication of the "one or more consecutive lines of text" rule is that
+# Markdown supports "hard-wrapped" text paragraphs. This differs significantly
+# from most other text-to-HTML formatters, including Movable Type’s "Convert
+# Line Breaks" option, which translate every line break character in a
+# paragraph into a <br /> tag.
+#
+# Now, when you do want to insert a <br /> break tag, you end a line with two
+# or more spaces, then type return. This is where the editor must be told to
+# not trim "trailing whitespace".
+#
+[*.{[Mm][Dd],[Mm][Kk][Dd],[Mm][Dd][Oo][Ww][Nn],[Mm][Kk][Dd][Oo][Ww][Nn],[Mm][Aa][Rr][Kk][Dd][Oo][Ww][Nn]}]
+trim_trailing_whitespace = false
+
+# Batch
+#
+# When using Unix line endings, the label parser will skip over some labels
+# because of an off-by-one error. This is due to the parser's use of 512-byte
+# sized chunks and the assumption that line endings is denoted by two
+# characters, \r\n, rather than one, \n. When a label is erroneously skipped
+# over, the next erroneous skip can only occur at an offset of 512 bytes. If
+# you duplicate a label on the next line, the duplicated label will be within
+# the 512 limit, and can act as a fallback.
+#
+# Furthermore, the parser also misinterprets the end of each 512-byte size
+# chunk as a new line (as well as somehow ignoring white space characters
+# between a colon and the next text on these pseudo lines). A comment such as
+# :: main section can trigger the parser into somehow reading the text : main
+# as the label :main
+#
+[*.{[Bb][Aa][Tt],[Cc][Mm][Dd]}]
+end_of_line = crlf
+
+# Appending a minus sign to the redirection operator <<-, will cause all leading
+# tab characters to be ignored. This allows us to use indentation when writing
+# here-documents in Dockerfiles.
+#
+# https://www.docker.com/blog/introduction-to-heredocs-in-dockerfiles/
+#
+[Dockerfile]
+indent_style = tab

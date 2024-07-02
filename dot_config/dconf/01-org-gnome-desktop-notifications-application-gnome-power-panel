@@ -1,0 +1,10 @@
+# dconf path
+#
+[org/gnome/desktop/notifications/application/gnome-power-panel]
+
+# GSettings key names and their corresponding values
+#
+# This is almost always inaccurate, except in rare cases with some compatible
+# hardware. Disabled to avoid spam.
+#
+enable=false

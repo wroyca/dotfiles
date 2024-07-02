@@ -1,0 +1,8 @@
+# dconf path
+#
+[org/gnome/desktop/app-folders/folders/Office]
+
+# GSettings key names and their corresponding values
+#
+name='Office'
+apps=['libreoffice-impress.desktop', 'libreoffice-calc.desktop', 'libreoffice-writer.desktop']

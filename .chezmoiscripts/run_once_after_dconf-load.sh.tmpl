@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -x # Print trace of simple commands.
+
+# Using `sourceDir` as `~/.config/dconf` may be impure.
+#
+cat {{ .chezmoi.sourceDir }}/dot_config/dconf/* | dconf load /

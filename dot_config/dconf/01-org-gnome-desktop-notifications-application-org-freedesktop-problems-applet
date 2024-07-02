@@ -1,0 +1,14 @@
+# dconf path
+#
+[org/gnome/desktop/notifications/application/org-freedesktop-problems-applet]
+
+# GSettings key names and their corresponding values
+#
+# Spurious crashes may happen frequently, especially with obscure background
+# processes. More often than not, these can be ignored as they typically recover
+# on their own. Some applications may crash and recover immediately, while
+# others may not crash at all but still spam the problems applet for various
+# reasons. Crash dumps and logs can be accessed by other means, so crash
+# notifications are disabled to avoid spam.
+#
+enable=false

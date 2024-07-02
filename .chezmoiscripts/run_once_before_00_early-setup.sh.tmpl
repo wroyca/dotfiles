@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -x # Print trace of simple commands.
+
+driver_version=$(nvidia-smi | grep -oP 'Driver Version: \K[^.]+')
+
+# Explicit synchronization is only available starting from
+# NVIDIA Driver 555 BETA.
+#
+if [[ $version -lt 555 ]]; then
+  echo "XWAYLAND_NO_GLAMOR=1 # nvidia-smi" >> {{ .chezmoi.sourceDir }}/etc/environment
+fi
+
+sudo cp -rf {{ .chezmoi.sourceDir }}/etc /
+
+if grep -q "# nvidia-smi" {{ .chezmoi.sourceDir }}/etc/environment; then
+  sed -i "/# nvidia-smi/d" {{ .chezmoi.sourceDir }}/etc/environment
+fi

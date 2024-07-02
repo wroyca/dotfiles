@@ -1,0 +1,7 @@
+# dconf path
+#
+[org/gnome/builder/editor]
+
+# GSettings key names and their corresponding values
+#
+auto-save=false

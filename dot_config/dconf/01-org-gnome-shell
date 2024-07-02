@@ -1,0 +1,16 @@
+# dconf path
+#
+[org/gnome/shell]
+
+# GSettings key names and their corresponding values
+#
+last-selected-power-profile='performance'
+
+# Disable user-extensions by default.
+#
+# Specifically, caffeine impacts GNOME shell performance, even when idle,
+# resulting in a 5 FPS drop at best and 10 at worst. On the other hand, the
+# legacy scheme autoswitcher extension is becoming less essential as more
+# applications align with the system-wide dark mode preference.
+#
+disable-user-extensions=true

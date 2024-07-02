@@ -1,0 +1,7 @@
+# dconf path
+#
+[org/gnome/weather]
+
+# GSettings key names and their corresponding values
+#
+locations=[<(uint32 2, <('Montreal', 'CYUL', true, [(0.79354303905785273, -1.2871803233458181)], [(0.79354303905785273, -1.2871803233458181)])>)>]

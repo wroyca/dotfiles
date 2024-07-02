@@ -1,0 +1,7 @@
+# dconf path
+#
+[org/gnome/desktop/sound]
+
+# GSettings key names and their corresponding values
+#
+allow-volume-above-100-percent=true
