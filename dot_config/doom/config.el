@@ -163,13 +163,6 @@
 
 (map! :map 'override :nv "gm" #'duplicate-line)
 
-;; Instructs Emacs to listen to changes to the OS's color scheme and switch to a
-;; matching theme accordingly.
-
-(after! doom-ui
-  (setq! auto-dark-dark-theme  'modus-vivendi-tinted
-         auto-dark-light-theme 'modus-operandi-tinted)
-  (auto-dark-mode 1))
 
 ;; Instructs Emacs to switch terminal colors to matching theme accordingly. Note
 ;; that this is assuming OSC 10 and 11 conformance.
@@ -188,3 +181,11 @@
 (defun run-after-enable-theme-hook (&rest _args)
   (run-hooks 'after-enable-theme-hook))
 (advice-add 'enable-theme :after #'run-after-enable-theme-hook)
+
+;; Instructs Emacs to listen to changes to the OS's color scheme and switch to a
+;; matching theme accordingly.
+
+(after! doom-ui
+  (setq! auto-dark-dark-theme  'modus-vivendi-tinted
+         auto-dark-light-theme 'modus-operandi-tinted)
+  (auto-dark-mode 1))
