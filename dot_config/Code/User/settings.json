@@ -93,4 +93,9 @@
   "workbench.preferredLightColorTheme": "Visual Studio Light",
   "workbench.startupEditor": "none",
   "workbench.statusBar.visible": true,
+
+  "vscode-neovim.NVIM_APPNAME": "nvim-vscode",
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1
+  }
 }
