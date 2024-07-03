@@ -6,22 +6,21 @@ user_pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-f
 user_pref("gnomeTheme.bookmarksToolbarUnderTabs", true);
 user_pref("gnomeTheme.hideSingleTab", true);
 
-user_pref("media.ffmpeg.vaapi.enabled", true);
-user_pref("media.hardware-video-decoding.force-enabled", true);
-
+user_pref("widget.gtk.rounded-bottom-corners.enabled", true);
 user_pref("svg.context-properties.content.enabled", true);
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 
 user_pref("widget.dmabuf.force-enabled", true);
-user_pref("widget.gtk.rounded-bottom-corners.enabled", true);
+user_pref("media.ffmpeg.vaapi.enabled", true);
+user_pref("media.hardware-video-decoding.force-enabled", true);
 
-user_pref("browser.newtabpage.activity-stream.discoverystream.saveToPocketCard.enabled", false)
-user_pref("browser.newtabpage.activity-stream.discoverystream.sendToPocket.enabled", false)
-user_pref("browser.newtabpage.activity-stream.feeds.section.topstories", false)
-user_pref("browser.newtabpage.activity-stream.feeds.topsites", false)
-user_pref("browser.newtabpage.activity-stream.section.highlights.includePocket", false)
-user_pref("browser.newtabpage.activity-stream.showSponsored", false)
-user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false)
+user_pref("accessibility.blockautorefresh", true);
+user_pref("extensions.pocket.enabled", false);
 
-user_pref("extensions.pocket.enabled", false)
-user_pref("accessibility.blockautorefresh", true)
+user_pref("browser.newtabpage.activity-stream.discoverystream.saveToPocketCard.enabled", false);
+user_pref("browser.newtabpage.activity-stream.discoverystream.sendToPocket.enabled", false);
+user_pref("browser.newtabpage.activity-stream.feeds.section.topstories", false);
+user_pref("browser.newtabpage.activity-stream.feeds.topsites", false);
+user_pref("browser.newtabpage.activity-stream.section.highlights.includePocket", false);
+user_pref("browser.newtabpage.activity-stream.showSponsored", false);
+user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);
