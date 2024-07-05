@@ -4,7 +4,7 @@ return {
 
   main = [[nvim-treesitter.configs]],
   opts = {
-    ensured_installed = { [[all]] },
+    ensure_installed = { [[all]] },
     highlight = {
       enable = true
     },
