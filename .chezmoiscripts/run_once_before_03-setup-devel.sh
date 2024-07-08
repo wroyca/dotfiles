@@ -50,6 +50,9 @@ sudo dnf install -y \
 sudo dnf install -y \
   luarocks
 
+sudo dnf install -y \
+  mold
+
 if ! command -v b > /dev/null 2>&1; then
   v=$(curl -s  'https://stage.build2.org/0/' | grep -oP '(?<=href=")0\.\K\d+\.\d+' | sort -nr |  head -1)
   curl --retry 5 --retry-all-errors -O \
