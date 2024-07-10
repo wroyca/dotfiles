@@ -12,7 +12,13 @@ sudo dnf install -y \
   fish
 
 sudo dnf install -y \
+  neovim
+
+sudo dnf install -y \
   scrcpy
+
+sudo dnf install -y \
+  steam
 
 sudo dnf install -y \
   wine
