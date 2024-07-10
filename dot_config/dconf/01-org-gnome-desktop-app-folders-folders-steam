@@ -1,0 +1,8 @@
+# dconf path
+#
+[org/gnome/desktop/app-folders/folders/Steam]
+
+# GSettings key names and their corresponding values
+#
+name='Steam'
+apps=['steam.desktop', 'Steam Linux Runtime 3.0 (sniper).desktop', 'Proton Experimental.desktop', 'Age of Empires II Definitive Edition.desktop']
