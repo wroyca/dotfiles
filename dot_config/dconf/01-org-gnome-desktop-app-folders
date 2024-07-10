@@ -4,4 +4,4 @@
 
 # GSettings key names and their corresponding values
 #
-folder-children=['Utilities', 'YaST', 'Pardus', 'Terminal', 'Office', 'Circle', 'Programming', 'Wine', 'Steam']
+folder-children=['Utilities', 'YaST', 'Pardus', 'Terminal', 'Office', 'Circle', 'Programming', 'Wine', 'Steam', 'Jetbrains']

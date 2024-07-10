@@ -1,0 +1,8 @@
+# dconf path
+#
+[org/gnome/desktop/app-folders/folders/Jetbrains]
+
+# GSettings key names and their corresponding values
+#
+name='Jetbrains'
+apps=['jetbrains-aqua-7a59c94d-34aa-4874-8772-e28ca0aed171.desktop', 'jetbrains-clion-47987817-73db-4d26-bba0-e60f405f6d48.desktop', 'jetbrains-datagrip-9fa06e50-fd8b-4071-b7a3-65292fe23072.desktop', 'jetbrains-dataspell-6251b80e-f67b-496a-ba81-8b35de3ad8b3.desktop', 'jetbrains-fleet-3d38a22d-ee51-4c2b-b802-5d4a3077932a.desktop', 'jetbrains-fleet.desktop', 'jetbrains-gateway-629d1029-339e-47ad-ba68-2974ed7e5097.desktop', 'jetbrains-gateway.desktop', 'jetbrains-goland-b1597cdf-b9a2-4b2d-8151-7cebf74dd4db.desktop', 'jetbrains-idea-ce-f10da956-6c90-43f9-9949-59adb654d310.desktop', 'jetbrains-idea-e40399ac-5765-4d4b-80fe-524c86f1a3b3.desktop', 'jetbrains-mps-72197ec3-b7ba-4816-8a27-46e05fa8f149.desktop', 'jetbrains-phpstorm-b1ccd382-859a-4ebe-8011-ff925a90369f.desktop', 'jetbrains-pycharm-49ad2509-fd09-4b5d-9788-6a1d93766e15.desktop', 'jetbrains-pycharm-ce-60448688-589f-45a9-a1cb-3d221b04dc40.desktop', 'jetbrains-rider-21ef083b-97aa-4c5b-a591-e3f6e0454b96.desktop', 'jetbrains-rubymine-c58049e5-b9b2-4ed0-bad4-77e5a0da935f.desktop', 'jetbrains-rustrover-6dd5d54f-7ede-461c-a8da-e5b712f8c608.desktop', 'jetbrains-studio-8fd802ad-c4d2-46a9-a7a8-4817003ba751.desktop', 'jetbrains-webstorm-6d777b4f-0f99-4fe5-a8b6-e9fdb16365bd.desktop', 'jetbrains-writerside-b689543b-dab3-4ceb-bb7e-b2831995befd.desktop', 'dotMemory-0d02205f-6152-4c18-9b55-c3afc5544831.desktop', 'dotTrace-566ac8ef-1bc0-4a28-9a74-b31bc68aafb2.desktop', 'Space Desktop-99a0b89b-556a-4096-a3cb-44ba8e24a3f2.desktop']
