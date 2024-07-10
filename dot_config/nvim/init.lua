@@ -4,6 +4,8 @@
 -- (  /  |        / | \                                    * .  ' .  .-+-
 --  \(_)_%s      /  |  \                                *   *  .   .
 
+vim.cmd.packadd [[vim-lumen]]
+
 local shada = vim.o.shada
 vim.o.shada = [[]]
 vim.schedule(function()
@@ -137,7 +139,6 @@ require [[lazy]].setup({
     { name = [[treesitter-textobjects]],           [[nvim-treesitter/nvim-treesitter-textobjects]]                                                                               },
     { name = [[treesitter]],                       [[nvim-treesitter/nvim-treesitter]]                                                                                           },
 
-    { name = [[lumen]],                            [[vimpostor/vim-lumen]],                                                                                         lazy = false },
     { name = [[nui]],                              [[MunifTanjim/nui.nvim]]                                                                                                      },
     { name = [[nui-components]],                   [[grapp-dev/nui-components.nvim]]                                                                                             },
     { name = [[plenary]],                          [[nvim-lua/plenary.nvim]]                                                                                                     },
@@ -200,7 +201,9 @@ require [[lazy]].setup({
   },
 
   install = {
-    colorscheme = { [[default]] }
+    colorscheme = {
+      [[default]]
+    }
   },
 
   ui = {
