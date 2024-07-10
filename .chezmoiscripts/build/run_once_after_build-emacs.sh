@@ -35,27 +35,27 @@ make distclean
 make uninstall
 
 ./autogen.sh
-./configure \
-  --prefix=$HOME/.local \
-  --without-pop \
-  --with-mailutils \
-  --with-pgtk \
-  --without-x \
-  --with-xwidgets \
-  --with-cairo \
-  --without-compress-install \
-  --with-native-compilation \
-  --with-json \
-  --with-dbus \
-  --with-gif \
-  --with-jpeg \
-  --with-png \
-  --with-rsvg \
-  --with-tiff \
-  --with-webp \
-  --with-gpm \
-  --with-modules \
-  --with-harfbuzz \
+./configure                           \
+  --prefix=$HOME/.local               \
+  --without-pop                       \
+  --with-mailutils                    \
+  --with-pgtk                         \
+  --without-x                         \
+  --with-xwidgets                     \
+  --with-cairo                        \
+  --without-compress-install          \
+  --with-native-compilation           \
+  --with-json                         \
+  --with-dbus                         \
+  --with-gif                          \
+  --with-jpeg                         \
+  --with-png                          \
+  --with-rsvg                         \
+  --with-tiff                         \
+  --with-webp                         \
+  --with-gpm                          \
+  --with-modules                      \
+  --with-harfbuzz                     \
   build_alias=x86_64-redhat-linux-gnu \
   host_alias=x86_64-redhat-linux-gnu
 
