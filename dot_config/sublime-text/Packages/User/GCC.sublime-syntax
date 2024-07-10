@@ -1,0 +1,36 @@
+%YAML 1.2
+---
+name: GCC
+scope: text.output.gcc
+
+contexts:
+  main:
+    # Define the pattern to match file paths with line and column numbers
+    - match: '^\s*(?!.*\[)(..[^:]*):(([0-9]+):?([0-9]+)?)?:?'
+      captures:
+        1: markup.heading  # Capture file path
+        2: markup.heading  # Capture line number
+        3: markup.heading  # Capture optional column number
+      push: [message]  # Push message context based on match
+
+  message:
+    # Pop the context when reaching the end of the line
+    - match: $
+      pop: 1
+
+    # Match error, warning, or note messages and capture their types
+    - match: "(?:((?:fatal )?error)|(warning)|(note)|(info)):"
+      captures:
+        1: message.error  # Capture error message
+        2: message.error  # Capture warning message
+        3: message.error  # Capture note message
+        4: markup.changed  # Capture note message
+
+    # Match single-quoted or back-quoted strings
+    - match: '‘.+?’|`.+?'
+      scope: markup.heading
+
+    # Match square bracketed strings at the end of lines
+    - match: '\[[\w-]+]$'
+      scope: markup.heading
+

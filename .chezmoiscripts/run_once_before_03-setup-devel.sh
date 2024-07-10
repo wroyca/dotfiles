@@ -54,10 +54,10 @@ sudo dnf install -y \
   mold
 
 if ! command -v b > /dev/null 2>&1; then
-  v=$(curl -s  'https://stage.build2.org/0/' | grep -oP '(?<=href=")0\.\K\d+\.\d+' | sort -nr |  head -1)
+  v=$(curl -sSf https://stage.build2.org/0/toolchain.sha256 | sed -n 's,^.*/build2-install-\(.*\)-stage\.sh$,\1,p')
   curl --retry 5 --retry-all-errors -O \
-    "https://stage.build2.org/0/0.$v-a.0/build2-install-0.$v-a.0-stage.sh"
-  sh build2-install-0.$v-a.0-stage.sh --local --yes /usr
+    "https://stage.build2.org/0/$v/build2-install-$v-stage.sh"
+  sh build2-install-$v-stage.sh --local --yes /usr
 fi
 
 if ! command -v git-credential-manager > /dev/null 2>&1; then
