@@ -11,9 +11,9 @@ l="Neovim-Light"
 
 case $mode in
   *dark* )
-    kitty +kitten themes --cache-age=14 --reload-in=all $d 2>/dev/null
+    kitty +kitten themes --reload-in=all $d 2>/dev/null
     ;;
   *default* | *light* )
-    kitty +kitten themes --cache-age=14 --reload-in=all $l 2>/dev/null
+    kitty +kitten themes --reload-in=all $l 2>/dev/null
     ;;
 esac
