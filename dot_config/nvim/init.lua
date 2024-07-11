@@ -33,39 +33,14 @@ vim.o.smartindent    = true
 vim.o.shiftwidth     = 0
 vim.o.tabstop        = 2
 vim.o.textwidth      = 80
-vim.o.cmdheight      = 0
-vim.o.laststatus     = 0
+vim.o.cmdheight      = 1
+vim.o.laststatus     = 3
 vim.o.pumheight      = 8
 vim.o.scrolloff      = 4
 vim.o.wrap           = false
+vim.cmd.hi           [[NormalFloat cterm=reverse guibg=NONE]]
 
-vim.api.nvim_create_autocmd({
-  [[VimEnter]],
-  [[VimResume]],
-  [[ColorScheme]]
-}, {
-  callback = function()
-    io.stdout:write(string.format("\027]10;1;#%06x\a", vim.api.nvim_get_hl(0, { name = [[Normal]] }).bg))
-  end,
-})
-vim.api.nvim_create_autocmd({
-  [[User]]
-}, {
-  pattern = { [[LumenLight]], [[LumenDark]] },
-  callback = function()
-    io.stdout:write(string.format("\027]10;1;#%06x\a", vim.api.nvim_get_hl(0, { name = [[Normal]] }).bg))
-  end,
-})
-vim.api.nvim_create_autocmd({
-  [[VimLeavePre]],
-  [[VimSuspend]]
-}, {
-  callback = function()
-    io.stdout:write("\027]111;;\a")
-  end,
-})
-
-local lazypath = vim.fs.joinpath(vim.fn.stdpath [[data]], [[lazy]], [[lazy.nvim]])
+local lazypath = vim.fs.joinpath(vim.fn.stdpath [[data]] --[[ @as string]], [[lazy]], [[lazy.nvim]])
 if not vim.uv.fs_stat(lazypath) then
   vim.system({
     [[git]],
@@ -130,6 +105,8 @@ require [[lazy]].setup({
     { name = [[ufo]],                              [[kevinhwang91/nvim-ufo]]                                                                                                     },
 
     { name = [[neogit]],                           [[NeogitOrg/neogit]]                                                                                                          },
+    { name = [[neogit-telescope]],                 [[nvim-telescope/telescope.nvim]]                                                                                             },
+    { name = [[neogit-diffview]],                  [[sindrets/diffview.nvim]]                                                                                                    },
 
     { name = [[leap.flit]],                        [[ggandor/flit.nvim]]                                                                                                         },
     { name = [[leap.spooky]],                      [[ggandor/leap-spooky.nvim]]                                                                                                  },

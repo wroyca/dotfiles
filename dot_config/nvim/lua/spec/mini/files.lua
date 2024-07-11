@@ -24,6 +24,11 @@ return {
     }
   },
 
+  init = function()
+    vim.cmd.hi [[MiniFilesNormal cterm=reverse guibg=NONE]]
+    vim.cmd.hi [[MiniFilesBorder cterm=reverse guibg=NONE]]
+  end,
+
   opts = {
     content = {
       -- https://github.com/echasnovski/mini.nvim/issues/377#issuecomment-1669965688

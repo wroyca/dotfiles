@@ -1,19 +1,18 @@
 ---@type LazyPluginSpec
 return {
-  [[neogit]],
-  dependencies = {
-    { name = [[misc-neogit-telescope]], [[nvim-telescope/telescope.nvim]] },
-    { name = [[misc-neogit-diffview]],  [[sindrets/diffview.nvim]] },
+  [[neogit]], dependencies = { [[neogit-diffview]], [[neogit-telescope]] },
+
+  keys = {
+    { [[<leader>gn]], [[<cmd>Neogit<cr>]], desc = [[Neogit]] }
   },
 
-  keys = { { [[<leader>gn]], [[<cmd>Neogit<cr>]], desc = [[Neogit]] } },
   opts = {
-    graph_style = [[unicode]],
     auto_show_console = false,
     disable_signs = true,
+    graph_style = [[unicode]],
     integrations = {
-      telescope = true,
-      diffview = true
+      diffview = true,
+      telescope = true
     }
   },
 
@@ -23,16 +22,15 @@ return {
       [[commit_select_view]],
       [[commit_view]],
       [[log_view]],
+      [[merge_editor]],
+      [[popup]],
+      [[preview_buffer]],
       [[rebase_editor]],
       [[reflog_view]],
-      [[merge_editor]],
-      [[tag_editor]],
-      [[preview_buffer]],
-      [[popup]]
+      [[tag_editor]]
     }) do
       opts[e] = { kind = [[tab]] }
     end
     require [[neogit]].setup(opts)
   end
 }
-

@@ -1,14 +1,16 @@
 ---@type LazyPluginSpec
 return {
-  [[coc]],
-  event = [[VeryLazy]],
+  [[coc]], event = [[VeryLazy]],
 
   init = function()
     vim.o.updatetime = 300
+    vim.cmd.hi [[CocFloating cterm=reverse                               guibg=NONE]]
+    vim.cmd.hi [[CocMenuSel  cterm=underline,reverse guifg=NvimDarkGrey3 guibg=NvimLightGrey2 blend=0]]
   end,
 
   keys = {
     { [[<Tab>]], [[coc#pum#visible() ? coc#pum#confirm() : "<Tab>"]], mode = [[i]], expr = true, replace_keycodes = false },
+
     {
       [[K]],
       function()
@@ -22,32 +24,45 @@ return {
         end
       end
     },
-    { [[gD]], [[<Plug>(coc-declaration)]], desc = [[Go to declaration]] },
-    { [[gd]], [[<Plug>(coc-definition)]], desc = [[Go to definition]] },
-    { [[gi]], [[<Plug>(coc-implementation)]], desc = [[Go to implementation]] },
-    { [[gr]], [[<Plug>(coc-references)]], desc = [[Go to references]] },
+
+    { [[gD]], [[<Plug>(coc-declaration)]],     desc = [[Go to declaration]]     },
+    { [[gd]], [[<Plug>(coc-definition)]],      desc = [[Go to definition]]      },
+    { [[gi]], [[<Plug>(coc-implementation)]],  desc = [[Go to implementation]]  },
+    { [[gr]], [[<Plug>(coc-references)]],      desc = [[Go to references]]      },
     { [[gt]], [[<Plug>(coc-type-definition)]], desc = [[Go to type definition]] },
+
     {
       [[<leader>;]],
       [[<Plug>(coc-format-selected)]],
       desc = [[Format selection]],
-      mode = { [[n]], [[x]] }
+      mode = {
+        [[n]],
+        [[x]]
+      },
+      nowait = true
     },
+
     {
       [[<leader>.]],
       [[<Plug>(coc-codeaction-cursor)]],
       desc = [[Code action]],
+      mode = {
+        [[n]],
+        [[x]]
+      },
       nowait = true
     },
-    { [[<leader>co]], [[<cmd>CocOutline<cr>]], desc = [[Outline]], silent = true },
-    { [[<leader>cd]], [[<cmd>CocDiagnostic<cr>]], desc = [[Diagnostic]], silent = true },
-    { [[<leader>cs]], [[<cmd>CocList symbols<cr>]], desc = [[Symbols]], silent = true },
-    { [[<leader>cl]], [[<cmd>CocList links<cr>]], desc = [[Links]], silent = true },
-    { [[<leader>cc]], [[<cmd>CocList commands<cr>]], desc = [[Commands]], silent = true },
-    { [[<leader>cL]], [[<cmd>CocList lists<cr>]], desc = [[Lists]], silent = true }
+
+    { [[<leader>lo]], [[<cmd>CocOutline<cr>]],    desc = [[Outline]],    silent = true },
+    { [[<leader>ld]], [[<cmd>CocDiagnostic<cr>]], desc = [[Diagnostic]], silent = true },
   },
 
   opts = {
+    ------------------------------------------------------------------------------
+    -- Colors
+    ------------------------------------------------------------------------------
+    ["colors.enable"] = true,
+
     ------------------------------------------------------------------------------
     -- Diagnostic
     ------------------------------------------------------------------------------
@@ -95,6 +110,11 @@ return {
     },
 
     ------------------------------------------------------------------------------
+    -- SemanticTokens
+    ------------------------------------------------------------------------------
+    ["semanticTokens.enable"] = true,
+
+    ------------------------------------------------------------------------------
     -- Signature
     ------------------------------------------------------------------------------
     ["signature.floatConfig"] = {
@@ -124,8 +144,8 @@ return {
     ------------------------------------------------------------------------------
     ["clangd.arguments"] = {
       [[--all-scopes-completion=true]],
-      [[--background-index=true]],
       [[--background-index-priority=normal]],
+      [[--background-index=true]],
       [[--clang-tidy]],
       [[--completion-parse=always]],
       [[--completion-style=bundled]],
@@ -142,23 +162,27 @@ return {
       [[/usr/share/nvim/runtime]],
       [[/usr/share/nvim/runtime/lua/vim/_meta]],
 
-      ---@diagnostic disable-next-line: param-type-mismatch
-      vim.fs.joinpath(vim.fn.stdpath [[data]], [[lazy]], [[lazy.nvim]]),
-      ---@diagnostic disable-next-line: param-type-mismatch
-      vim.fs.joinpath(vim.fn.stdpath [[data]], [[lazy]], [[neodev.nvim]], [[types]], [[nightly]])
+      vim.fs.joinpath(vim.fn.stdpath [[data]] --[[ @as string]], [[lazy]]),
+      vim.fs.joinpath(vim.fn.stdpath [[data]] --[[ @as string]], [[lazy]], [[lazy.nvim]]),
+      vim.fs.joinpath(vim.fn.stdpath [[data]] --[[ @as string]], [[lazy]], [[neodev.nvim]], [[types]], [[stable]]),
+      vim.fs.joinpath(vim.fn.stdpath [[data]] --[[ @as string]], [[lazy]], [[neodev.nvim]], [[types]], [[nightly]])
     }
   },
 
   config = function(opts)
     vim.g.coc_global_extensions = {
       [[coc-marketplace]],
+
+      [[coc-clangd]],
+      [[coc-json]],
       [[coc-lua]],
+      [[coc-sh]],
+      [[coc-xml]],
+
       [[@statiolake/coc-stylua]],
-      [[coc-clangd]]
     }
 
-    ---@diagnostic disable-next-line: param-type-mismatch
-    for k, v in pairs(opts.opts) do
+    for k, v in pairs(opts.opts --[[@as table]]) do
       vim.fn["coc#config"](k, v)
     end
   end

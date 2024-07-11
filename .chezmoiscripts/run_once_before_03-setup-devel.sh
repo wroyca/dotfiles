@@ -53,6 +53,9 @@ sudo dnf install -y \
 sudo dnf install -y \
   mold
 
+sudo dnf install -y \
+  shellcheck
+
 if ! command -v b > /dev/null 2>&1; then
   v=$(curl -sSf https://stage.build2.org/0/toolchain.sha256 | sed -n 's,^.*/build2-install-\(.*\)-stage\.sh$,\1,p')
   curl --retry 5 --retry-all-errors -O \

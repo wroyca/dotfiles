@@ -7,7 +7,7 @@ return {
       duration = 10000
     }
   },
-  
+
   config = function(_, opts)
     vim.notify = require [[mini.notify]].make_notify(opts)
   end

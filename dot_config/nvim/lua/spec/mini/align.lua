@@ -3,7 +3,7 @@ return {
   [[mini.align]], config = true,
 
   keys = {
-    { [[ga]], mode = { [[n]], [[x]] }, desc = [[Align text]] },
-    { [[gA]], mode = { [[n]], [[x]] }, desc = [[Align text (with preview)]] }
+    { [[gA]], mode = { [[n]], [[x]] }, desc = [[Align with preview]] },
+    { [[ga]], mode = { [[n]], [[x]] }, desc = [[Align]]              }
   }
 }
