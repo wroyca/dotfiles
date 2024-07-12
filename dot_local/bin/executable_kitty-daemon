@@ -5,4 +5,4 @@ if ! command -v kitty > /dev/null 2>&1; then
 fi
 
 gsettings monitor org.gnome.desktop.interface color-scheme | \
-  xargs -I % bash -c 'kitty-color-scheme' &2>>/dev/null
+  xargs -I % bash -c "$HOME/.local/bin/kitty-color-scheme" &2>>/dev/null true
