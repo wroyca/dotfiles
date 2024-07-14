@@ -38,6 +38,7 @@ vim.o.laststatus     = 3
 vim.o.pumheight      = 8
 vim.o.scrolloff      = 4
 vim.o.wrap           = false
+vim.o.more           = false
 vim.cmd.hi           [[NormalFloat cterm=reverse guibg=NONE]]
 
 local lazypath = vim.fs.joinpath(vim.fn.stdpath [[data]] --[[ @as string]], [[lazy]], [[lazy.nvim]])
