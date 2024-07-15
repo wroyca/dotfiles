@@ -1,3 +1,4 @@
+// vim: set ft=jsonc:
 {
   // The name of the Zed theme to use for the UI
   "theme": "Andromeda",
