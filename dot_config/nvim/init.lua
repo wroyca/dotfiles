@@ -11,6 +11,7 @@ vim.o.shada = [[]]
 vim.schedule(function()
   vim.o.shada = shada
   pcall(vim.cmd.rshada, { bang = true })
+  vim.cmd.doautocmd [[User ShadaLoadPost]]
 end)
 
 vim.g.mapleader      = [[ ]]
