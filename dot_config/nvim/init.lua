@@ -19,6 +19,7 @@ vim.g.localmapleader = [[,]]
 vim.o.clipboard      = [[unnamedplus]]
 vim.o.mouse          = [[a]]
 vim.o.mousescroll    = [[ver:3,hor:0]]
+vim.o.mousemoveevent = true
 vim.o.fillchars      = [[eob: ]]
 vim.o.titlestring    = [[%t]]
 vim.o.title          = true
