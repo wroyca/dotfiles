@@ -1,0 +1,36 @@
+# If scanning the remote server in search of new files, only those new files
+# will be downloaded in the place of the old ones. A file is considered new if
+# one of these two conditions are met:
+#
+#   A file of that name does not already exist locally.
+#
+#   A file of that name does exist, but the remote file was modified more
+#   recently than the local file.
+#
+# https://www.gnu.org/software/wget/manual/html_node/Time_002dStamping.html
+#
+timestamping = on
+
+# Set all applicable timeout values to n, the same as ‘-T n’. This is equivalent
+# to specifying --dns-timeout, --connect-timeout, and --read-timeout, all at the
+# same time. The only timeout enabled by default was a 900-second (15 minutes)
+# read timeout.
+#
+timeout = 60
+
+# Set number of retries per URL—the same as ‘-t n’. The default was to retry 20
+# times, with the exception of fatal errors like "connection refused" or "not
+# found" (404), which were not retried.
+#
+tries = 5
+
+# Consider “connection refused” a transient error—the same as
+# ‘--retry-connrefused’.
+#
+# Normally Wget gives up on a URL when it is unable to connect to the site
+# because failure to connect is taken as a sign that the server is not running
+# at all and that retries would not help. In truth it can be useful for
+# mirroring unreliable sites whose servers tend to disappear for short periods
+# of time.
+#
+retry_connrefused = on
