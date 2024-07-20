@@ -5,7 +5,6 @@ user_pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-f
 
 user_pref("gnomeTheme.bookmarksToolbarUnderTabs", true);
 user_pref("gnomeTheme.hideSingleTab", true);
-
 user_pref("widget.gtk.rounded-bottom-corners.enabled", true);
 user_pref("svg.context-properties.content.enabled", true);
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);

@@ -1,6 +1,5 @@
 editorconfig.editorconfig
 asvetliakov.vscode-neovim
-
 alefragnani.project-manager
 
 github.codespaces

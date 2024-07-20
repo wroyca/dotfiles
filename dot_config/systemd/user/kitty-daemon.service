@@ -1,5 +1,5 @@
 [Unit]
-Description=Listen to changes to the OS's color scheme and switch Kitty to a matching theme accordingly.
+Description=Listen for changes in the OS color scheme and update Kitty's theme to match.
 
 [Service]
 Type=forking

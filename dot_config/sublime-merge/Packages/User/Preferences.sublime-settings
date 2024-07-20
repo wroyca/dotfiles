@@ -1,9 +1,11 @@
+// vim: set ft=jsonc:
+//
 // Settings in here override those in "Default/Preferences.sublime-settings",
 // and are overridden in turn by syntax-specific settings.
 {
-  "theme": "auto",
   "hardware_acceleration": "opengl",
   "side_bar_layout": "tabs",
+  "theme": "auto",
   "translate_tabs_to_spaces": true,
-  "trim_trailing_white_space_on_save": true,
+  "trim_trailing_white_space_on_save": true
 }
