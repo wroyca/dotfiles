@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 set -x # Print trace of simple commands.
-set +e # Ignore errors, if any.
+set +e # Ignore pipeline that returns a non-zero status.
 
 if command -v zed > /dev/null 2>&1; then
   exit 0

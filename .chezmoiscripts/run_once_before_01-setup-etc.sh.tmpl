@@ -4,10 +4,6 @@ set -x # Print trace of simple commands.
 
 sudo cp -rf {{ .chezmoi.sourceDir }}/etc /
 
-if grep -q "# nvidia-smi" {{ .chezmoi.sourceDir }}/etc/environment; then
-  sed -i "/# nvidia-smi/d" {{ .chezmoi.sourceDir }}/etc/environment
-fi
-
 # TMP: Remove once it's fixed on NV side.
 #
 echo "options nvidia NVreg_EnableGpuFirmware=0" | sudo tee -a /etc/modprobe.d/nvidia-gsp.conf

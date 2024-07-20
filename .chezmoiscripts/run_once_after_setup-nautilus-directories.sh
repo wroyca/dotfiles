@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -x # Print trace of simple commands.
+set -e # Exit immediately if a pipeline returns a non-zero status.
 
 cd ~/
 
