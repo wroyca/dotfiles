@@ -1,4 +1,4 @@
-vim.api.nvim_create_autocmd({ [[BufWinEnter]] }, {
+vim.api.nvim_create_autocmd([[BufWinEnter]], {
   callback = function(event)
     if vim.bo.filetype == [[man]] then
       vim.bo[event.buf].buflisted = false
