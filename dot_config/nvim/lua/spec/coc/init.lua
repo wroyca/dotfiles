@@ -1,6 +1,6 @@
 ---@type LazyPluginSpec
 return {
-  [[coc]], event = [[VeryLazy]],
+  [[neoclide/coc.nvim]], event = [[VeryLazy]], branch = [[release]],
 
   init = function()
     vim.o.updatetime = 300

@@ -1,6 +1,5 @@
----@type LazyPluginSpec
 return {
-  [[hlslens]],
+  [[kevinhwang91/nvim-hlslens]], name = [[hlslens]],
 
   keys = { [[*]], [[#]], [[n]], [[N]] },
   opts = {

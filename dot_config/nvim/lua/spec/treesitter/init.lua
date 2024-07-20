@@ -1,7 +1,6 @@
----@type LazySpec
 return {
-  [[treesitter]], event = [[VeryLazy]],
-
+  [[nvim-treesitter/nvim-treesitter]], name = [[treesitter]], event = [[VeryLazy]],
+  
   main = [[nvim-treesitter.configs]],
   opts = {
     ensure_installed = [[all]],

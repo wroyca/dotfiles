@@ -1,6 +1,5 @@
----@type LazyPluginSpec
 return {
-  [[fundo]], event = [[VeryLazy]],
+  [[kevinhwang91/nvim-fundo]], name = [[fundo]], event = [[VeryLazy]],
 
   build = function()
     require [[fundo]].install()

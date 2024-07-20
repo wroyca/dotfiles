@@ -1,6 +1,5 @@
----@type LazyPluginSpec
 return {
-  [[bqf]], ft = [[qf]],
+  [[kevinhwang91/nvim-bqf]], name = [[bqf]], ft = [[qf]],
 
   opts = {
     preview = {
