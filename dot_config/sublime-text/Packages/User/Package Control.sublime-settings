@@ -1,14 +1,11 @@
+// vim: set ft=jsonc:
 {
   "bootstrapped": true,
-  "in_process_packages":
-  [
-  ],
-  "installed_packages":
-  [
+  "installed_packages": [
     "EditorConfig",
     "LSP",
     "LSP-clangd",
     "NeoVintageous",
-    "Package Control",
-  ],
+    "Package Control"
+  ]
 }

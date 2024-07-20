@@ -1,6 +1,8 @@
+// vim: set ft=jsonc:
+//
 // Settings in here override those in "LSP/LSP.sublime-settings"
 {
-  "show_diagnostics_count_in_view_status": true,
-  "show_diagnostics_in_view_status": false,
   "diagnostics_gutter_marker": "",
+  "show_diagnostics_count_in_view_status": true,
+  "show_diagnostics_in_view_status": false
 }

@@ -1,17 +1,46 @@
+// vim: set ft=jsonc:
 [
-  { "keys": ["ctrl+left"], "command": "move", "args": {"by": "subwords", "forward": false} },
-  { "keys": ["ctrl+right"], "command": "move", "args": {"by": "subword_ends", "forward": true} },
-  { "keys": ["ctrl+shift+left"], "command": "move", "args": {"by": "subwords", "forward": false, "extend": true} },
-  { "keys": ["ctrl+shift+right"], "command": "move", "args": {"by": "subword_ends", "forward": true, "extend": true} },
-
-  { "keys": ["alt+left"], "command": "move", "args": {"by": "words", "forward": false} },
-  { "keys": ["alt+right"], "command": "move", "args": {"by": "word_ends", "forward": true} },
-  { "keys": ["alt+shift+left"], "command": "move", "args": {"by": "words", "forward": false, "extend": true} },
-  { "keys": ["alt+shift+right"], "command": "move", "args": {"by": "word_ends", "forward": true, "extend": true} },
-
-  { "keys": ["ctrl+shift+b"], "command": "show_overlay", "args": {"overlay": "command_palette", "text": "Build With: "} },
-
-  { "keys": ["ctrl+."], "command": "lsp_code_actions", "context": [{"key": "lsp.session_with_capability", "operand": "codeActionProvider"}] },
-  { "keys": ["ctrl+;"], "command": "lsp_format_document_range", "context": [{"key": "lsp.session_with_capability", "operand": "documentRangeFormattingProvider"}] },
+  { "keys": ["ctrl+left"],        "command": "move", "args": {"by": "subwords",     "forward": false                 } },
+  { "keys": ["ctrl+right"],       "command": "move", "args": {"by": "subword_ends", "forward": true                  } },
+  { "keys": ["ctrl+shift+left"],  "command": "move", "args": {"by": "subwords",     "forward": false, "extend": true } },
+  { "keys": ["ctrl+shift+right"], "command": "move", "args": {"by": "subword_ends", "forward": true , "extend": true } },
+  { "keys": ["alt+left"],         "command": "move", "args": {"by": "words",        "forward": false                 } },
+  { "keys": ["alt+right"],        "command": "move", "args": {"by": "word_ends",    "forward": true                  } },
+  { "keys": ["alt+shift+left"],   "command": "move", "args": {"by": "words",        "forward": false, "extend": true } },
+  { "keys": ["alt+shift+right"],  "command": "move", "args": {"by": "word_ends",    "forward": true , "extend": true } },
+  {
+    "keys": [
+      "ctrl+shift+b"
+    ],
+    "command": "show_overlay",
+    "args": {
+      "overlay": "command_palette",
+      "text": "Build With: "
+    }
+  },
+  {
+    "keys": [
+      "ctrl+."
+    ],
+    "command": "lsp_code_actions",
+    "context": [
+      {
+        "key": "lsp.session_with_capability",
+        "operand": "codeActionProvider"
+      }
+    ]
+  },
+  {
+    "keys": [
+      "ctrl+;"
+    ],
+    "command": "lsp_format_document_range",
+    "context": [
+      {
+        "key": "lsp.session_with_capability",
+        "operand": "documentRangeFormattingProvider"
+      }
+    ]
+  }
 ]
 

@@ -33,4 +33,3 @@ contexts:
     # Match square bracketed strings at the end of lines
     - match: '\[[\w-]+]$'
       scope: markup.heading
-
