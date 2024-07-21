@@ -3,7 +3,7 @@
 set -x # Print trace of simple commands.
 
 if ! command -v code > /dev/null 2>&1; then
-  exit 0
+  sudo rpm -i 'https://code.visualstudio.com/sha/download?build=stable&os=linux-rpm-x64'
 fi
 
 while read -r n; do
