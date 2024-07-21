@@ -1,6 +1,5 @@
----@type LazyPluginSpec
 return {
-  [[mini.pairs]],
+  [[mini.pairs]], name = [[mini-pairs]], main = [[mini.pairs]], dev = true,
 
   keys = {
     { [[`]], mode = [[i]] },

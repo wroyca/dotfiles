@@ -1,7 +1,7 @@
----@type LazyPluginSpec
 return {
-  [[mini.misc]], event = [[VeryLazy]],
+  [[mini.misc]], name = [[mini-misc]], main = [[mini.misc]], dev = true,
 
+  event = [[VeryLazy]],
   config = function()
     local misc = require [[mini.misc]]
     misc.setup()

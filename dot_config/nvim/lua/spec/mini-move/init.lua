@@ -1,7 +1,7 @@
----@type LazyPluginSpec
 return {
-  [[mini.move]], config = true,
+  [[mini.move]], name = [[mini-move]], main = [[mini.move]], dev = true,
 
+  opts = {},
   keys = {
     { [[<A-h>]], mode = { [[n]], [[x]] } },
     { [[<A-j>]], mode = { [[n]], [[x]] } },
