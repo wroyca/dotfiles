@@ -43,14 +43,6 @@ vim.o.wrap           = false
 vim.o.more           = false
 vim.o.number         = true
 
-vim.api.nvim_create_autocmd ([[User]], {
-  pattern = [[VeryLazy]],
-  callback = function()
-    require [[which-key]].add {
-    }
-  end
-})
-
 local lazypath = vim.fs.joinpath(vim.fn.stdpath [[data]] --[[ @as string ]], [[lazy]], [[lazy.nvim]])
 if not vim.uv.fs_stat(lazypath) then
   vim.system({
