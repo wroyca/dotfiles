@@ -21,4 +21,4 @@ sudo dnf install -y \
   'pkgconfig(xkbcommon-x11)'
 
 cargo install --git \
-  https://github.com/zed-industries/zed.git zed
+  https://github.com/zed-industries/zed.git zed || true
