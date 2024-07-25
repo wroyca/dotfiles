@@ -41,6 +41,18 @@ vim.o.laststatus     = 3
 vim.o.pumheight      = 8
 vim.o.scrolloff      = 4
 
+local hotpotpath = vim.fs.joinpath(vim.fn.stdpath [[data]] --[[ @as string ]], [[lazy]], [[hotpot.nvim]])
+if not vim.uv.fs_stat(hotpotpath) then
+  vim.system({
+    [[git]],
+    [[clone]],
+    [[--filter=blob:none]],
+    [[https://github.com/rktjmp/hotpot.nvim]],
+    hotpotpath
+  }):wait()
+end
+vim.opt.rtp:prepend(hotpotpath)
+
 local lazypath = vim.fs.joinpath(vim.fn.stdpath [[data]] --[[ @as string ]], [[lazy]], [[lazy.nvim]])
 if not vim.uv.fs_stat(lazypath) then
   vim.system({
@@ -122,9 +134,15 @@ require [[lazy]].setup({
     { name = [[plenary]],                          [[nvim-lua/plenary.nvim]]                                                                                                     },
     { name = [[promise-async]],                    [[kevinhwang91/promise-async]]                                                                                                },
 
+
     -- Merge specs together in the final spec.
     {
       import = [[spec]]
+    },
+
+    -- Merge hotpot in the final spec to update it with lazy.nvim.
+    {
+      [[rktjmp/hotpot.nvim]], lazy = false, config = true
     }
   },
 
