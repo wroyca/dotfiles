@@ -1,5 +1,7 @@
 if package.loaded['lazy'] then return end
 
+vim.cmd.packadd[[vim-lumen]]
+
 -- https://github.com/folke/lazy.nvim/issues/1180
 --
 
