@@ -57,8 +57,10 @@ H.apply_options = function ()
 end
 
 H.iterate_options = function(options, callback)
-  for option, value in pairs(options) do
-    callback(option, value)
+  if options ~= nil then
+    for option, value in pairs(options) do
+      callback(option, value)
+    end
   end
 end
 
@@ -265,7 +267,7 @@ H.parse = function(path)
 end
 
 H.generalize = function(data)
-  local ok, json = pcall(vim.json.decode, data, {
+  local ok, json = pcall(require[[jsonc]].decode, data, {
     luanil = {
       object = true,
       array = true
