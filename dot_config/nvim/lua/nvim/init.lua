@@ -31,6 +31,7 @@ H.apply = function(config)
   end
 
   H.apply_options()
+  H.apply_keymaps()
 end
 
 --
@@ -42,6 +43,10 @@ end
 
 H.options = function()
   return vim.fs.joinpath(H.std(), [[options.json]])
+end
+
+H.keymaps = function()
+  return vim.fs.joinpath(H.std(), [[keymaps.json]])
 end
 
 --
@@ -57,16 +62,22 @@ H.iterate_options = function(options, callback)
   end
 end
 
+H.apply_keymaps = function()
+  return H.iterate_keymaps(H.parse(H.keymaps()), H.set_keymap) ~= nil
+end
+
+H.iterate_keymaps = function(keymaps, callback)
+  for _, binding in pairs(keymaps) do
+    callback(binding)
+  end
+end
+
 --
 --
 
 H.set_option = function (option, value)
-  if not H.is_option(option) then
-    return H.set_option_local(option, value)
-  end
-  if H.is_global_option(option) then
-    return H.set_option_schedule(vim.o, option, value)
-  end
+  if not H.is_option(option) then return H.set_option_local(option, value) end
+  if H.is_global_option(option) then return H.set_option_schedule(vim.o, option, value) end
 end
 
 H.is_buffer_option = function(option)
@@ -131,6 +142,114 @@ H.create_autocmd = function(event, pattern, callback, once)
   vim.api.nvim_create_autocmd(event, {
     pattern = pattern, callback = callback, once = once, nested = true
   })
+end
+
+--
+--
+
+H.set_keymap = function(binding)
+  local modes = H.get_modes(binding.mode)
+  H.iterate_modes(modes, function(mode)
+    H.set_keymap_for_mode(mode, binding.lhs, binding.rhs, binding.opts or {})
+  end)
+end
+
+H.get_modes = function(mode)
+  return type(mode) == [[string]] and { mode } or mode
+end
+
+H.iterate_modes = function(modes, callback)
+  for _, mode in ipairs(modes) do
+    callback(mode)
+  end
+end
+
+H.set_keymap_for_mode = function(mode, lhs, rhs, opts)
+  if H.should_set_keymap(mode, lhs) then
+    H.map_key(mode, lhs, rhs, opts)
+  end
+end
+
+H.should_set_keymap = function(mode, lhs)
+  local map_info = H.get_map_info(mode, lhs)
+  return H.is_default_keymap(mode, lhs, map_info)
+end
+
+H.is_default_keymap = function(mode, lhs, map_info)
+  if not map_info then return true end
+  if H.is_default_normal_keymap(mode, lhs, map_info) then return true end
+  if H.is_default_insert_keymap(mode, lhs, map_info) then return true end
+  if H.is_default_visual_keymap(mode, lhs, map_info) then return true end
+  return false
+end
+
+H.is_default_normal_keymap = function(mode, lhs, map_info)
+  local rhs = H.get_rhs(map_info)
+  return H.is_normal_mode(mode) and H.is_clear_highlight(lhs, rhs)
+end
+
+H.is_default_insert_keymap = function(mode, lhs, map_info)
+  local desc = H.get_desc(map_info)
+  return H.is_insert_mode(mode) and H.is_signature(lhs, desc)
+end
+
+H.is_default_visual_keymap = function(mode, lhs, map_info)
+  local rhs = H.get_rhs(map_info)
+  return H.is_visual_mode(mode) and H.is_visual_search(lhs, rhs)
+end
+
+H.is_normal_mode = function(mode)
+  return mode == [[n]]
+end
+
+H.is_insert_mode = function(mode)
+  return mode == [[i]]
+end
+
+H.is_visual_mode = function(mode)
+  return mode == [[x]]
+end
+
+H.is_clear_highlight = function(lhs, rhs)
+  return lhs == [[<C-L>]] and rhs:find [[nohl]] ~= nil
+end
+
+H.is_signature = function(lhs, desc)
+  return lhs == [[<C-S>]] and desc:find [[signature]] ~= nil
+end
+
+H.is_visual_search = function(lhs, rhs)
+  return (lhs == '*' and rhs == [[y/\V<C-R>"<CR>]]) or (lhs == '#' and rhs == [[y?\V<C-R>"<CR>]])
+end
+
+H.get_map_info = function(mode, lhs)
+  local keymaps = vim.api.nvim_get_keymap(mode)
+  return H.find_keymap(keymaps, lhs)
+end
+
+H.find_keymap = function(keymaps, lhs)
+  for _, info in ipairs(keymaps) do
+    if info.lhs == lhs then return info end
+  end
+  return nil
+end
+
+H.get_rhs = function(map_info)
+  return map_info.rhs or [[]]
+end
+
+H.get_desc = function(map_info)
+  return map_info.desc or [[]]
+end
+
+H.map_key = function(mode, lhs, rhs, opts)
+  if lhs == [[]] then return end
+  local options = H.merge_options(opts)
+  vim.keymap.set(mode, lhs, rhs, options)
+end
+
+H.merge_options = function(opts)
+  return vim.tbl_deep_extend([[force]], { silent = true }, opts or {})
 end
 
 --
