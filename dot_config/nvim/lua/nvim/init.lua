@@ -78,8 +78,11 @@ end
 --
 
 H.set_option = function (option, value)
-  if not H.is_option(option) then return H.set_option_local(option, value) end
-  if H.is_global_option(option) then return H.set_option_schedule(vim.o, option, value) end
+  if not H.is_option(option) then
+    return H.set_option_local(option, value)
+  else
+    return H.set_option_schedule(vim.o, option, value)
+  end
 end
 
 H.is_buffer_option = function(option)
@@ -105,7 +108,6 @@ H.set_option_local = function(filetype, options)
   --
   if type(options) == [[table]] then
     H.create_autocmd([[FileType]], filetype, function()
-      print ("foo")
       for option, value in pairs(options) do
         if H.is_buffer_option(option) then H.set_buffer_option(option, value) end
         if H.is_window_option(option) then H.set_window_option(option, value) end
