@@ -1,3 +1,5 @@
+require ("nvim").setup()
+
 return {
   { name = [[coc]],                              [[neoclide/coc.nvim]],                                                                                     branch=[[release]] },
   { name = [[neodev]],                           [[folke/neodev.nvim]],                                                                                                        },
