@@ -1,0 +1,53 @@
+// vim: set ft=jsonc:
+{
+  // Enables mouse support in all modes.
+  "mouse": "a",
+
+  // Configures the scroll speed: vertical scroll set to 3 lines per scroll, horizontal scroll disabled.
+  "mousescroll": "ver:3,hor:0",
+
+  // Enables mouse move events.
+  "mousemoveevent": true,
+
+  // Uses the system clipboard for all yank, delete, change, and put operations.
+  "clipboard": "unnamedplus",
+
+  // Adds the 'g' flag to all substitutions by default, replacing all occurrences in a line.
+  "gdefault": true,
+
+  // Displays whitespace characters.
+  "list": true,
+
+  // Confirms actions before executing commands that would normally fail.
+  "confirm": true,
+
+  // Enables 24-bit RGB color in the TUI.
+  "termguicolors": true,
+
+  // Sets the maximum height of the popup menu to 8 lines.
+  "pumheight": 8,
+
+  // Keeps 4 lines visible above and below the cursor.
+  "scrolloff": 4,
+
+  // Enables indentation of wrapped lines to match the parent line.
+  "breakindent": true,
+
+  // Maintains the same indentation level as the previous line.
+  "copyindent": true,
+
+  // Converts tabs to spaces.
+  "expandtab": true,
+
+  // Preserves the indentation structure of a file.
+  "preserveindent": true,
+
+  // Automatically inserts the correct amount of indentation when starting a new line.
+  "smartindent": true,
+
+  // Sets the number of spaces a tab counts for.
+  "tabstop": 2,
+
+  // Sets the number of spaces inserted for each indentation level.
+  "shiftwidth": 0
+}
