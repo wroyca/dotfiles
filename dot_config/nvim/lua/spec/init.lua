@@ -1,6 +1,7 @@
 vim.g.mapleader = [[ ]]
 
 require ("nvim").setup()
+require ("nvim.runtime").setup()
 
 return {
   { name = [[coc]],                              [[neoclide/coc.nvim]],                                                                                     branch=[[release]] },
