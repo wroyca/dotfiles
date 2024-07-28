@@ -19,9 +19,9 @@ mkdir -p /tmp/fnlfmt && cd $_
 
 git init .
 git remote add --no-fetch origin https://git.sr.ht/~technomancy/fnlfmt --no-tags
-git config remote.origin.fetch "+refs/heads/master:refs/remotes/origin/master"
+git config remote.origin.fetch "+refs/heads/main:refs/remotes/origin/main"
 git fetch -v --depth=1
-git pull origin master
+git pull origin main
 
 sudo make install PREFIX=/usr
 
