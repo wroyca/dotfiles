@@ -1,7 +1,7 @@
 [firefoxpwa]
 name=FirefoxPWA
 baseurl=https://packagecloud.io/filips/FirefoxPWA/rpm_any/rpm_any/$basearch
-gpgcheck=1
+gpgcheck=0
 gpgkey=https://packagecloud.io/filips/FirefoxPWA/gpgkey
 enabled=1
 enabled_metadata=1
