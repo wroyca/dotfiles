@@ -9,13 +9,8 @@ if package.loaded['lazy'] then
   return
 end
 
-vim.cmd.packadd[[vim-lumen]]
-
--- https://github.com/folke/lazy.nvim/issues/1180
---
-
 require [[lazy]].setup ([[spec]], {
-   performance = {
+  performance = {
     rtp = {
       disabled_plugins = {
         [[2html_plugin]],
@@ -69,15 +64,15 @@ require [[lazy]].setup ([[spec]], {
     enabled = false
   },
 
-  ui = {
-    pills = false,
-    backdrop = 100
+  install = {
+    colorscheme = { [[default]] },
   },
 
-  dev = {
-    path = [[~/.config]],
-    patterns = {
-      [[wroyca]]
-    }
+  ui = {
+    pills = false,
+    border = [[single]],
+    backdrop = 100
   }
 })
+
+if vim.o.filetype == [[lazy]] then vim.cmd.close() end
