@@ -9,7 +9,7 @@ return {
     ---@type {[string]:TSModule}
     modules = {
       highlight = {
-        enable = false
+        enable = true
       },
       incremental_selection = {
         enable = true,
@@ -45,21 +45,19 @@ return {
     -- like a valid Lua table, resulting in a broken configuration that might go
     -- unnoticed, particularly if other highlighting methods are layered.
     __index = function(table, key)
-      if key == [[modules]] then
-        return nil
-      end
-      local modules = rawget(table, [[modules]])
-      if modules then
-        for k, v in pairs(modules) do
-          rawset(table, k, v)
+      if key ~= [[modules]] then
+        local modules = rawget(table, [[modules]])
+        if modules then
+          for k, v in pairs(modules) do
+            rawset(table, k, v)
+          end
+          rawset(table, [[modules]], nil)
+          return rawget(table, key)
         end
-        rawset(table, [[modules]], nil)
-        return rawget(table, key)
       end
-      return nil
     end,
     __newindex = function(table, key, value)
-      if key ~= "modules" then
+      if key ~= [[modules]] then
         rawset(table, key, value)
       end
     end
