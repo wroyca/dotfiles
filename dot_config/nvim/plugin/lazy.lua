@@ -1,4 +1,13 @@
-if package.loaded['lazy'] then return end
+if package.loaded['lazy'] then
+  -- Keep plugin management separate from configuration logic. Note that
+  -- lazy.nvim overrides Neovim's built-in loader, causing pack/*/start/* to be
+  -- sourced again. The overhead is minimal since we mark the file as no-op
+  -- after lazy.nvim loads (using package.loaded).
+  --
+  -- https://github.com/folke/lazy.nvim/issues/1180.
+  --
+  return
+end
 
 vim.cmd.packadd[[vim-lumen]]
 
