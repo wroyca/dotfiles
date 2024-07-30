@@ -1,6 +1,6 @@
 ---@type LazyPluginSpec
 local Spec = {
-  [[kevinhwang91/nvim-bqf]], ft = [[qf]],
+  [[bqf]], ft = [[qf]],
 
   ---@type BqfConfig
   ---@diagnostic disable: missing-fields

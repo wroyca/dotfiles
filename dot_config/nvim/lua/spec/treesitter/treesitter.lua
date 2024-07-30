@@ -7,7 +7,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  [[nvim-treesitter/nvim-treesitter]], main = [[nvim-treesitter.configs]], event = [[VeryLazy]],
+  [[treesitter]], main = [[nvim-treesitter.configs]], event = [[VeryLazy]],
 
   init = function ()
     vim.cmd.vmenu [[PopUp.Node\ Incremental <cmd>:lua require"nvim-treesitter.incremental_selection".node_incremental()<cr>]]

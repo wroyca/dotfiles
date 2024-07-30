@@ -1,16 +1,15 @@
 ---@type LazyPluginSpec
-return {
-  [[fundo]], event = [[VeryLazy]],
+local Spec = {
+  [[fundo]], event = [[VeryLazy]], dependencies = [[promise-async]],
 
-  build = function()
-    require [[fundo]].install()
-  end,
-
-  init = function()
+  init = function ()
     vim.o.undofile = true
   end,
 
+  ---@type FundoConfig
   opts = {
-    limit_archives_size = 9999
-  }
+    limit_archives_size = 9999,
+  },
 }
+
+return Spec
