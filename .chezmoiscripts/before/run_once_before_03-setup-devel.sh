@@ -59,8 +59,9 @@ sudo dnf install -y \
 sudo dnf install -y \
   shellcheck
 
-cargo install \
-  stylua
+# https://github.com/JohnnyMorganz/StyLua/pull/839
+cargo install --git \
+  https://github.com/alerque/StyLua --branch space-in-function-defs
 
 sudo dnf install -y \
   neovim
