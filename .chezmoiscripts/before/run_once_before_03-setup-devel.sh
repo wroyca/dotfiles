@@ -41,6 +41,9 @@ sudo dnf install -y \
 sudo dnf install -y \
   npm
 
+sudo npm install \
+  -g npm
+
 sudo dnf install -y \
   yarnpkg
 
@@ -58,6 +61,30 @@ sudo dnf install -y \
 
 cargo install \
   stylua
+
+sudo dnf install -y \
+  neovim
+
+sudo dnf install -y \
+  ruby-devel
+
+sudo gem update \
+  --system
+
+gem install \
+  neovim
+
+pip install \
+  pynvim
+
+sudo npm install -g \
+  neovim
+
+sudo dnf install -y \
+  perl-App-cpanminus
+
+cpanm --sudo \
+  Neovim::Ext
 
 if ! command -v b > /dev/null 2>&1; then
   v=$(curl -sSf https://stage.build2.org/0/toolchain.sha256 | sed -n 's,^.*/build2-install-\(.*\)-stage\.sh$,\1,p')
