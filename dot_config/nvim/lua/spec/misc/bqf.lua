@@ -1,10 +1,14 @@
 ---@type LazyPluginSpec
-return {
-  [[bqf]], ft = [[qf]],
+local Spec = {
+  [[kevinhwang91/nvim-bqf]], ft = [[qf]],
 
+  ---@type BqfConfig
+  ---@diagnostic disable: missing-fields
   opts = {
     preview = {
-      auto_preview = false
-    }
-  }
+      auto_resize_height = true,
+    },
+  },
 }
+
+return Spec
