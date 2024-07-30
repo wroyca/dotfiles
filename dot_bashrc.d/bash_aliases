@@ -3,11 +3,6 @@
 alias e='emacs -nw'
 alias v='nvim'
 
-# Keep fennel toolchain under consistent namespaced aliases.
-#
-alias fennel-format='fnlfmt'
-alias fennel-transpile='antifennel'
-
 # https://man.openbsd.org/cp#i
 # https://man.openbsd.org/cp#v
 # https://man.openbsd.org/mv#i

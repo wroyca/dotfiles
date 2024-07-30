@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+exit 0 # Temporarily disable for now.
 set -x # Print trace of simple commands.
 set +e # Ignore pipeline that returns a non-zero status.
 
