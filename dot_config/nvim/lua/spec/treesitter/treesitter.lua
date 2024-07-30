@@ -1,65 +1,64 @@
 ---@diagnostic disable: missing-fields
+---@class nvim-treesitter.opts.modules.incremental_selection.keymaps
+---@field init_selection string|boolean In normal mode, start incremental selection.
+---@field node_incremental string|boolean In visual mode, increment to the upper named parent.
+---@field scope_incremental string|boolean In visual mode, increment to the upper scope
+---@field node_decremental string|boolean In visual mode, decrement to the previous named node.
+
 ---@type LazyPluginSpec
-return {
+local Spec = {
   [[nvim-treesitter/nvim-treesitter]], main = [[nvim-treesitter.configs]], event = [[VeryLazy]],
 
+  init = function ()
+    vim.cmd.vmenu [[PopUp.Node\ Incremental <cmd>:lua require"nvim-treesitter.incremental_selection".node_incremental()<cr>]]
+    vim.cmd.vmenu [[PopUp.Node\ Decremental <cmd>:lua require"nvim-treesitter.incremental_selection".node_decremental()<cr>]]
+  end,
+
   ---@type TSConfig
-  opts = setmetatable({
-    ensure_installed = [[all]],
-    ---@type {[string]:TSModule}
+  opts = setmetatable ({
+    ---@type { [string]:TSModule }
     modules = {
       highlight = {
-        enable = true
+        enable = true,
       },
+
       incremental_selection = {
         enable = true,
+        ---@type nvim-treesitter.opts.modules.incremental_selection.keymaps
         keymaps = {
           node_incremental = [[v]],
-          node_decremental = [[V]]
-        }
-      }
-    }
+          node_decremental = [[V]],
+        },
+      },
+    },
   },
 
-  -- HACK:
+  -- TSConfig annotation displays `@field modules { [string]: TSModule }`, but
+  -- Treesitter's internal logic dynamically creates the modules field at
+  -- runtime, which causes `opts.modules` to nest within it.
   --
-  -- Use a metatable to unpack the modules table at runtime, automatically
-  -- inlining its fields into opts.
+  -- For now, the strategy is to unpack `opts.modules` fields into `opts` and
+  -- then dynamically remove `opts.modules` at runtime. This should allow
+  -- Treesitter's internal logic to properly parse (however they do so) the
+  -- modules configuration.
+  --
   {
-    -- TSConfig expects a modules field, but Treesitter's internal logic also
-    -- dynamically creates it. This situation results in our modules field nesting
-    -- within Treesitter's dynamically created one. Generally, various Neovim
-    -- configurations approach this by manually inlining the configuration (e.g.):
-    --
-    -- opts = {
-    --   ---@type TSModule
-    --   highlight = {
-    --     enable = false
-    --   }
-    -- }
-    --
-    -- Although this approach is technically valid, the class annotation displays
-    -- `@field modules {[string]:TSModule}`, implying that we should configure
-    -- modules through the `modules` table. Being unaware of this internal quirk
-    -- and following this suggestion could lead to a silent merge of what seems
-    -- like a valid Lua table, resulting in a broken configuration that might go
-    -- unnoticed, particularly if other highlighting methods are layered.
-    __index = function(table, key)
+    __index = function (table, key)
       if key ~= [[modules]] then
-        local modules = rawget(table, [[modules]])
+        local modules = rawget (table, [[modules]])
         if modules then
-          for k, v in pairs(modules) do
-            rawset(table, k, v)
+          for k, v in pairs (modules) do
+            rawset (table, k, v)
           end
-          rawset(table, [[modules]], nil)
-          return rawget(table, key)
+          rawset (table, [[modules]], nil)
+          return rawget (table, key)
         end
       end
     end,
-    __newindex = function(table, key, value)
-      if key ~= [[modules]] then
-        rawset(table, key, value)
-      end
-    end
+    __newindex = function (table, key, value)
+      if key ~= [[modules]] then rawset (table, key, value) end
+    end,
   })
 }
+
+return Spec
