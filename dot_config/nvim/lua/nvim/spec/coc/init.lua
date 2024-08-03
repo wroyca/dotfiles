@@ -4,6 +4,10 @@ local Spec = {
 
   init = function ()
     vim.o.updatetime = 300
+    vim.cmd [[
+      highlight CocFloating cterm=reverse guibg=NONE
+      highlight! link CocMenuSel PMenuSel
+    ]]
   end,
 
   keys = {
@@ -80,6 +84,8 @@ local Spec = {
         "--ranking-model=decision_forest",
       },
     },
+
+    -- FIXME: use rc
     Lua = {
       workspace = {
         -- Make the server aware of Neovim runtime files
@@ -107,19 +113,15 @@ local Spec = {
   config = function (opts)
     vim.g.coc_global_extensions = {
       [[coc-marketplace]],
-
       [[coc-clangd]],
       [[coc-json]],
       [[coc-lua]],
       [[coc-sh]],
       [[coc-xml]],
-
       [[@statiolake/coc-stylua]],
     }
 
-    for k, v in
-      pairs (opts.opts --[[@as table]])
-    do
+    for k, v in pairs (opts.opts --[[@as table]]) do
       vim.fn["coc#config"] (k, v)
     end
   end,

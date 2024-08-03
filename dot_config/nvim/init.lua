@@ -4,19 +4,21 @@
 -- (  /  |        / | \                                    * .  ' .  .-+-
 --  \(_)_%s      /  |  \                                *   *  .   .
 
+vim.cmd.packadd "vim-lumen"
+
 local shada = vim.o.shada
-vim.o.shada = [[]]
+vim.o.shada = ""
 vim.schedule(function()
   vim.o.shada = shada
   pcall(vim.cmd.rshada, { bang = true })
-  vim.cmd.doautocmd [[User ShadaLoadPost]]
+  vim.cmd.doautocmd "User ShadaLoadPost"
 end)
 
-vim.g.mapleader      = [[ ]]
-vim.g.localmapleader = [[,]]
-vim.o.clipboard      = [[unnamedplus]]
-vim.o.mouse          = [[a]]
-vim.o.mousescroll    = [[ver:3,hor:0]]
+vim.g.mapleader      = " "
+vim.g.localmapleader = ","
+vim.o.clipboard      = "unnamedplus"
+vim.o.mouse          = "a"
+vim.o.mousescroll    = "ver:3,hor:0"
 vim.o.mousemoveevent = true
 vim.o.title          = true
 vim.o.confirm        = true
@@ -35,4 +37,4 @@ vim.o.cmdheight      = 1
 vim.o.laststatus     = 3
 vim.o.pumheight      = 8
 vim.o.scrolloff      = 4
-vim.o.guicursor      = [[n-v-i:blinkwait700-blinkoff400-blinkon250,i-ci-ve:ver25,r-cr-o:hor20]]
+vim.o.guicursor      = "n-v-i:blinkwait700-blinkoff400-blinkon250,i-ci-ve:ver25,r-cr-o:hor20"
