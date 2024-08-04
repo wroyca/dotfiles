@@ -1,0 +1,9 @@
+# Don't load default options files.
+#
+--no-default-options
+
+# `GPL-3.0-or-later` as the default package license.
+#
+--type exe,license=GPL-3.0-or-later
+--type bare,license=GPL-3.0-or-later
+--type lib,license=GPL-3.0-or-later
