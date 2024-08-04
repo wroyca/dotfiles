@@ -43,6 +43,7 @@ local setup_termbg_sync = function ()
       io.write (string.format ("\027]10;1;#%06x\a", normal.bg))
     end
     vim.api.nvim_create_autocmd ({ "VimEnter", "VimResume", "ColorScheme" }, { group = augroup, callback = sync })
+    vim.api.nvim_create_autocmd ("User", { pattern = { "LumenDark", "LumenLight"}, group = augroup, callback = sync })
 
     -- Set up reset to the color returned from the very first call
     local reset = function () io.write ("\027]111;;\a") end
