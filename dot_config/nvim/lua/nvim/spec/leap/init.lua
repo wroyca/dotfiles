@@ -1,3 +1,5 @@
+---@module "leap"
+
 ---@LazyPluginSpec
 local Spec = {
   "ggandor/leap.nvim", keys = { "s", "S", "gs" },
@@ -7,8 +9,9 @@ local Spec = {
   },
 
   config = function(_, opts)
-    require "leap".setup(opts)
-    require "leap".add_default_mappings(true)
+    local leap = require("leap")
+    leap.setup(opts)
+    leap.add_default_mappings(true)
   end
 }
 

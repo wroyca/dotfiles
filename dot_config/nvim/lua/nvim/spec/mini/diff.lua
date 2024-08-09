@@ -1,10 +1,15 @@
+---@module "mini.diff"
+
 ---@type LazyPluginSpec
 local Spec = {
   "mini.diff", dev = true,
 
-  init = function () vim.o.signcolumn = "yes:1" end,
-  keys = function ()
-    local diff = require  "mini.diff"
+  init = function()
+    vim.o.signcolumn = "yes:1"
+  end,
+
+  keys = function()
+    local diff = require "mini.diff"
     return {
       { "go", diff.toggle_overlay, mode = "n", desc = "Toggle hunks overlay" },
     }
@@ -12,15 +17,15 @@ local Spec = {
 
   opts = {
     delay = {
-      text_change = 0,
+      text_change = 0
     },
     view = {
       style = "sign",
       signs = {
-        add = "┃", change = "┃", delete = "┃",
-      },
-    },
-  },
+        add = "┃", change = "┃", delete = "┃"
+      }
+    }
+  }
 }
 
 return Spec

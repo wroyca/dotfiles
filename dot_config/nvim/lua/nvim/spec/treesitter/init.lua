@@ -1,25 +1,19 @@
----@type LazyPluginSpec
+---@module "nvim-treesitter"
 ---@diagnostic disable: missing-fields
+
+---@type LazyPluginSpec
 local Spec = {
   "nvim-treesitter/nvim-treesitter", main = "nvim-treesitter.configs", event = "VeryLazy",
 
   ---@type TSConfig
   opts = setmetatable ({
     ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline" },
-    auto_install = vim.fn.executable "git" == 1 and vim.fn.executable "tree-sitter" == 1,
     ---@type { [string]: TSModule }
     modules = {
       highlight = {
         enable = true,
-      },
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          node_incremental = "v",
-          node_decremental = "V",
-        },
-      },
-    },
+      }
+    }
   },
   -- TSConfig annotation displays `@field modules { [string]: TSModule }`, but
   -- Treesitter's internal logic dynamically creates the modules field at

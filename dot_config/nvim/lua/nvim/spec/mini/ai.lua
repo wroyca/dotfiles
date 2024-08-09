@@ -1,10 +1,13 @@
+---@module "mini.ai"
+---@module "mini.extra"
+
 ---@type LazyPluginSpec
 local Spec = {
   "mini.ai", dev = true,
 
   keys = {
-    { [[a]], mode = { [[x]], [[o]] } },
-    { [[i]], mode = { [[x]], [[o]] } }
+    { "a", mode = { "x", "o" } },
+    { "i", mode = { "x", "o" } }
   },
 
   opts = function()

@@ -1,6 +1,6 @@
 ---@type LazySpec
 local Spec = {
-  { import = [[nvim.spec]] }
+  { import = "nvim.spec" },
 }
 
 return Spec

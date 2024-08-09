@@ -34,7 +34,6 @@ vim.o.smartindent    = true
 vim.o.shiftwidth     = 0
 vim.o.tabstop        = 2
 vim.o.cmdheight      = 1
-vim.o.laststatus     = 3
 vim.o.pumheight      = 8
 vim.o.scrolloff      = 4
 vim.o.guicursor      = "n-v-i:blinkwait700-blinkoff400-blinkon250,i-ci-ve:ver25,r-cr-o:hor20"

@@ -9,7 +9,9 @@ if package.loaded["lazy"] then
   return
 end
 
-require ("lazy").setup ("nvim", {
+vim.g.mapleader = [[ ]]
+
+require("lazy").setup("nvim", {
   performance = {
     rtp = {
       disabled_plugins = {
@@ -81,5 +83,3 @@ require ("lazy").setup ("nvim", {
     },
   },
 })
-
-if vim.o.filetype == "lazy" then vim.cmd.close () end

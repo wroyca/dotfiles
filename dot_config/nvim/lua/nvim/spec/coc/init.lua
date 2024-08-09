@@ -1,67 +1,96 @@
+---@module "coc"
+
 ---@type LazyPluginSpec
 local Spec = {
-  "neoclide/coc.nvim", build = "npm install", event = "VeryLazy",
-
-  init = function ()
-    vim.o.updatetime = 300
-    vim.cmd [[
-      highlight CocFloating cterm=reverse guibg=NONE
-      highlight! link CocMenuSel PMenuSel
-    ]]
-  end,
+  "neoclide/coc.nvim", branch = "release", event = "VeryLazy",
 
   keys = {
     { "<Tab>", [[coc#pum#visible() ? coc#pum#confirm() : "<Tab>"]], mode = "i", expr = true, replace_keycodes = false },
 
     {
       "K",
-      function ()
-        local cw = vim.fn.expand('<cword>')
-        if vim.fn.index({'vim', 'help'}, vim.bo.filetype) >= 0 then
-          vim.api.nvim_command('h ' .. cw)
-        elseif vim.api.nvim_eval('coc#rpc#ready()') then
-          vim.fn.CocActionAsync('doHover')
+      function()
+        local cw = vim.fn.expand("<cword>")
+        if vim.fn.index({ "vim", "help" }, vim.bo.filetype) >= 0 then
+          vim.api.nvim_command("h" .. " " .. cw)
+        elseif vim.api.nvim_eval([[coc#rpc#ready()]]) then
+          vim.fn.CocActionAsync("doHover")
         else
-          vim.api.nvim_command('!' .. vim.o.keywordprg .. ' ' .. cw)
+          vim.api.nvim_command("!" .. vim.o.keywordprg .. " " .. cw)
         end
-      end,
+      end
     },
 
-    { "<leader>lD", "<Plug>(coc-declaration)",     desc = "Go To Declaration" },
-    { "<leader>ld", "<Plug>(coc-definition)",      desc = "Go To Definition" },
-    { "<leader>li", "<Plug>(coc-implementation)",  desc = "Go To Implementation" },
-    { "<leader>lr", "<Plug>(coc-references)",      desc = "Go To References" },
-    { "<leader>lt", "<Plug>(coc-type-definition)", desc = "Go To Type Definition" },
+    { "gD", "<Plug>(coc-declaration)", desc = "Go to declaration" },
+    { "gd", "<Plug>(coc-definition)", desc = "Go to definition" },
+    { "gi", "<Plug>(coc-implementation)", desc = "Go to implementation" },
+    { "gr", "<Plug>(coc-references)", desc = "Go to references" },
+    { "gt", "<Plug>(coc-type-definition)", desc = "Go to type definition" },
 
-    { "<leader>;", "<Plug>(coc-format-selected)",    desc = "Format", mode = { "n", "x", }, nowait = true, },
-    { "<leader>.", "<Plug>(coc-codeaction-cursor)",  desc = "Action", mode = { "n", "x", }, nowait = true, },
-    { "<leader>/", "<Plug>(coc-codeaction-cursor)",  desc = "Rename", mode = { "n", "x", }, nowait = true, },
+    { "<leader>.", "<Plug>(coc-codeaction-cursor)", desc = "Code action", mode = { "n", "x" }, nowait = true },
+    { "<leader>;", "<Plug>(coc-format-selected)", desc = "Format selection", mode = { "n", "x" }, nowait = true },
   },
 
   opts = {
-    colors = { enable = true },
+    colors = {
+      enable = true
+    },
+
     diagnostic = {
       enableHighlightLineNumber = false,
       enableSign = false,
-      floatConfig = { border = true, borderhighlight = "FloatBorder" },
+      floatConfig = {
+        focusable = false
+      },
       refreshOnInsertMode = true,
     },
-    dialog = { floatBorderHighlight = "FloatBorder" },
-    hover = { floatConfig = { border = true, borderhighlight = "FloatBorder" } },
-    inlayHint = { enable = false },
+
+    dialog = {
+      floatBorderHighlight = "FloatBorder"
+    },
+
+    hover = {
+      floatConfig = {
+        focusable = false
+      }
+    },
+
+    inlayHint = {
+      enable = false
+    },
+
     list = {
       alignColumns = true,
-      floatPreview = { border = true, borderhighlight = "FloatBorder" },
+      floatPreview = {
+        focusable = false
+      },
       statusLineSegments = false,
     },
-    notification = { disabledProgressSources = { "*" } },
-    semanticTokens = { enable = true },
-    signature = { floatConfig = { border = true, borderhighlight = "FloatBorder" } },
+
+    notification = {
+      disabledProgressSources = {
+        "*"
+      }
+    },
+
+    semanticTokens = {
+      enable = true
+    },
+
+    signature = {
+      floatConfig = {
+        focusable = false,
+      }
+    },
+
     suggest = {
       asciiCharactersOnly = true,
-      floatConfig = { border = true, borderhighlight = "FloatBorder" },
+      floatConfig = {
+        focusable = false,
+      },
       removeDuplicateItems = true,
     },
+
     coc = {
       preferences = {
         currentFunctionSymbolAutoUpdate = true,
@@ -69,6 +98,7 @@ local Spec = {
         formatOnType = true,
       },
     },
+
     clangd = {
       arguments = {
         "--all-scopes-completion=true",
@@ -85,32 +115,19 @@ local Spec = {
       },
     },
 
-    -- FIXME: use rc
     Lua = {
       workspace = {
-        -- Make the server aware of Neovim runtime files
-        library = {
-          [[/usr/lib/nvim]],
-          [[/usr/share/nvim/runtime]],
-          [[/usr/share/nvim/runtime/lua/vim/_meta]],
-          vim.fs.joinpath (vim.fn.stdpath  [[data]] --[[ @as string]], [[lazy]]),
-          vim.fs.joinpath (vim.fn.stdpath  [[data]] --[[ @as string]], [[lazy]], [[lazy.nvim]]),
-          vim.fs.joinpath (vim.fn.stdpath  [[data]] --[[ @as string]], [[lazy]], [[neodev.nvim]], [[types]], [[stable]]),
-          vim.fs.joinpath (
-            vim.fn.stdpath  [[data]] --[[ @as string]],
-            [[lazy]],
-            [[neodev.nvim]],
-            [[types]],
-            [[nightly]]
-          ),
-          vim.api.nvim_get_runtime_file ("", true),
-        },
         checkThirdParty = false,
+        library = {
+          "/usr/share/nvim/runtime",
+
+          vim.fs.joinpath(vim.fn.stdpath("data") --[[@as string]], "lazy")
+        },
       },
     },
   },
 
-  config = function (opts)
+  config = function(opts)
     vim.g.coc_global_extensions = {
       [[coc-marketplace]],
       [[coc-clangd]],
@@ -121,10 +138,10 @@ local Spec = {
       [[@statiolake/coc-stylua]],
     }
 
-    for k, v in pairs (opts.opts --[[@as table]]) do
-      vim.fn["coc#config"] (k, v)
+    for k, v in pairs(opts.opts --[[@as table]]) do
+      vim.fn["coc#config"](k, v)
     end
-  end,
+  end
 }
 
 return Spec

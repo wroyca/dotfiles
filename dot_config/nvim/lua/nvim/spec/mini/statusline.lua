@@ -1,8 +1,12 @@
-vim.api.nvim_create_autocmd("User", { pattern = { "CocStatusChange" }, command = "redrawstatus" })
+---@module "mini.statusline"
 
 ---@type LazyPluginSpec
 local Spec = {
   "mini.statusline", dev = true, event = "VimEnter",
+
+  init = function ()
+    vim.o.laststatus = 3
+  end,
 
   opts = {
     set_vim_settings = false,
@@ -61,62 +65,28 @@ local Spec = {
           return ' %02v:%02{max([1, virtcol("$") - 1])} '
         end
 
-        MiniStatusline.section_lsp = function (args)
-          if MiniStatusline.is_truncated (args.trunc_width) then return "" end
-
-          local filter_duplicates = function(input)
-            local dup = {}
-            return input:gsub("%S+", function(word)
-              if dup[word] then
-                return ""
-              end
-              dup[word] = true
-            end)
-          end
-
-          local remove_stylua = function(input)
-            return input:gsub("stylua", "%%")
-          end
-
-          local truncate_after_whitespace = function(input)
-            return input:match("^(.-%s%s)")
-          end
-
-          local is_single_word = function(input)
-            return input:match("^%S+$") ~= nil
-          end
-
-          local sanitize = function(input)
-            local output = filter_duplicates(input)
-            output = remove_stylua(output)
-            return truncate_after_whitespace(output)
-          end
-
-          return vim.g.coc_status and string.format("%s", sanitize(vim.g.coc_status) or "") or ""
-        end
-
-        local mode          = MiniStatusline.section_mode()
-        local git           = MiniStatusline.section_git({ trunc_width = 40 })
-        local diff          = MiniStatusline.section_diff({ trunc_width = 75 })
-        local diagnostics   = MiniStatusline.section_diagnostics({ trunc_width = 75 })
-        local lsp           = MiniStatusline.section_lsp({ trunc_width = 75 })
-        local filename      = MiniStatusline.section_filename()
-        local fileinfo      = MiniStatusline.section_fileinfo()
-        local location      = MiniStatusline.section_location({ trunc_width = 75 })
+        local mode        = MiniStatusline.section_mode()
+        local git         = MiniStatusline.section_git({ trunc_width = 40 })
+        local diff        = MiniStatusline.section_diff({ trunc_width = 75 })
+        local diagnostics = MiniStatusline.section_diagnostics({ trunc_width = 75 })
+        local lsp         = MiniStatusline.section_lsp({ trunc_width = 75 })
+        local filename    = MiniStatusline.section_filename()
+        local fileinfo    = MiniStatusline.section_fileinfo()
+        local location    = MiniStatusline.section_location({ trunc_width = 75 })
 
         return MiniStatusline.combine_groups({
-          { hl = mode.highlight,           strings = { mode.name } },
-          { hl = 'MiniStatuslineDevinfo',  strings = { git, diff } },
-          '%<', -- Mark general truncate point
-          { hl = 'MiniStatuslineFilename', strings = { filename } },
-          '%=', -- End left alignment
-          { hl = 'MiniStatuslineFilename',  strings = { diagnostics, lsp } },
-          { hl = 'MiniStatuslineFilename', strings = { fileinfo } },
-          { hl = mode.highlight,           strings = { location } },
+          { hl = mode.highlight,            strings = { mode.name } },
+          { hl = 'MiniStatuslineDevinfo',   strings = { git, diff } },
+          '%<',
+          { hl = 'MiniStatuslineFilename',  strings = { filename } },
+          '%=',
+          { hl = 'MiniStatuslineFilename',  strings = { diagnostics } },
+          { hl = 'MiniStatuslineFilename',  strings = { fileinfo } },
+          { hl = mode.highlight,            strings = { location } },
         })
       end
     }
-  },
+  }
 }
 
 return Spec

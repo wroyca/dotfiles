@@ -1,19 +1,10 @@
-return {
+---@type LazyPluginSpec
+local Spec = {
   "NeogitOrg/neogit",
-
-  dependencies = { { "nvim-telescope/telescope.nvim" }, { "sindrets/diffview.nvim" }, { "nvim-lua/plenary.nvim" }, },
-  keys = { { "<leader>gn", "<cmd>Neogit<cr>", desc = "Neogit" } },
-  opts = {
-    auto_show_console = false,
-    disable_signs = true,
-    graph_style = "unicode",
-    integrations = {
-      diffview = true,
-      telescope = true,
-    },
-  },
-  config = function (_, opts)
-    for _, e in ipairs  {
+  dependencies = { "nvim-lua/plenary.nvim", "sindrets/diffview.nvim", },
+  keys = { { "<leader>gn", "<cmd>Neogit<cr>", desc = "Neogit" }, },
+  config = function(_, opts)
+    for _, e in ipairs {
       "commit_editor",
       "commit_select_view",
       "commit_view",
@@ -27,6 +18,8 @@ return {
     } do
       opts[e] = { kind = "tab" }
     end
-    require ("neogit").setup (opts)
+    require("neogit").setup(opts)
   end,
 }
+
+return Spec
