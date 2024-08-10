@@ -1,4 +1,5 @@
 ---@module "mini.statusline"
+---@diagnostic disable: duplicate-set-field
 
 ---@type LazyPluginSpec
 local Spec = {
@@ -26,7 +27,7 @@ local Spec = {
           ['i']    = { name = 'IN', highlight = 'MiniStatuslineModeInsert'  },
           ['R']    = { name = 'RE', highlight = 'MiniStatuslineModeReplace' },
           ['c']    = { name = 'CO', highlight = 'MiniStatuslineModeCommand' },
-          ['r']    = { name = 'P',  highlight = 'MiniStatuslineModeOther'   },
+          ['r']    = { name = 'PR', highlight = 'MiniStatuslineModeOther'   },
           ['!']    = { name = 'SH', highlight = 'MiniStatuslineModeOther'   },
           ['t']    = { name = 'TE', highlight = 'MiniStatuslineModeOther'   },
         }, {
@@ -61,15 +62,33 @@ local Spec = {
 
         MiniStatusline.section_location = function(args)
           if MiniStatusline.is_truncated(args.trunc_width) then return ' %02v ' end
-
           return ' %02v:%02{max([1, virtcol("$") - 1])} '
+        end
+
+        MiniStatusline.section_diagnostics = function(args)
+          if MiniStatusline.is_truncated(args.trunc_width) then return '' end
+          local _, coc_diagnostic_info = pcall(vim.api.nvim_buf_get_var, 0, "coc_diagnostic_info")
+          local severities = {
+            error = { symbol = "", hl_group = "MiniStatuslineDiagnosticsError" },
+            warning = { symbol = "", hl_group = "MiniStatuslineDiagnosticsWarning" },
+            information = { symbol = "", hl_group = "MiniStatuslineDiagnosticsInfo" },
+            hint = { symbol = "", hl_group = "MiniStatuslineDiagnosticsHint" }
+          }
+          local diagnostics_list = {}
+          for severity, info in pairs(severities) do
+            local count = coc_diagnostic_info[severity]
+            if count and count > 0 then
+              table.insert(diagnostics_list, ("%%#%s#%s %d"):format(info.hl_group, info.symbol, count))
+            end
+          end
+          if #diagnostics_list == 0 then return '' end
+          return table.concat(diagnostics_list, " ")
         end
 
         local mode        = MiniStatusline.section_mode()
         local git         = MiniStatusline.section_git({ trunc_width = 40 })
         local diff        = MiniStatusline.section_diff({ trunc_width = 75 })
         local diagnostics = MiniStatusline.section_diagnostics({ trunc_width = 75 })
-        local lsp         = MiniStatusline.section_lsp({ trunc_width = 75 })
         local filename    = MiniStatusline.section_filename()
         local fileinfo    = MiniStatusline.section_fileinfo()
         local location    = MiniStatusline.section_location({ trunc_width = 75 })
