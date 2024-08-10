@@ -8,6 +8,3 @@ indent_width = 2
 indent_type = "Spaces"
 call_parentheses = "None"
 collapse_simple_statement = "Always"
-
-# https://github.com/JohnnyMorganz/StyLua/pull/839
-space_after_functions = "Always"
