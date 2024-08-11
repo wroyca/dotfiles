@@ -1,82 +1,100 @@
 ---@module "mini.notify"
 
----@class CocStatusHandler
----@field coc_notify_id number|nil The ID of the existing notification (if any).
----@field coc_work_in_progress boolean Tracks if a loading process is ongoing.
-local CocStatusHandler = {}
-CocStatusHandler.__index = CocStatusHandler
+---@class CocNotify
+---@field id number|nil The existing notification ID (if any).
+---@field indexing boolean The indexing process current state.
+---@field autocmd boolean The existing autocommand ID (if any).
+local CocNotify = {} CocNotify.__index = CocNotify
 
---- Constructor for CocStatusHandler.
---- @return CocStatusHandler instance A new instance of the CocStatusHandler class.
-function CocStatusHandler:new()
-  return setmetatable({
-    coc_notify_id = nil,
-    coc_work_in_progress = false,
-  }, CocStatusHandler)
+---@return CocNotify instance A new instance of CocNotify.
+function CocNotify:new()
+  return setmetatable({ id = nil, indexing = false, autocmd = nil }, CocNotify)
 end
 
----Sanitizes the Coc status string by removing duplicate words.
----@param status string The original status string from Coc.
----@return string sanitized_status The sanitized status string with duplicates removed.
-function CocStatusHandler:sanitize_status(status)
-  local seen_words = {}
-  local sanitized_status = status:gsub("%S+", function(word)
-    if seen_words[word] then
-      return ""
-    else
-      seen_words[word] = true
-      return word
+---Setup the autocommand to track CocStatusChange events.
+function CocNotify:setup()
+  self.autocmd = vim.api.nvim_create_autocmd("User", {
+    pattern = { "CocStatusChange" },
+    callback = function()
+      self:callback()
     end
-  end)
-  return sanitized_status:match("^(.-%s%s)")
+  })
 end
 
----Updates or creates a notification with the sanitized Coc status.
----@param status string The sanitized status string to be displayed.
-function CocStatusHandler:update_notify(status)
-  local sanitized_status = self:sanitize_status(status)
-  if sanitized_status and sanitized_status:find("stylua") then
-    sanitized_status = sanitized_status:gsub("stylua", "")
+---Parse CoC status to sanitize any unwanted inputs (e.g. ignored scopeUri).
+---@param status string The status string from CoC.
+---@return string status The sanitized status string.
+function CocNotify:parse(status)
+  local uniquify = function(input)
+    local duplicates = {}
+    local uniquifying = input:gsub("%S+", function(word)
+      if duplicates[word] then
+        return ""
+      else
+        duplicates[word] = true
+        return word
+      end
+    end)
+
+    return uniquifying:match("^(.-%s%s)")
   end
 
-  if self.coc_notify_id == nil then
-    self.coc_notify_id = MiniNotify.add(sanitized_status)
+  -- TODO: Figure out how to retrieve the linter dynamically?
+  local known_linters = { "stylua", "eslint", "prettier", "flake8", "rubocop" }
+  local strip_linter_names = function(input)
+    for _, linter in ipairs(known_linters) do
+      input = input:gsub(linter, "")
+    end
+    return input
+  end
+
+  return strip_linter_names(uniquify(status))
+end
+
+---Updates or creates CocNotify status notification.
+---@param status string CoC status.
+function CocNotify:update(status)
+  local notification = self:parse(status)
+
+  -- TODO: Figure out a way to interpolate the current progress
+  -- towards the target progress
+  if self.id == nil then
+    self.id = MiniNotify.add(notification)
   else
-    MiniNotify.update(self.coc_notify_id, { msg = sanitized_status })
+    MiniNotify.update(self.id, { msg = notification })
   end
 end
 
----Callback function triggered on CocStatusChange to handle notifications.
-function CocStatusHandler:on_coc_status_change()
-  if not vim.g.coc_service_initialized or not vim.g.coc_status then
+---Callback function triggered on the CocStatusChange event to handle notifications.
+function CocNotify:callback()
+  local coc_service_initialized = vim.g.coc_service_initialized
+  local coc_status = vim.g.coc_status
+  if not (coc_service_initialized or coc_status) then
     return
   end
 
+  -- CoC does not provide a built-in progress tracker for tracking ongoing
+  -- operations like LSP `workDoneProgress`. To handle this, we use a
+  -- workaround by monitoring changes in `vim.g.coc_status` which contains
+  -- status messages from Coc.
+  --
+  -- Specifically, we look for the string "Loading" in `vim.g.coc_status` to
+  -- determine if there is ongoing work. FYI, this approach relies on the
+  -- assumption that "Loading" in the status message reliably represents
+  -- progress, regardless of the server behind CoC.
+  --
   if vim.g.coc_status:find("Loading") then
-    self.coc_work_in_progress = true
-    self:update_notify(vim.g.coc_status)
-  elseif self.coc_work_in_progress then
-    vim.api.nvim_del_autocmd(self.coc_status_change_autocmd_id)
+    self.indexing = true
+    self:update(coc_status)
+  elseif self.indexing then
+    vim.api.nvim_del_autocmd(self.autocmd)
     vim.schedule(MiniNotify.clear)
   end
 end
 
----Sets up an autocmd to track CocStatusChange events.
----@param opts table Options table containing configuration settings.
-function CocStatusHandler:setup_coc_status_autocmd()
-  self.coc_status_change_autocmd_id = vim.api.nvim_create_autocmd("User", {
-    pattern = { "CocStatusChange" },
-    callback = function()
-      self:on_coc_status_change()
-    end,
-  })
-end
-
 ---@type LazyPluginSpec
 local Spec = {
-  "mini.notify",
-  dev = true,
-  event = "VeryLazy",
+  "mini.notify", dev = true, event = "VeryLazy",
 
   opts = {
     ERROR = {
@@ -84,16 +102,11 @@ local Spec = {
     },
   },
 
-  --- Configuration function to set up MiniNotify and Coc status handling.
-  --- @param _ any Unused parameter for the plugin specification.
-  --- @param opts table Options table passed to MiniNotify setup.
   config = function(_, opts)
-    local notify = require("mini.notify")
-    notify.setup(opts)
-    vim.notify = notify.make_notify(opts)
-
-    local handler = CocStatusHandler:new()
-    handler:setup_coc_status_autocmd()
+    local mini_notify = require("mini.notify")
+    mini_notify.setup(opts)
+    local coc_notify = CocNotify:new()
+    coc_notify:setup()
   end,
 }
 

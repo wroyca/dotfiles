@@ -65,23 +65,36 @@ local Spec = {
           return ' %02v:%02{max([1, virtcol("$") - 1])} '
         end
 
+        local set_default_hl = function(name, data)
+          data.default = true
+          vim.api.nvim_set_hl(0, name, data)
+        end
+
+        set_default_hl('MiniStatuslineDiagnosticError', { link = 'DiagnosticError' })
+        set_default_hl('MiniStatuslineDiagnosticHint',  { link = 'DiagnosticHint' })
+        set_default_hl('MiniStatuslineDiagnosticInfo',  { link = 'DiagnosticInfo' })
+        set_default_hl('MiniStatuslineDiagnosticWarn',  { link = 'DiagnosticWarn' })
+
+        local severities = {
+          error = { symbol = "E", hl_group = "MiniStatuslineDiagnosticError" },
+          hint = { symbol = "H", hl_group = "MiniStatuslineDiagnosticHint" },
+          information = { symbol = "I", hl_group = "MiniStatuslineDiagnosticInfo" },
+          warning = { symbol = "W", hl_group = "MiniStatuslineDiagnosticWarn" },
+        }
+
         MiniStatusline.section_diagnostics = function(args)
           if MiniStatusline.is_truncated(args.trunc_width) then return '' end
-          local _, coc_diagnostic_info = pcall(vim.api.nvim_buf_get_var, 0, "coc_diagnostic_info")
-          local severities = {
-            error = { symbol = "", hl_group = "MiniStatuslineDiagnosticsError" },
-            warning = { symbol = "", hl_group = "MiniStatuslineDiagnosticsWarning" },
-            information = { symbol = "", hl_group = "MiniStatuslineDiagnosticsInfo" },
-            hint = { symbol = "", hl_group = "MiniStatuslineDiagnosticsHint" }
-          }
+
+          local count = vim.b.coc_diagnostic_info or {}
           local diagnostics_list = {}
           for severity, info in pairs(severities) do
-            local count = coc_diagnostic_info[severity]
-            if count and count > 0 then
-              table.insert(diagnostics_list, ("%%#%s#%s %d"):format(info.hl_group, info.symbol, count))
+            local n = count[severity] or 0
+            if n > 0 then
+              table.insert(diagnostics_list, ("%%#%s#%s%d"):format(info.hl_group, info.symbol, n))
             end
           end
           if #diagnostics_list == 0 then return '' end
+
           return table.concat(diagnostics_list, " ")
         end
 
