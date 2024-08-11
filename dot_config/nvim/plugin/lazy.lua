@@ -9,9 +9,8 @@ if package.loaded["lazy"] then
   return
 end
 
-vim.g.mapleader = [[ ]]
-
-require("lazy").setup("nvim", {
+---@type LazyConfig
+local opts = {
   performance = {
     rtp = {
       disabled_plugins = {
@@ -67,7 +66,9 @@ require("lazy").setup("nvim", {
   },
 
   install = {
-    colorscheme = { "default" },
+    colorscheme = {
+      "default"
+    },
   },
 
   ui = {
@@ -82,4 +83,16 @@ require("lazy").setup("nvim", {
       "wroyca",
     },
   },
+}
+
+vim.api.nvim_create_autocmd("User", {
+  once = true,
+  pattern = "LazyInstall",
+  callback = function()
+    if vim.o.filetype == "lazy" then
+      vim.cmd.close()
+    end
+  end
 })
+
+require ("lazy").setup("nvim", opts)
