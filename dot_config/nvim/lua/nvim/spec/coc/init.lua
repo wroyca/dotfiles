@@ -4,6 +4,9 @@
 local Spec = {
   "neoclide/coc.nvim", branch = "release", event = "VeryLazy",
 
+  -- https://github.com/neovim/neovim/issues/26268
+  dependencies = { { "Bilal2453/luvit-meta", lazy = true } },
+
   keys = {
     { "<Tab>", [[coc#pum#visible() ? coc#pum#confirm() : "<Tab>"]], mode = "i", expr = true, replace_keycodes = false },
 
@@ -116,6 +119,9 @@ local Spec = {
     },
 
     Lua = {
+      runtime = {
+        version = "LuaJIT",
+      },
       workspace = {
         checkThirdParty = false,
         library = {
