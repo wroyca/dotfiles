@@ -3,7 +3,7 @@
 ---@class CocNotify
 ---@field id number|nil The existing notification ID (if any).
 ---@field indexing boolean The indexing process current state.
----@field autocmd boolean The existing autocommand ID (if any).
+---@field autocmd number|nil The existing autocommand ID (if any).
 local CocNotify = {} CocNotify.__index = CocNotify
 
 ---@return CocNotify instance A new instance of CocNotify.
@@ -83,7 +83,7 @@ function CocNotify:callback()
   -- assumption that "Loading" in the status message reliably represents
   -- progress, regardless of the server behind CoC.
   --
-  if vim.g.coc_status:find("Loading") then
+  if coc_status:find("Loading") then
     self.indexing = true
     self:update(coc_status)
   elseif self.indexing then
