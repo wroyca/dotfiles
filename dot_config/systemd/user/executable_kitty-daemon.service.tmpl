@@ -3,8 +3,8 @@ Description=Listen for changes in the OS color scheme and update Kitty's theme t
 
 [Service]
 Type=forking
-Environment=\"PATH=/home/wroy/.local/bin:/usr/local/bin:/usr/bin:/bin\"
-ExecStart=/home/wroy/.local/bin/kitty-daemon
+Environment=\"PATH={{ .chezmoi.homeDir }}/.local/bin:/usr/local/bin:/usr/bin:/bin\"
+ExecStart={{ .chezmoi.homeDir }}/.local/bin/kitty-daemon
 RemainAfterExit=yes
 
 [Install]

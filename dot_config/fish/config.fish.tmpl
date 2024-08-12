@@ -15,10 +15,10 @@ end
 function fish_greeting
 end
 
-fish_add_path /home/wroy/.config/emacs/bin
-fish_add_path /home/wroy/.cargo/bin
-fish_add_path /home/wroy/.dotnet/tools
-fish_add_path /home/wroy/.local/bin
+fish_add_path {{ .chezmoi.homeDir }}/.config/emacs/bin
+fish_add_path {{ .chezmoi.homeDir }}/.cargo/bin
+fish_add_path {{ .chezmoi.homeDir }}/.dotnet/tools
+fish_add_path {{ .chezmoi.homeDir }}/.local/bin
 
 # Bash aliases are compatible with Fish.
 #
