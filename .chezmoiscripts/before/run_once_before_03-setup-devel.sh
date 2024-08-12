@@ -57,6 +57,9 @@ sudo dnf install -y \
   mold
 
 sudo dnf install -y \
+  lld
+
+sudo dnf install -y \
   shellcheck
 
 # https://github.com/JohnnyMorganz/StyLua/pull/839
