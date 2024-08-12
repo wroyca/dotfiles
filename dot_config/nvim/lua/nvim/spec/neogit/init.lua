@@ -1,8 +1,11 @@
 ---@type LazyPluginSpec
 local Spec = {
-  "NeogitOrg/neogit",
-  dependencies = { "nvim-lua/plenary.nvim", "sindrets/diffview.nvim", },
-  keys = { { "<leader>gn", "<cmd>Neogit<cr>", desc = "Neogit" }, },
+  "NeogitOrg/neogit", dependencies = { "nvim-lua/plenary.nvim", "sindrets/diffview.nvim", },
+
+  keys = {
+    { "<leader>g", "<cmd>Neogit<cr>", desc = "Neogit" },
+  },
+
   config = function(_, opts)
     for _, e in ipairs {
       "commit_editor",

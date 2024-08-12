@@ -34,8 +34,12 @@ local Spec = {
     show_help = false,
     show_keys = false,
     spec = {
-      { "<leader>l",  group = "lsp" },
-      { "<Leader>lf", "<cmd>lua vim.lsp.buf.format({async = true})<CR>", desc = "Format buffer" },
+      { "<leader>p",   group = "Pick"      },
+      { "<leader>pe",  group = "Extra"     },
+      { "<Leader>peg", group = "Git"       },
+      { "<Leader>peh", group = "Highlight" },
+      { "<Leader>pel", group = "List"      },
+      { "<Leader>pev", group = "Visit"     },
     },
   },
 }

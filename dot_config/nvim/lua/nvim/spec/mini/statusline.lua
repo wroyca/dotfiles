@@ -3,7 +3,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "mini.statusline", dev = true, event = "VimEnter",
+  "mini.statusline", dev = true, event = "VimEnter", enabled = false,
 
   init = function ()
     vim.o.laststatus = 3

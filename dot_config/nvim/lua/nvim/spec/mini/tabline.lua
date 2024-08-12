@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "mini.tabline", dev = true, event = "VimEnter",
+  "mini.tabline", dev = true, event = "VimEnter", enabled = false,
 
   opts = {
     tabpage_section = "right",

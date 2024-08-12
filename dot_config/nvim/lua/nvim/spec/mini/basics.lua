@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "mini.basics", dev = true,
+  "mini.basics", dev = true, event = "VeryLazy",
 
   opts = {
     options = {
