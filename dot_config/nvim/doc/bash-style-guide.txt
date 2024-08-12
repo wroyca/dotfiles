@@ -1,0 +1,704 @@
+*Bash* Style Guide
+|https://cgit.build2.org/cgit/etc/tree/doc/bash-style.cli|
+
+===============================================================================
+Introduction
+
+Bash works best for simple tasks. Needing arrays, arithmetic, and so on, is
+usually a good indication that the task at hand may be too complex for Bash.
+
+Most of the below rules can be broken if there is a good reason for it.
+Besides making things consistent, rules free you from having to stop and think
+every time you encounter a particular situation. But if it feels that the
+prescribed way is clearly wrong, then it probably makes sense to break it. You
+just need to be clear on why you are doing it.
+
+See also |https://google.github.io/styleguide/shell.xml| as well as
+|https://github.com/progrium/bashstyle|; we agree with quite a few (but not
+all) items in there. In particular, the former provides a lot more rationale
+compared to this guide.
+
+===============================================================================
+Style
+
+Don't use any extensions for your scripts. That is, call it just `foo`
+rather than `foo.sh` or `foo.bash` (though we do use the `.bash`
+extension for |https://build2.org/build2/doc/build2-build-system-manual.xhtml#module-bash.
+Use lower-case letters and dash to separate words, for example `foo-bar`.
+
+Indentation is two spaces (not tabs). Maximum line length is 79 characters
+(excluding newline). Use blank lines between logical blocks to improve
+readability.
+
+Variable and function names should use lower-case letters with underscores
+separating words.
+
+For `if` / `while` and `for` / `do` the corresponding `then` or `do`
+is written on the same line after a semicolon, for example:
+
+>sh
+  if [[ ... ]]; then
+    ...
+  fi
+
+  for x in ...; do
+    ...
+  done
+<
+
+Do use `elif` instead of nested `else` and `if` (and consider if
+`case` can be used instead).
+
+For `if` / `while` use `[[ ]]` since it results in cleaner code for
+complex expressions, for example:
+
+>sh
+  if [[ "$foo" && ("$bar" || "$baz") ]]; then
+    ...
+  fi
+<
+
+Note: If for some reason you need the semantics of `[`, use `test` instead to
+make it clear this is intentional.
+
+===============================================================================
+Structure
+
+The overall structure of the script should be as follows:
+
+>sh
+  #! /usr/bin/env bash
+
+  # <SUMMARY>
+  #
+  # [<FUNCTIONALITY-DESCRIPTION>]
+  #
+  # [<OPTIONS-DESCRIPTION>]
+  #
+  usage="usage: $0 <OPTIONS>"
+
+  owd="$(pwd)"
+  trap "{ cd '$owd'; exit 1; }" ERR
+  set -o errtrace   # Trap in functions and subshells.
+  set -o pipefail   # Fail if any pipeline command fails.
+  shopt -s lastpipe # Execute last pipeline command in the current shell.
+  shopt -s nullglob # Expand no-match globs to nothing rather than themselves.
+
+  function info () { echo "$*" 1>&2; }
+  function error () { info "$*"; exit 1; }
+
+  # [<OPTIONS-ARGUMENTS-DEFAULTS>]
+
+  # [<OPTIONS-ARGUMENTS-PARSING>]
+
+  # [<OPTIONS-ARGUMENTS-VALIDATION>]
+
+  # <FUNCTIONALITY>
+<
+
+SUMMARY
+
+One-two sentences describing what the script does.
+
+FUNCTIONALITY-DESCRIPTION
+
+More detailed functionality description for more complex scripts.
+
+OPTIONS-DESCRIPTION
+
+Description of command line options. For example:
+
+>sh
+  # -q
+  #   Run quiet.
+  #
+  # -t <dir>
+  #   Specify the alternative toolchain installation directory.
+<
+
+OPTIONS
+
+Command line options summary. For example:
+
+>sh
+  usage="usage: $0 [-q] [-t <dir>] <file>"
+<
+
+OPTIONS-ARGUMENTS-DEFAULTS
+
+Set defaults to variables that will contain option/argument values. For
+example:
+
+>sh
+  quiet="n"
+  tools=/usr/local
+  file=
+<
+
+OPTIONS-ARGUMENTS-PARSING
+
+Parse the command line options/arguments. For example:
+
+>sh
+  while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+      -q)
+        quiet="y"
+        shift
+        ;;
+      -t)
+        shift
+        tools="${1%/}"
+        shift
+        ;;
+      *)
+        if [[ -n "$file" ]]; then
+          error "$usage"
+        fi
+
+        file="$1"
+        shift
+        ;;
+    esac
+  done
+<
+
+If the value you are expecting from the command line is a directory path,
+then always strip the trailing slash (as shown above for the `-t` option).
+
+OPTIONS-ARGUMENTS-VALIDATION
+
+Validate option/argument values. For example:
+
+>sh
+  if [[ -z "$file" ]]; then
+    error "$usage"
+  fi
+
+  if [[ ! -d "$file" ]]; then
+    error "'$file' does not exist or is not a directory"
+  fi
+<
+
+FUNCTIONALITY
+
+Implement script logic. For diagnostics use the `info()` and `error()`
+functions defined above (so that it goes to stderr, not stdout). If using
+functions, then define them just before use.
+
+===============================================================================
+Quoting
+
+We quote every variable expansion, no exceptions. For example:
+
+>sh
+  if [[ -n "$foo" ]]; then
+    ...
+  fi
+<
+
+Notes: While there is no word splitting in the `[[ ]]` context, we still quote
+variable expansions for consistency.
+
+This also applies to command substitution (which we always write as
+`$(foo arg)` rather than `foo arg`), for example:
+
+>sh
+  list="$(cat foo)"
+<
+
+Note that a command substitution creates a new quoting context, for example:
+
+>sh
+  list="$(basename "$1")"
+<
+
+We also quote values that are `strings` as opposed to options/file names,
+paths, enum-like values, or integers. Prefer single quotes for `sed`
+scripts, for example:
+
+>sh
+  url="https://example.org"  # String.
+  quiet=y                    # Enum-like.
+  verbosity=1                # Integer.
+  dir=/etc                   # Directory path.
+  out=/dev/null              # File path.
+  file=manifest              # File name.
+  option=--quiet             # Option name.
+  seds='s%^./%%'             # sed script.
+<
+
+Take care to quote globs that are not meant to be expanded, for example:
+
+>sh
+  unset "array[0]"
+<
+
+And since quoting will inhibit globbing, you may end up with expansions along
+these lines:
+
+>sh
+  rm -f "$dir/$name".*
+<
+
+Note also that globbing is not performed in the `[[ ]]` context so this is
+ok:
+
+>sh
+  if [[ -v array[0] ]]; then
+    ...
+  fi
+<
+
+Notes: One exception to this quoting rule is arithmetic expansion (`$((\ ))`):
+Bash treats it as if it was double-quoted and, as a result, any inner quoting
+is treated literally. For example:
+
+>sh
+  z=$(($x + $y))           # Ok.
+  z=$(("$x" + "$y"))       # Error.
+  z=$(($x + $(echo "$y"))) # Ok.
+<
+
+------------------
+
+If you have multiple values (e.g., program arguments) that may contain spaces,
+don't try to handle them with quoting and use arrays instead. Here is a
+typical example of a space-aware argument handling:
+
+>sh
+  files=()
+
+  while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+
+      ...
+
+      *)
+        files+=("$1")
+        shift
+        ;;
+    esac
+  done
+
+  rm -f "${files[@]}"
+<
+
+In the same vein, never write:
+
+>sh
+  cmd $*
+<
+
+Instead always write:
+
+>sh
+  cmd "$@"
+<
+
+Also understand the difference between `@` and `*` expansion:
+
+>sh
+  files=('one' '2 two' 'three')
+  echo "files: ${files[@]}"  # $1='files: one', $2='2 two', $3='three'
+  echo "files: ${files[*]}"  # $1='files: one 2 two three'
+<
+
+===============================================================================
+Boolean
+
+For boolean values use `empty` for false and `true` for true. This way you
+can have terse and natural looking conditions, for example:
+
+>sh
+  first=true
+  while ...; do
+
+    if [[ ! "$first" ]]; then
+       ...
+    fi
+
+    if [[ "$first" ]]; then
+       first=
+    fi
+
+  done
+<
+
+===============================================================================
+Subshell
+
+Bush executes certain constructs in `subshells` and some of these constructs
+may not be obvious:
+
+• Explicit subshell: `(...)`
+
+• Pipeline: `...|...`
+
+• Command substitution: `$(...)`
+
+• Process substitution: `<(...)`, `>(...)`
+
+• Background: `...&`, `coproc ...`
+
+------------
+
+Naturally, a subshell cannot modify any state in the parent shell, which
+sometimes leads to counter-intuitive behavior, for example:
+
+>sh
+  lines=()
+
+  ... | while read l; do
+    lines+=("$l")
+  done
+<
+
+At the end of the loop, `lines` will remain empty since the loop body is
+executed in a subshell. One way to resolve this is to use the program
+substitution instead of the pipeline:
+
+>sh
+  lines=()
+
+  while read l; do
+    lines+=("$l")
+  done < <(...)
+<
+
+This, however, results in an unnatural, backwards-looking (compared to the
+pipeline) code. Instead, we can request the last command of the pipeline to be
+executed in the parent shell with the `lastpipe` shell option, for example:
+
+>sh
+  shopt -s lastpipe
+
+  lines=()
+
+  ... | while read l; do
+    lines+=("$l")
+  done
+<
+
+Note: The `lastpipe` shell option is inherited by functions and subshells.
+
+===============================================================================
+Functions
+
+If a function takes arguments, provide a brief usage after the function
+header, for example:
+
+>sh
+  function dist() # <pkg> <dir>
+  {
+    ...
+  }
+<
+
+For non-trivial/obvious functions also provide a short description of its
+functionality/purpose, for example:
+
+>sh
+  # Prepare a distribution of the specified packages and place it
+  # into the specified directory.
+  #
+  function dist() # <pkg> <dir>
+  {
+    ...
+  }
+<
+
+Inside functions use local variables, for example:
+
+>sh
+  function dist()
+  {
+    local x="foo"
+  }
+<
+
+If the evaluation of the value may fail (e.g., it contains a program
+substitution), then place the assignment on a separate line since `local`
+will cause the error to be ignored. For example:
+
+>sh
+  function dist()
+  {
+    local b
+    b="$(basename "$2")"
+  }
+<
+
+A function can return data in two primary ways: exit code and stdout.
+Normally, exit code 0 means success and exit code 1 means failure though
+additional codes can be used to distinguish between different kinds of
+failures (for example, \"hard\" and \"soft\" failures), signify special
+conditions, etc., see |error-handing| for details.
+
+A function can also write to stdout with the result available to the caller in
+the same way as from programs (command substitution, pipeline, etc). If a
+function needs to return multiple values, then it can print them separated
+with newlines with the caller using the `readarray` builtin to read them
+into an indexed array, for example:
+
+>sh
+  function func ()
+  {
+    echo one
+    echo two
+    echo three
+  }
+
+  func | readarray -t r
+<
+
+Note: The use of the newline as a separator means that values may not contain
+newlines. While `readarray` supports specifying a custom separator with the
+`-d` option, including a `NUL` separator, this support is only available
+since Bash 4.4.
+
+This technique can also be extended to return an associative array by first
+returning the values as an indexed array and then converting them to
+an associative array with `eval`, for example:
+
+>sh
+  function func ()
+  {
+    echo "[a]=one"
+    echo "[b]=two"
+    echo "[c]=three"
+  }
+
+  func | readarray -t ia
+
+  eval declare -A aa=("${ia[@]}")
+<
+
+Note that if a key or a value contains whitespaces, then it must be quoted.
+The recommendation is to always quote both, for example:
+
+>sh
+  function func ()
+  {
+    echo "['a']='one ONE'"
+    echo "['b']='two'"
+    echo "['c']='three'"
+  }
+<
+
+Or, if returning a local array:
+
+>sh
+  function func ()
+  {
+    declare -A a=([a]='one ONE' [b]=two [c]=three)
+
+    for k in "${!a[@]}"; do
+      echo "['$k']='${a[$k]}'"
+    done
+  }
+<
+
+For more information on returning data from functions, see
+|https://mywiki.wooledge.org/BashFAQ/084|
+
+===============================================================================
+Error Handling
+
+Our scripts use the `ERR` trap to automatically terminate the script in case
+any command fail. This semantics is also propagated to functions and subshells
+by specifying the `errtrace` shell option and to all the commands of a
+pipeline by specifying the `pipefail` option.
+
+Note: Without `pipefail`, a non-zero exit of any command in the pipeline except
+the last is ignored. The `pipefail` shell option is inherited by functions
+and subshells.
+
+Note: While the `nounset` options may also seem like a good idea, it has
+subtle, often latent pitfalls that make it more trouble than it's worth (see
+|https://mywiki.wooledge.org/BashPitfalls#nounset| pitfalls).
+
+The `pipefail` semantics is not without pitfalls which should be kept in
+mind. In particular, if a command in a pipeline exits before reading the
+preceding command's output in its entirety, such a command may exit with a
+non-zero exit status (see |https://mywiki.wooledge.org/BashPitfalls#pipefail|
+pitfalls for details).
+
+Note: In such situation, the preceding command may exit with zero
+status not only because it gracefully handled `SIGPIPE` but also because all
+of its output happened to fit into the pipe buffer.
+
+For example, these are the two common pipelines that may exhibit this issue:
+
+>sh
+  prog | head -n 1
+  prog | grep -q foo
+<
+
+In these two cases, the simplest (though not the most efficient) way to work
+around this issue is to reimplement `head` with `sed` and to get rid of
+`-q` in `grep`, for example:
+
+>sh
+  prog | sed -n -e '1p'
+  prog | grep foo >/dev/null
+<
+
+If you need to check the exit status of a command, use `if`, for example:
+
+>sh
+  if grep -q "foo" /tmp/bar; then
+    info \"found\"
+  fi
+
+  if ! grep -q "foo" /tmp/bar; then
+    info "not found"
+  fi
+<
+
+Note that the `if`-condition can be combined with capturing the output, for
+example:
+
+>sh
+  if v="$(...)"; then
+    ...
+  fi
+<
+
+But keep in mind that in Bash a failure is often indistinguishable from a
+true/false result. For example, in the above `grep` command, the result will
+be the same whether there is no match or if the file does not exist.
+
+Furthermore, in certain contexts, the above-mentioned `ERR` trap is ignored.
+Quoting from the Bash manual:
+
+>blank
+  The `ERR` trap is not executed if the failed command is part of the
+  command list immediately following an `until` or `while` keyword, part of
+  the test following the `if` or `elif` reserved words, part of a command
+  executed in a `&&` or `||` list except the command following the final
+  `&&` or `||`, any command in a pipeline but the last, or if the command’s
+  return status is being inverted using `!`. These are the same conditions
+  obeyed by the `errexit` (`-e`) option.
+<
+
+To illustrate the gravity of this point, consider the following example:
+
+>sh
+  function cleanup()
+  {
+    cd "$1"
+    rm -f *
+  }
+
+  if ! cleanup /no/such/dir; then
+    ...
+  fi
+<
+
+Here, the `cleanup()` function will continue executing (and may succeed)
+even if the `cd` command has failed.
+
+Note, however, that notwithstanding the above statement from the Bash manual,
+the `ERR` trap is executed inside all the subshell commands of a pipeline
+provided the `errtrace` option is specified. As a result, the above code can
+be made to work by temporarily disabling `pipefail` and reimplementing it as
+a pipeline:
+
+>sh
+  set +o pipefail
+  cleanup /no/such/dir | cat
+
+  r="${PIPESTATUS[0]}"
+  set -o pipefail
+
+  if [[ "$r" -ne 0 ]]; then
+    ...
+  fi
+<
+
+Note: Here, if `cleanup`'s `cd` fails, the `ERR` trap will be executed in
+the subshell, causing it to exit with an error status, which the parent shell
+then makes available in `PIPESTATUS`.
+
+The recommendation is then to avoid calling functions in contexts where the
+`ERR` trap is ignored resorting to the above pipe trick where that's not
+possible.  And to be mindful of the potential ambiguity between the true/false
+result and failure for other commands. The use of the `&&` and `||`
+command expressions is best left to the interactive shell.
+
+Note: The pipe trick cannot be used if the function needs to modify the global
+state. Such a function, however, might as well return the exit status also as
+part of the global state. The pipe trick can also be used to ignore the exit
+status of a command.
+
+The pipe trick can also be used to distinguish between different exit codes,
+for example:
+
+>sh
+  function func()
+  {
+    bar  # If this command fails, the function returns 1.
+
+    if ... ; then
+      return 2
+    fi
+  }
+
+  set +o pipefail
+  func | cat
+  r="${PIPESTATUS[0]}"
+  set -o pipefail
+
+  case "$r" in
+    0)
+      ;;
+    1)
+      exit 1
+      ;;
+    2)
+      ...
+      ;;
+  esac
+<
+
+Note: In such functions it makes sense to keep exit code 1 to mean failure so
+that the inherited `ERR` trap can be re-used.
+
+This technique can be further extended to implement functions that both
+return multiple exit codes and produce output, for example:
+
+>sh
+  function func()
+  {
+    bar  # If this command fails, the function returns 1.
+
+    if ... ; then
+      return 2
+    fi
+
+    echo result
+  }
+
+  set +o pipefail
+  func | readarray -t ro
+  r="${PIPESTATUS[0]}"
+  set -o pipefail
+
+  case "$r" in
+    0)
+      echo "${ro[0]}"
+      ;;
+    1)
+      exit 1
+      ;;
+    2)
+      ...
+      ;;
+  esac
+<
+
+Note: We use `readarray` instead of `read` since the latter fails if the left
+hand side of the pipeline does not produce anything.
+
+vim:tw=78:ts=2:noet:ft=help:norl:
