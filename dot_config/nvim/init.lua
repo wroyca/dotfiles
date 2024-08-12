@@ -40,3 +40,4 @@ vim.o.pumheight      = 8
 vim.o.scrolloff      = 4
 vim.o.fillchars      = "eob: "
 vim.o.guicursor      = "n-v-i:blinkwait700-blinkoff400-blinkon250,i-ci-ve:ver25,r-cr-o:hor20"
+vim.opt.diffopt      = vim.list_extend(vim.opt.diffopt:get(), { "algorithm:histogram" })
