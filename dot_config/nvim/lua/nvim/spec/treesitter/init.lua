@@ -7,7 +7,7 @@ local Spec = {
 
   ---@type TSConfig
   opts = setmetatable ({
-    ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "html" },
+    ensure_installed = "all",
     ---@type { [string]: TSModule }
     modules = {
       highlight = {
