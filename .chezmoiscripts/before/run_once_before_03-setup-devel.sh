@@ -24,6 +24,12 @@ sudo dnf install -y \
   clang-tools-extra
 
 sudo dnf install -y \
+  libcxx
+
+sudo dnf install -y \
+  libcxx-devel
+
+sudo dnf install -y \
   python3-pip
 
 pip install \
