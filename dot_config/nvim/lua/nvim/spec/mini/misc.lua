@@ -37,11 +37,11 @@ local Spec = {
           end
         end
         local reset = function()
-          -- delay a little to avoid unexpected surprises
+          -- schedule to avoid unexpected surprises
           -- https://github.com/echasnovski/mini.nvim/issues/1111
-          vim.defer_fn(function()
+          vim.schedule(function()
             io.write "\027]111\007"
-          end, 10)
+          end)
         end
         vim.api.nvim_create_autocmd({ "UIEnter", "ColorScheme" }, { callback = sync })
         vim.api.nvim_create_autocmd({ "UILeave" }, { callback = reset })
