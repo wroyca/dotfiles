@@ -89,12 +89,19 @@ local projects = function(_, opts)
   local preview = function(buf_id, item)
     if not item then return end
 
+    -- TODO: iterate?
     local files = {}
-    for name, type in vim.fs.dir(item.dir) do
-      if type == "file" and not name:match("^%.") then
-        table.insert(files, name)
+    local function collect(dir)
+      for name, type in vim.fs.dir(dir) do
+        local path = dir .. '/' .. name
+        if type == "file" and not name:match("^%.") then
+          table.insert(files, path:sub(item.dir:len() + 2))
+        elseif type == "directory" and not name:match("^%.") then
+          collect(path)
+        end
       end
     end
+    collect(item.dir)
 
     vim.api.nvim_buf_set_lines(buf_id, 0, -1, false, files)
   end
@@ -119,14 +126,14 @@ local Spec = {
       { "<leader>pg",   pick.builtin.grep,                                                                   desc = "Grep"                   },
       { "<leader>pG",   pick.builtin.grep_live,                                                              desc = "Grep Live"              },
       { "<leader>ph",   help,                                                                                desc = "Help"                   },
-      { "<leader>pR",   pick.builtin.resume,                                                                 desc = "Resume"                 },
-      { "<leader>pr",   projects,                                                                            desc = "Projects"               },
+      { "<leader>pr",   pick.builtin.resume,                                                                 desc = "Resume"                 },
+      { "<leader>pR",   projects,                                                                            desc = "Projects"               },
 
       -- Extra
 
       { "<leader>peb",  extra.pickers.buf_lines,                                                             desc = "Buf Lines"              },
       { "<leader>pec",  extra.pickers.commands,                                                              desc = "Commands"               },
-      { "<leader>ped",  extra.pickers.diagnostic,                                                            desc = "Diagnostic"             },
+   -- { "<leader>ped",  extra.pickers.diagnostic,                                                            desc = "Diagnostic"             },
       { "<leader>pee",  extra.pickers.explorer,                                                              desc = "Explorer"               },
       { "<leader>pegb", extra.pickers.git_branches,                                                          desc = "Git branches"           },
       { "<leader>pegc", extra.pickers.git_commits,                                                           desc = "Git commits"            },
@@ -136,10 +143,7 @@ local Spec = {
       { "<leader>peH",  extra.pickers.history,                                                               desc = "History"                },
       { "<leader>pehg", extra.pickers.hl_groups,                                                             desc = "Groups"                 },
       { "<leader>pek",  extra.pickers.keymaps,                                                               desc = "Keymaps"                },
-
-   -- TODO: CoC compatibility
-   -- { [[<leader>peL]],  extra.pickers.lsp,                                                                 desc = [[Lsp]]                  },
-
+   -- { "<leader>peL",  extra.pickers.lsp,                                                                 desc = [[Lsp]]                  },
       { "<leader>pem",  extra.pickers.marks,                                                                 desc = "Marks"                  },
       { "<leader>peo",  extra.pickers.oldfiles,                                                              desc = "Oldfiles"               },
       { "<leader>peO",  extra.pickers.options,                                                               desc = "Options"                },
