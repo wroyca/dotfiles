@@ -96,15 +96,26 @@ sudo dnf install -y \
 cpanm --sudo \
   Neovim::Ext
 
-if ! command -v b > /dev/null 2>&1; then
+build2()
+{
   v=$(curl -sSf https://stage.build2.org/0/toolchain.sha256 | sed -n 's,^.*/build2-install-\(.*\)-stage\.sh$,\1,p')
-  curl --retry 5 --retry-all-errors -O \
+  curl --connect-timeout 10 --retry 5 --retry-all-errors -O \
     "https://stage.build2.org/0/$v/build2-install-$v-stage.sh"
   sh build2-install-$v-stage.sh --local --yes /usr
+}
+
+if ! command -v b > /dev/null 2>&1; then
+  build2
+
+  # https://github.com/build2/build2/issues/417
+  #
+  if ! command -v b > /dev/null 2>&1; then
+    build2
+  fi
 fi
 
 if ! command -v git-credential-manager > /dev/null 2>&1; then
-  curl --retry 5 --retry-all-errors -O \
+  curl --connect-timeout 10 --retry 5 --retry-all-errors -O \
     "https://raw.githubusercontent.com/git-ecosystem/git-credential-manager/main/src/linux/Packaging.Linux/install-from-source.sh"
   sh install-from-source.sh -y --install-prefix=/usr && git-credential-manager configure
 fi
