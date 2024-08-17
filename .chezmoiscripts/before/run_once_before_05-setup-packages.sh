@@ -12,13 +12,7 @@ sudo dnf install -y \
   fish
 
 sudo dnf install -y \
-  fzf
-
-sudo dnf install -y \
-  bat
-
-sudo dnf install -y \
-  fd-find
+  neovim
 
 sudo dnf install -y \
   scrcpy
