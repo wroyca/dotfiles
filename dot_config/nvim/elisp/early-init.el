@@ -1,6 +1,6 @@
 ; -*- mode: emacs-lisp; lexical-binding: t -*-
 
-(defconst dotemacs--mouse-scroll-amount '((3) ((shift) . 3) ((control) . nil))
+(defconst dotemacs--mouse-scroll-amount '(3 ((shift) . 3) ((control) . nil))
   "Amount to scroll for various mouse actions.")
 
 (defconst dotemacs--inhibit-startup t
