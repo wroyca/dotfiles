@@ -9,6 +9,10 @@ if package.loaded["lazy"] then
   return
 end
 
+-- https://github.com/neovim/neovim/issues/29966
+--
+vim.o.termguicolors = true
+
 ---@type LazyConfig
 local opts = {
   performance = {
@@ -67,6 +71,7 @@ local opts = {
 
   install = {
     colorscheme = {
+      "mini",
       "default"
     },
   },
