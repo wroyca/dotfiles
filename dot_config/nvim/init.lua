@@ -35,6 +35,7 @@ vim.o.smartindent    = true
 vim.o.shiftwidth     = 0
 vim.o.tabstop        = 2
 vim.o.laststatus     = 0
+vim.o.showtabline    = 0
 vim.o.cmdheight      = 0
 vim.o.pumheight      = 8
 vim.o.scrolloff      = 4

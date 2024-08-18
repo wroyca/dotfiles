@@ -7,8 +7,7 @@ local Spec = {
     local terminal = require("toggleterm.terminal").Terminal
     local magit = terminal:new({
       cmd = "emacs -nw --init-directory=~/.config/nvim/elisp --magit .",
-      autochdir = true,
-      direction = "float",
+      direction = "tab",
     })
 
     return {
@@ -36,22 +35,19 @@ function _G.set_terminal_keymaps()
   vim.keymap.set("t", "<C-w>", [[<C-\><C-n><C-w>]], opts)
 end
 
-vim.cmd "autocmd! TermOpen term://*toggleterm#* lua set_terminal_keymaps()"
-local restore_terminal_mode = vim.api.nvim_create_augroup("restore_terminal_mode", { clear = true })
-vim.api.nvim_create_autocmd({ "TermEnter", "TermLeave" }, {
-	pattern = "term://*",
-	callback = function()
-    vim.cmd.startinsert()
-	end,
-	group = restore_terminal_mode,
+vim.api.nvim_create_autocmd({ "TermOpen" }, {
+  pattern = "term://*toggleterm#*",
+  callback = function() set_terminal_keymaps() end,
 })
 
-vim.api.nvim_create_autocmd("BufEnter", {
-	pattern = "term://*",
-	callback = function()
-			vim.cmd.startinsert()
-	end,
-	group = restore_terminal_mode,
+vim.api.nvim_create_autocmd({ "TermEnter", "TermLeave" }, {
+  pattern = "term://*toggleterm#*",
+  callback = function() vim.cmd.startinsert() end,
+})
+
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+  pattern = "term://*toggleterm#*",
+  callback = function() vim.cmd.startinsert() end,
 })
 
 return Spec
