@@ -4,4 +4,7 @@
 # https://gitlab.gnome.org/GNOME/mutter/-/issues/2633
 # https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/3859
 #
-NO_POINTER_VIEWPORT=1
+# Pointer viewport was reverted for GNOME 47.
+# https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/7531
+#
+# NO_POINTER_VIEWPORT=1
