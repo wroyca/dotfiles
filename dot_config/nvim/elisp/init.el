@@ -16,8 +16,13 @@
 (require 'packages-evil-collection)
 (require 'packages-magit)
 (require 'packages-forge)
+(require 'packages-kkp)
 
 (elpaca-wait)
+
+(defun no-op ()
+  "A no-op function for use with key bindings."
+  (interactive))
 
 (defun parse-command-line (args)
   "Handle specific command line arguments.
@@ -35,6 +40,7 @@ arguments is that we want to process these arguments as soon as possible."
           ("--magit"
            (evil-collection-init 'magit)
            (setq magit-no-message '("Turning on magit-auto-revert-mode..."))
+           (evil-define-key 'normal magit-status-mode-map (kbd "q") 'no-op)
            (magit-status))
           (_ (push arg new-args))))
       (setq i (1+ i)))

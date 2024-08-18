@@ -12,21 +12,25 @@ local Spec = {
       { "<leader>g", function() magit:toggle() end, desc = "Magit" }
     }
   end,
+
+  ---@type ToggleTermConfig
+  ---@diagnostic disable-next-line: missing-fields
   opts = {
     autochdir = true,
     shade_terminals = false,
+    persist_mode = true,
+    start_in_insert = true
   },
 }
 
 function _G.set_terminal_keymaps()
   local opts = { buffer = 0 }
 
-  -- Restore <Esc> to switch to Normal mode
-  vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], opts)
-
-  -- Restore <C-o> and <C-i> for jumplist navigation
   vim.keymap.set("t", "<C-o>", [[<C-\><C-n><C-o>]], opts)
-  vim.keymap.set("t", "<C-i>", [[<C-\><C-n><C-i>]], opts)
+
+  -- FIXME: CSIu sequence?
+  --
+  -- vim.keymap.set("t", "<C-i>", [[<C-\><C-n><C-i>]], opts)
 
   -- Allow colon to trigger command mode
   vim.keymap.set("t", ":", [[<C-\><C-n>:]], opts)
@@ -37,15 +41,24 @@ vim.api.nvim_create_autocmd({ "TermOpen" }, {
   callback = function() set_terminal_keymaps() end,
 })
 
-vim.api.nvim_create_autocmd({ "TermEnter" }, {
+-- BUG:
+--
+-- STARTINSERT is ignored unless it is deferred in **BOTH** TermEnter and BufEnter.
+-- https://github.com/akinsho/toggleterm.nvim/issues/455
+--
+vim.api.nvim_create_autocmd({ "TermEnter", }, {
   pattern = "term://*toggleterm#*",
-  callback = function() vim.cmd.startinsert() end,
+  callback = function()
+    vim.defer_fn(vim.cmd.startinsert, 10)
+  end,
 })
 
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
   pattern = "term://*toggleterm#*",
-  callback = function() vim.cmd.startinsert() end,
-})
+  callback = function()
+    vim.defer_fn(vim.cmd.startinsert, 10)
+  end,
+ })
 
 --
 --
