@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "kevinhwang91/nvim-fundo", dependencies = "kevinhwang91/promise-async", event = "VeryLazy",
+  "kevinhwang91/nvim-fundo", dependencies = "promise-async", event = "VeryLazy",
 
   init = function()
     vim.o.undofile = true

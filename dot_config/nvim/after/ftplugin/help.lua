@@ -5,7 +5,6 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
       vim.bo[event.buf].buflisted = true
       vim.bo[event.buf].modifiable = true
       vim.bo[event.buf].readonly = false
-
       vim.api.nvim_exec2("wincmd L", {})
     end
   end

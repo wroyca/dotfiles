@@ -4,12 +4,10 @@ local Spec = {
   "akinsho/toggleterm.nvim",
   keys = function()
     local terminal = require("toggleterm.terminal").Terminal
-    local magit = terminal:new({
-      cmd = "emacs -nw --init-directory=~/.config/nvim/elisp --magit .",
-      direction = "tab",
-    })
+    local magit = terminal:new { cmd = "emacs -nw --init-directory=~/.config/nvim/elisp --magit .", direction = "tab" }
+
     return {
-      { "<leader>g", function() magit:toggle() end, desc = "Magit" }
+      { "<leader>g", function() magit:toggle() end, desc = "Magit" },
     }
   end,
 
@@ -19,7 +17,7 @@ local Spec = {
     autochdir = true,
     shade_terminals = false,
     persist_mode = true,
-    start_in_insert = true
+    start_in_insert = true,
   },
 }
 
@@ -29,7 +27,6 @@ function _G.set_terminal_keymaps()
   vim.keymap.set("t", "<C-o>", [[<C-\><C-n><C-o>]], opts)
 
   -- FIXME: CSIu sequence?
-  --
   -- vim.keymap.set("t", "<C-i>", [[<C-\><C-n><C-i>]], opts)
 
   -- Allow colon to trigger command mode
@@ -46,19 +43,15 @@ vim.api.nvim_create_autocmd({ "TermOpen" }, {
 -- STARTINSERT is ignored unless it is deferred in **BOTH** TermEnter and BufEnter.
 -- https://github.com/akinsho/toggleterm.nvim/issues/455
 --
-vim.api.nvim_create_autocmd({ "TermEnter", }, {
+vim.api.nvim_create_autocmd({ "TermEnter" }, {
   pattern = "term://*toggleterm#*",
-  callback = function()
-    vim.defer_fn(vim.cmd.startinsert, 10)
-  end,
+  callback = function() vim.defer_fn(vim.cmd.startinsert, 10) end,
 })
 
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
   pattern = "term://*toggleterm#*",
-  callback = function()
-    vim.defer_fn(vim.cmd.startinsert, 10)
-  end,
- })
+  callback = function() vim.defer_fn(vim.cmd.startinsert, 10) end,
+})
 
 --
 --
@@ -89,7 +82,7 @@ local function replace_with_accent(file_path)
       assert(stat ~= nil)
       uv.fs_read(fd, stat.size, 0, function(_, data)
         uv.fs_close(fd, function()
-          assert (data ~= nil)
+          assert(data ~= nil)
           -- FIXME: We're using this approach because we couldn't get gsub to
           -- work with word boundaries.
           data = data:gsub("p%.bg_mid2",   get_accent_color "bg_mid2")
@@ -139,9 +132,7 @@ local function copy_file(src, dest, callback)
         uv.fs_close(fd, function()
           uv.fs_open(dest, "w", 438, function(_, fd_w)
             uv.fs_write(fd_w, data, 0, function()
-              uv.fs_close(fd_w, function()
-                callback(true)
-              end)
+              uv.fs_close(fd_w, function() callback(true) end)
             end)
           end)
         end)
@@ -155,15 +146,13 @@ local function on_colorscheme_change()
   local src_file = "/home/wroy/.local/share/chezmoi/dot_config/nvim/elisp/early-init.el"
   uv.fs_unlink(dest_file, function()
     copy_file(src_file, dest_file, function(success)
-      if success then
-        replace_with_accent(dest_file)
-      end
+      if success then replace_with_accent(dest_file) end
     end)
   end)
 end
 
-vim.api.nvim_create_autocmd({"ColorScheme"}, {
-  callback = on_colorscheme_change
+vim.api.nvim_create_autocmd({ "ColorScheme" }, {
+  callback = on_colorscheme_change,
 })
 
 return Spec

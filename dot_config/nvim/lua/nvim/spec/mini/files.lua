@@ -1,7 +1,7 @@
 ---@module "mini.files"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "mini.files", dev = true,
   keys = {
     {
@@ -76,3 +76,5 @@ return {
     require("mini.files").setup(opts)
   end
 }
+
+return Spec

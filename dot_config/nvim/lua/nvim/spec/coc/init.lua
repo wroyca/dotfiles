@@ -135,13 +135,13 @@ local Spec = {
 
   config = function(opts)
     vim.g.coc_global_extensions = {
-      [[coc-marketplace]],
-      [[coc-clangd]],
-      [[coc-json]],
-      [[coc-lua]],
-      [[coc-sh]],
-      [[coc-xml]],
-      [[@statiolake/coc-stylua]],
+      "coc-marketplace",
+      "coc-clangd",
+      "coc-json",
+      "coc-lua",
+      "coc-sh",
+      "coc-xml",
+      "@statiolake/coc-stylua",
     }
 
     for k, v in pairs(opts.opts --[[@as table]]) do

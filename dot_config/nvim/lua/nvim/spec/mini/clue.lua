@@ -1,6 +1,8 @@
 ---@module "mini.clue"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "mini.clue", dev = true, optional = true
 }
+
+return Spec
