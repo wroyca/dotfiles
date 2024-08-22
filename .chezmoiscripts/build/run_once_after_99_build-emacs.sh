@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-exit 0 # Temporarily disable for now.
 set -x # Print trace of simple commands.
 set +e # Ignore pipeline that returns a non-zero status.
 
@@ -11,12 +10,12 @@ fi
 owd="$(pwd)"
 ret ()
 {
-  cd "$owd"
+  cd "$owd" || exit
 }
 
 trap ret EXIT
 
-mkdir -p /tmp/emacs && cd $_
+mkdir -p /tmp/emacs && cd "$_" || exit
 
 # https://dnf-plugins-core.readthedocs.io/en/latest/builddep.html
 #
@@ -60,8 +59,5 @@ make uninstall
   build_alias=x86_64-redhat-linux-gnu \
   host_alias=x86_64-redhat-linux-gnu
 
-make -j$((`nproc`+2))
+make -j$(($(nproc)+2))
 make install
-
-git clone --depth 1 https://github.com/doomemacs/doomemacs \
-  ~/.config/emacs && ~/.config/emacs/bin/doom install

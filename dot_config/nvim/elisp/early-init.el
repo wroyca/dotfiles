@@ -38,6 +38,27 @@
 
 ;;
 
+(when (and (getenv "WAYLAND_DISPLAY")
+           (executable-find "wl-copy")
+           (executable-find "wl-paste"))
+  (defvar wl-copy-process nil)
+  (defun wl-copy (text)
+    (setq wl-copy-process (make-process :name "wl-copy"
+                                        :buffer nil
+                                        :command '("wl-copy" "-f" "-n")
+                                        :connection-type 'pipe))
+    (process-send-string wl-copy-process text)
+    (process-send-eof wl-copy-process))
+  (defun wl-paste ()
+    (if (and wl-copy-process (process-live-p wl-copy-process))
+        nil
+      (shell-command-to-string "wl-paste -n | tr -d '\\r'")))
+  (setq interprogram-cut-function #'wl-copy
+        interprogram-paste-function #'wl-paste)
+  nil)
+
+;;
+
 (defun inside-neovim-p ()
   (getenv dotemacs--neovim-env-var))
 
@@ -171,7 +192,7 @@
  `(transient-value                       ((t (:background nil :foreground nil))))
  `(header-line                           ((t (:background nil :foreground nil))))
  `(highlight                             ((t (:background "p.bg_mid2" :foreground nil ))))
- `(region                                ((t (:background nil :foreground nil))))
+ ;`(region                                ((t (:background nil :foreground nil))))
  `(link                                  ((t (:background nil :foreground "p.blue"))))
  `(git-commit-comment-action             ((t (:background nil :foreground "p.fg_mid2"))))
  `(git-commit-comment-branch-local       ((t (:background nil :foreground "p.fg_mid2"))))

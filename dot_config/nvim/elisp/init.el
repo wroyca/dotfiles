@@ -17,6 +17,7 @@
 (require 'packages-magit)
 (require 'packages-forge)
 (require 'packages-kkp)
+(require 'packages-clipetty)
 
 (elpaca-wait)
 
