@@ -40,6 +40,11 @@ local Spec = {
       { "<Leader>peh", group = "Highlight" },
       { "<Leader>pel", group = "List"      },
       { "<Leader>pev", group = "Visit"     },
+
+      { "<Leader>v",  group = "Vimspector" },
+      { "<Leader>vb", group = "Breakpoint" },
+      { "<Leader>vs", group = "Step" },
+      { "<Leader>vs", group = "Stack Frame" },
     },
   },
 }

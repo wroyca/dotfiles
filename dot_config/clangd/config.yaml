@@ -327,7 +327,6 @@ Diagnostics:
       - portability-std-allocator-const
       - readability-avoid-const-params-in-decls
       - readability-avoid-unconditional-preprocessor-if
-      - readability-braces-around-statements
       - readability-const-return-type
       - readability-container-contains
       - readability-container-data-pointer
@@ -487,6 +486,7 @@ Diagnostics:
       - portability-restrict-system-includes
       - portability-simd-intrinsics
       - portability-std-allocator-const
+      - readability-braces-around-statements
       - readability-identifier-length
       - readability-qualified-auto
       - zircon-temporary-objects
