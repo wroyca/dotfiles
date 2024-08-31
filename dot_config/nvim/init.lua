@@ -80,6 +80,6 @@ for _, pairs in ipairs(colemak_maps) do
 end
 
 for _, mode in pairs({ "n", "v" }) do
-  map(mode, "e", "v:count == 0 ? 'gk' : 'k'", expr)
-  map(mode, "n", "v:count == 0 ? 'gj' : 'j'", expr)
+  map(mode, "e", "v:count == 0 ? 'gk' : 'k'", {expr = true})
+  map(mode, "n", "v:count == 0 ? 'gj' : 'j'", {expr = true})
 end 
