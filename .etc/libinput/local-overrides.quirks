@@ -1,0 +1,9 @@
+# The MX Master 3 is as a high-resolution scrolling device, but there is an
+# issue with libinput where it continues to transmit high-resolution events
+# when the device is in ratcheting mode.
+#
+[Logitech MX Master 3]
+MatchVendor=0x46D
+MatchProduct=0x4082
+ModelInvertHorizontalScrolling=1
+AttrEventCode=-REL_WHEEL_HI_RES;-REL_HWHEEL_HI_RES;

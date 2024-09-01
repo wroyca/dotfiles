@@ -1,0 +1,10 @@
+[mutter-patched]
+name=GNOME's Dynamic Triple Buffering
+type=rpm-md
+skip_if_unavailable=True
+baseurl=https://download.copr.fedorainfracloud.org/results/trixieua/mutter-patched/fedora-$releasever-$basearch/
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/trixieua/mutter-patched/pubkey.gpg
+enabled=1
+enabled_metadata=1
+metadata_expire=300

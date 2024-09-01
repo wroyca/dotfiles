@@ -1,0 +1,8 @@
+# Houses workflows, issue templates, pull request templates, funding
+# information, and some other files specific to the repository.
+#
+.github/
+
+# System-wide configuration files.
+#
+.etc/

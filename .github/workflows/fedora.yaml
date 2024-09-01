@@ -1,0 +1,16 @@
+name: Fedora Workstation
+
+on:
+  workflow_dispatch:
+  push:
+  branches:
+    - ergodox
+
+jobs:
+  chezmoi:
+    runs-on: ubuntu-latest
+    container: fedora:latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sh -c "$(curl -fsLS get.chezmoi.io)" -- init --one-shot wroyca
