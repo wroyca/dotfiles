@@ -3,7 +3,7 @@
 ### Install chezmoi and the dotfiles on a new machine.
 
 ```bash
-sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply wroyca
+sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply wroyca --branch ergodox
 ```
 
 ### Install chezmoi and the dotfiles in a transitory environments (e.g. short-lived Linux containers).
@@ -12,7 +12,7 @@ This install the dotfiles, and then remove all traces of chezmoi, including the
 source directory and chezmoi's configuration directory.
 
 ```bash
-sh -c "$(curl -fsLS get.chezmoi.io)" -- init --one-shot wroyca
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --one-shot wroyca --branch ergodox
 ```
 
 ### Pull the latest changes from the repo and apply them.
