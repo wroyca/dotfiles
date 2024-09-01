@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-alias e='emacs -nw'
 alias v='nvim'
+alias e='emacs -nw'
 
 # https://man.openbsd.org/cp#i
 # https://man.openbsd.org/cp#v
@@ -17,8 +17,6 @@ alias mv='mv -iv'
 alias rm='rm -iv'
 alias mkdir='mkdir -pv'
 
-# https://man.archlinux.org/man/ls.1.en#hyperlink
 # https://man.archlinux.org/man/extra/tree/tree.1.en#filesfirst
 #
-alias ls='ls --hyperlink'
 alias tree='tree --filesfirst'
