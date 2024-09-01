@@ -6,3 +6,8 @@
 # System-wide configuration files.
 #
 .etc/
+
+# ZUnit testing framework.
+#
+tests/
+.zunit.yml
