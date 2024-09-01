@@ -1,8 +1,10 @@
+{{- $id := mozillaInstallHash "/usr/lib64/firefox" -}}
+
 [General]
 StartWithLastProfile=1
 Version=2
 
-[Install11457493C5A56847]
+[Install{{- $id -}}]
 Default=default-release
 Locked=1
 
