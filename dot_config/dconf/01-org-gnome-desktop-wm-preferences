@@ -1,0 +1,7 @@
+# dconf path
+#
+[org/gnome/desktop/wm/preferences]
+
+# GSettings key names and their corresponding values
+#
+resize-with-right-button=true

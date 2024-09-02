@@ -1,0 +1,11 @@
+# dconf path
+#
+[org/gnome/desktop/interface]
+
+# GSettings key names and their corresponding values
+#
+enable-hot-corners=false
+show-battery-percentage=true
+gtk-theme='adw-gtk3'
+icon-theme='morewaita'
+monospace-font-name='MonoLisa 10'

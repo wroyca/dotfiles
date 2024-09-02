@@ -1,0 +1,55 @@
+# https://editorconfig.org
+#
+# While EditorConfig does not officially support global configuration, it will
+# search upwards through the directory tree until it encounters a file with
+# root=true (if present). It then applies the settings from that point downward
+# through the directory structure.
+#
+# For additional details, refer to https://github.com/editorconfig/editorconfig/issues/465
+
+root = true
+
+[*]
+indent_size = 2
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Markdown
+#
+# A paragraph consists of one or more consecutive lines of text, separated by
+# one or more blank lines. A blank line is defined as any line that appears
+# empty; it may contain only spaces or tabs. Normal paragraphs should not begin
+# with spaces or tabs for indentation.
+#
+# The rule of "one or more consecutive lines of text" means that Markdown
+# supports "hard-wrapped" text paragraphs. This is notably different from many
+# other text-to-HTML converters, such as Movable Type's "Convert Line Breaks"
+# option, which converts every line break within a paragraph into a <br /> tag.
+#
+# If you need to insert a <br /> tag for a line break, end the line with two or
+# more spaces and then press return. Note that editors must be told to preserve
+# "trailing whitespace" to maintain this formatting.
+#
+[*.{[Mm][Dd],[Mm][Kk][Dd],[Mm][Dd][Oo][Ww][Nn],[Mm][Kk][Dd][Oo][Ww][Nn],[Mm][Aa][Rr][Kk][Dd][Oo][Ww][Nn]}]
+trim_trailing_whitespace = false
+
+# Batch
+#
+# When using Unix line endings (\n), the label parser may skip over some labels
+# due to an off-by-one error. This error occurs because the parser processes
+# data in 512-byte chunks and incorrectly assumes that line endings are
+# represented by two characters (\r\n) instead of one (\n). If a label is
+# mistakenly skipped, the next skip will only happen at a 512-byte offset. To
+# prevent this, you can duplicate a label on the following line, keeping it
+# within the 512-byte limit, which allows the duplicate label to act as a
+# fallback.
+#
+# Additionally, the parser misinterprets the end of each 512-byte chunk as a
+# new line and also overlooks whitespace characters between a colon and the
+# subsequent text on these pseudo-lines. For example, a comment like `:: main
+# section` may lead the parser to incorrectly interpret the text as the label
+# :main.
+#
+[*.{[Bb][Aa][Tt],[Cc][Mm][Dd]}]
+end_of_line = crlf

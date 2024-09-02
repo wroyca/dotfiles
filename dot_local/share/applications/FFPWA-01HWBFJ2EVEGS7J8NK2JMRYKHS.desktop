@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Version=1.4
+Name=Github
+Comment=
+Keywords=;
+Categories=GTK;WebApps;;
+Icon=FFPWA-01HWBFJ2EVEGS7J8NK2JMRYKHS
+Exec=/usr/bin/firefoxpwa site launch 01HWBFJ2EVEGS7J8NK2JMRYKHS --protocol %u
+Actions=
+MimeType=
+Terminal=false
+StartupNotify=true
+StartupWMClass=FFPWA-01HWBFJ2EVEGS7J8NK2JMRYKHS

@@ -1,0 +1,4 @@
+# .chezmoiremove matches against target locations, not source.
+# https://www.chezmoi.io/reference/special-files-and-directories/chezmoiremove/
+
+.config/dconf

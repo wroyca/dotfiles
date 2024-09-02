@@ -1,0 +1,7 @@
+# dconf path
+#
+[org/gnome/clocks]
+
+# GSettings key names and their corresponding values
+#
+world-clocks=[{'location': <(uint32 2, <('Montreal', 'CYUL', true, [(0.79354303905785273, -1.2871803233458181)], [(0.79354303905785273, -1.2871803233458181)])>)>}, {'location': <(uint32 2, <('Paris', 'LFPB', true, [(0.85462956287765413, 0.042760566673861078)], [(0.8528842336256599, 0.040724343395436846)])>)>}, {'location': <(uint32 2, <('Helsinki', 'EFHF', true, [(1.0515608743265836, 0.43720497762457955)], [(1.0502615814182288, 0.43518331039211688)])>)>}]

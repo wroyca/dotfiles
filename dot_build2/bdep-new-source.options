@@ -1,0 +1,2 @@
+--post-hook "ln -s ../LICENSE.md LICENSE.md"
+--post-hook "sed -i -e 's/doc\{README.md\}/doc\{README.md\} legal\{LICENSE.md\}/g' buildfile"

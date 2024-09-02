@@ -1,13 +1,13 @@
-# Houses workflows, issue templates, pull request templates, funding
-# information, and some other files specific to the repository.
-#
-.github/
+# .chezmoiignore matches against target locations, not source.
+# https://www.chezmoi.io/reference/special-files-and-directories/chezmoiignore/
 
-# System-wide configuration files.
-#
-.etc/
+{{ template "teardown" (dict "name" "clang-format" "directory" ".config/clang-format") }}
+{{ template "teardown" (dict "name" "emacs" "directory" ".config/emacs") }}
+{{ template "teardown" (dict "name" "kitty" "directory" ".config/kitty") }} 
+  {{ template "teardown" (dict "name" "kitty" "directory" ".config/systemd") }}
+  {{ template "teardown" (dict "name" "kitty" "directory" ".local/kitty-service-exec") }}
+{{ template "teardown" (dict "name" "nano" "directory" ".config/nano") }}
+{{ template "teardown" (dict "name" "npm" "directory" ".config/npm") }}
+{{ template "teardown" (dict "name" "starship" "directory" ".config/starship") }}
 
-# ZUnit testing framework.
-#
-tests/
-.zunit.yml
+.config/dconf

@@ -1,0 +1,8 @@
+# dconf path
+#
+[org/gnome/desktop/privacy]
+
+# GSettings key names and their corresponding values
+#
+remove-old-temp-files=true
+remove-old-trash-files=true

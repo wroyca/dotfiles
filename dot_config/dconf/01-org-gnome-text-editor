@@ -1,0 +1,9 @@
+# dconf path
+#
+[org/gnome/TextEditor]
+
+# GSettings key names and their corresponding values
+#
+indent-style='space'
+spellcheck=false
+tab-width=uint32 2

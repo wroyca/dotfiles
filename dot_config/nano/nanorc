@@ -1,0 +1,40 @@
+# Automatically indent a newly created line to the same number of tabs and/or
+# spaces as the preceding line -- or as the next line if the preceding line is
+# the beginning of a paragraph.
+#
+set autoindent
+
+# Do case-sensitive searches by default.
+#
+set casesensitive
+
+# Use cut-from-cursor-to-end-of-line by default.
+#
+set cutfromcursor
+
+# Remember the used search/replace strings for the next session.
+#
+set historylog
+
+# Enable mouse support, if available for your system.  When enabled, mouse
+# clicks can be used to place the cursor, set the mark (with a double click),
+# and execute shortcuts.  The mouse will work in the X Window System, and on
+# the console when gpm is running.
+#
+set mouse
+
+# Use this tab size instead of the default; it must be greater than 0.
+#
+set tabsize 2
+
+# Convert each typed tab to the fitting number of spaces.
+#
+set tabstospaces
+
+# Snip whitespace at the end of lines when justifying or hard-wrapping.
+#
+set trimblanks
+
+# Suspend nano with one keystroke (instead of with ^T^Z).
+#
+bind ^Z suspend main

@@ -1,0 +1,7 @@
+# dconf path
+#
+[org/gnome/GWeather4]
+
+# GSettings key names and their corresponding values
+#
+temperature-unit='centigrade'

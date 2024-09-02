@@ -1,0 +1,10 @@
+[Unit]
+Description=Kitty service to sync with OS appearance
+
+[Service]
+Type=forking
+ExecStart={{ .chezmoi.homeDir }}/.local/bin/kitty-service
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target

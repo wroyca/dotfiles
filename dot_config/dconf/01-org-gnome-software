@@ -1,0 +1,7 @@
+# dconf path
+#
+[org/gnome/software]
+
+# GSettings key names and their corresponding values
+#
+packaging-format-preference=['flatpak:flathub-beta', 'flatpak:flathub', 'rpm']
