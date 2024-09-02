@@ -1,2 +1,4 @@
-etc
-.stylua.toml
+# .chezmoiignore matches against target locations, not source.
+# https://www.chezmoi.io/reference/special-files-and-directories/chezmoiignore/
+
+{{ template "teardown" (dict "name" "alacritty" "directory" ".config/alacritty") }}
