@@ -2,7 +2,6 @@ name: Fedora Workstation
 
 on:
   workflow_dispatch:
-  push:
     branches:
       - ergodox
 
