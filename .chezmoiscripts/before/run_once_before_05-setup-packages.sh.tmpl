@@ -24,4 +24,6 @@ sudo dnf remove  -y gnome-terminal
 # XXX: Not included in `.chezmoiexternals/` because it does not support running
 # post-hook commands.
 #
-wget https://github.com/Nevcairiel/LAVFilters/releases/latest/download/LAVFilters-{{ (gitHubLatestTag "Nevcairiel/LAVFilters").Name | replace "v" "" -}}-Installer.exe && wine $(basename "$_")
+if [ ! -d "$HOME/.wine/drive_c/Program Files (x86)/LAV Filters" ]; then
+  wget https://github.com/Nevcairiel/LAVFilters/releases/latest/download/LAVFilters-{{ (gitHubLatestTag "Nevcairiel/LAVFilters").Name | replace "v" "" -}}-Installer.exe && wine $(basename "$_")
+fi
