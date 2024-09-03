@@ -5,3 +5,7 @@ sudo cp -rfT {{ .chezmoi.sourceDir }}/.etc /etc
 # TMP: Remove once it's fixed on NV side.
 #
 echo "options nvidia NVreg_EnableGpuFirmware=0" | sudo tee -a /etc/modprobe.d/nvidia-gsp.conf
+
+# https://lists.fedoraproject.org/archives/list/devel@lists.fedoraproject.org/thread/6ZMTM7NXFUMKN6MICSI4LDDTCGE4TSTF/#MYMU5QS3RMGP27TXIXO6WXW5HWOG4MCZ
+#
+sudo grubby --args="preempt=full" --update-kernel=ALL
