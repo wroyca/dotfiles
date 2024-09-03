@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+sudo dnf install -y fish
+sudo dnf install -y scrcpy
+sudo dnf install -y steam
+sudo dnf install -y wine
+sudo dnf install -y winetricks
+sudo dnf install -y adw-gtk3-theme
+sudo dnf install -y firefoxpwa
+
+# Since kitty is our primary terminal, gnome-terminal is now redundant and can
+# be safely removed.
+#
+sudo dnf remove  -y gnome-terminal
+
+# Install DirectShow filters based on the libavformat and libavcodec libraries
+# from the FFmpeg project. These filters enable Wine to play almost any media
+# format in a DirectShow-compatible player.
+#
+# This addresses a common issue in older games where in-game cutscenes or
+# movies would only show a black screen instead of the intended video content.
+# Notable examples of such games include the Trails series from Nihon Falcom.
+#
+# XXX: Not included in `.chezmoiexternals/` because it does not support running
+# post-hook commands.
+#
+wget https://github.com/Nevcairiel/LAVFilters/releases/latest/download/LAVFilters-{{ (gitHubLatestTag "Nevcairiel/LAVFilters").Name | replace "v" "" -}}-Installer.exe && wine $(basename "$_")

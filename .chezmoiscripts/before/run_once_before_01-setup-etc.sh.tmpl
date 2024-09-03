@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+sudo cp -rfT {{ .chezmoi.sourceDir }}/.etc /etc
+
+# TMP: Remove once it's fixed on NV side.
+#
+echo "options nvidia NVreg_EnableGpuFirmware=0" | sudo tee -a /etc/modprobe.d/nvidia-gsp.conf
