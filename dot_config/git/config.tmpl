@@ -1,0 +1,62 @@
+; vim: set ft=gitconfig:
+; https://git-scm.com/docs/git-config
+
+[user]
+  name = {{ .name | quote }}
+  email = {{ .email | quote }}
+
+[advice]
+  detachedHead = false
+
+[commit]
+  verbose = true
+
+[core]
+  editor = /usr/bin/nvim
+  excludesFile = ~/.config/git/excludes
+  attributesFile = ~/.config/git/attributes
+
+[credential]
+  helper = /usr/bin/git-credential-manager
+  credentialStore = cache
+  cacheOptions = --timeout 86400
+
+[diff]
+  renames = copies
+  algorithm = histogram
+
+[filter "media"]
+  required = true
+  clean = git media clean %f
+  smudge = git media smudge %f
+
+[filter "lfs"]
+  required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+
+[help]
+  autocorrect = 1
+
+[init]
+  defaultBranch = main
+
+[merge]
+  conflictstyle = zdiff3
+
+[pull]
+  twohead = ort
+
+[push]
+  autoSetupRemote = true
+
+[rebase]
+  abbreviateCommands = true
+
+[submodule]
+  recurse = true
+  fetchJobs = 10
+
+[url "https://github.com/"]
+  insteadOf = git@github.com:
