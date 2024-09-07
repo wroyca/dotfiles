@@ -4,8 +4,6 @@
 -- (  /  |        / | \                                    * .  ' .  .-+-
 --  \(_)_%s      /  |  \                                *   *  .   .
 
-vim.cmd.packadd "vim-lumen"
-
 local shada = vim.o.shada
 vim.o.shada = ""
 vim.schedule(function()
