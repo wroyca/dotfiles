@@ -14,31 +14,33 @@ end)
 
 vim.g.mapleader      = " "
 vim.g.localmapleader = ","
-vim.o.clipboard      = "unnamedplus"
 vim.o.mouse          = "a"
 vim.o.mousescroll    = "ver:3,hor:0"
 vim.o.mousemoveevent = true
-vim.o.title          = true
 vim.o.confirm        = true
 vim.o.list           = true
 vim.o.gdefault       = true
-vim.o.termguicolors  = true
-vim.o.ruler          = false
 vim.o.wrap           = false
+vim.o.ruler          = false
 vim.o.showmode       = false
+vim.o.showtabline    = 0
+vim.o.laststatus     = 0
+vim.o.cmdheight      = 0
+vim.o.scrolloff      = 4
+vim.o.pumheight      = 8
+vim.o.fillchars      = "eob: "
+vim.o.guicursor      = "a:blinkwait700-blinkoff400-blinkon250,i-ci-ve:ver25,r-cr-o:hor20"
+
+-- Most of the formatting and style settings will be automatically managed by
+-- EditorConfig (https://editorconfig.org/), provided it is available and in
+-- use.
+--
 vim.o.breakindent    = true
 vim.o.copyindent     = true
 vim.o.expandtab      = true
 vim.o.preserveindent = true
 vim.o.smartindent    = true
-vim.o.shiftwidth     = 0
 vim.o.tabstop        = 2
-vim.o.laststatus     = 3
-vim.o.showtabline    = 0
-vim.o.cmdheight      = 1
-vim.o.pumheight      = 8
-vim.o.scrolloff      = 4
-vim.o.fillchars      = "eob: "
-vim.o.guicursor      = "n-v-i:blinkwait700-blinkoff400-blinkon250,i-ci-ve:ver25,r-cr-o:hor20"
-vim.opt.diffopt      = vim.list_extend(vim.opt.diffopt:get(), { "algorithm:histogram" })
+vim.o.shiftwidth     = 0
+vim.o.shiftround     = true
 
