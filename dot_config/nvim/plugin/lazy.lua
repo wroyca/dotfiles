@@ -9,13 +9,98 @@ if package.loaded["lazy"] then
   return
 end
 
--- Global system-wide dark mode preference.
---
--- Supported platforms are Linux, MacOS and Windows. All platform
--- implementations are interrupt-based and do not use any resources in the
--- background.
---
-vim.cmd.packadd "vim-lumen"
+--- Set up org.freedesktop.appearance.
+---
+--- The org.freedesktop.appearance.color-scheme key got standardized in the XDG
+--- desktop portal  specification across all DEs. This make it possible on both
+--- X11 and Wayland to be notified at runtime as soon as the dark mode
+--- preference changes.
+---
+--- Currently, the Settings interface provides the following keys:
+---
+--- - org.freedesktop.appearance color-scheme
+---   Indicates the system’s preferred color scheme.
+---
+--- - org.freedesktop.appearance accent-color (ddd)
+---   Indicates the system’s preferred accent color as a tuple of RGB values
+---   in the sRGB color space, in the range [0, 1]. Out-of-range RGB values
+---   should be treated as an unset accent color.
+---
+--- - org.freedesktop.appearance contrast (u)
+---   Indicates the system’s preferred contrast level.
+---
+--- https://flatpak.github.io/xdg-desktop-portal/docs/doc-org.freedesktop.portal.Settings.html
+--- https://github.com/flatpak/xdg-desktop-portal/issues/629
+---
+--- What it does:
+--- - Retrieves and interprets information from org.freedesktop.appearance
+---   interface.
+---
+--- - Extracts color-scheme key to determine current color scheme preference
+---   set by user.
+
+--- - Executes gdbus in background to continuously monitor changes to color
+---   scheme preference. FYI monitoring uses interrupts instead of polling.
+---
+--- - Immediately synchronizes Neovim’s "background" option with detected
+---   preference.
+---
+setup_appearance_sync = function()
+  -- org.freedesktop.appearance color-scheme
+  --
+  -- Supported values are:
+  -- - 0: No preference
+  -- - 1: Prefer dark appearance
+  -- - 2: Prefer light appearance
+  --
+  local function parse_color_scheme(line)
+    local v = tonumber(line:match("uint32 (%d+)"))
+    if v == nil then return end
+    vim.o.background = (v == 2 or v == 0) and "light" or "dark"
+  end
+
+  vim.fn.jobstart(
+    "gdbus monitor --session --dest org.freedesktop.portal.Desktop --object-path /org/freedesktop/portal/desktop",
+    {
+      on_stdout = function (_, data)
+        -- When the background job outputs data, it may arrive in multiple chunks.
+        --
+        -- For example, the data might be {"Hello, ", "world!\n", "This is a
+        -- test.\n"}. We append data[1] to the last string in lines. If lines was
+        -- initially {"Hello, "} and data[1] is "world!", lines becomes {"Hello,
+        -- world!"}.
+        --
+        -- We use vim.list_extend(lines, vim.list_slice(data, 2)) to add the
+        -- remaining chunks from data to lines. In this example,
+        -- vim.list_slice(data, 2) produces {"\n", "This is a test.\n"}, so lines
+        -- becomes {"Hello, world!", "\n", "This is a test.\n"}.
+        --
+        local lines = {""}
+        lines[#lines] = lines[#lines] .. data[1]
+        vim.list_extend(lines, vim.list_slice(data, 2))
+        while #lines > 1 do
+          local line = table.remove(lines, 1)
+
+          -- org.freedesktop.appearance color-scheme
+          if string.find(line, "color%-scheme") then
+            parse_color_scheme(line)
+          end
+        end
+      end
+    }
+  )
+
+  -- Apply the correct background based on the user’s preference (dark or
+  -- light) when Neovim starts. This should be done before we begin monitoring
+  -- changes.
+  --
+  parse_color_scheme(
+    vim.fn.system(
+      "gdbus call -t 1 --session --dest=org.freedesktop.portal.Desktop --object-path=/org/freedesktop/portal/desktop --method=org.freedesktop.portal.Settings.Read org.freedesktop.appearance color-scheme"
+    )
+  )
+end
+setup_appearance_sync()
 
 -- Neovim 0.10.1 includes logic to test whether a given terminal emulator
 -- supports truecolor and sets the default value of `termguicolors` to true.
@@ -23,8 +108,8 @@ vim.cmd.packadd "vim-lumen"
 --
 -- - If `COLORTERM=truecolor`, enable truecolor (`tgc`).
 --
--- - If the `TERM` variable's terminfo reports support for `Tc` or `RGB`, enable
---   `tgc`.
+-- - If the `TERM` variable's terminfo reports support for `Tc` or `RGB`,
+--   enable `tgc`.
 --
 -- - Query the terminal capability directly via OSC 11, enabling `tgc` if the
 --   color rendered matches the configured color.
