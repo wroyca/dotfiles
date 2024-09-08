@@ -3,6 +3,7 @@ Description=Kitty service to sync with OS appearance
 
 [Service]
 Type=forking
+Environment=\"PATH={{ .chezmoi.homeDir }}/.local/bin:/usr/local/bin:/usr/bin:/bin\"
 ExecStart={{ .chezmoi.homeDir }}/.local/bin/kitty-service-exec
 RemainAfterExit=yes
 
