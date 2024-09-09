@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "mini.surround", dev = true, event = "VeryLazy",
+  "mini.surround", dev = true,
   keys = {
     { "gsa", mode = { "n", "x" } },
     { "gsd", mode = { "n", "x" } },

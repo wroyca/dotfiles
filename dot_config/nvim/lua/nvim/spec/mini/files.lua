@@ -2,7 +2,8 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "mini.files", dev = true,
+  "mini.files", dev = true, dependencies = {{ "mini.icons", dev = true }},
+
   keys = {
     {
       "<leader>f",

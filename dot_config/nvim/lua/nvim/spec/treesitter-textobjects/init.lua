@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "nvim-treesitter/nvim-treesitter-textobjects", optional = true,
+  "nvim-treesitter/nvim-treesitter-textobjects"
 }
 
 return Spec

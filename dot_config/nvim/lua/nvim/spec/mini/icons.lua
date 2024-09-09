@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "mini.icons", dev = true, event = "VeryLazy",
+  "mini.icons", dev = true,
 
   config = function()
     local icons = require ("mini.icons")

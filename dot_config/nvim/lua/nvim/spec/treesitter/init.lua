@@ -1,5 +1,4 @@
 ---@module "nvim-treesitter"
----@diagnostic disable: missing-fields
 
 ---@type LazyPluginSpec
 local Spec = {
@@ -11,6 +10,7 @@ local Spec = {
     ---@type { [string]: TSModule }
     modules = {
       highlight = {
+        ---@diagnostic disable-next-line: missing-fields
         enable = true,
       }
     }

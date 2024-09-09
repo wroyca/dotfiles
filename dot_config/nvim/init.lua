@@ -31,7 +31,7 @@ vim.o.pumheight      = 8
 vim.o.fillchars      = "eob: "
 vim.o.guicursor      = "a:blinkwait700-blinkoff400-blinkon250,i-ci-ve:ver25,r-cr-o:hor20"
 
--- Most of the formatting and style settings will be automatically managed by
+-- Most formatting and style settings will be automatically managed by
 -- EditorConfig (https://editorconfig.org/), provided it is available and in
 -- use.
 --
@@ -43,4 +43,3 @@ vim.o.smartindent    = true
 vim.o.tabstop        = 2
 vim.o.shiftwidth     = 0
 vim.o.shiftround     = true
-
