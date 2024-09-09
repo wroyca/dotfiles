@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "mini.misc", dev = true, event = "VimEnter",
+  "mini.misc", dev = true, event = "VeryLazy",
 
   config = function(_, opts)
     local misc = require "mini.misc"

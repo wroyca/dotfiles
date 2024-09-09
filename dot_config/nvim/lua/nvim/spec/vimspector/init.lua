@@ -1,12 +1,13 @@
----@module "overseer"
+---@module "vimspector"
 
 ---@type LazyPluginSpec
 local Spec = {
-  "puremourning/vimspector", event = "VeryLazy",
+  "puremourning/vimspector", config = function() end,
 
   init = function()
     vim.o.signcolumn = "yes:1"
   end,
+
   keys = {
     { "<leader>vl", ":call vimspector#Launch()<CR>",          desc = "Launch"                        },
     { "<leader>vr", ":call vimspector#Reset()<CR>",           desc = "Reset"                         },

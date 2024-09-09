@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "OXY2DEV/markview.nvim", ft = "markdown", config = true
+  "OXY2DEV/markview.nvim", ft = "markdown", opts = {}
 }
 
 return Spec
