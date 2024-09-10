@@ -69,6 +69,7 @@ vim.fn.jobstart(
     end,
   }
 )
+vim.api.nvim_create_autocmd({ "OptionSet" }, { pattern = "background", callback = function() vim.cmd.doautocmd ("colorscheme") end, })
 
 ---@type LazyConfig
 local opts = {
