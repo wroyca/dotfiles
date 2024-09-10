@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-if ! command -v kitty > /dev/null 2>&1; then
-  exit 1
-fi
-
 mode=`gsettings get org.gnome.desktop.interface color-scheme`
 
 d="Neovim-Dark"
