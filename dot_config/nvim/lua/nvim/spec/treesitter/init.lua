@@ -1,4 +1,5 @@
 ---@module "nvim-treesitter"
+---@diagnostic disable: missing-fields
 
 ---@type LazyPluginSpec
 local Spec = {
@@ -10,10 +11,16 @@ local Spec = {
     ---@type { [string]: TSModule }
     modules = {
       highlight = {
-        ---@diagnostic disable-next-line: missing-fields
         enable = true,
-      }
-    }
+      },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          node_incremental = "v",
+          node_decremental = "V",
+        }
+      },
+    },
   },
   -- TSConfig annotation displays `@field modules { [string]: TSModule }`, but
   -- Treesitter's internal logic dynamically creates the modules field at
