@@ -16,7 +16,7 @@ local Spec = {
   config = function(_, opts)
     require("fundo").setup(opts)
 
-    local archive_dir = "/home/wroy/.cache/nvim/fundo"
+    local archive_dir = vim.fs.joinpath(vim.fn.stdpath("cache") --[[ @as string ]], "fundo")
     for _, file in ipairs(vim.fn.readdir(archive_dir)) do
       local stat = vim.uv.fs_stat(file)
       if stat and os.time() - stat.mtime.sec > 7 * 24 * 60 * 60 then
