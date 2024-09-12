@@ -83,7 +83,7 @@
   "window.autoDetectColorScheme": true,
   "window.dialogStyle": "custom",
   "window.menuBarVisibility": "toggle",
-  "window.zoomLevel": 1,
+  "window.zoomLevel": 1.0001, // https://github.com/microsoft/vscode/issues/224714
 
   // Workbench
   "workbench.editor.decorations.colors": false,
