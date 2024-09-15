@@ -6,7 +6,7 @@ local Spec = {
 
   config = function(_, opts)
     local misc = require "mini.misc"
-    misc.setup()
+    misc.setup(opts)
     misc.setup_auto_root()
     misc.setup_restore_cursor()
   end

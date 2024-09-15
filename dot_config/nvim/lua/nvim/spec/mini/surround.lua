@@ -3,6 +3,7 @@
 ---@type LazyPluginSpec
 local Spec = {
   "mini.surround", dev = true,
+
   keys = {
     { "gsa", mode = { "n", "x" } },
     { "gsd", mode = { "n", "x" } },
@@ -12,6 +13,7 @@ local Spec = {
     { "gsr", mode = { "n", "x" } },
     { "gsn", demo = { "n", "x" } },
   },
+
   opts = {
     mappings = {
       add = "gsa",
