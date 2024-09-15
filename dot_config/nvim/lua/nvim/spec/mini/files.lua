@@ -46,6 +46,20 @@ local Spec = {
             on_stdout = function(_, file)
               MiniFiles.gitignore_cache(dir, file)
             end,
+            on_exit = function()
+              -- HACK: MiniFiles.refresh only force updates if there is an actual change.
+              local function refresh_with_filter(exclude_char)
+                MiniFiles.refresh {
+                  content = {
+                    filter = function(fs_entry)
+                      return not vim.startswith(fs_entry.name, exclude_char)
+                    end
+                  }
+                }
+              end
+              refresh_with_filter(";") -- dummy
+              refresh_with_filter(".")
+            end
           })
           local entries = {}
           for _, fs in ipairs(fs_entries) do
