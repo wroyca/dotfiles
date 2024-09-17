@@ -1,5 +1,62 @@
 ---@module "coc"
 
+-- TODO: Refactor this code completely at some point. It was hastily written
+-- out of annoyance and needs a proper review.
+function Gd()
+  local function s()
+    local l, c = vim.fn.getline("."), vim.fn.col(".")
+    local sc = c
+    local sd = nil
+    while sc > 0 do
+      local ch = l:sub(sc, sc)
+      if ch == '"' or ch == "'" or ch == "[" then
+        sd = ch
+        break
+      end
+      sc = sc - 1
+    end
+    if not sd then return nil end
+    local ec = c
+    local ed = nil
+    while ec <= #l do
+      local ch = l:sub(ec, ec)
+      if (sd == '"' and ch == '"') or
+         (sd == "'" and ch == "'") or
+         (sd == "[" and ch == "]") then
+        ed = ch
+        break
+      end
+      ec = ec + 1
+    end
+    if not ed then return nil end
+    return l:sub(sc, ec):gsub("^['\"%[]+", ""):gsub("['\"%]]+$", "")
+  end
+  local function g(pn)
+    local sep = package.config:sub(1, 1)
+    local ls = pn:match("([^/]+)$")
+    if not ls then return end
+    local bp = vim.fn.expand("~/.local/share/nvim/lazy")
+    local fp = bp .. sep .. ls
+    if vim.fn.isdirectory(fp) == 1 then
+      local lfs = vim.fn.glob(fp .. sep .. "**" .. sep .. "*.lua", true, true)
+      local qf = {}
+      for _, f in ipairs(lfs) do
+        table.insert(qf, { filename = f, lnum = 1, text = f })
+      end
+      vim.fn.setqflist(qf)
+      vim.cmd.copen()
+    end
+  end
+  if vim.bo.filetype == "lua" then
+    local str = s()
+    if str then
+      local pn = str
+      return g(pn)
+    end
+  end
+  vim.fn.CocActionAsync("jumpDefinition")
+end
+
 ---@type LazyPluginSpec
 local Spec = {
   "neoclide/coc.nvim", branch = "release", event = "VeryLazy",
@@ -25,7 +82,7 @@ local Spec = {
     },
 
     { "gD", "<Plug>(coc-declaration)", desc = "Go to declaration" },
-    { "gd", "<Plug>(coc-definition)", desc = "Go to definition" },
+    { "gd", Gd, desc = "Go to definition" },
     { "gi", "<Plug>(coc-implementation)", desc = "Go to implementation" },
     { "gr", "<Plug>(coc-references)", desc = "Go to references" },
     { "gt", "<Plug>(coc-type-definition)", desc = "Go to type definition" },
