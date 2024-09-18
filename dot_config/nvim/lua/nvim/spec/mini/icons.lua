@@ -4,9 +4,9 @@
 local Spec = {
   "mini.icons", dev = true,
 
-  config = function()
+  config = function(_, opts)
     local icons = require ("mini.icons")
-    icons.setup()
+    icons.setup(opts)
     icons.mock_nvim_web_devicons()
   end
 }

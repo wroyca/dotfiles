@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "OXY2DEV/helpview.nvim", ft = "help", opts = {}
+  "oxy2dev/helpview.nvim", ft = "help", opts = {}
 }
 
 return Spec

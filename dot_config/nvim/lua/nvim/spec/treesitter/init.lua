@@ -22,6 +22,7 @@ local Spec = {
       },
     },
   },
+
   -- TSConfig annotation displays `@field modules { [string]: TSModule }`, but
   -- Treesitter's internal logic dynamically creates the modules field at
   -- runtime, which causes `opts.modules` to nest within it.
