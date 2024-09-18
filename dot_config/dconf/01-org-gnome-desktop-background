@@ -1,9 +1,5 @@
-# dconf path
-#
 [org/gnome/desktop/background]
 
-# GSettings key names and their corresponding values
-#
 picture-uri='file:///usr/share/backgrounds/gnome/adwaita-l.jxl'
 picture-uri-dark='file:///usr/share/backgrounds/gnome/adwaita-d.jxl'
 picture-options='zoom'

@@ -1,9 +1,5 @@
-# dconf path
-#
 [org/gnome/desktop/notifications/application/org-freedesktop-problems-applet]
 
-# GSettings key names and their corresponding values
-#
 # Spurious crashes may occur frequently, particularly with obscure background
 # processes. In most cases, these crashes can be ignored as they typically
 # recover on their own. Some applications may crash and immediately recover,

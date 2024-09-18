@@ -1,9 +1,5 @@
-# dconf path
-#
 [org/gnome/desktop/notifications/application/gnome-power-panel]
 
-# GSettings key names and their corresponding values
-#
 # GNOME's power panel is typically inaccurate, except in rare instances with
 # certain compatible hardware. It has been disabled to prevent unnecessary
 # output and/or spam.

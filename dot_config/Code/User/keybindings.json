@@ -1,6 +1,5 @@
-// vim: set ft=jsonc:
 [
-  // Place your key bindings here to override the defaults
+  // Place key bindings here to override the defaults
   {
     "key": "ctrl+shift+b",
     "command": "workbench.action.toggleActivityBarVisibility"

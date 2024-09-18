@@ -23,6 +23,7 @@ sudo dnf install -y mold
 sudo dnf install -y lld
 sudo dnf install -y shellcheck
 sudo dnf install -y neovim
+sudo dnf install -y git-delta
 
 if ! command -v b > /dev/null 2>&1; then
  v=$(curl -sSf https://stage.build2.org/0/toolchain.sha256 | sed -n 's,^.*/build2-install-\(.*\)-stage\.sh$,\1,p')

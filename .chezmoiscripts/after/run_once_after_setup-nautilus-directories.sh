@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-cd ~/
+cd ~/ || exit
 
 [[ ! -d Projects ]] && mkdir Projects
 

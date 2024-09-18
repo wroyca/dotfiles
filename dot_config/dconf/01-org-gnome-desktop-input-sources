@@ -1,9 +1,5 @@
-# dconf path
-#
 [org/gnome/desktop/input-sources]
 
-# GSettings key names and their corresponding values
-#
 # The "LockMods" action only clears modifiers (in this case, Lock) when the
 # associated key is released, not when it's pressed. It's still possible for
 # uppercase letters to be typed during that timeframe.

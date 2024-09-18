@@ -6,4 +6,3 @@ chezmoi age decrypt --output {{ .chezmoi.homeDir }}/.age/key.txt \
   --passphrase {{ .chezmoi.sourceDir }}/dot_age/key.txt.age
 
 chmod 600 {{ .chezmoi.homeDir }}/.age/key.txt
-

@@ -1,1 +1,3 @@
---post-hook "cp {{ .chezmoi.homeDir }}/Templates/LICENSE.md ."
+# Copy the GPL-3.0-or-later LICENSE file to new projects directory.
+#
+--post-hook "cp {{ .chezmoi.homeDir }}/Templates/GPL-3.0-or-later.md ./LICENSE.md"

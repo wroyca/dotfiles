@@ -1,4 +1,8 @@
---no-default-options
+# Don't load default options files, and register the LICENSE file standardized
+# short identifier in the manifest when creating and initializing a new
+# project.
+#
 --type exe,license=GPL-3.0-or-later
---type bare,license=GPL-3.0-or-later
 --type lib,license=GPL-3.0-or-later
+--type bare,license=GPL-3.0-or-later
+--type empty,license=GPL-3.0-or-later

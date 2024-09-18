@@ -1,6 +1,6 @@
 # GDB commands to automatically execute during GDB startup.
 #
-# For more information, refer to GDB manual with "info -f gdb -n Startup".
+# For more information, refer to the GDB manual with `info -f gdb -n Startup`.
 
 set confirm off
 set verbose off

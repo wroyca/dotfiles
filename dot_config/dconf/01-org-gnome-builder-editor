@@ -1,7 +1,6 @@
-# dconf path
-#
 [org/gnome/builder/editor]
 
-# GSettings key names and their corresponding values
+# Auto-save is disabled; otherwise, Builder will preserve deleted files and
+# save them back to disk.
 #
 auto-save=false

@@ -1,8 +1,4 @@
-# dconf path
-#
 [org/gnome/desktop/app-folders/folders/Wine]
 
-# GSettings key names and their corresponding values
-#
 name='Wine'
 apps=['wine-winefile.desktop', 'wine-winemine.desktop', 'dosbox-staging.desktop', 'winetricks.desktop', 'wine-winhelp.desktop', 'wine-oleview.desktop', 'wine-uninstaller.desktop', 'wine-wordpad.desktop', 'wine-notepad.desktop', 'wine-regedit.desktop', 'wine-winecfg.desktop', 'wine-wineboot.desktop', 'wine-Programs-LAV Filters-Uninstall LAV Filters.desktop', 'wine-Programs-LAV Filters-LAV Audio Configuration.desktop', 'wine-Programs-LAV Filters-LAV Splitter Configuration.desktop', 'wine-Programs-LAV Filters-LAV Video Configuration.desktop']

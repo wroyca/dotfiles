@@ -1,4 +1,3 @@
-; vim: set ft=gitconfig:
 ; https://git-scm.com/docs/git-config
 
 [user]
@@ -15,6 +14,10 @@
   editor = /usr/bin/nvim
   excludesFile = ~/.config/git/excludes
   attributesFile = ~/.config/git/attributes
+  pager = delta
+
+[interactive]
+    diffFilter = delta --color-only
 
 [credential]
   helper = /usr/bin/git-credential-manager
@@ -50,6 +53,7 @@
 
 [push]
   autoSetupRemote = true
+  followTags = true
 
 [rebase]
   abbreviateCommands = true
@@ -60,3 +64,9 @@
 
 [url "https://github.com/"]
   insteadOf = git@github.com:
+
+[rerere]
+  enabled = true
+
+[delta]
+  navigate = true
