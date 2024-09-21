@@ -71,10 +71,8 @@ nvim_create_autocmd("User", {
 
       if vim.fn.filereadable(patch_path) then
         if info.match:match("Pre$") and gitcmd(plugin_path, { "diff", "--stat" }).output ~= "" then
-          vim.notify("reverting plugin patch" .. patch_path)
           gitcmd(plugin_path, { "apply", "--reverse", "--ignore-space-change", patch_path })
         else
-          vim.notify("applying plugin patch" .. patch_path)
           gitcmd(plugin_path, { "apply", "--ignore-space-change", patch_path })
         end
       end

@@ -1,5 +1,5 @@
 local keymap = {
-  set = vim.keymap.set
+  set = vim.keymap.set,
 }
 
 keymap.set("n", "dd", function()

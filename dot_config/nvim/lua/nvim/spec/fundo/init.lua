@@ -10,8 +10,8 @@ local Spec = {
 
   ---@type FundoConfig
   opts = {
-    limit_archives_size = 9999
-  }
+    limit_archives_size = 9999,
+  },
 }
 
 return Spec

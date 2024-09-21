@@ -36,7 +36,8 @@ local Spec = {
   },
 
   specs = {
-    "folke/which-key.nvim", opts = { spec = { { { "gs", group = "Surround" } } } },
+    "folke/which-key.nvim",
+    opts = { spec = { { { "gs", group = "Surround" } } } },
   },
 }
 

@@ -8,7 +8,7 @@ local Spec = {
     options = {
       basic = false,
       extra_ui = false, -- https://github.com/neovim/neovim/issues/24159
-      win_borders = 'default',
+      win_borders = "default",
     },
 
     mappings = {
@@ -24,7 +24,7 @@ local Spec = {
     },
 
     silent = true,
-  }
+  },
 }
 
 return Spec

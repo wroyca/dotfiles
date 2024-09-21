@@ -52,8 +52,8 @@ syn region buildfileCommentBlock matchgroup=buildfileCommentBlock start="/^\s*#\
 " -----------------------------------------------------------------------------
 " String Literals
 " -----------------------------------------------------------------------------
-syn region buildfileString        start=/"/  end=/"/ oneline
-syn region buildfileString        start=/'/  end=/'/ oneline
+syn region buildfileString        start=/"/   end=/"/ oneline
+syn region buildfileString        start=/'/   end=/'/ oneline
 syn region buildfileSpecialString start=/\~"/ end=/"/ oneline
 syn region buildfileSpecialString start=/\~'/ end=/'/ oneline
 

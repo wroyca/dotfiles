@@ -22,6 +22,7 @@ vim.o.list           = true
 vim.o.gdefault       = true
 vim.o.number         = true
 vim.o.cursorline     = true
+vim.o.more           = false
 vim.o.wrap           = false
 vim.o.laststatus     = 3
 vim.o.scrolloff      = 4
@@ -57,13 +58,13 @@ vim.o.shiftround     = true
 --
 vim.o.clipboard = "unnamedplus"
 vim.g.clipboard = {
-  name = 'OSC 52',
+  name = "OSC 52",
   copy = {
-    ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
-    ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+    ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+    ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
   },
   paste = {
-    ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
-    ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+    ["+"] = require("vim.ui.clipboard.osc52").paste("+"),
+    ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
   },
 }

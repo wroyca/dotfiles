@@ -36,12 +36,12 @@ if has_stdout_tty then
   vim.api.nvim_create_autocmd({ "VimEnter", "VimResume", "ColorScheme" }, {
     callback = function()
       io.stdout:write(string.format("\027]11;#%06x\007", vim.api.nvim_get_hl(0, { name = "Normal" }).bg))
-    end
+    end,
   })
   vim.api.nvim_create_autocmd({ "VimLeavePre", "VimSuspend" }, {
-    callback = function ()
+    callback = function()
       io.stdout:write("\027]111;;\007")
-    end
+    end,
   })
 end
 
@@ -52,7 +52,9 @@ end
 --
 -- https://github.com/flatpak/xdg-desktop-portal/issues/629
 --
-local function parse_color_scheme(line) vim.o.background = (tonumber(line:match("uint32 (%d+)")) or 0) % 2 == 0 and "light" or "dark" end
+local function parse_color_scheme(line)
+  vim.o.background = (tonumber(line:match("uint32 (%d+)")) or 0) % 2 == 0 and "light" or "dark"
+end
 parse_color_scheme(
   vim.fn.system(
     "gdbus call -t 1 --session --dest=org.freedesktop.portal.Desktop --object-path=/org/freedesktop/portal/desktop --method=org.freedesktop.portal.Settings.Read org.freedesktop.appearance color-scheme"
@@ -69,7 +71,12 @@ vim.fn.jobstart(
     end,
   }
 )
-vim.api.nvim_create_autocmd({ "OptionSet" }, { pattern = "background", callback = function() vim.cmd.doautocmd ("colorscheme") end, })
+vim.api.nvim_create_autocmd({ "OptionSet" }, {
+  pattern = "background",
+  callback = function()
+    vim.cmd.doautocmd("colorscheme")
+  end,
+})
 
 ---@type LazyConfig
 local opts = {
@@ -141,9 +148,9 @@ local opts = {
   },
 
   dev = {
-    path = "~/Projects",
+    path = vim.fs.joinpath(os.getenv "HOME" or os.getenv "USERPROFILE", "Projects"),
     patterns = {
-      "wroyca",
+      os.getenv "USER" or os.getenv "USERNAME",
     },
   },
 }

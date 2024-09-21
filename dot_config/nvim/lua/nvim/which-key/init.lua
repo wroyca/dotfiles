@@ -3,7 +3,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "folke/which-key.nvim", event = "VeryLazy", opts_extend = { "spec" },
+  "folke/which-key.nvim", event = "VeryLazy",
 
   ---@type wk.Opts
   opts = {
@@ -20,6 +20,18 @@ local Spec = {
     plugins = {
       marks = false,
       registers = false,
+      spelling = {
+        enabled = false,
+      },
+      presets = {
+        g = false,
+        motions = true,
+        nav = true,
+        operators = true,
+        text_objects = true,
+        windows = true,
+        z = false,
+      },
     },
 
     win = {
@@ -33,19 +45,6 @@ local Spec = {
 
     show_help = false,
     show_keys = false,
-    spec = {
-      { "<leader>p",   group = "Pick"      },
-      { "<leader>pe",  group = "Extra"     },
-      { "<Leader>peg", group = "Git"       },
-      { "<Leader>peh", group = "Highlight" },
-      { "<Leader>pel", group = "List"      },
-      { "<Leader>pev", group = "Visit"     },
-
-      { "<Leader>v",  group = "Vimspector" },
-      { "<Leader>vb", group = "Breakpoint" },
-      { "<Leader>vs", group = "Step" },
-      { "<Leader>vs", group = "Stack Frame" },
-    },
   },
 }
 

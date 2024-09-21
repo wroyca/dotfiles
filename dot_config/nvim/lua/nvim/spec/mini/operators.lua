@@ -5,11 +5,11 @@ local Spec = {
   "mini.operators", dev = true, opts = {},
 
   keys = {
-    { "g=",  mode = { "n", "x" } },
-    { "gx",  mode = { "n", "x" } },
-    { "gm",  mode = { "n", "x" } },
-    { "gr",  mode = { "n", "x" } },
-    { "gs",  mode = { "n", "x" } },
+    { "g=", mode = { "n", "x" } },
+    { "gx", mode = { "n", "x" } },
+    { "gm", mode = { "n", "x" } },
+    { "gr", mode = { "n", "x" } },
+    { "gs", mode = { "n", "x" } },
   },
 }
 
