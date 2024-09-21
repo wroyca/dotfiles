@@ -6,6 +6,8 @@ Type=forking
 Environment="PATH={{ .chezmoi.homeDir }}/.local/bin:/usr/local/bin:/usr/bin:/bin"
 ExecStart={{ .chezmoi.homeDir }}/.local/bin/kitty-service
 RemainAfterExit=yes
+Restart=on-failure
+RestartSec=5s
 
 [Install]
 WantedBy=default.target
