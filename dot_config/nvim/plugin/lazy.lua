@@ -123,6 +123,8 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 
 ---@type LazyConfig
 local opts = {
+  root = vim.fs.joinpath(vim.fn.stdpath("config") --[[@as string]], "pack", "snapshot", "opt"),
+
   performance = {
     rtp = {
       disabled_plugins = {
