@@ -10,6 +10,8 @@ if package.loaded["lazy"] then
   return
 end
 
+local id = vim.api.nvim_create_augroup ("Lazy", { clear = false })
+
 -- Neovim 0.10.1 includes logic to test whether a given terminal emulator
 -- supports truecolor and sets the default value of `termguicolors` to true.
 --
@@ -76,6 +78,47 @@ vim.api.nvim_create_autocmd({ "OptionSet" }, {
   callback = function()
     vim.cmd.doautocmd("colorscheme")
   end,
+})
+
+-- Hide Neovim UI when LazyFloat is shown.
+--
+-- The idea is that if LazyFloat is displayed, Neovim is installing or
+-- synchronizing plugin specs. It makes sense to treat this state as if Neovim
+-- isn't ready for usage, and hide any UI elements until Lazy is done.
+--
+local ui = {
+  state = {
+    number = vim.o.number,
+    ruler = vim.o.ruler,
+    laststatus = vim.o.laststatus,
+    cursorline = vim.o.cursorline,
+  }
+}
+
+ui.state.lock = function()
+  vim.o.number = false
+  vim.o.ruler = false
+  vim.o.laststatus = 0
+  vim.o.cursorline = false
+
+  vim.cmd.hi("cursor", "blend=100")
+  vim.opt_local.guicursor:append { "a:cursor/lcursor" }
+end
+
+ui.state.unlock = function()
+  vim.o.number = ui.state.number
+  vim.o.ruler = ui.state.ruler
+  vim.o.laststatus = ui.state.laststatus
+  vim.o.cursorline = ui.state.cursorline
+
+  vim.cmd.hi("cursor", "blend=0")
+  vim.opt_local.guicursor:remove { "a:cursor/lcursor" }
+end
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+  once = true,
+  group = "Lazy",
+  callback = ui.state.lock
 })
 
 ---@type LazyConfig
@@ -155,8 +198,9 @@ local opts = {
   },
 }
 
-local id = vim.api.nvim_create_autocmd("User", {
+vim.api.nvim_create_autocmd("User", {
   once = true,
+  group = "Lazy",
   pattern = "LazyInstall",
   callback = function()
     if vim.o.filetype == "lazy" then
@@ -167,10 +211,12 @@ local id = vim.api.nvim_create_autocmd("User", {
 
 vim.api.nvim_create_autocmd("User", {
   once = true,
+  group = "Lazy",
   pattern = "VeryLazy",
   callback = function()
     if vim.o.filetype ~= "lazy" then
-      pcall(vim.api.nvim_del_autocmd, id)
+      pcall(vim.api.nvim_del_augroup_by_id, id)
+      ui.state.unlock() vim.cmd.redraw()
     end
   end,
 })
