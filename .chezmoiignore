@@ -12,3 +12,5 @@
 {{ template "teardown" (dict "name" "starship" "directory" ".config/starship") }}
 
 .config/dconf
+
+QMK
