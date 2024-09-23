@@ -18,6 +18,7 @@ sudo dnf swap -y bluez https://kojipkgs.fedoraproject.org/packages/bluez/5.73/3.
 sudo dnf install -y \
   'dnf-command(versionlock)'
 
-sudo dnf versionlock add bluez-obexd
-sudo dnf versionlock add bluez-cups
-sudo dnf versionlock add bluez-libs
+sudo dnf5 versionlock add bluez
+sudo dnf5 versionlock add bluez-obexd
+sudo dnf5 versionlock add bluez-cups
+sudo dnf5 versionlock add bluez-libs
