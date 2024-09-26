@@ -62,6 +62,13 @@ syn region buildfileSpecialString start=/\~'/ end=/'/ oneline
 " -----------------------------------------------------------------------------
 syntax match buildfileIndentifier /^\s*\v(project|extension|backlink)\>/
 syntax match buildfileIndentifier /\v(config\.)?(cc|cxx|c)(\.export)?(\.(poptions|coptions|loptions|aoptions|libs))/
+syntax match buildfileIndentifier /\v(bin\.)?(lib)(\.version)/
+syntax match buildfileIndentifier /\v(^|[^\-a-zA-Z0-9_])include([^a-zA-Z0-9_./]|$)/
+syntax match buildfileIndentifier /\v(^|[^\-a-zA-Z0-9_])dist([^a-zA-Z0-9_./]|$)/
+syntax match buildfileIndentifier /\v(^|[^\-a-zA-Z0-9_])clean([^a-zA-Z0-9_./]|$)/
+syntax match buildfileIndentifier /\v(^|[^\-a-zA-Z0-9_])backlink([^a-zA-Z0-9_./]|$)/
+syntax match buildfileIndentifier /\v(^|[^\-a-zA-Z0-9_])install([^a-zA-Z0-9_./]|$)/
+syntax match buildfileIndentifier /\v(install)?(\.subdirs)/
 syntax match buildfileIndentifier /^\s*\v[a-zA-Z][a-zA-Z0-9_.]*\>/
 
 " -----------------------------------------------------------------------------
@@ -76,7 +83,7 @@ syntax match buildfilePreProc /\$\([<>]\)/
 " Type
 " -----------------------------------------------------------------------------
 syntax match buildfileType /\v\[\w+\]/
-syntax match buildfileType "/\v(bool\|uint64\|uint64s|string|strings|path\|paths|dir_path\|dir_paths|name\|names|name_pair\|project_name\|target_triplet)/"
+syntax match buildfileType /\v(bool\|uint64\|uint64s|string|strings|path\|paths|dir_path\|dir_paths|name\|names|name_pair\|project_name\|target_triplet)/
 syntax match buildfileType /@\v/
 
 " -----------------------------------------------------------------------------
@@ -86,7 +93,7 @@ syntax match  buildfileFunction /\$[a-zA-Z][a-zA-Z0-9_.]*\ze(/ contains=buildfil
 syntax region buildfileFunctionArgs start="*\ze(\([^)]*\))/" end="/(\zs[^)\n]*)/" contained
 
 " -----------------------------------------------------------------------------
-" HL Link
+" Highlight link
 " -----------------------------------------------------------------------------
 highlight link buildfileEscape                Special
 highlight link buildfileCommentLine           Comment

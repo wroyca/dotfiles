@@ -91,4 +91,3 @@ syntax match manifestIndentifier /*-to-downstream-version:/
 highlight link manifestIndentifier   Identifier
 highlight link manifestCommentLine   Comment
 highlight link manifestCommentEscape Normal
-
