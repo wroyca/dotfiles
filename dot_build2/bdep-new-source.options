@@ -1,8 +1,3 @@
-# Create a symbolic link from the existing project/package LICENSE file into the
-# new source subdirectory.
-#
---post-hook "ln -s ../LICENSE.md LICENSE.md"
-
 # List README.md and LICENSE files as prerequisites in the new source
 # subdirectory. This achieves two things: first, they will be installed if/when
 # our project is installed and second, they will be included into the project
