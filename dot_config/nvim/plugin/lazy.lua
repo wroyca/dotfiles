@@ -10,6 +10,8 @@ if package.loaded["lazy"] then
   return
 end
 
+assert(jit.status(), "JIT is inadvertently switched off.")
+
 local id = vim.api.nvim_create_augroup ("Lazy", { clear = false })
 
 -- Neovim 0.10.1 includes logic to test whether a given terminal emulator
