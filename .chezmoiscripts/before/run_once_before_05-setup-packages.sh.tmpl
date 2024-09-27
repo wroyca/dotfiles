@@ -7,13 +7,19 @@ sudo dnf install -y wine
 sudo dnf install -y winetricks
 sudo dnf install -y adw-gtk3-theme
 sudo dnf install -y firefoxpwa
+
+# FIXME:
+#
+# Fedora Workstation no longer pre-installs deprecated GNOME X11 session for
+# new installations. The problem is that Wine can sometimes end up in a broken
+# state on Wayland (presumably, something wrong gets cached somewhere), which
+# causes games that previously ran fine to start crashing every few minutes.
+# It's not clear to me what the cause is or where the faulty cache lies, but
+# using X11 stops crashes from happening, so we’ll want to preserve GNOME X11
+# session for now.
+#
 sudo dnf install -y gnome-session-xsession
 sudo dnf install -y gnome-classic-session-xsession
-
-# Since kitty is our primary terminal, gnome-terminal is now redundant and can
-# be safely removed.
-#
-sudo dnf remove  -y gnome-terminal
 
 # Install DirectShow filters based on the libavformat and libavcodec libraries
 # from the FFmpeg project. These filters enable Wine to play almost any media
@@ -29,3 +35,4 @@ sudo dnf remove  -y gnome-terminal
 if [ ! -d "$HOME/.wine/drive_c/Program Files (x86)/LAV Filters" ]; then
   wget https://github.com/Nevcairiel/LAVFilters/releases/latest/download/LAVFilters-{{ (gitHubLatestTag "Nevcairiel/LAVFilters").Name | replace "v" "" -}}-Installer.exe && wine $(basename "$_")
 fi
+winetricks directshow
