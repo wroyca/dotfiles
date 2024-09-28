@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 alias v='nvim'
-alias e='emacs'
 
 # https://man.openbsd.org/cp#i
 # https://man.openbsd.org/cp#v
