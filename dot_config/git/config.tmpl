@@ -7,31 +7,80 @@
 [advice]
   detachedHead = false
 
+[branch]
+  sort = -committerdate
+
+[column]
+  ui = auto
+
 [commit]
   verbose = true
 
 [core]
+  pager = delta
   editor = /usr/bin/nvim
   excludesFile = ~/.config/git/excludes
   attributesFile = ~/.config/git/attributes
-  pager = delta
-
-[interactive]
-    diffFilter = delta --color-only
+  repositoryformatversion = 1
 
 [credential]
   helper = /usr/bin/git-credential-manager
   credentialStore = cache
   cacheOptions = --timeout 86400
 
+# TODO: Bridge neovim colorscheme.
+#
+[delta]
+  navigate = true
+  line-numbers = true
+  side-by-side = true
+  keep-plus-minus-markers = false
+  syntax-theme = Nord
+  file-style = lightgray bold italic
+  file-decoration-style = lightgray bold ul
+  file-added-label =
+  file-copied-label =
+  file-modified-label =
+  file-removed-label  =
+  file-renamed-label =
+  hunk-header-style = omit
+  line-numbers-left-format = " ┃ "
+  line-numbers-left-style = red
+  line-numbers-minus-style = red
+  line-numbers-plus-style = green
+  line-numbers-right-format = " ┃ "
+  line-numbers-right-style = green
+  line-numbers-zero-style = lightgray
+  zero-style = syntax
+  minus-style = bold red
+  minus-emph-style = bold
+  minus-non-emph-style = bold
+  plus-style = bold green
+  plus-emph-style = bold
+  plus-non-emph-style = bold
+  blame-code-style = syntax
+  blame-format = "{author:<18} ({commit:>9}) {timestamp:^16}"
+  merge-conflict-begin-symbol = ~
+  merge-conflict-end-symbol = ~
+  merge-conflict-ours-diff-header-style = bold
+  merge-conflict-ours-diff-header-decoration-style = box
+  merge-conflict-theirs-diff-header-style = bold
+  merge-conflict-theirs-diff-header-decoration-style = box
+
 [diff]
   renames = copies
   algorithm = histogram
+  colorMoved = "default"
 
-[filter "media"]
-  required = true
-  clean = git media clean %f
-  smudge = git media smudge %f
+[extensions]
+  refStorage = "reftable"
+
+[feature]
+  manyFiles = true
+  experimental = true
+
+[fetch]
+  negotiationAlgorithm = skipping
 
 [filter "lfs"]
   required = true
@@ -39,17 +88,33 @@
   smudge = git-lfs smudge -- %f
   process = git-lfs filter-process
 
+[filter "media"]
+  required = true
+  clean = git media clean %f
+  smudge = git media smudge %f
+
+[gc]
+  writeCommitGraph = true
+
 [help]
   autocorrect = 1
 
 [init]
   defaultBranch = main
 
+[interactive]
+  diffFilter = delta --color-only
+
 [merge]
   conflictstyle = zdiff3
 
+[pack]
+  allowPackReuse = multi
+  useBitmapBoundaryTraversal = true
+
 [pull]
   twohead = ort
+  rebase = true
 
 [push]
   autoSetupRemote = true
@@ -58,15 +123,13 @@
 [rebase]
   abbreviateCommands = true
 
+[rerere]
+  autoUpdate = true
+  enabled = true
+
 [submodule]
   recurse = true
   fetchJobs = 10
 
 [url "https://github.com/"]
   insteadOf = git@github.com:
-
-[rerere]
-  enabled = true
-
-[delta]
-  navigate = true
