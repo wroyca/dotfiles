@@ -1,9 +1,6 @@
-if vim.bo.filetype ~= "lua" then return end
-if vim.fn.executable "stylua" == 1 then
-  vim.opt_local.formatprg = "stylua -"
+if vim.bo.filetype ~= "lua" then
+  return
 end
-
-vim.bo.comments = ":---,:--"
 
 vim.b.miniai_config = {
   custom_textobjects = {
