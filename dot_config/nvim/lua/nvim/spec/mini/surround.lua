@@ -2,24 +2,17 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "mini.surround", dev = true, lazy = false,
+  "mini.surround", dev = true,
 
-  keys = function(self, keys)
-    local opts = require("lazy.core.plugin").values(self, "opts", false)
-
-    local mappings = {
-      { opts.mappings.add },
-      { opts.mappings.delete },
-      { opts.mappings.replace },
-      { opts.mappings.find },
-      { opts.mappings.find_left },
-      { opts.mappings.highlight },
-      { opts.mappings.update_n_lines },
-    }
-
-    mappings = vim.tbl_filter(function(m) return m[1] and #m[1] > 0 end, mappings)
-    return vim.list_extend(mappings, keys)
-  end,
+  keys = {
+    { "gsa", mode = { "n", "x" } },
+    { "gsd", mode = { "n", "x" } },
+    { "gsr", mode = { "n", "x" } },
+    { "gsf", mode = { "n", "x" } },
+    { "gsF", mode = { "n", "x" } },
+    { "gsh", mode = { "n", "x" } },
+    { "gsn", mode = { "n", "x" } },
+  },
 
   opts = {
     mappings = {
@@ -33,11 +26,6 @@ local Spec = {
     },
     search_method = "next",
     silent = true,
-  },
-
-  specs = {
-    "folke/which-key.nvim",
-    opts = { spec = { { { "gs", group = "Surround" } } } },
   },
 }
 

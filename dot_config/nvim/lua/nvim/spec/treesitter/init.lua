@@ -1,5 +1,4 @@
 ---@module "nvim-treesitter"
----@diagnostic disable: missing-fields
 
 ---@type LazyPluginSpec
 local Spec = {

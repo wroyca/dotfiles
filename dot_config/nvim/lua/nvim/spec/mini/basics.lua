@@ -7,7 +7,7 @@ local Spec = {
   opts = {
     options = {
       basic = false,
-      extra_ui = false, -- https://github.com/neovim/neovim/issues/24159
+      extra_ui = false,
       win_borders = "default",
     },
 

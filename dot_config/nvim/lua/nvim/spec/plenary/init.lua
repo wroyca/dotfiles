@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "nvim-lua/plenary.nvim"
+  "nvim-lua/plenary.nvim",
 }
 
 return Spec

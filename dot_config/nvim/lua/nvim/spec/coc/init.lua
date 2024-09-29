@@ -52,7 +52,7 @@ local Spec = {
 
       hover = {
         floatConfig = {
-          focusable = false,
+          focusable = true,
         },
       },
 
@@ -100,6 +100,14 @@ local Spec = {
         },
       },
 
+      snippets = {
+        loadFromExtensions = false,
+        priority = 100,
+        textmateSnippetsRoots = {
+          vim.fs.joinpath(vim.fn.stdpath("config") --[[@as string]], "snippets"),
+        },
+      },
+
       clangd = {
         arguments = {
           "--all-scopes-completion=true",
@@ -114,6 +122,8 @@ local Spec = {
           "--pch-storage=memory",
           "--ranking-model=decision_forest",
         },
+
+        disableSnippetCompletion = true
       },
 
       -- Right now, we’re just using Lua for Neovim, but there’s a chance we
@@ -128,7 +138,11 @@ local Spec = {
         workspace = {
           checkThirdParty = false,
           library = {
-            "/usr/share/nvim/runtime", vim.fs.joinpath(vim.fn.stdpath("data") --[[@as string]], "lazy"),
+            "/usr/share/nvim/runtime",
+
+            vim.fs.joinpath(vim.fn.stdpath("config") --[[@as string]], "lazy"),
+            vim.fs.joinpath(vim.fn.stdpath("config") --[[@as string]], "pack", "snapshot", "opt"),
+            vim.fs.joinpath(vim.fn.stdpath("config") --[[@as string]], "pack", "snapshot", "start"),
           },
         },
       },
@@ -142,6 +156,7 @@ local Spec = {
         "coc-lua",
         "coc-sh",
         "coc-xml",
+        "coc-snippets",
         "@statiolake/coc-stylua",
       }
 
@@ -152,9 +167,7 @@ local Spec = {
   },
 
   -- https://github.com/neovim/neovim/issues/26268
-  {
-    "Bilal2453/luvit-meta", lazy = true, ft = "lua",
-  },
+  { "Bilal2453/luvit-meta", lazy = true },
 }
 
 return Spec

@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "kevinhwang91/promise-async"
+  "kevinhwang91/promise-async",
 }
 
 return Spec

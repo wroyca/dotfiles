@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "tiagovla/scope.nvim", event = "TabNew", opts = {}
+  "tiagovla/scope.nvim", opts = {}
 }
 
 return Spec

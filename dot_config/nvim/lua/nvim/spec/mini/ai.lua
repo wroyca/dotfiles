@@ -1,5 +1,4 @@
 ---@module "mini.ai"
----@module "mini.extra"
 
 ---@type LazyPluginSpec
 local Spec = {

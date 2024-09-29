@@ -51,16 +51,6 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     hi("LspCodeLens",                  { italic = false })
     hi("LspCodeLensSeparator",         { italic = false })
     hi("LeapBackdrop",                 { italic = false })
-
-    -- hi("NormalFloat",                  { bg = "" })
-    -- hi("FloatTitle",                   { bg = "" })
-    -- hi("FloatBorder",                  { bg = "" })
-    -- hi("DiagnosticFloatingError",      { bg = "" })
-    -- hi("DiagnosticFloatingHint",       { bg = "" })
-    -- hi("DiagnosticFloatingInfo",       { bg = "" })
-    -- hi("DiagnosticFloatingOk",         { bg = "" })
-    -- hi("DiagnosticFloatingWarn",       { bg = "" })
-    -- hi("MiniFilesTitleFocused",        { bg = "" })
   end
 })
 

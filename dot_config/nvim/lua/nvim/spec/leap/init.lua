@@ -2,8 +2,9 @@
 
 ---@LazyPluginSpec
 local Spec = {
-  "ggandor/leap.nvim", keys = { "s", "S", "gs" },
+  "ggandor/leap.nvim",
 
+  keys = { "s", "S", "gs" },
   opts = {
     highlight_unlabeled_phase_one_targets = true,
   },
