@@ -36,3 +36,57 @@ vim.o.smartindent    = true
 vim.o.tabstop        = 2
 vim.o.shiftwidth     = 0
 vim.o.shiftround     = true
+
+local autocmds = {
+  {
+    event = "FileType",
+    desc = "Load EditorConfig settings with highest priority",
+    callback = function(ev)
+      if vim.F.if_nil(vim.b.editorconfig, vim.g.editorconfig, true) then
+        local editorconfig_avail, editorconfig = pcall(require, "editorconfig")
+        if editorconfig_avail then
+          editorconfig.config(ev.buf)
+        end
+      end
+    end
+  },
+  {
+    event = "BufWritePre",
+    desc = "Create any missing parent directories before saving the file",
+    callback = function(ev)
+      local buf_is_valid_and_listed = vim.api.nvim_buf_is_valid(ev.buf) and vim.bo[ev.buf].buflisted
+      if buf_is_valid_and_listed then
+        vim.fn.mkdir(vim.fn.fnamemodify(vim.uv.fs_realpath(ev.match) or ev.match, ":p:h"), "p")
+      end
+    end
+  },
+  {
+    event = { "InsertLeave", "WinEnter" },
+    desc = "Enable cursor line in the active window",
+    callback = function(event)
+      if vim.bo[event.buf].buftype == "" then
+        vim.opt_local.cursorline = true
+      end
+    end
+  },
+  {
+    event = { "InsertEnter", "WinLeave" },
+    desc = "Disable cursor line in inactive windows",
+    callback = function()
+      vim.opt_local.cursorline = false
+    end
+  },
+  {
+    event = "VimResized",
+    desc = "Adjust split sizes when the window is resized",
+    callback = function()
+      local current_tab = vim.api.nvim_get_current_tabpage()
+      vim.cmd.tabdo("wincmd =")
+      vim.api.nvim_set_current_tabpage(current_tab)
+    end
+  }
+}
+
+for _, autocmd in ipairs(autocmds) do
+  vim.api.nvim_create_autocmd(autocmd.event, { desc = autocmd.desc, callback = autocmd.callback })
+end

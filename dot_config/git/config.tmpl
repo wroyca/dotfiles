@@ -17,7 +17,7 @@
   verbose = true
 
 [core]
-  pager = delta
+  pager = delta --color-only
   editor = /usr/bin/nvim
   excludesFile = ~/.config/git/excludes
   attributesFile = ~/.config/git/attributes
@@ -32,45 +32,10 @@
 #
 [delta]
   navigate = true
-  line-numbers = true
-  side-by-side = true
-  keep-plus-minus-markers = false
-  syntax-theme = Nord
-  file-style = lightgray bold italic
-  file-decoration-style = lightgray bold ul
-  file-added-label =
-  file-copied-label =
-  file-modified-label =
-  file-removed-label  =
-  file-renamed-label =
-  hunk-header-style = omit
-  line-numbers-left-format = " ┃ "
-  line-numbers-left-style = red
-  line-numbers-minus-style = red
-  line-numbers-plus-style = green
-  line-numbers-right-format = " ┃ "
-  line-numbers-right-style = green
-  line-numbers-zero-style = lightgray
-  zero-style = syntax
-  minus-style = bold red
-  minus-emph-style = bold
-  minus-non-emph-style = bold
-  plus-style = bold green
-  plus-emph-style = bold
-  plus-non-emph-style = bold
-  blame-code-style = syntax
-  blame-format = "{author:<18} ({commit:>9}) {timestamp:^16}"
-  merge-conflict-begin-symbol = ~
-  merge-conflict-end-symbol = ~
-  merge-conflict-ours-diff-header-style = bold
-  merge-conflict-ours-diff-header-decoration-style = box
-  merge-conflict-theirs-diff-header-style = bold
-  merge-conflict-theirs-diff-header-decoration-style = box
 
 [diff]
   renames = copies
   algorithm = histogram
-  colorMoved = "default"
 
 [extensions]
   refStorage = "reftable"
@@ -101,9 +66,6 @@
 
 [init]
   defaultBranch = main
-
-[interactive]
-  diffFilter = delta --color-only
 
 [merge]
   conflictstyle = zdiff3

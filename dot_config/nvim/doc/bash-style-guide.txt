@@ -67,7 +67,7 @@ Structure
 The overall structure of the script should be as follows:
 
 >sh
-  #! /usr/bin/env bash
+  #!/usr/bin/env bash
 
   # <SUMMARY>
   #

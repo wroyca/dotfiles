@@ -25,6 +25,7 @@ local unlist_unnamed_all = function()
   end
 end
 
+vim.api.nvim_create_autocmd({ "BufAdd", "BufFilePost" }, { callback = unlist_unnamed })
 vim.api.nvim_create_autocmd({ "VimEnter" }, { once = true, callback = unlist_unnamed_all })
 
 return Spec

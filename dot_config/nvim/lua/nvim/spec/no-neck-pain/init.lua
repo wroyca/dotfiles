@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "shortcuts/no-neck-pain.nvim", opts = {}, cmd = "NoNeckPain"
+  "shortcuts/no-neck-pain.nvim", cmd = "NoNeckPain", opts = {},
 }
 
 return Spec

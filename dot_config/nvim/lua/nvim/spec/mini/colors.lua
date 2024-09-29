@@ -18,7 +18,7 @@ vim.api.nvim_create_autocmd("ColorScheme", {
         for k, v in pairs(opts) do
           hl[k] = v
         end
-        vim.api.nvim_set_hl(0, name, hl)
+        pcall(vim.api.nvim_set_hl, 0, name, hl)
       end
     end
 
