@@ -19,6 +19,10 @@ set -gx DOTNET_CLI_HOME $XDG_DATA_HOME/dotnet
 set -gx NPM_CONFIG_USERCONFIG $XDG_CONFIG_HOME/npm/npmrc
 set -gx STARSHIP_CONFIG $XDG_CONFIG_HOME/starship/starship.toml
 
+# Suppress Wine debug messages.
+#
+set -gx WINEDEBUG "-all,fixme-all"
+
 # Bash aliases are compatible with Fish.
 #
 source ~/.bashrc.d/bash_aliases
