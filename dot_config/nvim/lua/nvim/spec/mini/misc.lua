@@ -5,10 +5,9 @@ local Spec = {
   "mini.misc", dev = true, event = "VeryLazy",
 
   config = function(_, opts)
-    local misc = require("mini.misc")
-    misc.setup(opts)
-    misc.setup_auto_root()
-    misc.setup_restore_cursor()
+    require("mini.misc").setup(opts)
+    MiniMisc.setup_auto_root()
+    MiniMisc.setup_restore_cursor()
   end,
 }
 

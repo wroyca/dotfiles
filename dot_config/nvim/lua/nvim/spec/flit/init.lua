@@ -12,7 +12,9 @@ local Spec = {
     return ret
   end,
 
-  opts = { labeled_modes = "nx" },
+  opts = {
+    labeled_modes = "nx"
+  },
 }
 
 return Spec

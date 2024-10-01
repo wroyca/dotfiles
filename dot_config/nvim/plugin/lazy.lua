@@ -55,21 +55,12 @@ end
 
 ---@type LazyConfig
 local opts = {
-  root = vim.fs.joinpath(vim.fn.stdpath("config") --[[@as string]], "pack", "snapshot", "opt"),
-
   performance = {
     rtp = {
       disabled_plugins = {
-        "editorconfig",
         "gzip",
-        "man",
-        "matchit",
-        "matchparen",
         "netrwPlugin",
-        "osc52",
         "rplugin",
-        "shada",
-        "spellfile",
         "tarPlugin",
         "tohtml",
         "tutor",
