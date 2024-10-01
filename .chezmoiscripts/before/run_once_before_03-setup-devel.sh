@@ -24,6 +24,7 @@ sudo dnf install -y lld
 sudo dnf install -y shellcheck
 sudo dnf install -y neovim
 sudo dnf install -y git-delta
+sudo dnf install -y msitools
 
 pip install pynvim
 pip install pygments
