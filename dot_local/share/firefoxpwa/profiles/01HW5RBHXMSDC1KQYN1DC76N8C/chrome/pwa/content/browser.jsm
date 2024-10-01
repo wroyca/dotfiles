@@ -6,6 +6,7 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   sendNativeMessage: 'resource://pwa/utils/nativeMessaging.jsm',
   hookFunction: 'resource://pwa/utils/hookFunction.jsm',
   xPref: 'resource://pwa/utils/xPref.jsm',
+  sanitizeString: 'resource://pwa/utils/common.jsm',
 });
 XPCOMUtils.defineLazyServiceGetter(this, 'ioService', '@mozilla.org/network/io-service;1', Ci.nsIIOService);
 XPCOMUtils.defineLazyServiceGetter(this, 'WindowsUIUtils', '@mozilla.org/windows-ui-utils;1', Ci.nsIWindowsUIUtils);
@@ -35,6 +36,7 @@ class PwaBrowser {
     this.moveMenuButtons();
     this.switchPopupSides();
     this.makeUrlBarReadOnly();
+    this.setDisplayModeStandalone();
     this.handleRegisteringProtocols();
     this.handleOutOfScopeNavigation();
     this.handleOpeningNewWindow();
@@ -84,7 +86,7 @@ class PwaBrowser {
     const siteIcon = siteIcons.find(icon => icon.size >= 32) || siteIcons[siteIcons.length - 1];
     if (siteIcon) tabIconImage.setAttribute('src', siteIcon.icon.src);
 
-    const siteName = window.gFFPWASiteConfig?.config.name || window.gFFPWASiteConfig?.manifest.name || window.gFFPWASiteConfig?.manifest.short_name
+    const siteName = sanitizeString(window.gFFPWASiteConfig?.config.name || window.gFFPWASiteConfig?.manifest.name || window.gFFPWASiteConfig?.manifest.short_name) || new URL(site.manifest.scope).host;
     tabLabel.replaceChildren(siteName);
     document.title = siteName;
 
@@ -184,16 +186,16 @@ class PwaBrowser {
     const menuItem = this.createElement(document, 'menuitem', { id: 'contextmenu-openlinkdefault', 'data-l10n-id': 'context-menu-open-link-default-browser', oncommand: 'gContextMenu.openLinkInDefaultBrowser()' });
     document.getElementById('context-sep-open').before(menuItem)
 
-    hookFunction(window, 'openContextMenu', null, () => {
+    // Handle clicking on it and open link in default browser
+    nsContextMenu.prototype.openLinkInDefaultBrowser = function () {
+      MailIntegration._launchExternalUrl(makeURI(this.linkURL));
+    };
+
+    hookFunction(nsContextMenu.prototype, 'initOpenItems', null, function () {
       // Display it only when clicked on links
-      const shouldShow = window.gContextMenu.onSaveableLink || window.gContextMenu.onPlainTextLink;
+      const shouldShow = this.onSaveableLink || this.onPlainTextLink;
       document.getElementById('context-sep-open').hidden = !shouldShow;
       menuItem.hidden = !shouldShow;
-
-      // Handle clicking on it and open link in default browser
-      window.gContextMenu.openLinkInDefaultBrowser = function () {
-        MailIntegration._launchExternalUrl(makeURI(this.linkURL));
-      };
     });
   }
 
@@ -322,7 +324,28 @@ class PwaBrowser {
     // Also un-focus the URL bar in case it is focused for some reason
     document.getElementById('urlbar').removeAttribute('focused');
 
+    // Restore the original toolbar visibility
     window.toolbar.visible = originalToolbarVisibility;
+
+    // Prevent error when changing search mode when `searchModeSwitcher` is undefined
+    Object.defineProperty(window.gURLBar, 'searchMode', {
+      set: function (searchMode) {
+        this.setSearchMode(searchMode, this.window.gBrowser.selectedBrowser);
+        this.searchModeSwitcher?.onSearchModeChanged();
+      },
+    });
+  }
+
+  setDisplayModeStandalone () {
+    function hookCurrentBrowser () {
+      // Set the display mode on the main browser window
+      if (location.href === AppConstants.BROWSER_CHROME_URL && window.gBrowser?.selectedBrowser?.browsingContext) {
+        window.gBrowser.selectedBrowser.browsingContext.displayMode = 'standalone';
+      }
+    }
+
+    hookFunction(window.gBrowser, 'init', null, hookCurrentBrowser);
+    hookFunction(window.gBrowser, 'updateCurrentBrowser', null, hookCurrentBrowser);
   }
 
   handleRegisteringProtocols () {
@@ -352,7 +375,7 @@ class PwaBrowser {
       const existingHandlers = new Set([
         ...window.gFFPWASiteConfig.config.custom_protocol_handlers,
         ...window.gFFPWASiteConfig.manifest.protocol_handlers
-      ].map(handler => handler.protocol).sort());
+      ].map(handler => sanitizeString(handler.protocol)).filter(handler => handler).sort());
       if (existingHandlers.has(protocol)) return;
 
       // Now ask the user and provide the proper callback
@@ -553,16 +576,6 @@ class PwaBrowser {
         return BrowserWindowTracker._openWindow(options);
       }
     }
-
-    // Handle opening new window from context menus
-    hookFunction(window, 'openContextMenu', null, () => {
-      gContextMenu.openLink = function () {
-        return window.openDialog(AppConstants.BROWSER_CHROME_URL, '_blank', 'chrome,all,dialog=no,non-private', this.linkURL);
-      };
-      gContextMenu.openLinkInPrivateWindow = function () {
-        return window.openDialog(AppConstants.BROWSER_CHROME_URL, '_blank', 'chrome,all,dialog=no,private', this.linkURL);
-      };
-    });
   }
 
   handleDisablingShortcuts () {
@@ -1740,7 +1753,8 @@ class PwaBrowser {
 
       onCommand (event) {
         const window = event.target.ownerGlobal;
-        window.BrowserBack(event);
+        if (window.BrowserCommands) window.BrowserCommands.back(event);
+        else window.BrowserBack(event);
       }
     });
 
@@ -1752,7 +1766,8 @@ class PwaBrowser {
 
       onCommand (event) {
         const window = event.target.ownerGlobal;
-        window.BrowserForward(event);
+        if (window.BrowserCommands) window.BrowserCommands.forward(event);
+        else window.BrowserForward(event);
       }
     });
   }
@@ -1870,6 +1885,9 @@ class PwaBrowser {
     xPref.set('browser.tabs.extraDragSpace', false, true);
     xPref.set('browser.tabs.warnOnClose', false, true);
     xPref.set('browser.sessionstore.resume_from_crash', false, true);
+    xPref.set('browser.sessionstore.max_resumed_crashes', 0, true);
+    xPref.set('browser.sessionstore.max_tabs_undo', 0, true);
+    xPref.set('browser.sessionstore.max_windows_undo', 0, true);
     xPref.set('browser.shell.checkDefaultBrowser', false, true);
     xPref.set('browser.startup.upgradeDialog.enabled', false, true);
     xPref.set('browser.aboutwelcome.enabled', false, true);

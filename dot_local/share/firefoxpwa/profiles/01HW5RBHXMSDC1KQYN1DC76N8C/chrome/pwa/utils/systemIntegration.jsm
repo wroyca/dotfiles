@@ -7,6 +7,7 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   ImageTools: 'resource:///modules/ssb/ImageTools.jsm',
   NetUtil: 'resource://gre/modules/NetUtil.jsm',
   xPref: 'resource://pwa/utils/xPref.jsm',
+  sanitizeString: 'resource://pwa/utils/common.jsm',
 });
 XPCOMUtils.defineLazyServiceGetter(this, 'ImgTools', '@mozilla.org/image/tools;1', Ci.imgITools);
 XPCOMUtils.defineLazyServiceGetter(this, 'WinUIUtils', '@mozilla.org/windows-ui-utils;1', Ci.nsIWindowsUIUtils);
@@ -44,7 +45,7 @@ function configureThemeColor (window, styles, colorR, colorG, colorB) {
   }
 
   // Set background and text colors to the titlebar and tabs
-  styles.innerHTML += `#navigator-toolbox, html[tabsintitlebar] #main-menubar > *, html[tabsintitlebar] #titlebar > * { background-color: ${backgroundColor} !important; color: ${textColor} !important; }`;
+  styles.innerHTML += `#navigator-toolbox { background-color: ${backgroundColor} !important; color: ${textColor} !important; }`;
   styles.innerHTML += `.tabbrowser-tab { color: ${textColor} !important; }`;
 }
 
@@ -182,7 +183,8 @@ function setWindowColors (window, site) {
 function applySystemIntegration (window, site) {
   // Set title only on the main browser chrome window
   if (window.location.href === AppConstants.BROWSER_CHROME_URL) {
-    window.document.title = site.config.name || site.manifest.name || site.manifest.short_name;
+    const name = sanitizeString(site.config.name || site.manifest.name || site.manifest.short_name);
+    window.document.title = name || new URL(site.manifest.scope).host;
   }
 
   window.document.documentElement.setAttribute('icon', `FFPWA-${site.ulid}`);
