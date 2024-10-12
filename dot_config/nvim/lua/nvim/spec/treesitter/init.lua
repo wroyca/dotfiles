@@ -1,4 +1,5 @@
 ---@module "nvim-treesitter"
+---@diagnostic disable: missing-fields
 
 ---@type LazyPluginSpec
 local Spec = {
@@ -11,25 +12,28 @@ local Spec = {
     modules = {
       highlight = {
         enable = true,
-      },
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          node_incremental = "v",
-          node_decremental = "V",
-        }
+        disable = function(_, bufnr)
+          -- For large files, parsing may slow down, causing user input to
+          -- block. To mitigate this, disable TSHighlight when file size
+          -- exceeds 1 MB.
+          --
+          -- For more details, see
+          -- https://github.com/neovim/neovim/issues/22426
+          --
+          return (vim.fn.getfsize(bufnr) > 1000000) or false
+        end
       },
     },
   },
 
-  -- TSConfig annotation displays `@field modules { [string]: TSModule }`, but
-  -- Treesitter's internal logic dynamically creates the modules field at
-  -- runtime, which causes `opts.modules` to nest within it.
+  -- The TSConfig annotation shows `@field modules { [string]: TSModule }`, but
+  -- Tree-sitter's internal logic dynamically creates the modules field at
+  -- runtime, causing opts.modules to be nested within it.
   --
-  -- For now, the strategy is to unpack `opts.modules` fields into `opts` and
-  -- then dynamically remove `opts.modules` at runtime. This should allow
-  -- Treesitter's internal logic to properly parse (however they do so) the
-  -- modules configuration.
+  -- To address this, the current strategy is to unpack the fields from
+  -- opts.modules directly into opts and then dynamically remove opts.modules
+  -- at runtime. This approach should enable Tree-sitter's internal logic to
+  -- correctly parse the modules configuration, however they do so.
   --
   {
     __index = function (table, key)
