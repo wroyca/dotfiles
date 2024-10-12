@@ -31,7 +31,7 @@ vim.o.termguicolors = true
 -- lightness. Unfortunately, this check presents the same issues as with
 -- termguicolors (see above for details).
 --
-vim.cmd.packadd "vim-lumen"
+vim.cmd.packadd "lumen"
 
 -- Terminal Color Synchronization with OSC 10. This assumes that the terminal
 -- supports the OSC 111 extension as well.
