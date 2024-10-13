@@ -22,9 +22,12 @@ sudo dnf install -y luarocks
 sudo dnf install -y mold
 sudo dnf install -y lld
 sudo dnf install -y shellcheck
+sudo dnf install -y msitools
 sudo dnf install -y neovim
 sudo dnf install -y git-delta
-sudo dnf install -y msitools
+sudo dnf install -y glibc-devel.i686 # gnu/stubs-32.h
+sudo dnf install -y --skip-broken \
+  mingw*
 
 pip install pynvim
 pip install pygments
