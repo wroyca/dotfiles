@@ -12,12 +12,20 @@ set -gx XDG_STATE_HOME $HOME/.local/state
 #
 set -gx HISTFILE $XDG_STATE_HOME/bash/history
 set -gx CARGO_HOME $XDG_DATA_HOME/cargo
-set -gx CARGO_BIN $CARGO_HOME/bin
 set -gx PERL_CPANM_HOME $XDG_CACHE_HOME/cpanm
 set -gx CUDA_CACHE_PATH $XDG_CACHE_HOME/nv
 set -gx DOTNET_CLI_HOME $XDG_DATA_HOME/dotnet
 set -gx NPM_CONFIG_USERCONFIG $XDG_CONFIG_HOME/npm/npmrc
 set -gx STARSHIP_CONFIG $XDG_CONFIG_HOME/starship/starship.toml
+
+# Cargo environment.
+#
+source $XDG_DATA_HOME/cargo/env.fish
+
+# Hook commands for conveniance.
+#
+source $XDG_CONFIG_HOME/fish/hooks/git.fish
+source $XDG_CONFIG_HOME/fish/hooks/bdep.fish
 
 # Bash aliases are compatible with Fish.
 #
