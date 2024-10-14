@@ -34,7 +34,7 @@ local Spec = {
 
     opts = {
       colors = {
-        enable = false,
+        enable = true,
       },
 
       diagnostic = {
@@ -75,7 +75,7 @@ local Spec = {
       },
 
       semanticTokens = {
-        enable = false,
+        enable = true,
       },
 
       signature = {
