@@ -22,14 +22,14 @@ local Spec = {
         end,
       },
 
-      { "gD", "<Plug>(coc-declaration)",     desc = "Go to declaration" },
-      { "gd", "<Plug>(coc-definition)",      desc = "Go to definition" },
-      { "gi", "<Plug>(coc-implementation)",  desc = "Go to implementation" },
-      { "gr", "<Plug>(coc-references)",      desc = "Go to references" },
+      { "gD", "<Plug>(coc-declaration)", desc = "Go to declaration" },
+      { "gd", "<Plug>(coc-definition)", desc = "Go to definition" },
+      { "gi", "<Plug>(coc-implementation)", desc = "Go to implementation" },
+      { "gr", "<Plug>(coc-references)", desc = "Go to references" },
       { "gt", "<Plug>(coc-type-definition)", desc = "Go to type definition" },
 
       { "<leader>.", "<Plug>(coc-codeaction-cursor)", desc = "Code action", mode = { "n", "x" }, nowait = true },
-      { "<leader>;", "<Plug>(coc-format-selected)",   desc = "Format selection", mode = { "n", "x" }, nowait = true },
+      { "<leader>;", "<Plug>(coc-format-selected)", desc = "Format selection", mode = { "n", "x" }, nowait = true },
     },
 
     opts = {
@@ -122,15 +122,9 @@ local Spec = {
           "--pch-storage=memory",
           "--ranking-model=decision_forest",
         },
-
         disableSnippetCompletion = true
       },
 
-      -- Right now, we’re just using Lua for Neovim, but there’s a chance we
-      -- might use it for another project down the line. If that comes up,
-      -- we’ll need a way to set up workspaces dynamically, e.g. similar to
-      -- https://github.com/folke/lazydev.nvim
-      --
       Lua = {
         runtime = {
           version = "LuaJIT",
@@ -139,10 +133,7 @@ local Spec = {
           checkThirdParty = false,
           library = {
             "/usr/share/nvim/runtime",
-
-            vim.fs.joinpath(vim.fn.stdpath("config") --[[@as string]], "lazy"),
-            vim.fs.joinpath(vim.fn.stdpath("config") --[[@as string]], "pack", "snapshot", "opt"),
-            vim.fs.joinpath(vim.fn.stdpath("config") --[[@as string]], "pack", "snapshot", "start"),
+            vim.fs.joinpath(vim.fn.stdpath("data") --[[@as string]], "lazy"),
           },
         },
       },
@@ -167,7 +158,7 @@ local Spec = {
   },
 
   -- https://github.com/neovim/neovim/issues/26268
-  { "Bilal2453/luvit-meta", lazy = true },
+  { "Bilal2453/luvit-meta" },
 }
 
 return Spec

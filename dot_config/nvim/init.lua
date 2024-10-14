@@ -12,20 +12,20 @@ vim.schedule(function()
 end)
 
 vim.g.mapleader      = vim.keycode("<Space>")
-vim.g.localmapleader = vim.keycode(",")
+vim.g.localmapleader = vim.g.mapleader
 vim.o.clipboard      = "unnamedplus"
-vim.o.guicursor      = "a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor,i-ci-ve:ver25,r-cr-o:hor20"
+vim.o.guicursor      = "a:blinkwait700-blinkoff400-blinkon250,i-ci-ve:ver25,r-cr-o:hor20"
 vim.o.mouse          = "a"
 vim.o.mousescroll    = "ver:3,hor:0"
 vim.o.mousemoveevent = true
 vim.o.confirm        = true
 vim.o.list           = true
 vim.o.gdefault       = true
-vim.o.number         = true
 vim.o.cursorline     = true
 vim.o.scrolloff      = 4
 vim.o.pumheight      = 8
-vim.o.laststatus     = 3
+vim.o.laststatus     = 0
+vim.o.cmdheight      = 0
 vim.o.wrap           = false
 vim.o.fillchars      = "eob: "
 vim.o.breakindent    = true

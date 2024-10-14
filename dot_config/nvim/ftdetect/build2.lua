@@ -1,9 +1,16 @@
-vim.filetype.add({
-  extension = {
-    manifest = "build2-manifest",
-    buildfile = "build2-buildfile",
-    build2file = "build2-buildfile",
-    ["bootstrap.build"] = "build2-buildfile",
-    ["root.build"] = "build2-buildfile"
-  }
+vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  pattern = {
+    "manifest",
+    "buildfile",
+    "build2file",
+    "bootstrap.build",
+    "root.build",
+  },
+  callback = function()
+    if vim.fn.expand("<afile>") == "manifest" then
+      vim.bo.filetype = "build2-manifest"
+    else
+      vim.bo.filetype = "build2-buildfile"
+    end
+  end,
 })
