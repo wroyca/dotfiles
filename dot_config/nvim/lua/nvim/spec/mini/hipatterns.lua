@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "mini.hipatterns", dev = true, event = "VeryLazy",
+  "mini.hipatterns", dev = true, event = "VeryLazy", enabled = false,
 
   opts = function()
     local extra = require("mini.extra")
