@@ -10,10 +10,20 @@
 root = true
 
 [*]
+charset = utf-8
 indent_size = 2
 indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
+
+# Custom properties
+#
+# https://neovim.io/doc/user/editorconfig.html#editorconfig-custom-properties
+#
+breakindent = true
+copyindent = true
+smartindent = true
+preserveindent = true
 
 # Markdown
 #

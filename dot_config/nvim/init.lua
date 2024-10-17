@@ -24,18 +24,29 @@ vim.o.gdefault       = true
 vim.o.cursorline     = true
 vim.o.scrolloff      = 4
 vim.o.pumheight      = 8
-vim.o.laststatus     = 0
-vim.o.cmdheight      = 0
+vim.o.laststatus     = 3
 vim.o.wrap           = false
 vim.o.fillchars      = "eob: "
-vim.o.breakindent    = true
-vim.o.copyindent     = true
-vim.o.expandtab      = true
-vim.o.preserveindent = true
-vim.o.smartindent    = true
-vim.o.tabstop        = 2
-vim.o.shiftwidth     = 0
-vim.o.shiftround     = true
+
+local function set_editorconfig_properties (props)
+  local ok, p = pcall(function() return require("editorconfig").properties end)
+  if not ok then
+    vim.notify("warning: editorconfig runtime is unavailable", vim.log.levels.WARN)
+    return
+  end
+  for _, n in ipairs(props) do
+    p[n] = function(b, v, _)
+      vim.b[b][n] = v
+    end
+  end
+end
+
+set_editorconfig_properties({
+  "breakindent",
+  "copyindent",
+  "smartindent",
+  "preserveindent",
+})
 
 local function create_autocmds(cmds)
   for _, c in ipairs(cmds) do
