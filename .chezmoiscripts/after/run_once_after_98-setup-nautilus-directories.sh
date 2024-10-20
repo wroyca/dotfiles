@@ -7,4 +7,4 @@ cd ~/ || exit
 # https://gitlab.gnome.org/GNOME/nautilus/-/issues/1481
 #
 gio set Projects metadata::custom-icon \
-  file:///home/wroy/.local/share/icons/morewaita/places/scalable/folder-projects.svg
+  file:///home/wroy/.local/share/icons/morewaita/scalable/places/folder-projects.svg
