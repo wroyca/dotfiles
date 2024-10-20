@@ -8,8 +8,6 @@ sudo dnf install -y winetricks
 sudo dnf install -y adw-gtk3-theme
 sudo dnf install -y firefoxpwa
 
-# FIXME:
-#
 # Fedora Workstation no longer pre-installs deprecated GNOME X11 session for
 # new installations. The problem is that Wine can sometimes end up in a broken
 # state on Wayland (presumably, something wrong gets cached somewhere), which
@@ -34,7 +32,9 @@ sudo dnf install -y gnome-classic-session-xsession
 #
 if [ ! -d "$HOME/.wine/drive_c/Program Files (x86)/LAV Filters" ]; then
   wget https://github.com/Nevcairiel/LAVFilters/releases/latest/download/LAVFilters-{{ (gitHubLatestTag "Nevcairiel/LAVFilters").Name | replace "v" "" -}}-Installer.exe && wine $(basename "$_")
-else
+fi
+if [ -d "$HOME/.wine/drive_c/Program Files (x86)/LAV Filters" ]; then
   sudo rm $HOME/LAVFilters-*
 fi
+
 winetricks directshow

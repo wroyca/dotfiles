@@ -24,8 +24,7 @@ user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);
 user_pref("extensions.pocket.enabled", false);
 
 // Make Firefox look more at home on GNOME desktop. By default this remodels
-// Mozilla’s browser into something that closely resembles the Epiphany (aka
-// GNOME Web) browser.
+// Mozilla’s browser into something that closely resembles GNOME Web.
 //
 // https://github.com/rafaelmardojai/firefox-gnome-theme
 //
@@ -37,10 +36,7 @@ user_pref("svg.context-properties.content.enabled", true);
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 user_pref("widget.gtk.rounded-bottom-corners.enabled", true);
 
-// Force (enable) hardware video acceleration (VA-API) when available. FYI we
-// also use an VA-API implementation that uses NVDEC as a backend.
-//
-// https://github.com/elFarto/nvidia-vaapi-driver
+// Force (enable) hardware video acceleration (VA-API) when available.
 //
 user_pref("widget.dmabuf.force-enabled", true);
 user_pref("media.ffmpeg.vaapi.enabled", true);

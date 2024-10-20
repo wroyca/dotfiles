@@ -12,7 +12,7 @@ format = '[$symbol](purple)'
 symbol = '⬢'
 
 [directory]
-format = " $path"
+format = ' $path'
 truncation_length = 1
 
 [git_branch]
@@ -33,5 +33,5 @@ format = '$hostname'
 ssh_only = false
 
 [username]
-format = "$user"
+format = '$user'
 show_always = true

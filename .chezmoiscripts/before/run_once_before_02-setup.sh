@@ -14,7 +14,7 @@ sudo dnf group install -y \
   multimedia
 
 # This is enabled by default starting with Fedora 41. Disable it since we use
-# integer scaling, and leaving it on would unnecessarily downscale and add
+# integer scaling, and leaving it would unnecessarily downscale and add
 # extra computations (yes, even with integer scaling).
 #
 gsettings set org.gnome.mutter experimental-features "[]"
