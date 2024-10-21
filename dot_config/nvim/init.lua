@@ -4,6 +4,8 @@
 -- (  /  |        / | \                                    * .  ' .  .-+-
 --  \(_)_%s      /  |  \                                *   *  .   .
 
+vim.cmd.packadd "lumen"
+
 local shada = vim.o.shada
 vim.o.shada = ""
 vim.schedule(function()
@@ -116,8 +118,7 @@ create_autocmds({
     { "VimLeavePre", "VimSuspend" },
     "Revert terminal background color with OSC",
     function()
-      local bg_color = vim.api.nvim_get_hl(0, { name = "Normal" }).bg
-      io.stdout:write(string.format("\027]11;#%06x\007", bg_color))
+      io.stdout:write("\027]111;;\007")
     end
   }
 })
