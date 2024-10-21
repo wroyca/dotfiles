@@ -70,17 +70,18 @@ create_autocmds({
   },
   {
     "BufWritePre",
-    "Create any missing parent directories before saving the file",
+    "Create missing parent directories before saving",
     function(ev)
       local is_valid = vim.api.nvim_buf_is_valid(ev.buf) and vim.bo[ev.buf].buflisted
       if is_valid then
-        vim.fn.mkdir(vim.fn.fnamemodify(vim.uv.fs_realpath(ev.match) or ev.match, ":p:h"), "p")
+        local path = vim.uv.fs_realpath(ev.match) or ev.match
+        vim.fn.mkdir(vim.fn.fnamemodify(path, ":p:h"), "p")
       end
     end
   },
   {
     { "InsertLeave", "WinEnter" },
-    "Enable cursor line in active window",
+    "Show cursor line in current active window",
     function(ev)
       if vim.bo[ev.buf].buftype == "" then
         vim.opt_local.cursorline = true
@@ -89,18 +90,34 @@ create_autocmds({
   },
   {
     { "InsertEnter", "WinLeave" },
-    "Disable cursor line in inactive windows",
+    "Hide cursor line in inactive windows",
     function()
       vim.opt_local.cursorline = false
     end
   },
   {
     "VimResized",
-    "Adjust split sizes when the window is resized",
+    "Equalize split sizes on resize event",
     function()
-      local t = vim.api.nvim_get_current_tabpage()
+      local current_tab = vim.api.nvim_get_current_tabpage()
       vim.cmd.tabdo("wincmd =")
-      vim.api.nvim_set_current_tabpage(t)
+      vim.api.nvim_set_current_tabpage(current_tab)
+    end
+  },
+  {
+    { "VimEnter", "VimResume", "ColorScheme" },
+    "Sync terminal background color with OSC",
+    function()
+      local bg_color = vim.api.nvim_get_hl(0, { name = "Normal" }).bg
+      io.stdout:write(string.format("\027]11;#%06x\007", bg_color))
+    end
+  },
+  {
+    { "VimLeavePre", "VimSuspend" },
+    "Revert terminal background color with OSC",
+    function()
+      local bg_color = vim.api.nvim_get_hl(0, { name = "Normal" }).bg
+      io.stdout:write(string.format("\027]11;#%06x\007", bg_color))
     end
   }
 })
