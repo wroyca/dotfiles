@@ -1,3 +1,5 @@
+;;; -*- mode: emacs-lisp; lexical-binding: t -*-
+
 (setq package-enable-at-startup nil)
 
 (setq inhibit-startup-echo-area-message (user-login-name)
@@ -6,5 +8,5 @@
 (setq initial-scratch-message nil)
 
 (mapc (lambda (mode) (funcall mode -1))
-  '(menu-bar-mode scroll-bar-mode tool-bar-mode))
+      '(menu-bar-mode scroll-bar-mode tool-bar-mode))
 (setq-default mode-line-format nil)
