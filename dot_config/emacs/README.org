@@ -1,4 +1,5 @@
-#+title: GNU Emacs
+#+Title: GNU Emacs
+#+Startup: overview
 
 This document describes my GNU Emacs configuration. You may use =C-c C-v t= to tangle each section automatically, or optionally, evaluate the following code block:
 
@@ -6,34 +7,118 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
   (org-babel-tangle)
 #+end_src
 
-#+toc:
+;; Local Variables:
+;; eval: (add-hook 'after-save-hook (lambda ()(if (y-or-n-p "Reload?")(load-file user-init-file))) nil t)
+;; eval: (add-hook 'after-save-hook (lambda ()(if (y-or-n-p "Tangle?")(org-babel-tangle))) nil t)
+;; End:
 
 * Early Initialization
 
 #+begin_src emacs-lisp :tangle "early-init.el"
-  ;;; -*- mode: emacs-lisp; lexical-binding: t -*-
+    ;;; -*- mode: emacs-lisp; lexical-binding: t -*-
+    (setq package-enable-at-startup nil)
 
-  (setq package-enable-at-startup nil)
+    (setq inhibit-startup-echo-area-message (user-login-name)
+          inhibit-startup-screen t)
+    (put 'inhibit-startup-echo-area-message 'saved-value t)
+    (setq initial-scratch-message nil)
 
-  (setq inhibit-startup-echo-area-message (user-login-name)
-        inhibit-startup-screen t)
-  (put 'inhibit-startup-echo-area-message 'saved-value t)
-  (setq initial-scratch-message nil)
-
-  (mapc (lambda (mode) (funcall mode -1))
-        '(menu-bar-mode scroll-bar-mode tool-bar-mode))
-  (setq-default mode-line-format nil)
+    (mapc (lambda (mode) (funcall mode -1))
+          '(menu-bar-mode scroll-bar-mode tool-bar-mode))
+  ; (setq-default mode-line-format nil)
 #+end_src
 
 * Initialization
 
 #+begin_src emacs-lisp :tangle "init.el"
   ;;; -*- mode: emacs-lisp; lexical-binding: t -*-
+  (savehist-mode)
+  #+end_src
 
+** Minibuffer
+
+Support opening new minibuffers from inside existing minibuffers.
+
+#+begin_src emacs-lisp :tangle "init.el"
+  (setq enable-recursive-minibuffers t)
+#+end_src
+
+Show the current recursion depth in the minibuffer prompt on recursive use of the minibuffer.
+
+#+begin_src emacs-lisp :tangle "init.el"
+  (setq minibuffer-depth-indicate-mode t)
+#+end_src
+
+Do not allow the cursor in the minibuffer prompt.
+
+#+begin_src emacs-lisp :tangle "init.el"
+  (setq minibuffer-prompt-properties
+        '(read-only t cursor-intangible t face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+#+end_src
+
+** Prompt indicator
+
+Enhance the prompt indicator for `completing-read-multiple' to display [CRM<separator>] (e.g., [CRM,] when using a comma as the separator).
+
+Note: As I'm relatively new to Emacs, `completing-read-multiple' specifics are not entirely clear. But since Vertico recommends this setting, in Vertico we trust.
+
+#+begin_src emacs-lisp :tangle "init.el"
+  (defun crm-indicator (args)
+    (cons (format "[CRM%s] %s"
+                  (replace-regexp-in-string
+                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                   crm-separator)
+                  (car args))
+          (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+#+end_src
+
+** Load-theme
+
+According to [[elisp:(describe-symbol 'load-theme)][Load theme description]], when a theme is enabled in Emacs, it doesn’t automatically disable any other active themes. This means the newly enabled theme takes precedence, which can sometimes cause subtle appearance changes that are hard to trace. For users unfamiliar with Emacs, this might even give the impression that the theme is "broken," as I experienced myself.
+
+A better approach is to disable any previously active themes before applying a new one. This can be done by advising the load-theme function to deactivate other enabled themes beforehand. /(I wish I had known about this sooner…)/
+
+#+begin_src emacs-lisp :tangle "init.el"
   (defun dotemacs//disable-themes (&rest _args)
     (mapc #'disable-theme custom-enabled-themes))
   (advice-add #'load-theme :before #'dotemacs//disable-themes)
+#+end_src
 
+** XTerm
+
+#+begin_src emacs-lisp :tangle "init.el"
+  (xterm-mouse-mode)
+#+end_src
+
+*** Operating System Command (OSC)
+
+Modern terminal can send and receive Operating System Command (OSC) codes. In practice it refers to this sequence of two ASCII characters: 27, 93 (esc ]). If the command takes parameters it will be followed by a semicolon and the structure of the rest of the body of the OSC sequence is dependent on the command. Well-behaved terminal emulators ignore OSC codes with unrecognized commands. ST stands for `string terminator` and terminates an OSC sequence. It consists either of two ASCII characters 27, 92 (esc \) or ASCII 7 (bel). The parameters (Ps) consists of a single (usually optional) numeric parameter, composed of one or more decimal digits.
+
+From XTerm specification, the 10 colors (below) may be set or queried using 1 0 through 1 9. They are denoted dynamic colors, since the corresponding control sequences were the first means for setting xterm's colors dynamically, i.e., after it was started.  They are not the same as the ANSI colors (however, the dynamic text foreground and background colors are used when ANSI colors are reset using SGR 3 9  and 4 9 , respectively).
+
+| Resource                 | Description                        |
+|--------------------------+------------------------------------|
+| foreground               | VT100 text foreground color        |
+| background               | VT100 text background color        |
+| cursorColor              | text cursor color                  |
+| pointerColor             | pointer foreground color           |
+| pointerColorBackground   | pointer background                 |
+| (foreground)             | Tektronix foreground color         |
+| (background)             | Tektronix background color         |
+| highlightColor           | highlight background color         |
+| (cursorColor)            | Tektronix cursor color             |
+| highlightTextColor       | highlight foreground color         |
+|--------------------------+------------------------------------|
+
+Here we advise load-theme to send an ANSI escape sequence to the terminal to update the background color according to the current frame's background-color parameter. Moreover, we advise Emacs to reset the terminal background to its default state upon exit.
+
+Note that we aren't adhering to our specification for the latter case—we use the unofficial `111` extension. The reasoning is that using only `11` would require us to cache the terminal's background color before setting the theme and restore it when Emacs exits. This approach fails to account for system theme changes; for example, if the cached background is dark but the system switches to light mode, exiting Emacs would result in incorrect terminal colors (e.g., dark text on a dark background).
+
+https://invisible-island.net/xterm/ctlseqs/ctlseqs.html
+
+#+begin_src emacs-lisp :tangle "init.el"
   (defun dotemacs//xterm-osc10 (&rest _args)
     (send-string-to-terminal (format "\e]11;%s\a" (frame-parameter nil 'background-color))))
   (advice-add #'load-theme :after #'dotemacs//xterm-osc10)
@@ -42,95 +127,26 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
     (send-string-to-terminal "\e]111;\a"))
   (add-hook 'kill-emacs-hook #'dotemacs//xterm-osc11)
 
-  (when (getenv "WAYLAND_DISPLAY")
-    (setq wl-copy-p nil
-          interprogram-cut-function (lambda (text)
-                                      (setq-local process-connection-type 'pipe)
-                                      (setq wl-copy-p (start-process "wl-copy" nil "wl-copy" "-f" "-n"))
-                                      (process-send-string wl-copy-p text)
-                                      (process-send-eof wl-copy-p))
-          interprogram-paste-function (lambda ()
-                                        (unless (and wl-copy-p (process-live-p wl-copy-p))
-                                          (shell-command-to-string "wl-paste -n | tr -d '\r'")))))
+  ;; Call once since lumen run early to detect OS preference.
+  (dotemacs//xterm-osc10)
+#+end_src
 
-  (setq make-backup-files nil)
-  (xterm-mouse-mode)
-  (load-theme 'modus-vivendi-tinted)
+** Active Process
 
-  ;;
+Stop asking "Active processes exist; kill them and exit anyway" since we're monitoring dbus in the background.
 
-  (use-package emacs
-    :ensure nil
-    :custom
-    ;; Support opening new minibuffers from inside existing minibuffers.
-    (enable-recursive-minibuffers t)
-    ;; Hide commands in M-x which do not work in the current mode.
-    (read-extended-command-predicate #'command-completion-default-include-p)
-    :init
-    ;; Add prompt indicator to `completing-read-multiple'.
-    (defun crm-indicator (args)
-      (cons (format "[CRM%s] %s"
-                    (replace-regexp-in-string
-                     "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                     crm-separator)
-                    (car args))
-            (cdr args)))
-    (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-    ;; Do not allow the cursor in the minibuffer prompt
-    (setq minibuffer-prompt-properties
-          '(read-only t cursor-intangible t face minibuffer-prompt))
-    (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
+#+begin_src emacs-lisp :tangle "init.el"
+  (require 'cl-lib)
 
-  (use-package savehist
-    :ensure nil
-    :init
-    (savehist-mode))
-
-  (use-package eglot
-    :config
-    (add-to-list 'eglot-server-programs '((sh-mode bash-ts-mode) . ("bash-language-server" "start")))
-    (add-to-list 'eglot-server-programs '((c-mode c++-mode) . ("clangd"
-                                                               "--all-scopes-completion=true"
-                                                               "--background-index-priority=normal"
-                                                               "--background-index=true"
-                                                               "--clang-tidy"
-                                                               "--completion-parse=always"
-                                                               "--completion-style=bundled"
-                                                               "--function-arg-placeholders=false"
-                                                               "--header-insertion=never"
-                                                               "--parse-forwarding-functions"
-                                                               "--pch-storage=memory"
-                                                               "--ranking-model=decision_forest")))
-    :hook
-    (sh-mode . eglot-ensure)
-    (bash-ts-mode . eglot-ensure)
-    (c-mode . eglot-ensure)
-    (c++-mode . eglot-ensure))
-
-  (defun my-suppress-eglot-message (orig-fun format &rest args)
-    "Suppress specific eglot messages from being shown in the minibuffer."
-    (let ((message-string (apply #'format format args)))
-      (unless (or (string-prefix-p "Connected" message-string)
-                  (string-prefix-p "Waiting" message-string)
-                  (string-prefix-p "Reconnected" message-string))
-        (apply orig-fun format args))))
-
-  (advice-add 'eglot--message :around #'my-suppress-eglot-message)
-
-  ;;
-
-  (use-package clangd-inactive-regions
-    :ensure (:host github :repo "fargiolas/clangd-inactive-regions.el")
-    :init
-    (add-hook 'eglot-managed-mode-hook #'clangd-inactive-regions-mode)
-    :config
-    (clangd-inactive-regions-set-method "darken-foreground")
-    (clangd-inactive-regions-set-opacity 0.50))
+  (defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
+    "Prevent annoying \"Active processes exist\" query when you quit Emacs."
+    (cl-letf (((symbol-function #'process-list) (lambda ())))
+      ad-do-it))
 #+end_src
 
 * Packages
-
 ** Elpaca
+
 #+begin_src emacs-lisp :tangle "init.el"
   (defvar elpaca-installer-version 0.7)
   (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
@@ -175,6 +191,7 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
 #+end_src
 
 ** Meow
+
 #+begin_src emacs-lisp :tangle "init.el"
    (use-package meow
     :ensure t
@@ -269,11 +286,11 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
   (use-package vertico
     :ensure t
     :hook
-    (elpaca-after-init . vertico-mode)
-    (vertico-mode . vertico-mouse-mode))
+    (elpaca-after-init . vertico-mode))
 #+end_src
 
 *** Vertico Buffer
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package vertico-buffer
     :after vertico
@@ -281,6 +298,7 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
 #+end_src
 
 *** Vertico Directory
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package vertico-directory
     :after vertico
@@ -295,6 +313,7 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
 #+end_src
 
 *** Vertico Flat
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package vertico-flat
     :after vertico
@@ -302,6 +321,7 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
 #+end_src
 
 *** Vertico Grid
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package vertico-grid
     :after vertico
@@ -309,6 +329,7 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
 #+end_src
 
 *** Vertico Indexed
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package vertico-indexed
     :after vertico
@@ -316,13 +337,17 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
 #+end_src
 
 *** Vertico Mouse
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package vertico-mouse
     :after vertico
-    :ensure nil)
+    :ensure nil
+    :hook
+    (vertico-mode . vertico-mouse-mode))
 #+end_src
 
 *** Vertico Multiform
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package vertico-multiform
     :after vertico
@@ -330,6 +355,7 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
 #+end_src
 
 *** Vertico Quick
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package vertico-quick
     :after vertico
@@ -337,6 +363,7 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
 #+end_src
 
 *** Vertico Repeat
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package vertico-repeat
     :after vertico
@@ -344,6 +371,7 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
 #+end_src
 
 *** Vertico Reverse
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package vertico-reverse
     :after vertico
@@ -351,6 +379,7 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
 #+end_src
 
 *** Vertico Suspend
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package vertico-suspend
     :after vertico
@@ -358,6 +387,7 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
 #+end_src
 
 *** Vertico Unobstrusive
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package vertico-unobtrusive
     :after vertico
@@ -365,6 +395,7 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
 #+end_src
 
 ** Marginalia
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package marginalia
     :ensure t
@@ -373,24 +404,28 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
 #+end_src
 
 ** Consult
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package consult
     :ensure t)
 #+end_src
 
 ** Embark
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package embark
     :ensure t)
 #+end_src
 
 *** Embark Consult
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package embark-consult
     :ensure t)
 #+end_src
 
 ** Orderless
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package orderless
     :ensure t
@@ -401,12 +436,14 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
 #+end_src
 
 ** Transient
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package transient
     :ensure t)
 #+end_src
 
 ** Magit
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package magit
     :ensure t
@@ -423,6 +460,7 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
 #+end_src
 
 *** Magit Delta
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package magit-delta
     :ensure t
@@ -431,10 +469,276 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
 #+end_src
 
 ** Forge
+
 #+begin_src emacs-lisp :tangle "init.el"
   (use-package forge
     :ensure t
     :after magit
     :config
     (setq auth-sources '("~/.authinfo")))
+#+end_src
+
+** Org
+
+#+begin_src emacs-lisp :tangle "init.el"
+  (use-package org
+    :ensure t)
+#+end_src
+
+*** Modern
+
+#+begin_src emacs-lisp :tangle "init.el"
+  (use-package org-modern
+    :ensure t
+    :hook
+    (org-mode . org-modern-mode))
+#+end_src
+
+** Moodline
+
+#+begin_src emacs-lisp :tangle "init.el"
+  (use-package mood-line
+    :ensure t
+    :init
+    (mood-line-mode))
+#+end_src
+
+* Language Server Protocol
+
+#+begin_src emacs-lisp :tangle "init.el"
+  (use-package eglot
+    :config
+    ;; Disable "bold/highlight" ish effect on token under cursor
+    (setq eglot-ignored-server-capabilites '(:documentHighlightProvider))
+    (add-to-list 'eglot-server-programs '((sh-mode bash-ts-mode) . ("bash-language-server" "start")))
+    (add-to-list 'eglot-server-programs '((c-mode c++-mode) . ("clangd"
+                                                               "--all-scopes-completion=true"
+                                                               "--background-index-priority=normal"
+                                                               "--background-index=true"
+                                                               "--clang-tidy"
+                                                               "--completion-parse=always"
+                                                               "--completion-style=bundled"
+                                                               "--function-arg-placeholders=false"
+                                                               "--header-insertion=never"
+                                                               "--parse-forwarding-functions"
+                                                               "--pch-storage=memory"
+                                                               "--ranking-model=decision_forest")))
+    :hook
+    ((sh-mode
+      bash-ts-mode
+      c-mode
+      c++-mode) . eglot-ensure))
+#+end_src
+
+** Completion
+
+#+begin_src emacs-lisp :tangle "init.el"
+    (use-package company
+      :ensure t
+      :bind
+      (:map company-active-map
+            ([tab] . company-complete-selection)
+            ("TAB"    . company-complete-selection)
+            ("<return>" . nil)
+            ("RET" . nil))
+      :init
+      (setq company-minimum-prefix-length 1
+    	        company-idle-delay 0
+    	        company-format-margin-function nil
+    	 company-backends '(company-capf)
+    	 ;; Only search the current buffer for `company-dabbrev' (a backend that
+        ;; suggests text your open buffers). This prevents Company from causing
+        ;; lag once you have a lot of buffers open.
+        company-dabbrev-other-buffers nil
+        ;; Make `company-dabbrev' fully case-sensitive, to improve UX with
+        ;; domain-specific words with particular casing.
+        company-dabbrev-ignore-case nil
+        company-dabbrev-downcase nil)
+      (global-company-mode))
+#+end_src
+
+* Debug Adapter Protocol
+* Gist
+* Experimental
+** Lumen
+
+Quickly put together hackish partial vim-lumen "port" from Vimscript to Elisp. I want to revisit this properly at some point.
+
+https://github.com/vimpostor/vim-lumen
+
+#+begin_src emacs-lisp :tangle "early-init.el"
+  (defvar lumen-background "")
+
+  (defvar lumen-exit-code -1
+    "Last job exit code.")
+
+  (defvar lumen-lines nil
+    "List to store output from job.")
+
+  (defvar lumen-elines nil
+    "List to store error output from job.")
+
+  (defvar lumen-watched-line "/org/freedesktop/portal/desktop: org.freedesktop.portal.Settings.SettingChanged ('org.freedesktop.appearance', 'color-scheme', <uint32 "
+    "Line pattern to watch for D-Bus notifications.")
+
+  (defun lumen-debug-message (msg)
+    "Print if Emacs is started with the --debug-init flag."
+    (when debug-on-error
+      (message "Lumen debug: %s" msg)))
+
+  (defun lumen-apply-colorscheme ()
+    "Apply colorscheme based on `lumen-background`."
+    (let ((colorscheme
+           (cond
+            ((string= lumen-background "light") "modus-operandi-tinted")
+            ((string= lumen-background "dark") "modus-vivendi-tinted")
+            (t "")))) ;; Default to no colorscheme if not matching
+
+      (when (and (not (string-empty-p colorscheme))
+                 (not (string= (car custom-enabled-themes) colorscheme)))
+        (lumen-debug-message (format "Applying colorscheme: %s" colorscheme))
+        (load-theme (intern colorscheme) t))))
+
+  (defun lumen-light-hook ()
+    "Hook to apply light background color scheme."
+    (lumen-debug-message (format "Lumen light hook: Current background %s, desired %s"
+                                 (frame-parameter nil 'background) "light"))
+    (unless (and (string= lumen-background "light")
+                 (string= (frame-parameter nil 'background) lumen-background))
+      (set-frame-parameter nil 'background "light")
+      (setq lumen-background (frame-parameter nil 'background))
+      (lumen-debug-message "Lumen light hook: Background set to light")
+      (lumen-apply-colorscheme))
+    (run-hooks 'lumen-light-hook))
+
+  (defun lumen-dark-hook ()
+    "Hook to apply dark background color scheme."
+    (lumen-debug-message (format "Lumen dark hook: Current background %s, desired %s"
+                                 (frame-parameter nil 'background) "dark"))
+    (unless (and (string= lumen-background "dark")
+                 (string= (frame-parameter nil 'background) lumen-background))
+      (set-frame-parameter nil 'background "dark")
+      (setq lumen-background (frame-parameter nil 'background))
+      (lumen-debug-message "Lumen dark hook: Background set to dark")
+      (lumen-apply-colorscheme))
+    (run-hooks 'lumen-dark-hook))
+
+  (defun lumen-oneshot ()
+    "Run one-shot commands for Linux platforms."
+    (lumen-debug-message "Lumen oneshot: Running Linux-specific one-shot command...")
+    (let ((out (string-trim (shell-command-to-string
+                             (format "%s call -t 1 --session --dest=org.freedesktop.portal.Desktop --object-path=/org/freedesktop/portal/desktop --method=org.freedesktop.portal.Settings.Read org.freedesktop.appearance color-scheme"
+                                     (executable-find "gdbus"))))))
+      (lumen-debug-message (format "Lumen oneshot: Output %s" out))
+      (if (string-match "(<<uint32 " out)
+          (let ((val (string-to-number (substring out 10 11))))
+            (setq lumen-background (if (or (= val 2) (= val 0)) "light" "dark"))
+            (lumen-apply-colorscheme))
+        (lumen-debug-log-err out))))
+
+  (defun lumen-parse-output (line)
+    "Parse output from job."
+    (lumen-debug-message (format "Lumen parse output: %s" line))
+    (lumen-platforms-linux-parse-line line))
+
+  (defun lumen-on-stdout (process output)
+    "Handle standard output from job."
+    (let ((data (split-string output "\n" t)))
+      (lumen-debug-message (format "Lumen on stdout: %s" output))
+      (setq lumen-lines (append lumen-lines data))
+      (while (> (length lumen-lines) 1)
+        (let ((line (car lumen-lines)))
+          (setq lumen-lines (cdr lumen-lines))
+          (lumen-debug-message (format "Lumen processing line: %s" line))
+          (lumen-parse-output line)))))
+
+  (defun lumen-out-cb (channel msg)
+    "Callback for standard output."
+    (lumen-debug-message (format "Lumen out cb: %s" msg))
+    (lumen-parse-output msg))
+
+  (defun lumen-on-stderr (process output)
+    "Handle standard error from job."
+    (let ((data (split-string output "\n" t)))
+      (lumen-debug-message (format "Lumen on stderr: %s" output))
+      (setq lumen-elines (append lumen-elines data))
+      (while (> (length lumen-elines) 1)
+        (let ((line (car lumen-elines)))
+          (setq lumen-elines (cdr lumen-elines))
+          (lumen-debug-log-err line)))))
+
+  (defun lumen-err-cb (channel msg)
+    "Callback for standard error."
+    (lumen-debug-message (format "Lumen err cb: %s" msg))
+    (lumen-debug-log-err msg))
+
+  (defun lumen-on-exit (process status)
+    "Handle job exit."
+    (let ((code (process-exit-status process)))
+      (lumen-debug-message (format "Lumen on exit: Job %s exited with code %d" process code))
+      (setq lumen-exit-code code)))
+
+  (defun lumen-exit-cb (job code)
+    "Callback for job exit."
+    (lumen-debug-message (format "Lumen exit cb: Job %s exited with code %d" job code))
+    (setq lumen-exit-code code))
+
+  (defun lumen-fork-job ()
+    "Fork a job to run the command."
+    (remove-hook 'after-init-hook 'lumen-fork-job)
+    (lumen-debug-message "Lumen fork job: Removing hook and starting job...")
+    (let ((command (lumen-platforms-linux-watch-cmd)))
+      (lumen-debug-message (format "Lumen fork job: Command is %s" (string-join command " ")))
+      (when command
+        (let ((proc (apply #'start-process "lumen-job" nil command)))
+          (set-process-filter proc #'lumen-on-stdout)
+          (set-process-sentinel proc #'lumen-on-exit)))))
+
+  (defun lumen-job-state ()
+    "Get current job state."
+    (let ((res ""))
+      (let ((pid (when (< lumen-exit-code 0) (process-id (get-process "lumen-job")))))
+        (setq res (if pid (format "run as PID %d" pid) "dead")))
+      (when (> lumen-exit-code -1)
+        (setq res (concat res (format " (exit code %d)" lumen-exit-code))))
+      (lumen-debug-message (format "Lumen job state: %s" res))
+      res))
+
+  (defun lumen-platforms-linux-watch-cmd ()
+    "Command to listens for interrupts and/or signals from D-Bus on Linux platforms."
+    (let ((gdbus-path (executable-find "gdbus")))  ;; Find the gdbus executable
+      (if gdbus-path
+  	(list gdbus-path
+                "monitor"
+                "--session"
+                "--dest" "org.freedesktop.portal.Desktop"
+                "--object-path" "/org/freedesktop/portal/desktop")
+        (error "gdbus not found in PATH"))))
+
+  (defun lumen-platforms-linux-parse-line (line)
+    "Parse line output from D-Bus."
+    (lumen-debug-message (format "Lumen platforms linux parse line: %s" line))
+    (when (string-prefix-p lumen-watched-line line)
+      (let ((val (- (aref line (- (length line) 3)) 48)))
+        (lumen-debug-message (format "Lumen parsed value: %d" val))
+        (cond ((or (= val 2) (= val 0))
+               (lumen-light-hook))
+              ((= val 1) (lumen-dark-hook))))))
+
+  (defun lumen-debug-log-err (msg)
+    "Log an error message."
+    (lumen-debug-message (format "Lumen error: %s" msg)))
+
+  (defun lumen-init ()
+    "Initialize Lumen configuration."
+    (lumen-debug-message "Lumen init: Starting...")
+    (unless (bound-and-true-p lumen-startup-overwrite)
+      (setq lumen-startup-overwrite t))
+    (lumen-debug-message (format "Lumen init: startup-overwrite set to %s" lumen-startup-overwrite))
+    (when lumen-startup-overwrite
+      (lumen-oneshot))
+    (add-hook 'after-init-hook 'lumen-fork-job)
+    (lumen-debug-message "Lumen init: Hook added."))
+
+  (lumen-init)
 #+end_src

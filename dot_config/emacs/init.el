@@ -1,8 +1,28 @@
 ;;; -*- mode: emacs-lisp; lexical-binding: t -*-
+(savehist-mode)
+
+(setq enable-recursive-minibuffers t)
+
+(setq minibuffer-depth-indicate-mode t)
+
+(setq minibuffer-prompt-properties
+      '(read-only t cursor-intangible t face minibuffer-prompt))
+(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+(defun crm-indicator (args)
+  (cons (format "[CRM%s] %s"
+                (replace-regexp-in-string
+                 "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                 crm-separator)
+                (car args))
+        (cdr args)))
+(advice-add #'completing-read-multiple :filter-args #'crm-indicator)
 
 (defun dotemacs//disable-themes (&rest _args)
   (mapc #'disable-theme custom-enabled-themes))
 (advice-add #'load-theme :before #'dotemacs//disable-themes)
+
+(xterm-mouse-mode)
 
 (defun dotemacs//xterm-osc10 (&rest _args)
   (send-string-to-terminal (format "\e]11;%s\a" (frame-parameter nil 'background-color))))
@@ -12,90 +32,15 @@
   (send-string-to-terminal "\e]111;\a"))
 (add-hook 'kill-emacs-hook #'dotemacs//xterm-osc11)
 
-(when (getenv "WAYLAND_DISPLAY")
-  (setq wl-copy-p nil
-        interprogram-cut-function (lambda (text)
-                                    (setq-local process-connection-type 'pipe)
-                                    (setq wl-copy-p (start-process "wl-copy" nil "wl-copy" "-f" "-n"))
-                                    (process-send-string wl-copy-p text)
-                                    (process-send-eof wl-copy-p))
-        interprogram-paste-function (lambda ()
-                                      (unless (and wl-copy-p (process-live-p wl-copy-p))
-                                        (shell-command-to-string "wl-paste -n | tr -d '\r'")))))
-                                        
-(setq make-backup-files nil)
-(xterm-mouse-mode)
-(load-theme 'modus-vivendi-tinted)
+;; Call once since lumen run early to detect OS preference.
+(dotemacs//xterm-osc10)
 
-;;
+(require 'cl-lib)
 
-(use-package emacs
-  :ensure nil
-  :custom
-  ;; Support opening new minibuffers from inside existing minibuffers.
-  (enable-recursive-minibuffers t)
-  ;; Hide commands in M-x which do not work in the current mode.
-  (read-extended-command-predicate #'command-completion-default-include-p)
-  :init
-  ;; Add prompt indicator to `completing-read-multiple'.
-  (defun crm-indicator (args)
-    (cons (format "[CRM%s] %s"
-                  (replace-regexp-in-string
-                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-                   crm-separator)
-                  (car args))
-          (cdr args)))
-  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-  ;; Do not allow the cursor in the minibuffer prompt
-  (setq minibuffer-prompt-properties
-        '(read-only t cursor-intangible t face minibuffer-prompt))
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
-
-(use-package savehist
-  :ensure nil
-  :init
-  (savehist-mode))
-
-(use-package eglot
-  :config
-  (add-to-list 'eglot-server-programs '((sh-mode bash-ts-mode) . ("bash-language-server" "start")))
-  (add-to-list 'eglot-server-programs '((c-mode c++-mode) . ("clangd"
-                                                             "--all-scopes-completion=true"
-                                                             "--background-index-priority=normal"
-                                                             "--background-index=true"
-                                                             "--clang-tidy"
-                                                             "--completion-parse=always"
-                                                             "--completion-style=bundled"
-                                                             "--function-arg-placeholders=false"
-                                                             "--header-insertion=never"
-                                                             "--parse-forwarding-functions"
-                                                             "--pch-storage=memory"
-                                                             "--ranking-model=decision_forest")))
-  :hook
-  (sh-mode . eglot-ensure)
-  (bash-ts-mode . eglot-ensure)
-  (c-mode . eglot-ensure)
-  (c++-mode . eglot-ensure))
-
-(defun my-suppress-eglot-message (orig-fun format &rest args)
-  "Suppress specific eglot messages from being shown in the minibuffer."
-  (let ((message-string (apply #'format format args)))
-    (unless (or (string-prefix-p "Connected" message-string)
-                (string-prefix-p "Waiting" message-string)
-                (string-prefix-p "Reconnected" message-string))
-      (apply orig-fun format args))))
-
-(advice-add 'eglot--message :around #'my-suppress-eglot-message)
-
-;;
-
-(use-package clangd-inactive-regions
-  :ensure (:host github :repo "fargiolas/clangd-inactive-regions.el")
-  :init
-  (add-hook 'eglot-managed-mode-hook #'clangd-inactive-regions-mode)
-  :config
-  (clangd-inactive-regions-set-method "darken-foreground")
-  (clangd-inactive-regions-set-opacity 0.50))
+(defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
+  "Prevent annoying \"Active processes exist\" query when you quit Emacs."
+  (cl-letf (((symbol-function #'process-list) (lambda ())))
+    ad-do-it))
 
 (defvar elpaca-installer-version 0.7)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
@@ -227,8 +172,7 @@
 (use-package vertico
   :ensure t
   :hook
-  (elpaca-after-init . vertico-mode)
-  (vertico-mode . vertico-mouse-mode))
+  (elpaca-after-init . vertico-mode))
 
 (use-package vertico-buffer
   :after vertico
@@ -259,7 +203,9 @@
 
 (use-package vertico-mouse
   :after vertico
-  :ensure nil)
+  :ensure nil
+  :hook
+  (vertico-mode . vertico-mouse-mode))
 
 (use-package vertico-multiform
   :after vertico
@@ -332,3 +278,62 @@
   :after magit
   :config
   (setq auth-sources '("~/.authinfo")))
+
+(use-package org
+  :ensure t)
+
+(use-package org-modern
+  :ensure t
+  :hook
+  (org-mode . org-modern-mode))
+
+(use-package mood-line
+  :ensure t
+  :init
+  (mood-line-mode))
+
+(use-package eglot
+  :config
+  ;; Disable "bold/highlight" ish effect on token under cursor
+  (setq eglot-ignored-server-capabilites '(:documentHighlightProvider))
+  (add-to-list 'eglot-server-programs '((sh-mode bash-ts-mode) . ("bash-language-server" "start")))
+  (add-to-list 'eglot-server-programs '((c-mode c++-mode) . ("clangd"
+                                                             "--all-scopes-completion=true"
+                                                             "--background-index-priority=normal"
+                                                             "--background-index=true"
+                                                             "--clang-tidy"
+                                                             "--completion-parse=always"
+                                                             "--completion-style=bundled"
+                                                             "--function-arg-placeholders=false"
+                                                             "--header-insertion=never"
+                                                             "--parse-forwarding-functions"
+                                                             "--pch-storage=memory"
+                                                             "--ranking-model=decision_forest")))
+  :hook
+  ((sh-mode
+    bash-ts-mode
+    c-mode
+    c++-mode) . eglot-ensure))
+
+(use-package company
+  :ensure t
+  :bind
+  (:map company-active-map
+        ([tab] . company-complete-selection)
+        ("TAB"    . company-complete-selection)
+        ("<return>" . nil)
+        ("RET" . nil))
+  :init
+  (setq company-minimum-prefix-length 1
+	        company-idle-delay 0
+	        company-format-margin-function nil
+	 company-backends '(company-capf)
+	 ;; Only search the current buffer for `company-dabbrev' (a backend that
+    ;; suggests text your open buffers). This prevents Company from causing
+    ;; lag once you have a lot of buffers open.
+    company-dabbrev-other-buffers nil
+    ;; Make `company-dabbrev' fully case-sensitive, to improve UX with
+    ;; domain-specific words with particular casing.
+    company-dabbrev-ignore-case nil
+    company-dabbrev-downcase nil)
+  (global-company-mode))
