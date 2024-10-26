@@ -7,6 +7,8 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
   (org-babel-tangle)
 #+end_src
 
+-----
+
 #+begin_src emacs-lisp :tangle "init.el"
   ;;; -*- mode: emacs-lisp; lexical-binding: t -*-
 #+end_src
@@ -23,17 +25,13 @@ Prior to Emacs 27, the init file was responsible for invoking [[elisp:(describe-
   (defun dotemacs//before-init-hook (&rest _args)
     ;; Ensure package requests are not preempted by the dependencies they rely on.
     (setq package-enable-at-startup nil)
-
-    ;; We run this in `before-init-hook' instead of `tty-setup-hook'
-    ;; because the latter happens too late.
-    (mapc (lambda (mode) (funcall mode -1))
-  	'(menu-bar-mode scroll-bar-mode tool-bar-mode))
-    (setq-default mode-line-format nil))
+    ;; Prevent premature redisplay.
+    <<inhibit-redisplay>>)
 
   (add-hook 'before-init-hook 'dotemacs//before-init-hook)
 #+end_src
 
-* Initialization
+* Initializa tion
 
 Emacs doesn't recommend that we move into ~~early-init.el~~ customizations that can be left in ~~init.el~~. That is because the early init file is read before the GUI is initialized, so customizations related to GUI features will not work reliably in ~~early-init.el~~. By contrast, the /normal/ init files are read after the GUI is initialized. Instead, the recommanded approach for customizations that rely on GUI features is to make them run off hooks provided by the Emacs startup, such as [[elisp:(describe-symbol 'package-initialize)][window-setup-hook]] or [[elisp:(describe-symbol 'package-initialize)][tty-setup-hook]].
 
@@ -44,6 +42,12 @@ Emacs doesn't recommend that we move into ~~early-init.el~~ customizations that 
     <<initial-scratch-message>>)
 
   (add-hook 'tty-setup-hook 'dotemacs//tty-setup-hook)
+
+  ;; Note: `tty-setup-hook' does not run while redisplay is
+  ;; inhibited. It will trigger only after we lift the inhibition, which
+  ;; is "too late" to hide the elements below.
+  (mapc (lambda (mode) (funcall mode -1))
+        '(menu-bar-mode scroll-bar-mode tool-bar-mode))
 #+end_src
 
 ** Inhibit
@@ -68,12 +72,12 @@ https://yrh.dev/blog/rant-obfuscation-in-emacs/
 
 #+name: inhibit-redisplay
 #+begin_src emacs-lisp
-  (setq inhibit-redisplay t)
+  (setq-default inhibit-redisplay t)
 #+end_src
 
 ** Scratch
 
-At startup, the *scratch* buffer contains a short message, in the form of a Lisp comment, that explains what it is for. This message is controlled by the variable [[elisp:(describe-symbol 'initial-scratch-message)][window-setup-hook]], which should be either a documentation string, or nil (which means to suppress the message).
+At startup, the *scratch* buffer contains a short message, in the form of a Lisp comment, that explains what it is for. This message is controlled by the [[elisp:(describe-symbol 'initial-scratch-message)][initial-scratch-message]] variable, which should be either a documentation string, or nil (which means to suppress the message).
 
 #+name: initial-scratch-message
 #+begin_src emacs-lisp
@@ -101,6 +105,8 @@ A better approach is to disable any previously [[elisp:(describe-symbol 'custom-
 ** XTerm
 
 *** Mouse
+
+ NOTE: This is extremely primitive.
 
 #+begin_src emacs-lisp :tangle "init.el"
   (xterm-mouse-mode)
@@ -292,6 +298,20 @@ My Keyboard is not ready right now, so we can't focus on Meow at the moment.
 (elpaca elpaca-use-package
   ;; Enable use-package :ensure support for Elpaca.
   (elpaca-use-package-mode))
+#+end_src
+
+** Doom Modeline
+#+begin_src emacs-lisp :tangle "init.el"
+  (use-package doom-modeline
+    :ensure (:wait t)
+    :init
+    (doom-modeline-mode)
+    :custom
+    (doom-modeline-icon nil)
+    :config
+    ;; Re-enable redisplay
+    (setq inhibit-redisplay nil)
+    (redisplay t)) ;; Force immediate redisplay
 #+end_src
 
 ** Vertico
@@ -537,9 +557,6 @@ My Keyboard is not ready right now, so we can't focus on Meow at the moment.
 
 ** Completion
 #+begin_src emacs-lisp :tangle "init.el"
-  (defun add-pcomplete-to-capf ()
-    (add-hook 'completion-at-point-functions 'pcomplete-completions-at-point nil t))
-
   (use-package company
     :ensure t
     :bind (:map company-active-map
@@ -548,7 +565,8 @@ My Keyboard is not ready right now, so we can't focus on Meow at the moment.
         	      ("<return>" . nil)
         	      ("RET" . nil))
     :custom
-    ;; "Tooltip" is misleading; this actually refers to the completion menu.
+    ;; "Tooltip" is misleading; this actually refers to the completion
+    ;; menu.
     (company-tooltip-limit 8)
     (company-tooltip-align-annotations t)
 
@@ -567,10 +585,10 @@ My Keyboard is not ready right now, so we can't focus on Meow at the moment.
     (company-format-margin-function nil)
 
     ;; In the Emacs’s world, the current tendency is to have the
-    ;; completion logic provided by completion-at-point-functions
-    ;; (CAPF) implementations. [Among the other things, this is what
-    ;; the popular packages that support language server protocol
-    ;; (LSP) also rely on.]
+    ;; completion logic provided by completion-at-point-functions (CAPF)
+    ;; implementations. [Among the other things, this is what the
+    ;; popular packages that support language server protocol (LSP) also
+    ;; rely on.]
     ;;
     ;; Since company-capf works as a bridge to the standard CAPF
     ;; facility, it is probably the most often used and recommended
@@ -581,8 +599,7 @@ My Keyboard is not ready right now, so we can't focus on Meow at the moment.
     ;; that have CAPF support implemented.
     (company-backends '(company-capf))
 
-    ;; Collect candidates from the from the buffers with the same major
-    ;; mode.
+    ;; Collect candidates from the buffers with the same major mode.
     (company-dabbrev-other-buffers t)
 
     (global-company-mode 1))

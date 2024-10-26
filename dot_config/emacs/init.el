@@ -9,6 +9,12 @@
 
 (add-hook 'tty-setup-hook 'dotemacs//tty-setup-hook)
 
+;; Note: `tty-setup-hook' does not run while redisplay is
+;; inhibited. It will trigger only after we lift the inhibition, which
+;; is "too late" to hide the elements below.
+(mapc (lambda (mode) (funcall mode -1))
+      '(menu-bar-mode scroll-bar-mode tool-bar-mode))
+
 (defun dotemacs//disable-themes (&rest _args)
   (mapc #'disable-theme custom-enabled-themes))
 
@@ -99,6 +105,17 @@
 (elpaca elpaca-use-package
   ;; Enable use-package :ensure support for Elpaca.
   (elpaca-use-package-mode))
+
+(use-package doom-modeline
+  :ensure (:wait t)
+  :init
+  (doom-modeline-mode)
+  :custom
+  (doom-modeline-icon nil)
+  :config
+  ;; Re-enable redisplay
+  (setq inhibit-redisplay nil)
+  (redisplay t)) ;; Force immediate redisplay
 
 (use-package vertico
   :ensure t
@@ -233,9 +250,6 @@
   :hook
   ((c-mode c++-mode) . eglot-ensure))
 
-(defun add-pcomplete-to-capf ()
-  (add-hook 'completion-at-point-functions 'pcomplete-completions-at-point nil t))
-
 (use-package company
   :ensure t
   :bind (:map company-active-map
@@ -244,7 +258,8 @@
       	      ("<return>" . nil)
       	      ("RET" . nil))
   :custom
-  ;; "Tooltip" is misleading; this actually refers to the completion menu.
+  ;; "Tooltip" is misleading; this actually refers to the completion
+  ;; menu.
   (company-tooltip-limit 8)
   (company-tooltip-align-annotations t)
 
@@ -263,10 +278,10 @@
   (company-format-margin-function nil)
 
   ;; In the Emacs’s world, the current tendency is to have the
-  ;; completion logic provided by completion-at-point-functions
-  ;; (CAPF) implementations. [Among the other things, this is what
-  ;; the popular packages that support language server protocol
-  ;; (LSP) also rely on.]
+  ;; completion logic provided by completion-at-point-functions (CAPF)
+  ;; implementations. [Among the other things, this is what the
+  ;; popular packages that support language server protocol (LSP) also
+  ;; rely on.]
   ;;
   ;; Since company-capf works as a bridge to the standard CAPF
   ;; facility, it is probably the most often used and recommended
@@ -277,8 +292,7 @@
   ;; that have CAPF support implemented.
   (company-backends '(company-capf))
 
-  ;; Collect candidates from the from the buffers with the same major
-  ;; mode.
+  ;; Collect candidates from the buffers with the same major mode.
   (company-dabbrev-other-buffers t)
 
   (global-company-mode 1))
