@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "nvim-treesitter/nvim-treesitter", main = "nvim-treesitter.configs", event = "VeryLazy",
+  "nvim-treesitter/nvim-treesitter", main = "nvim-treesitter.configs", build = ":TSUpdate", event = "VeryLazy",
 
   ---@type TSConfig
   ---@diagnostic disable: missing-fields
@@ -15,17 +15,14 @@ local Spec = {
         disable = function(_, bufnr)
           -- https://github.com/neovim/neovim/issues/22426
           return (vim.fn.getfsize(bufnr) > 1000000) or false
-        end
-      }
-    }
-  },
-
-  -- TSConfig annotation shows `@field modules { [string]: TSModule }`, but
-  -- Tree-sitter's internal logic dynamically creates the modules field at
-  -- runtime, To address this, we unpack the fields from opts.modules directly
-  -- into opts and then dynamically remove the former.
-  --
-  {
+        end,
+      },
+    },
+  }, {
+    -- TSConfig annotation specifies `@field modules { [string]: TSModule }`,
+    -- but Tree-sitter generates the modules field dynamically at runtime. To
+    -- address this, unpack opts.modules directly into opts, then remove the
+    -- original field.
     __index = function(table, key)
       if key ~= "modules" then
         local modules = rawget(table, "modules")
@@ -35,8 +32,8 @@ local Spec = {
           return rawget(table, key)
         end
       end
-    end
-  })
+    end,
+  }),
 }
 
 return Spec
