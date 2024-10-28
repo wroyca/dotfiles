@@ -4,8 +4,30 @@
 local Spec = {
   "ggandor/leap.nvim",
 
+  -- NOTE: Avoid `create_default_mappings` due to its keymap conflict
+  -- detection. It lack context awareness and frequently results in false
+  -- positives.
   keys = {
-    "s", "S", "gs",
+    {
+      "s",
+      "<Plug>(leap-forward)",
+      mode = { "n", "x", "o" },
+      desc = "Leap forward",
+    },
+
+    {
+      "S",
+      "<Plug>(leap-backward)",
+      mode = { "n", "x", "o" },
+      desc = "Leap backward",
+    },
+
+    {
+      "<C-s>",
+      "<Plug>(leap-from-window)",
+      mode = { "n", "x", "o" },
+      desc = "Leap from window",
+    },
 
     {
       "r",
@@ -29,11 +51,6 @@ local Spec = {
   opts = {
     highlight_unlabeled_phase_one_targets = true,
   },
-
-  config = function(_, opts)
-    require("leap").setup(opts)
-    require("leap").create_default_mappings()
-  end,
 }
 
 return Spec
