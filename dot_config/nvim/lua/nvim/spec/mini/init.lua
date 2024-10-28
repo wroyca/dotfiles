@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "echasnovski/mini.nvim", import = "nvim.spec.mini"
+  "echasnovski/mini.nvim", import = "nvim.spec.mini",
 }
 
-return not package.loaded["mini"] and Spec or {}
+return package.loaded["mini"] and {} or Spec

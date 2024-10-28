@@ -8,12 +8,9 @@ local Spec = {
     vim.o.signcolumn = "yes:1"
   end,
 
-  keys = function()
-    local diff = require("mini.diff")
-    return {
-      { "go", diff.toggle_overlay, mode = "n", desc = "Toggle hunks overlay" },
-    }
-  end,
+  keys = {
+    { "go", function() MiniDiff.toggle_overlay(0) end, mode = "n", desc = "Toggle hunks overlay" },
+  },
 
   opts = {
     delay = {
@@ -28,6 +25,11 @@ local Spec = {
       },
     },
   },
+
+  -- opts shouldn't call setup, as mini modules self-export through _G.
+  config = function (_, opts)
+    require ("mini.diff").setup(opts)
+  end
 }
 
 return Spec

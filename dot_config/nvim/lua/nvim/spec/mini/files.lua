@@ -80,6 +80,7 @@ local Spec = {
     options = { permanent_delete = false }
   },
 
+  -- opts shouldn't call setup, as mini modules self-export through _G.
   config = function(_, opts)
     require("mini.files").setup(opts)
 
