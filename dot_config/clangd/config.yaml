@@ -1,0 +1,15 @@
+# https://clangd.llvm.org/config
+# llvm-project/clang-tools-extra/clangd/configcompile.cpp
+
+Index:
+  StandardLibrary: Yes
+
+Diagnostics:
+  ClangTidy:
+    FastCheckFilter: None
+  UnusedIncludes: None
+
+Completion:
+  # Suggestions from scopes that are not visible will automatically insert the
+  # scope prefix.
+  AllScopes: true
