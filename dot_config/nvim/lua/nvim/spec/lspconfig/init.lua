@@ -1,26 +1,12 @@
 -- Namespace identifier for inactive regions
-local inactive_ns = vim.api.nvim_create_namespace('inactive_regions')
+local inactive_ns = vim.api.nvim_create_namespace("inactive_regions")
 
 ---@type LazyPluginSpec
 local Spec = {
-  "neovim/nvim-lspconfig", lazy = false, enabled = false,
+  "neovim/nvim-lspconfig", event = "User AsyncFileLoad", priority = 20,
 
-  dependencies = {
-    "williamboman/mason.nvim",
-    "williamboman/mason-lspconfig.nvim",
-  },
-
-  config = function()
-    require("mason-lspconfig").setup_handlers {
-      -- The first entry (without a key) will be the default handler
-      -- and will be called for each installed server that doesn't have
-      -- a dedicated handler.
-      function (server_name) require("lspconfig")[server_name].setup {} end,
-    }
-
-    local lspconfig = require ("lspconfig")
-
-    lspconfig.clangd.setup {
+  opts = {
+    clangd = {
       -- clang-tools-extra/clangd/tool/ClangdMain.cpp
       cmd = {
         "clangd",
@@ -102,7 +88,15 @@ local Spec = {
           },
         },
       },
-    }
+    },
+
+    lua_ls = {},
+  },
+
+  config = function(_, opts)
+    for server_name, server_opts in pairs(opts) do
+      require("lspconfig")[server_name].setup(server_opts)
+    end
   end
 }
 
