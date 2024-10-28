@@ -31,7 +31,7 @@ Prior to Emacs 27, the init file was responsible for invoking [[elisp:(describe-
   (add-hook 'before-init-hook 'dotemacs//before-init-hook)
 #+end_src
 
-* Initializa tion
+* Initialization
 
 Emacs doesn't recommend that we move into ~~early-init.el~~ customizations that can be left in ~~init.el~~. That is because the early init file is read before the GUI is initialized, so customizations related to GUI features will not work reliably in ~~early-init.el~~. By contrast, the /normal/ init files are read after the GUI is initialized. Instead, the recommanded approach for customizations that rely on GUI features is to make them run off hooks provided by the Emacs startup, such as [[elisp:(describe-symbol 'package-initialize)][window-setup-hook]] or [[elisp:(describe-symbol 'package-initialize)][tty-setup-hook]].
 
@@ -553,6 +553,15 @@ My Keyboard is not ready right now, so we can't focus on Meow at the moment.
 
     :hook
     ((c-mode c++-mode) . eglot-ensure))
+
+  (use-package clangd-inactive-regions
+    :ensure (:host github :repo "fargiolas/clangd-inactive-regions.el")
+    :init
+    ;; FIXME: Using `:hook' behave strangely. (lisp recursion?)
+    (add-hook 'eglot-managed-mode-hook #'clangd-inactive-regions-mode)
+    :config
+    (clangd-inactive-regions-set-method "darken-foreground")
+    (clangd-inactive-regions-set-opacity 0.55))
 #+end_src
 
 ** Completion
