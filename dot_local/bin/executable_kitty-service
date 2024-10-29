@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-gsettings monitor org.gnome.desktop.interface color-scheme | \
-  xargs -I % bash -c "$HOME/.local/bin/kitty-color-scheme" &2>>/dev/null

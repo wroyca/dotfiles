@@ -1,13 +1,12 @@
 [Unit]
-Description=Kitty service to sync with OS appearance
+Description=Kitty service to sync with system color-scheme
 
 [Service]
 Type=forking
-Environment="PATH={{ .chezmoi.homeDir }}/.local/bin:/usr/local/bin:/usr/bin:/bin"
-ExecStart={{ .chezmoi.homeDir }}/.local/bin/kitty-service
-RemainAfterExit=yes
+RestartSec=5
 Restart=on-failure
-RestartSec=5s
+Environment="PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:%h/.local/bin:%h/.cargo/bin:%h/go/bin"
+ExecStart=%h/.local/bin/kitty/kitty-color-scheme
 
 [Install]
 WantedBy=default.target
