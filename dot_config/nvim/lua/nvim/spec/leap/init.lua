@@ -4,9 +4,6 @@
 local Spec = {
   "ggandor/leap.nvim",
 
-  -- NOTE: Avoid `create_default_mappings` due to its keymap conflict
-  -- detection. It lack context awareness and frequently results in false
-  -- positives.
   keys = {
     {
       "s",
