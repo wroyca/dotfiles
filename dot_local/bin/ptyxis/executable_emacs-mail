@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+if [[ -n "$1" && -f "$1" ]]; then
+  ptyxis --tab --title "$(basename "$1") - " -x "emacsclient -nw -c -f message-mailto \"$1\""
+else
+  ptyxis --tab -x "emacsclient -nw -c -f message-mailto"
+fi

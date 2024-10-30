@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# New terminal tab in active window
+#
+ptyxis --tab --title "$1" -x "emacsclient -nw -c \"$2\""
