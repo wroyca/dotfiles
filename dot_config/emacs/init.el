@@ -24,6 +24,13 @@
 
 (xterm-mouse-mode)
 
+;; TODO: Terminals handle scrolling differently (e.g., Kitty's default is
+;; to scroll by 4, Ptyxis by 1, and so on). For now, set the default
+;; as if using Ptyxis, but later detect the terminal properly.
+(setq mouse-wheel-scroll-amount '(3 ((shift) . 5) ((control) . nil)))
+(setq mouse-wheel-progressive-speed nil)
+(setq scroll-margin 4)
+
 (defun dotemacs//xterm-change-text-background (&rest _args)
   (send-string-to-terminal
    (format "\e]11;%s\a" (frame-parameter nil 'background-color))))
@@ -39,6 +46,50 @@
 
 (add-hook 'kill-emacs-hook #'dotemacs//xterm-reset-text-background)
 (add-hook 'suspend-tty-functions #'dotemacs//xterm-reset-text-background)
+
+(defvar dotemacs--ptyxis-open-files '()
+  "List of files currently opened in Ptyxis tabs.")
+
+(defun dotemacs//ptyxis-generate-tab-command (file)
+  "Generate the command to open FILE in a new Ptyxis tab with Emacs client."
+  (let ((title (concat (file-name-nondirectory file) " - ")))
+    (format "/home/wroy/.local/bin/ptyxis/emacs-new-tab %s %s"
+            (shell-quote-argument title)
+            (shell-quote-argument file))))
+
+(defun dotemacs/ptyxis-open-file-in-tab (file)
+  "Open FILE in a new Ptyxis tab and launch new Emacs client.
+The file is also added to `dotemacs--ptyxis-open-files` for reopening
+purposes."
+  (interactive "FFile: ")
+  (let ((cmd (dotemacs//ptyxis-generate-tab-command file)))
+    (start-process-shell-command "ptyxis-open-file" nil cmd)
+    (add-to-list 'dotemacs--ptyxis-open-files file)))
+
+(defun dotemacs/ptyxis-reopen-tabs ()
+  "Reopen all files listed in `dotemacs--ptyxis-open-files` in new Ptyxis
+tabs.
+Use this function if a GTK crash occurs or tabs need to be restored."
+  (interactive)
+  (dolist (file dotemacs--ptyxis-open-files)
+    (dotemacs/ptyxis-open-file-in-tab file)))
+
+(defun dotemacs//ptyxis-open-file-advice (orig-fun &rest args)
+  "Advice to open files in a new Ptyxis tab by default.
+ORIG-FUN is the original function, and ARGS are its arguments."
+  (if (bound-and-true-p org-babel-exp-reference-buffer)
+      ;; Avoid creating a Ptyxis tab when org-babel-exp-reference-buffer
+      ;; is bound. That is, files are temporarily opened to write tangled
+      ;; code, and attempting to forward them to a new tab will cancel the
+      ;; tangle process.
+      (apply orig-fun args)
+    (let ((file (car args)))
+      (if (and file (file-exists-p file) (not (file-directory-p file)))
+          (dotemacs/ptyxis-open-file-in-tab file)
+        (apply orig-fun args)))))
+
+(advice-add 'find-file :around #'dotemacs//ptyxis-open-file-advice)
+(advice-add 'dired-find-file :around #'dotemacs//ptyxis-open-file-advice)
 
 (setq enable-recursive-minibuffers t)
 
@@ -249,6 +300,15 @@
 
   :hook
   ((c-mode c++-mode) . eglot-ensure))
+
+(use-package clangd-inactive-regions
+  :ensure (:host github :repo "fargiolas/clangd-inactive-regions.el")
+  :init
+  ;; FIXME: Using `:hook' behave strangely. (lisp recursion?)
+  (add-hook 'eglot-managed-mode-hook #'clangd-inactive-regions-mode)
+  :config
+  (clangd-inactive-regions-set-method "darken-foreground")
+  (clangd-inactive-regions-set-opacity 0.55))
 
 (use-package company
   :ensure t
