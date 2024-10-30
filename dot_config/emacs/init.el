@@ -1,26 +1,44 @@
 ;;; -*- mode: emacs-lisp; lexical-binding: t -*-
 
+(defvar dotemacs--inhibit-startup-screen t
+  "When non-nil, inhibit the startup screen on Emacs launch.")
+
+(defun dotemacs//inhibit-startup-screen ()
+    "Set `inhibit-startup-screen` to the value of `dotemacs--inhibit-startup-screen`.
+This acts as a shortcut to disable the startup screen, splash screen,
+and startup message."
+  (setq inhibit-startup-screen 'dotemacs--inhibit-startup-screen))
+(defvar dotemacs--inhibit-startup-echo-area-message (user-login-name)
+  "When non-nil, inhibit the startup echo area message on Emacs launch.")
+
+(defun dotemacs//inhibit-startup-echo-area-message ()
+    "Set `inhibit-startup-echo-area-message' to the value of
+`dotemacs--inhibit-startup-echo-area-message'.
+This acts as a shortcut to disable the startup echo area message."
+  (setq-default inhibit-startup-echo-area-message dotemacs--inhibit-startup-echo-area-message)
+  (put 'inhibit-startup-echo-area-message 'saved-value t))
+(defvar dotemacs--initial-scratch-message nil
+  "When non-nil, suppress the initial scratch message.")
+
+(defun dotemacs//initial-scratch-message ()
+    "Set `initial-scratch-message' to the value of
+`dotemacs--initial-scratch-message'.
+This acts as a shortcut to override the initial scratch message."
+  (setq-default initial-scratch-message dotemacs--initial-scratch-message))
+
 (defun dotemacs//tty-setup-hook (&rest _args)
-  (setq inhibit-startup-screen t)
-  (setq inhibit-startup-echo-area-message (user-login-name))
-  (put 'inhibit-startup-echo-area-message 'saved-value t)
-  ;; Suppress the *scratch* buffer short message
-  (setq initial-scratch-message nil))
+  (dotemacs//inhibit-startup-screen)
+  (dotemacs//inhibit-startup-echo-area-message)
+  (dotemacs//initial-scratch-message))
 
 (add-hook 'tty-setup-hook 'dotemacs//tty-setup-hook)
-
-;; Note: `tty-setup-hook' does not run while redisplay is
-;; inhibited. It will trigger only after we lift the inhibition, which
-;; is "too late" to hide the elements below.
-(mapc (lambda (mode) (funcall mode -1))
-      '(menu-bar-mode scroll-bar-mode tool-bar-mode))
 
 (defun dotemacs//disable-themes (&rest _args)
   (mapc #'disable-theme custom-enabled-themes))
 
 (advice-add #'load-theme :before #'dotemacs//disable-themes)
 
-(load-theme 'modus-vivendi-tinted)
+(load-theme 'modus-vivendi)
 
 (xterm-mouse-mode)
 
@@ -156,17 +174,6 @@ ORIG-FUN is the original function, and ARGS are its arguments."
 (elpaca elpaca-use-package
   ;; Enable use-package :ensure support for Elpaca.
   (elpaca-use-package-mode))
-
-(use-package doom-modeline
-  :ensure (:wait t)
-  :init
-  (doom-modeline-mode)
-  :custom
-  (doom-modeline-icon nil)
-  :config
-  ;; Re-enable redisplay
-  (setq inhibit-redisplay nil)
-  (redisplay t)) ;; Force immediate redisplay
 
 (use-package vertico
   :ensure t
@@ -337,22 +344,15 @@ ORIG-FUN is the original function, and ARGS are its arguments."
   ;; Disable icons.
   (company-format-margin-function nil)
 
-  ;; In the Emacs’s world, the current tendency is to have the
-  ;; completion logic provided by completion-at-point-functions (CAPF)
-  ;; implementations. [Among the other things, this is what the
-  ;; popular packages that support language server protocol (LSP) also
-  ;; rely on.]
-  ;;
-  ;; Since company-capf works as a bridge to the standard CAPF
-  ;; facility, it is probably the most often used and recommended
-  ;; backend nowadays, including for Emacs Lisp coding.
-  ;;
-  ;; To illustrate, the following minimal backends setup already cover
-  ;; a large number of basic use cases, especially so in major modes
-  ;; that have CAPF support implemented.
-  (company-backends '(company-capf))
-
   ;; Collect candidates from the buffers with the same major mode.
   (company-dabbrev-other-buffers t)
 
   (global-company-mode 1))
+
+(use-package company-org-block
+  :ensure t
+  :custom
+  (company-org-block-edit-style 'inline) ;; 'auto, 'prompt, or 'inline
+  :hook ((org-mode . (lambda ()
+                       (setq-local company-backends '(company-org-block))
+                       (company-mode +1)))))
