@@ -1,0 +1,6 @@
+[org/gnome/Ptyxis]
+
+audible-bell=false
+cursor-blink-mode='off'
+restore-session=false
+restore-window-size=false
