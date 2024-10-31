@@ -4,7 +4,7 @@
   "When non-nil, inhibit the startup screen on Emacs launch.")
 
 (defun dotemacs//inhibit-startup-screen ()
-    "Set `inhibit-startup-screen` to the value of `dotemacs--inhibit-startup-screen`.
+    "Set `inhibit-startup-screen' to the value of `dotemacs--inhibit-startup-screen'.
 This acts as a shortcut to disable the startup screen, splash screen,
 and startup message."
   (setq inhibit-startup-screen 'dotemacs--inhibit-startup-screen))
@@ -12,10 +12,10 @@ and startup message."
   "When non-nil, inhibit the startup echo area message on Emacs launch.")
 
 (defun dotemacs//inhibit-startup-echo-area-message ()
-    "Set `inhibit-startup-echo-area-message' to the value of
-`dotemacs--inhibit-startup-echo-area-message'.
+  "Set `inhibit-startup-echo-area-message' to the value of `dotemacs--inhibit-startup-echo-area-message'.
 This acts as a shortcut to disable the startup echo area message."
   (setq-default inhibit-startup-echo-area-message dotemacs--inhibit-startup-echo-area-message)
+  ;; https://yrh.dev/blog/rant-obfuscation-in-emacs/
   (put 'inhibit-startup-echo-area-message 'saved-value t))
 (defvar dotemacs--initial-scratch-message nil
   "When non-nil, suppress the initial scratch message.")
@@ -47,7 +47,9 @@ This acts as a shortcut to override the initial scratch message."
 ;; as if using Ptyxis, but later detect the terminal properly.
 (setq mouse-wheel-scroll-amount '(3 ((shift) . 5) ((control) . nil)))
 (setq mouse-wheel-progressive-speed nil)
-(setq scroll-margin 4)
+
+;; FIXME: Strange behavior with mouse wheel scroll when reading document end.
+;; (setq scroll-margin 4)
 
 (defun dotemacs//xterm-change-text-background (&rest _args)
   (send-string-to-terminal
@@ -68,6 +70,16 @@ This acts as a shortcut to override the initial scratch message."
 (defvar dotemacs--ptyxis-open-files '()
   "List of files currently opened in Ptyxis tabs.")
 
+(defvar dotemacs--tangling nil
+  "Non-nil if currently tangling with `org-babel-tangle'.")
+
+(defun dotemacs//with-tangling-active (orig-fun &rest args)
+  "Set `dotemacs--tangling` to non-nil during `org-babel-tangle`."
+  (let ((dotemacs--tangling t))
+    (apply orig-fun args)))
+
+(advice-add 'org-babel-tangle :around #'dotemacs//with-tangling-active)
+
 (defun dotemacs//ptyxis-generate-tab-command (file)
   "Generate the command to open FILE in a new Ptyxis tab with Emacs client."
   (let ((title (concat (file-name-nondirectory file) " - ")))
@@ -77,7 +89,7 @@ This acts as a shortcut to override the initial scratch message."
 
 (defun dotemacs/ptyxis-open-file-in-tab (file)
   "Open FILE in a new Ptyxis tab and launch new Emacs client.
-The file is also added to `dotemacs--ptyxis-open-files` for reopening
+The file is also added to `dotemacs--ptyxis-open-files' for reopening
 purposes."
   (interactive "FFile: ")
   (let ((cmd (dotemacs//ptyxis-generate-tab-command file)))
@@ -85,8 +97,7 @@ purposes."
     (add-to-list 'dotemacs--ptyxis-open-files file)))
 
 (defun dotemacs/ptyxis-reopen-tabs ()
-  "Reopen all files listed in `dotemacs--ptyxis-open-files` in new Ptyxis
-tabs.
+  "Reopen all files listed in `dotemacs--ptyxis-open-files' in new Ptyxis tabs.
 Use this function if a GTK crash occurs or tabs need to be restored."
   (interactive)
   (dolist (file dotemacs--ptyxis-open-files)
@@ -94,12 +105,8 @@ Use this function if a GTK crash occurs or tabs need to be restored."
 
 (defun dotemacs//ptyxis-open-file-advice (orig-fun &rest args)
   "Advice to open files in a new Ptyxis tab by default.
-ORIG-FUN is the original function, and ARGS are its arguments."
-  (if (bound-and-true-p org-babel-exp-reference-buffer)
-      ;; Avoid creating a Ptyxis tab when org-babel-exp-reference-buffer
-      ;; is bound. That is, files are temporarily opened to write tangled
-      ;; code, and attempting to forward them to a new tab will cancel the
-      ;; tangle process.
+  ORIG-FUN is the original function, and ARGS are its arguments."
+  (if dotemacs--tangling
       (apply orig-fun args)
     (let ((file (car args)))
       (if (and file (file-exists-p file) (not (file-directory-p file)))
@@ -129,6 +136,7 @@ ORIG-FUN is the original function, and ARGS are its arguments."
 (savehist-mode)
 
 (cua-mode)
+(setq-default cua-keep-region-after-copy t)
 
 (editorconfig-mode)
 

@@ -5,6 +5,8 @@
 
 (defun dotemacs//before-init-hook (&rest _args)
   (setq package-enable-at-startup dotemacs--package-enable-at-startup)
+
+  ;; TODO: dotemacs--
   (mapc (lambda (mode) (funcall mode -1))
       '(menu-bar-mode scroll-bar-mode tool-bar-mode))
   (setq-default mode-line-format nil))
