@@ -1,3 +1,13 @@
 [org/gnome/shell]
 
+# Although this previously worked, it appears to have been broken at some point
+# during the GNOME 46 update cycle. Specifically, while the value is still
+# saved in dconf, it is no longer read from there. This suggests that the power
+# profile might now store or read the preference value elsewhere, though I
+# haven’t looked into where that might be or confirmed if this assumption is
+# accurate.
+#
+# For now, keep it as-is in case it resolves itself in a future update or if we
+# ever decide to investigate further.
+#
 last-selected-power-profile='performance'
