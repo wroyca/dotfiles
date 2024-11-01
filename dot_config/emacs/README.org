@@ -68,23 +68,14 @@ Note that [[elisp:(describe-symbol 'load-theme)][load-theme]] doesn’t automati
   (load-theme 'modus-vivendi)
 #+end_src
 
-** XTerm
-
-*** Mouse
-
- NOTE: This is extremely primitive.
+** Terminal
 
 #+begin_src emacs-lisp :tangle "init.el"
-  (xterm-mouse-mode)
+  (defun dotemacs//setup-tty-hook 
+    (&rest _args)
+    (xterm-mouse-mode))
 
-  ;; TODO: Terminals handle scrolling differently (e.g., Kitty's default is
-  ;; to scroll by 4, Ptyxis by 1, and so on). For now, set the default
-  ;; as if using Ptyxis, but later detect the terminal properly.
-  (setq mouse-wheel-scroll-amount '(3 ((shift) . 5) ((control) . nil)))
-  (setq mouse-wheel-progressive-speed nil)
-
-  ;; FIXME: Strange behavior with mouse wheel scroll when reading document end.
-  ;; (setq scroll-margin 4)
+  (add-hook 'setup-tty-hook 'dotemacs//setup-tty-hook)
 #+end_src
 
 *** Operating System Command (OSC)
@@ -93,7 +84,7 @@ Modern terminals can send and receive Operating System Command (OSC) codes. In p
 
 Continuing forward, the string terminator (ST) ends an OSC sequence and consists of either two ASCII characters: ~27~ and ~92 (ESC )~ or—now deprecated—ASCII ~7 (BEL)~. The ~parameters~ (Ps) consist of a single (usually optional) numeric parameter, which is composed of one or more decimal digits.
 
-The XTerm specification states that the 10 colors listed below may be set or queried using codes 10 through 19. These are referred to as dynamic colors, as the corresponding control sequences were the first means for setting xterm's colors dynamically, i.e., after it was started. They are not the same as the ANSI colors; However, dynamic text foreground and background colors are used when ANSI colors are reset using SGR 39 and 49, respectively.
+The XTerm specification states that the 10 colors listed below may be set or queried using codes ~10~ through ~19~. These are referred to as dynamic colors, as the corresponding control sequences were the first means for setting xterm's colors dynamically, i.e., after it was started. They are not the same as the ANSI colors; However, dynamic text foreground and background colors are used when ANSI colors are reset using SGR ~39~ and ~49~, respectively.
 
 | Resource                 | Description                                |
 |--------------------------+--------------------------------------------|
@@ -108,7 +99,7 @@ The XTerm specification states that the 10 colors listed below may be set or que
 | Ps = 1 8                 |  Change Tektronix cursor color to Pt.      |
 | Ps = 1 9                 |  Change highlight foreground color to Pt.  |
 
-Here we advise load-theme to send an ANSI escape sequence to the terminal to update the background color according to the current frame's background-color parameter. Moreover, we advise Emacs to reset the terminal background to its default state upon exit.
+Here we advise [[elisp:(describe-symbol 'load-theme)][load-theme]] to send an ANSI escape sequence to update the background color according to the current frame's background-color parameter. Moreover, we advise Emacs to reset the terminal background to its default state upon exit.
 
 https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h3-Operating-System-Commands
 
@@ -119,8 +110,6 @@ https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h3-Operating-System-Comm
 
   (advice-add #'load-theme :after #'dotemacs//xterm-change-text-background)
   (add-hook 'resume-tty-functions #'dotemacs//xterm-change-text-background)
-
-  ;; Run once as pre-shot routine.
   (dotemacs//xterm-change-text-background)
 #+end_src
 
@@ -222,115 +211,79 @@ Note: This is extremely experimental and was created quickly as a demonstration.
   (advice-add 'dired-find-file :around #'dotemacs//ptyxis-open-file-advice)
 #+end_src
 
-** Settings
-
-*** Minibuffer
-
-Support for opening new minibuffer while already using an active minibuffer. Note that by default, the outer-level minibuffer is invisible while we are editing the inner one.
-
-#+begin_src emacs-lisp :tangle "init.el"
-  (setq enable-recursive-minibuffers t)
-#+end_src
-
-Display the current level of minibuffer recursion depth directly in the prompt
-
-#+begin_src emacs-lisp :tangle "init.el"
-  (setq minibuffer-depth-indicate-mode t)
-#+end_src
-
-Prevent cursor from entering minibuffer prompt area
-
-#+begin_src emacs-lisp :tangle "init.el"
-  (setq minibuffer-prompt-properties
-        '(read-only t cursor-intangible t face minibuffer-prompt))
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-#+end_src
-
-*** Prompt indicator
-
-Enhance the prompt indicator for `completing-read-multiple' to display [CRM<separator>] (e.g., [CRM,] when using a comma as the separator).
-
-#+begin_src emacs-lisp :tangle "init.el"
-  (defun crm-indicator (args)
-    (cons (format "[CRM%s] %s"
-  		(replace-regexp-in-string
-  		 "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-  		 crm-separator)
-  		(car args))
-  	(cdr args)))
-  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-#+end_src
-
-*** Savehist
-
-#+begin_src emacs-lisp :tangle "init.el"
-  (savehist-mode)
-#+end_src
-
-*** Cua Mode
-
-My Keyboard is not ready right now, so we can't focus on Meow at the moment.
-
-#+begin_src emacs-lisp :tangle "init.el"
-  (cua-mode)
-  (setq-default cua-keep-region-after-copy t)
-#+end_src
-
-*** Editorconfig
-
-#+begin_src emacs-lisp :tangle "init.el"
-  (editorconfig-mode)
-#+end_src
-
 * Packages
 ** Elpaca
+
 #+begin_src emacs-lisp :tangle "init.el"
-  (defvar elpaca-installer-version 0.7)
-  (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
-  (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-  (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
-  (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-                                :ref nil :depth 1
-                                :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-                                :build (:not elpaca--activate-package)))
-  (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
-         (build (expand-file-name "elpaca/" elpaca-builds-directory))
-         (order (cdr elpaca-order))
-         (default-directory repo))
-    (add-to-list 'load-path (if (file-exists-p build) build repo))
-    (unless (file-exists-p repo)
-      (make-directory repo t)
-      (when (< emacs-major-version 28) (require 'subr-x))
-      (condition-case-unless-debug err
-          (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-                   ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
-                                                   ,@(when-let ((depth (plist-get order :depth)))
-                                                       (list (format "--depth=%d" depth) "--no-single-branch"))
-                                                   ,(plist-get order :repo) ,repo))))
-                   ((zerop (call-process "git" nil buffer t "checkout"
-                                         (or (plist-get order :ref) "--"))))
-                   (emacs (concat invocation-directory invocation-name))
-                   ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-                                         "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-                   ((require 'elpaca))
-                   ((elpaca-generate-autoloads "elpaca" repo)))
-              (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-            (error "%s" (with-current-buffer buffer (buffer-string))))
-        ((error) (warn "%s" err) (delete-directory repo 'recursive))))
-    (unless (require 'elpaca-autoloads nil t)
-      (require 'elpaca)
-      (elpaca-generate-autoloads "elpaca" repo)
-      (load "./elpaca-autoloads")))
-  (add-hook 'after-init-hook #'elpaca-process-queues)
-  (elpaca `(,@elpaca-order))
+(defvar elpaca-installer-version 0.8)
+(defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
+(defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
+(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+(defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
+                              :ref nil :depth 1
+                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                              :build (:not elpaca--activate-package)))
+(let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+       (build (expand-file-name "elpaca/" elpaca-builds-directory))
+       (order (cdr elpaca-order))
+       (default-directory repo))
+  (add-to-list 'load-path (if (file-exists-p build) build repo))
+  (unless (file-exists-p repo)
+    (make-directory repo t)
+    (when (< emacs-major-version 28) (require 'subr-x))
+    (condition-case-unless-debug err
+        (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                  ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+                                                  ,@(when-let* ((depth (plist-get order :depth)))
+                                                      (list (format "--depth=%d" depth) "--no-single-branch"))
+                                                  ,(plist-get order :repo) ,repo))))
+                  ((zerop (call-process "git" nil buffer t "checkout"
+                                        (or (plist-get order :ref) "--"))))
+                  (emacs (concat invocation-directory invocation-name))
+                  ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                        "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                  ((require 'elpaca))
+                  ((elpaca-generate-autoloads "elpaca" repo)))
+            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+          (error "%s" (with-current-buffer buffer (buffer-string))))
+      ((error) (warn "%s" err) (delete-directory repo 'recursive))))
+  (unless (require 'elpaca-autoloads nil t)
+    (require 'elpaca)
+    (elpaca-generate-autoloads "elpaca" repo)
+    (load "./elpaca-autoloads")))
+(add-hook 'after-init-hook #'elpaca-process-queues)
+(elpaca `(,@elpaca-order))
+(elpaca elpaca-use-package
+  (elpaca-use-package-mode))
 #+end_src
 
-*** Install use-package support
-
+** Emacs
 #+begin_src emacs-lisp :tangle "init.el"
-(elpaca elpaca-use-package
-  ;; Enable use-package :ensure support for Elpaca.
-  (elpaca-use-package-mode))
+  (use-package emacs
+    :init
+    (savehist-mode)
+    (recentf-mode)
+    (save-place-mode)
+    (global-auto-revert-mode)
+    (winner-mode)
+    (compilation-shell-minor-mode)
+    (context-menu-mode)
+    (cua-mode)
+    (editorconfig-mode)
+    :custom
+    (read-extended-command-predicate #'command-completion-default-include-p)
+    :config
+    (setq history-length 25)
+    (setq global-auto-revert-non-file-buffers t)
+    (setq cua-keep-region-after-copy t)
+    (setq minibuffer-prompt-properties
+  	'(read-only t cursor-intangible t face minibuffer-prompt))
+    (setq scroll-conservatively 101)
+    (setq scroll-margin 4)
+    (setq mouse-wheel-scroll-amount '(3 ((shift) . 5) ((control) . nil)))
+    (setq mouse-wheel-progressive-speed nil)
+    :hook
+    (minibuffer-setup . cursor-intangible-mode))
 #+end_src
 
 ** Vertico
