@@ -53,11 +53,9 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
 (add-hook 'after-init-hook 'dotemacs//after-init-hook)
 #+end_src
 
-** Load Theme
+** Theme
 
-According to [[elisp:(describe-symbol 'load-theme)][load-theme]] description, when a theme is enabled in Emacs, it doesn’t automatically disable any other active themes. This means the newly enabled theme takes precedence and can sometimes cause subtle appearance changes that are hard to trace. For users unfamiliar with Emacs, this might even give the impression that the theme is "broken", as I experienced myself.
-
-A better approach is to disable any previously [[elisp:(describe-symbol 'custom-enabled-themes)][active themes]] before applying a new one. This can be achieved by advising [[elisp:(describe-symbol 'load-theme)][load-theme]] beforehand. /(I sure wish I had known about this sooner…)/
+Note that [[elisp:(describe-symbol 'load-theme)][load-theme]] doesn’t automatically disable any other active themes. That is, each theme stacks over the previous one, which may cause subtle appearance changes that are hard to trace. For users unfamiliar with Emacs, this might even give the impression that themes are "broken", as I experienced myself. Instead, advise [[elisp:(describe-symbol 'load-theme)][load-theme]] to disable any previously [[elisp:(describe-symbol 'custom-enabled-themes)][active themes]] before proceeding.
 
 #+begin_src emacs-lisp :tangle "init.el"
   (defun dotemacs//disable-themes (&rest _args)
