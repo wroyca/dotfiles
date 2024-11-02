@@ -1,5 +1,8 @@
 BasedOnStyle: GNU
 ---
+AlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 1
 AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortLambdasOnASingleLine: None
@@ -21,19 +24,22 @@ BraceWrapping:
   BeforeElse: true
   BeforeLambdaBody: true
   BeforeWhile: true
-  IndentBraces: true
+  IndentBraces: false
   SplitEmptyFunction: true
   SplitEmptyNamespace: true
   SplitEmptyRecord: true
 BreakBeforeBinaryOperators: None
 BreakBeforeBraces: Custom
-ContinuationIndentWidth: 8
+BreakTemplateDeclarations: Yes
+ContinuationIndentWidth: 2
 Cpp11BracedListStyle: true
 FixNamespaceComments: false
+IndentCaseBlocks: true
 IndentPPDirectives: AfterHash
 LambdaBodyIndentation: OuterScope
 Language: Cpp
 NamespaceIndentation: All
+PPIndentWidth: -1
 PointerAlignment: Left
 SortIncludes: Never
 Standard: Latest

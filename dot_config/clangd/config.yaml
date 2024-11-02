@@ -10,6 +10,4 @@ Diagnostics:
   UnusedIncludes: None
 
 Completion:
-  # Suggestions from scopes that are not visible will automatically insert the
-  # scope prefix.
   AllScopes: true
