@@ -13,8 +13,8 @@ sudo dnf install -y libva-nvidia-driver
 sudo dnf group install -y \
   multimedia
 
-# This is enabled by default starting with Fedora 41. Disable it since we use
-# integer scaling, and leaving it would unnecessarily downscale and add
-# extra computations (yes, even with integer scaling).
+# Fedora 41 uses fractional scaling by default, but we prefer to maintain
+# integer scaling. Undo this change by resetting the experimental features in
+# Mutter.
 #
 gsettings set org.gnome.mutter experimental-features "[]"
