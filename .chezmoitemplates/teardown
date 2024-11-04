@@ -1,0 +1,31 @@
+# Teardown template for chezmoi.
+#
+# This template is used to clean up configuration directories when an application is uninstalled.
+# It checks if the application binary is no longer present in the system's PATH and, if so,
+# removes the associated configuration directory.
+#
+# Template Variables:
+# - `name`: The name of the application or binary to check for.
+# - `directory`: The name of the configuration directory associated with the application.
+#
+# Usage:
+# This template assumes that `name` and `directory` are provided as input parameters. e.g.
+#
+#   template "teardown" (dict "name" "kitty" "directory" ".config/kitty")
+#
+# It uses `lookPath` to determine if the application binary is available in the system's PATH.
+# If the binary is not found, it proceeds to remove the configuration directory.
+#
+# The `output` function is used to execute the cleanup command. The `rm -rfv` command is used
+# to recursively and forcefully remove the specified directory.
+#
+# NOTE: We use a subshell to execute the cleanup command because Go templates automatically
+# single quote the path passed to `rm`, which would cause `rm` to interpret the single quotes
+# as part of the path rather than as string delimiters.
+
+{{- $name := .name -}}
+{{- $directory := .directory -}}
+{{- if not (lookPath $name) -}}
+  {{ output "bash" "-c" (printf "rm -rf ~/%s" $directory) | trim }}
+  {{ $directory }}
+{{- end }}

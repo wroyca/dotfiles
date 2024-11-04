@@ -1,0 +1,12 @@
+# .bash_profile
+
+# Get the aliases and functions
+#
+if [ -f ~/.bashrc ]; then
+  . ~/.bashrc
+fi
+
+# User specific environment and startup programs
+#
+export HISTFILE="$XDG_STATE_HOME"/bash/history
+export STARSHIP_CONFIG="$XDG_CONFIG_HOME"/starship/starship.toml

@@ -1,0 +1,6 @@
+[org/gnome/builder/editor]
+
+# Auto-save is disabled; otherwise, Builder will preserve deleted files and
+# save them back to disk.
+#
+auto-save=false

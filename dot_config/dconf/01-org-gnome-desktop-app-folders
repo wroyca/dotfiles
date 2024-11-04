@@ -1,0 +1,3 @@
+[org/gnome/desktop/app-folders]
+
+folder-children=['Utilities', 'YaST', 'Pardus', 'Terminal', 'Office', 'Circle', 'Programming', 'Wine', 'Steam', 'Jetbrains']

@@ -1,0 +1,22 @@
+function fish_greeting
+end
+
+# XDG Base directory specification
+#
+set -gx XDG_CACHE_HOME $HOME/.cache
+set -gx XDG_CONFIG_HOME $HOME/.config
+set -gx XDG_DATA_HOME $HOME/.local/share
+set -gx XDG_STATE_HOME $HOME/.local/state
+
+# User specific environment and startup programs
+#
+set -gx HISTFILE $XDG_STATE_HOME/bash/history
+set -gx STARSHIP_CONFIG $XDG_CONFIG_HOME/starship/starship.toml
+
+# Bash aliases are compatible with Fish.
+#
+source ~/.bashrc.d/bash_aliases
+
+# Minimal cross-shell prompt. https://starship.rs/
+#
+starship init fish | source

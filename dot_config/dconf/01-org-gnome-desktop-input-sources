@@ -1,0 +1,9 @@
+[org/gnome/desktop/input-sources]
+
+# The "LockMods" action only clears modifiers (in this case, Lock) when the
+# associated key is released, not when it's pressed. It's still possible for
+# uppercase letters to be typed during that timeframe.
+#
+#   https://gitlab.freedesktop.org/xorg/xserver/-/issues/312
+#
+xkb-options=['caps:none']

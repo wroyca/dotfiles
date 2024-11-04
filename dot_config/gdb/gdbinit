@@ -1,0 +1,41 @@
+# Disable prompts for user confirmation
+set confirm off
+
+# Turn off verbose output
+set verbose off
+
+# Specify the file path for saving command history
+set history filename ~/.gdb_history
+
+# Keep the last 10 unique commands in history
+set history remove-duplicates 10
+
+# Automatically save command history on exit
+set history save
+
+# Suppress array contents automatic printing
+set print array off
+
+# Pretty-printing for array indexes
+set print array-indexes on
+
+# Pretty-printing for data structures
+set print pretty on
+
+# Remove any limit on output width
+set width unlimited
+
+# Remove any limit on output height
+set height unlimited
+
+# Disable output pagination
+set pagination off
+
+# Set disassembly format to Intel syntax
+set disassembly-flavor intel
+
+# Skip debugging information for C++ standard library headers
+skip -gfi /usr/include/c++/*/*
+
+# Skip debugging information for C++ standard library headers (depth)
+skip -gfi /usr/include/c++/*/*/*

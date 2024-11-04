@@ -1,0 +1,96 @@
+; https://git-scm.com/docs/git-config
+
+[user]
+  name = {{ .name | quote }}
+  email = {{ .email | quote }}
+  signingkey = B5C3315FB0E89FC3
+
+[advice]
+  detachedHead = false
+
+[branch]
+  sort = -committerdate
+
+[column]
+  ui = auto
+
+[commit]
+  verbose = true
+
+[core]
+  pager = delta --color-only
+  editor = /usr/bin/nvim
+  excludesFile = ~/.config/git/excludes
+  attributesFile = ~/.config/git/attributes
+  repositoryformatversion = 1
+
+[credential]
+  helper = /usr/bin/git-credential-manager
+  credentialStore = cache
+  cacheOptions = --timeout 86400
+
+[delta]
+  navigate = true
+
+[diff]
+  renames = copies
+  algorithm = histogram
+
+[extensions]
+  refStorage = "reftable"
+
+[feature]
+  manyFiles = true
+  experimental = true
+
+[fetch]
+  negotiationAlgorithm = skipping
+
+[filter "lfs"]
+  required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+
+[filter "media"]
+  required = true
+  clean = git media clean %f
+  smudge = git media smudge %f
+
+[gc]
+  writeCommitGraph = true
+
+[help]
+  autocorrect = 1
+
+[init]
+  defaultBranch = main
+
+[merge]
+  conflictstyle = zdiff3
+
+[pack]
+  allowPackReuse = multi
+  useBitmapBoundaryTraversal = true
+
+[pull]
+  twohead = ort
+  rebase = true
+
+[push]
+  autoSetupRemote = true
+  followTags = true
+
+[rebase]
+  abbreviateCommands = true
+
+[rerere]
+  autoUpdate = true
+  enabled = true
+
+[submodule]
+  recurse = true
+  fetchJobs = 10
+
+[url "https://github.com/"]
+  insteadOf = git@github.com:

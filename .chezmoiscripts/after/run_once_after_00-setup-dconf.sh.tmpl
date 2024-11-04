@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+cat {{ .chezmoi.sourceDir }}/dot_config/dconf/* | dconf load /

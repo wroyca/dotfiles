@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# The cp commands normally treat the last operand specially when it is a
+# directory or a symbolic link to a directory. For example, ‘cp source dest’ is
+# equivalent to ‘cp source dest/source’ if dest is a directory. This behavior
+# is not exactly what we want.
+#
+# Instead, do not treat the last operand specially when it is a directory or a
+# symbolic link to a directory. For example, when the command ‘cp /tmp/source
+# /tmp/dest’ succeeds, there is no guarantee that /tmp/source was renamed to
+# /tmp/dest: it could have been renamed to /tmp/dest/source instead. However,
+# if cp -T /tmp/source /tmp/dest succeeds, there is no question that
+# /tmp/source was renamed to /tmp/dest.
+
+sudo cp -rfT {{ .chezmoi.sourceDir }}/.etc /etc

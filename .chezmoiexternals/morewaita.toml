@@ -1,0 +1,4 @@
+[".local/share/icons/morewaita"]
+url = "https://github.com/somepaulo/morewaita"
+type = "git-repo"
+refreshPeriod = "168h"
