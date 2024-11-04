@@ -1,0 +1,7 @@
+[org/gnome/desktop/search-providers]
+
+# Disable GNOME Boxes as a search provider to prevent D-Bus error spam in the
+# system logs. GNOME Shell is trying to query the Boxes search provider, but
+# the service is not running and isn't auto-starting.
+#
+disabled=['org.gnome.Boxes.desktop']

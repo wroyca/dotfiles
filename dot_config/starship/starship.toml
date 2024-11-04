@@ -1,0 +1,37 @@
+# https://starship.rs/config/
+
+format = '$container\[$username@$hostname$directory$git_branch$git_commit\]$character'
+add_newline = false
+
+[character]
+error_symbol = '\$'
+success_symbol = '\$'
+
+[container]
+format = '[$symbol](purple)'
+symbol = '⬢'
+
+[directory]
+format = ' $path'
+truncation_length = 1
+
+[git_branch]
+format = ''' \($branch\)'''
+only_attached = true
+
+[git_commit]
+format = ''' \($hash\)'''
+only_detached = true
+
+[git_metrics]
+format = ''' [+$added]($added_style)/[-$deleted]($deleted_style)\)'''
+disabled = true
+ignore_submodules = true
+
+[hostname]
+format = '$hostname'
+ssh_only = false
+
+[username]
+format = '$user'
+show_always = true

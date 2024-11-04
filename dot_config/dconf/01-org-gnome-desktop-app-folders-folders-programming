@@ -1,0 +1,4 @@
+[org/gnome/desktop/app-folders/folders/Programming]
+
+name='Programming'
+apps=['nvim.desktop', 'emacs.desktop', 'code.desktop', 'org.gnome.Builder.desktop', 'org.gnome.Sysprof.desktop', 'org.gnome.dspy.desktop', 'org.gnome.Devhelp.desktop', 'sublime_text.desktop', 'sublime_merge.desktop', 'emacsclient.desktop', 'zed.desktop']

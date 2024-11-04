@@ -1,0 +1,11 @@
+[org/gnome/desktop/notifications/application/org-freedesktop-problems-applet]
+
+# Spurious crashes may occur frequently, particularly with obscure background
+# processes. In most cases, these crashes can be ignored as they typically
+# recover on their own. Some applications may crash and immediately recover,
+# while others may not crash at all yet still generate alerts in the problems
+# applet for various reasons. Since crash dumps and logs are accessible through
+# other means, crash notifications have been disabled to reduce unnecessary
+# alerts and/or spam.
+#
+enable=false
