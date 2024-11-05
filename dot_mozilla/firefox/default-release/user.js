@@ -46,3 +46,7 @@ user_pref("media.hardware-video-decoding.force-enabled", true);
 //
 user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
 
+// Firefox 129 introduces a tab hover preview feature. Since I find this
+// distracting, I disable it by default.
+//
+user_pref("browser.tabs.hoverPreview.enabled", false)
