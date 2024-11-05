@@ -1,22 +1,21 @@
 if package.loaded["lazy"] then
   -- https://github.com/folke/lazy.nvim/issues/1180
-  --
   return
 end
 
-assert(jit.status(), "error: jit compiler is unavailable")
-
-vim.g.loaded_gzip = 1
-vim.g.loaded_man = true
-vim.g.loaded_matchit = 1
-vim.g.loaded_matchparen = 1
-vim.g.loaded_netrwPlugin = "v173"
-vim.g.loaded_remote_plugins = 1
-vim.g.loaded_spellfile_plugin = 1
-vim.g.loaded_tarPlugin = 1
-vim.g.loaded_2html_plugin = 1
-vim.g.loaded_tutor_mode_plugin = 1
-vim.g.loaded_zipPlugin = 1
+local lazypath = vim.fs.joinpath(vim.fn.stdpath "data" --[[ @as string ]], "lazy", "lazy.nvim")
+if not vim.uv.fs_stat(lazypath) then
+  vim
+  .system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim",
+    lazypath,
+  })
+  :wait()
+end
+vim.opt.rtp:prepend(lazypath)
 
 ---@type LazyConfig
 local opts = {
@@ -109,4 +108,4 @@ vim.api.nvim_create_autocmd("User", {
   end,
 })
 
-require("lazy").setup("nvim", opts)
+require("lazy").setup("nvim.spec", opts)
