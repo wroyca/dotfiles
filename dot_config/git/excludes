@@ -1,6 +1,1 @@
 .cache
-.idea
-.vs
-.vscode
-
-compile_commands.json
