@@ -1,5 +1,4 @@
 # https://clangd.llvm.org/config
-# llvm-project/clang-tools-extra/clangd/configcompile.cpp
 
 Index:
   StandardLibrary: Yes

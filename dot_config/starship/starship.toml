@@ -3,13 +3,17 @@
 format = '$container\[$username@$hostname$directory$git_branch$git_commit\]$character'
 add_newline = false
 
-[character]
-error_symbol = '\$'
-success_symbol = '\$'
-
 [container]
 format = '[$symbol](purple)'
 symbol = '⬢'
+
+[username]
+format = '$user'
+show_always = true
+
+[hostname]
+format = '$hostname'
+ssh_only = false
 
 [directory]
 format = ' $path'
@@ -23,15 +27,6 @@ only_attached = true
 format = ''' \($hash\)'''
 only_detached = true
 
-[git_metrics]
-format = ''' [+$added]($added_style)/[-$deleted]($deleted_style)\)'''
-disabled = true
-ignore_submodules = true
-
-[hostname]
-format = '$hostname'
-ssh_only = false
-
-[username]
-format = '$user'
-show_always = true
+[character]
+error_symbol = '\$'
+success_symbol = '\$'

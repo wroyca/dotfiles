@@ -11,7 +11,7 @@ if ! command -v b > /dev/null 2>&1; then
  v=$(curl -sSf https://stage.build2.org/0/toolchain.sha256 | sed -n 's,^.*/build2-install-\(.*\)-stage\.sh$,\1,p')
   curl --connect-timeout 10 --retry 5 --retry-all-errors -O \
     "https://stage.build2.org/0/$v/build2-install-$v-stage.sh"
-  sh build2-install-$v-stage.sh --local --yes /usr
+  sh build2-install-$v-stage.sh --yes /usr
 fi
 
 if ! command -v git-credential-manager > /dev/null 2>&1; then
