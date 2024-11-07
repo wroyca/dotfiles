@@ -1,4 +1,5 @@
 #+Title: GNU Emacs
+#+Property: header-args:emacs-lisp :tangle yes :comments link
 
 This document describes my GNU Emacs configuration. You may use =C-c C-v t= to tangle each section automatically, or optionally, evaluate the following code block:
 
@@ -9,206 +10,26 @@ This document describes my GNU Emacs configuration. You may use =C-c C-v t= to t
 * Early Initialization
 
 #+begin_src emacs-lisp :tangle "early-init.el"
-;;; -*- mode: emacs-lisp; lexical-binding: t -*-
+;; early-init.el --- -*- lexical-binding: t -*-
 
-(defvar dotemacs--package-enable-at-startup nil
-  "Whether package requests will be preempted by their dependencies.")
+(setq package-enable-at-startup nil)
 
-(defun dotemacs//before-init-hook
-  (&rest _args)
-  (setq package-enable-at-startup
-    dotemacs--package-enable-at-startup)
-  (mapc
-    (lambda
-      (mode)
-      (funcall mode -1))
-    '(menu-bar-mode scroll-bar-mode tool-bar-mode))
-  (setq-default mode-line-format nil))
+(setq inhibit-startup-echo-area-message (user-login-name)
+      inhibit-startup-screen t)
+(put 'inhibit-startup-echo-area-message 'saved-value t)
+(setq initial-scratch-message nil)
 
-(add-hook 'before-init-hook 'dotemacs//before-init-hook)
+;; https://github.com/doomemacs/doomemacs/blob/6a8c09f01288f1ed00a7cc2b7f5887e8f2b4be77/lisp/doom-start.el#L103
+(push '(menu-bar-lines . 0) default-frame-alist)
+(push '(tool-bar-lines . 0) default-frame-alist)
+
+(load-theme 'modus-operandi)
 #+end_src
 
 * Initialization
 
 #+begin_src emacs-lisp :tangle "init.el"
-;;; -*- mode: emacs-lisp; lexical-binding: t -*-
-
-(defvar dotemacs--inhibit-startup-screen t
-  "Whether to inhibit the startup screen.")
-
-(defvar dotemacs--inhibit-startup-echo-area-message (user-login-name)
-  "Whether to inhibit the startup echo area message.")
-
-(defvar dotemacs--initial-scratch-message nil
-  "Whether to suppress the initial scratch message.")
-
-(defun dotemacs//after-init-hook
-  (&rest _args)
-  (setq inhibit-startup-screen dotemacs--inhibit-startup-screen)
-  (put 'inhibit-startup-echo-area-message 'saved-value
-    (setq inhibit-startup-echo-area-message
-      dotemacs--inhibit-startup-echo-area-message))
-  (setq-default initial-scratch-message dotemacs--initial-scratch-message))
-
-(add-hook 'after-init-hook 'dotemacs//after-init-hook)
-#+end_src
-
-** Theme
-
-Note that [[elisp:(describe-symbol 'load-theme)][load-theme]] doesn’t automatically disable any other active themes. That is, each theme stacks over the previous one, which may cause subtle appearance changes that are hard to trace. For users unfamiliar with Emacs, this might even give the impression that themes are "broken", as I experienced myself. Instead, advise [[elisp:(describe-symbol 'load-theme)][load-theme]] to disable any previously [[elisp:(describe-symbol 'custom-enabled-themes)][active themes]] before proceeding.
-
-#+begin_src emacs-lisp :tangle "init.el"
-  (defun dotemacs//disable-themes (&rest _args)
-    (mapc #'disable-theme custom-enabled-themes))
-
-  (advice-add #'load-theme :before #'dotemacs//disable-themes)
-#+end_src
-
-#+begin_src emacs-lisp :tangle "init.el"
-  (load-theme 'modus-vivendi)
-#+end_src
-
-** Terminal
-
-#+begin_src emacs-lisp :tangle "init.el"
-  (defun dotemacs//setup-tty-hook 
-    (&rest _args)
-    (xterm-mouse-mode))
-
-  (add-hook 'setup-tty-hook 'dotemacs//setup-tty-hook)
-#+end_src
-
-*** Operating System Command (OSC)
-
-Modern terminals can send and receive Operating System Command (OSC) codes. In practice, this refers to the sequence of two ASCII characters: ~27~ and ~93 (ESC ])~. If the command takes ~parameters~, it will be followed by a semicolon, and the structure of the rest of the OSC sequence depends on the command. Well-behaved terminal emulators ignore OSC codes with unrecognized commands.
-
-Continuing forward, the string terminator (ST) ends an OSC sequence and consists of either two ASCII characters: ~27~ and ~92 (ESC )~ or—now deprecated—ASCII ~7 (BEL)~. The ~parameters~ (Ps) consist of a single (usually optional) numeric parameter, which is composed of one or more decimal digits.
-
-The XTerm specification states that the 10 colors listed below may be set or queried using codes ~10~ through ~19~. These are referred to as dynamic colors, as the corresponding control sequences were the first means for setting xterm's colors dynamically, i.e., after it was started. They are not the same as the ANSI colors; However, dynamic text foreground and background colors are used when ANSI colors are reset using SGR ~39~ and ~49~, respectively.
-
-| Resource                 | Description                                |
-|--------------------------+--------------------------------------------|
-| Ps = 1 0                 |  Change VT100 text foreground color to Pt. |
-| Ps = 1 1                 |  Change VT100 text background color to Pt. |
-| Ps = 1 2                 |  Change text cursor color to Pt.           |
-| Ps = 1 3                 |  Change pointer foreground color to Pt.    |
-| Ps = 1 4                 |  Change pointer background color to Pt.    |
-| Ps = 1 5                 |  Change Tektronix foreground color to Pt.  |
-| Ps = 1 6                 |  Change Tektronix background color to Pt.  |
-| Ps = 1 7                 |  Change highlight background color to Pt.  |
-| Ps = 1 8                 |  Change Tektronix cursor color to Pt.      |
-| Ps = 1 9                 |  Change highlight foreground color to Pt.  |
-
-Here we advise [[elisp:(describe-symbol 'load-theme)][load-theme]] to send an ANSI escape sequence to update the background color according to the current frame's background-color parameter. Moreover, we advise Emacs to reset the terminal background to its default state upon exit.
-
-https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h3-Operating-System-Commands
-
-#+begin_src emacs-lisp :tangle "init.el"
-  (defun dotemacs//xterm-change-text-background (&rest _args)
-    (send-string-to-terminal
-     (format "\e]11;%s\a" (frame-parameter nil 'background-color))))
-
-  (advice-add #'load-theme :after #'dotemacs//xterm-change-text-background)
-  (add-hook 'resume-tty-functions #'dotemacs//xterm-change-text-background)
-  (dotemacs//xterm-change-text-background)
-#+end_src
-
-Dynamic colors can also be reset to their default.
-
-| Resource                 | Description                        |
-|--------------------------+------------------------------------|
-| Ps = 1 1 0               | Reset VT100 text foreground color. |
-| Ps = 1 1 1               | Reset VT100 text background color. |
-| Ps = 1 1 2               | Reset text cursor color.           |
-| Ps = 1 1 3               | Reset pointer foreground color.    |
-| Ps = 1 1 4               | Reset pointer background color.    |
-| Ps = 1 1 5               | Reset Tektronix foreground color.  |
-| Ps = 1 1 6               | Reset Tektronix background color.  |
-| Ps = 1 1 7               | Reset highlight color.             |
-| Ps = 1 1 8               | Reset Tektronix cursor color.      |
-| Ps = 1 1 9               | Reset highlight foreground color.  |
-
-#+begin_src emacs-lisp :tangle "init.el"
-  (defun dotemacs//xterm-reset-text-background (&rest _args)
-    (send-string-to-terminal "\e]111;\a"))
-
-  (add-hook 'kill-emacs-hook #'dotemacs//xterm-reset-text-background)
-  (add-hook 'suspend-tty-functions #'dotemacs//xterm-reset-text-background)
-#+end_src
-
-If necessary, OSC compatibility can be tested as follows:
-
-#+begin_src emacs-lisp :tangle no :results none
-  (defun dotemacs//xterm-parse-osc11 ()
-    "Check if our Terminal supports OSC 11.
-  Sends an OSC 11 query and returns the response if the terminal supports it,
-  otherwise returns nil."
-    (send-string-to-terminal "\e]11;?\e\\")
-    (when (and (equal (read-event nil nil 2) ?\e)
-	       (equal (read-event nil nil 2) ?\]))
-      (let ((response ""))
-	(while (not (equal (setq chr (read-event nil nil 2)) ?\\))
-	  (setq response (concat response (string chr))))
-	(when (string-match
-	       "11;rgb:\\([a-f0-9]+\\)/\\([a-f0-9]+\\)/\\([a-f0-9]+\\)" response)
-	  response))))
-#+end_src
-
-*** Ptyxis
-
-Fedora 41 now ships Ptyxis as its default terminal. Thankfully, Ptyxis comes with proper instance detection and some convenient command-line arguments to, for example, create a new tab on an already existing instance. We can use that to wrap Emacs with Ptyxis.
-
-Note: This is extremely experimental and was created quickly as a demonstration. It will improve over time.
-
-#+begin_src emacs-lisp :tangle "init.el"
-  (defvar dotemacs--ptyxis-open-files '()
-    "List of files currently opened in Ptyxis tabs.")
-
-  (defvar dotemacs--tangling nil
-    "Non-nil if currently tangling with `org-babel-tangle'.")
-
-  (defun dotemacs//with-tangling-active (orig-fun &rest args)
-    "Set `dotemacs--tangling` to non-nil during `org-babel-tangle`."
-    (let ((dotemacs--tangling t))
-      (apply orig-fun args)))
-
-  (advice-add 'org-babel-tangle :around #'dotemacs//with-tangling-active)
-
-  (defun dotemacs//ptyxis-generate-tab-command (file)
-    "Generate the command to open FILE in a new Ptyxis tab with Emacs client."
-    (let ((title (concat (file-name-nondirectory file) " - ")))
-      (format "/home/wroy/.local/bin/ptyxis/emacs-new-tab %s %s"
-              (shell-quote-argument title)
-              (shell-quote-argument file))))
-
-  (defun dotemacs/ptyxis-open-file-in-tab (file)
-    "Open FILE in a new Ptyxis tab and launch new Emacs client.
-  The file is also added to `dotemacs--ptyxis-open-files' for reopening
-  purposes."
-    (interactive "FFile: ")
-    (let ((cmd (dotemacs//ptyxis-generate-tab-command file)))
-      (start-process-shell-command "ptyxis-open-file" nil cmd)
-      (add-to-list 'dotemacs--ptyxis-open-files file)))
-
-  (defun dotemacs/ptyxis-reopen-tabs ()
-    "Reopen all files listed in `dotemacs--ptyxis-open-files' in new Ptyxis tabs.
-  Use this function if a GTK crash occurs or tabs need to be restored."
-    (interactive)
-    (dolist (file dotemacs--ptyxis-open-files)
-      (dotemacs/ptyxis-open-file-in-tab file)))
-
-  (defun dotemacs//ptyxis-open-file-advice (orig-fun &rest args)
-    "Advice to open files in a new Ptyxis tab by default.
-    ORIG-FUN is the original function, and ARGS are its arguments."
-    (if dotemacs--tangling
-        (apply orig-fun args)
-      (let ((file (car args)))
-        (if (and file (file-exists-p file) (not (file-directory-p file)))
-            (dotemacs/ptyxis-open-file-in-tab file)
-          (apply orig-fun args)))))
-
-  (advice-add 'find-file :around #'dotemacs//ptyxis-open-file-advice)
-  (advice-add 'dired-find-file :around #'dotemacs//ptyxis-open-file-advice)
+  ;; init.el --- -*- lexical-binding: t -*-
 #+end_src
 
 * Packages
@@ -253,333 +74,708 @@ Note: This is extremely experimental and was created quickly as a demonstration.
     (load "./elpaca-autoloads")))
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
-(elpaca elpaca-use-package
-  (elpaca-use-package-mode))
+(elpaca leaf)
+(elpaca leaf-keywords
+  (leaf-keywords-init))
+(elpaca leaf-tree)
+(elpaca leaf-convert)
+(elpaca-wait)
 #+end_src
 
-** Emacs
+** Meow
+
 #+begin_src emacs-lisp :tangle "init.el"
-  (use-package emacs
-    :init
-    (savehist-mode)
-    (recentf-mode)
-    (save-place-mode)
-    (global-auto-revert-mode)
-    (winner-mode)
-    (compilation-shell-minor-mode)
-    (context-menu-mode)
-    (cua-mode)
-    (editorconfig-mode)
-    :custom
-    (read-extended-command-predicate #'command-completion-default-include-p)
-    :config
-    (setq history-length 25)
-    (setq global-auto-revert-non-file-buffers t)
-    (setq cua-keep-region-after-copy t)
-    (setq minibuffer-prompt-properties
-  	'(read-only t cursor-intangible t face minibuffer-prompt))
-    (setq scroll-conservatively 101)
-    (setq scroll-margin 4)
-    (setq mouse-wheel-scroll-amount '(3 ((shift) . 5) ((control) . nil)))
-    (setq mouse-wheel-progressive-speed nil)
-    :hook
-    (minibuffer-setup . cursor-intangible-mode))
+(leaf meow
+      :doc "Yet another modal editing on Emacs / 猫态编辑"
+      :url "https://github.com/meow-edit/meow"
+      :elpaca t
+      :require (meow-helpers
+                 meow-cheatsheet)
+      :global-minor-mode meow-global
+      :init
+      (defun dotemacs//meow-setup ()
+        (with-eval-after-load 'meow-cheatsheet
+                              (setq meow-cheatsheet-layout
+                                    meow-cheatsheet-layout-colemak-dh))
+        (meow-leader-define-key
+          '("1" . meow-digit-argument)
+          '("2" . meow-digit-argument)
+          '("3" . meow-digit-argument)
+          '("4" . meow-digit-argument)
+          '("5" . meow-digit-argument)
+          '("6" . meow-digit-argument)
+          '("7" . meow-digit-argument)
+          '("8" . meow-digit-argument)
+          '("9" . meow-digit-argument)
+          '("0" . meow-digit-argument)
+          '("/" . meow-keypad-describe-key)
+           '("?" . meow-cheatsheet))
+        (meow-motion-overwrite-define-key
+          '("<escape>" . ignore))
+        (meow-normal-define-key
+          '("0" . meow-expand-0)
+          '("9" . meow-expand-9)
+          '("8" . meow-expand-8)
+          '("7" . meow-expand-7)
+          '("6" . meow-expand-6)
+          '("5" . meow-expand-5)
+          '("4" . meow-expand-4)
+          '("3" . meow-expand-3)
+          '("2" . meow-expand-2)
+          '("1" . meow-expand-1)
+          '("-" . negative-argument)
+          '(";" . meow-reverse)
+          '("," . meow-inner-of-thing)
+          '("." . meow-bounds-of-thing)
+          '("<" . meow-beginning-of-thing)
+          '(">" . meow-end-of-thing)
+          '("a" . meow-append)
+          '("A" . meow-open-below)
+          '("b" . meow-back-word)
+          '("B" . meow-back-symbol)
+          '("c" . meow-change)
+          '("d" . meow-delete)
+          '("D" . meow-backward-delete)
+          '("e" . meow-line)
+          '("E" . meow-goto-line)
+          '("f" . meow-find)
+          '("g" . meow-cancel-selection)
+          '("G" . meow-grab)
+          '("h" . meow-left)
+          '("H" . meow-left-expand)
+          '("i" . meow-insert)
+          '("I" . meow-open-above)
+          '("j" . meow-join)
+          '("k" . meow-kill)
+          '("l" . meow-till)
+          '("m" . meow-mark-word)
+          '("M" . meow-mark-symbol)
+          '("n" . meow-next)
+          '("N" . meow-next-expand)
+          '("o" . meow-block)
+          '("O" . meow-to-block)
+          '("p" . meow-prev)
+          '("P" . meow-prev-expand)
+          '("q" . meow-quit)
+          '("Q" . meow-goto-line)
+          '("r" . meow-replace)
+          '("R" . meow-swap-grab)
+          '("s" . meow-search)
+          '("t" . meow-right)
+          '("T" . meow-right-expand)
+          '("u" . meow-undo)
+          '("U" . meow-undo-in-selection)
+          '("v" . meow-visit)
+          '("w" . meow-next-word)
+          '("W" . meow-next-symbol)
+          '("x" . meow-save)
+          '("X" . meow-sync-grab)
+          '("y" . meow-yank)
+          '("z" . meow-pop-selection)
+          '("'" . repeat)
+          '("<escape>" . ignore)))
+      :config
+      (dotemacs//meow-setup))
 #+end_src
 
 ** Vertico
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package vertico
-    :ensure t
-    :hook
-    (elpaca-after-init . vertico-mode))
+#+begin_src emacs-lisp :tangle "init.el" :noweb yes
+(leaf *vertico
+      :config
+      <<vertico>>
+      <<vertico-buffer>>
+      <<vertico-directory>>
+      <<vertico-flat>>
+      <<vertico-grid>>
+      <<vertico-indexed>>
+      <<vertico-mouse>>
+      <<vertico-multiform>>
+      <<vertico-quick>>
+      <<vertico-repeat>>
+      <<vertico-reverse>>
+      <<vertico-suspend>>
+      <<vertico-unobtrusive>>)
+#+end_src
+
+#+name: vertico
+#+begin_src emacs-lisp :tange no
+(leaf vertico
+      :doc "VERTical Interactive COmpletion"
+      :url "https://github.com/minad/vertico"
+      :elpaca t
+      :global-minor-mode t)
 #+end_src
 
 *** Vertico Buffer
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package vertico-buffer
-    :after vertico)
+#+name: vertico-buffer
+#+begin_src emacs-lisp :tangle no
+(leaf vertico-buffer
+      :doc "Display Vertico like a regular buffer."
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-buffer.el"
+      :after vertico)
 #+end_src
 
 *** Vertico Directory
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package vertico-directory
-    :after vertico
-    :bind (:map vertico-map
-                ("RET" . vertico-directory-enter)
-                ("DEL" . vertico-directory-delete-char)
-                ("M-DEL" . vertico-directory-delete-word))
-    ;; Tidy shadowed file names
-    :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+#+name: vertico-directory
+#+begin_src emacs-lisp :tangle no
+(leaf vertico-directory
+      :doc "Commands for Ido-like directory navigation."
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-directory.el"
+      :after vertico
+      :bind (:vertico-map :package vertico
+                          ("RET"   . vertico-directory-enter)
+                          ("DEL"   . vertico-directory-delete-char)
+                          ("M-DEL" . vertico-directory-delete-word)))
 #+end_src
 
 *** Vertico Flat
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package vertico-flat
-    :after vertico)
+#+name: vertico-flat
+#+begin_src emacs-lisp :tangle no
+(leaf vertico-flat
+      :doc "Enable a flat, horizontal display."
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-flat.el"
+      :after vertico)
 #+end_src
 
 *** Vertico Grid
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package vertico-grid
-    :after vertico)
+#+name: vertico-grid
+#+begin_src emacs-lisp :tangle no
+(leaf vertico-grid
+      :doc "Enable a grid display."
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-grid.el"
+      :after vertico)
 #+end_src
 
 *** Vertico Indexed
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package vertico-indexed
-    :after vertico)
+#+name: vertico-indexed
+#+begin_src emacs-lisp :tangle no
+(leaf vertico-indexed
+      :doc "Select indexed candidates with prefix arguments."
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-indexed.el"
+      :after vertico)
 #+end_src
 
 *** Vertico Mouse
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package vertico-mouse
-    :after vertico
-    :hook
-    (vertico-mode . vertico-mouse-mode))
+#+name: vertico-mouse
+#+begin_src emacs-lisp :tangle no
+(leaf vertico-mouse
+      :doc "Support mouse for scrolling and candidate selection."
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-mouse.el"
+      :after vertico
+      :hook
+      (vertico-mode-hook . vertico-mouse-mode))
 #+end_src
 
 *** Vertico Multiform
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package vertico-multiform
-    :after vertico)
+#+name: vertico-multiform
+#+begin_src emacs-lisp :tangle no
+(leaf vertico-multiform
+      :doc "Configure Vertico modes per command or completion category."
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-multiform.el"
+      :after vertico)
 #+end_src
 
 *** Vertico Quick
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package vertico-quick
-    :after vertico)
+#+name: vertico-quick
+#+begin_src emacs-lisp :tangle no
+(leaf vertico-quick
+      :doc "Commands to select using Avy-style quick keys."
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-quick.el"
+      :after vertico)
 #+end_src
 
 *** Vertico Repeat
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package vertico-repeat
-    :after vertico)
+#+name: vertico-repeat
+#+begin_src emacs-lisp :tangle no
+(leaf vertico-repeat
+      :doc "Repeats the last completion session."
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-repeat.el"
+      :after vertico)
 #+end_src
 
 *** Vertico Reverse
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package vertico-reverse
-    :after vertico)
+#+name: vertico-reverse
+#+begin_src emacs-lisp :tangle no
+(leaf vertico-reverse
+      :doc "Reverse the display."
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-reverse.el"
+      :after vertico)
 #+end_src
 
 *** Vertico Suspend
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package vertico-suspend
-    :after vertico)
+#+name: vertico-suspend
+#+begin_src emacs-lisp :tangle no
+(leaf vertico-suspend
+      :doc "Suspends and restores the current session."
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-suspend.el"
+      :after vertico)
 #+end_src
 
 *** Vertico Unobstrusive
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package vertico-unobtrusive
-    :after vertico)
+#+name: vertico-unobstrusive
+#+begin_src emacs-lisp :tangle no
+(leaf vertico-unobtrusive
+      :doc "Displays only the topmost candidate."
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-unobtrusive.el"
+      :after vertico)
 #+end_src
 
 ** Marginalia
 
 #+begin_src emacs-lisp :tangle "init.el"
-  (use-package marginalia
-    :ensure t
-    :hook
-    (vertico-mode . marginalia-mode))
+(leaf marginalia
+      :doc "Marginalia in the minibuffer"
+      :url "https://github.com/minad/marginalia"
+      :elpaca t
+      :global-minor-mode t)
 #+end_src
 
 ** Consult
 
 #+begin_src emacs-lisp :tangle "init.el"
-  (use-package consult
-    :ensure t)
+(leaf consult
+      :doc "consult.el - Consulting completing-read"
+      :url "https://github.com/minad/consult"
+      :elpaca t
+      :disabled nil) ;; Consult is recommended. Learn about it later.
 #+end_src
 
 ** Embark
 
 #+begin_src emacs-lisp :tangle "init.el"
-  (use-package embark
-    :ensure t)
-#+end_src
-
-*** Embark Consult
-
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package embark-consult
-    :ensure t)
+(leaf embark
+      :doc "Emacs Mini-Buffer Actions Rooted in Keymaps"
+      :url "https://github.com/oantolin/embark"
+      :elpaca t
+      :disabled t) ;; Embark is recommended. Learn about it later.
 #+end_src
 
 ** Orderless
 
 #+begin_src emacs-lisp :tangle "init.el"
-  (use-package orderless
-    :ensure t
-    :custom
-    (completion-styles '(orderless basic))
-    (completion-category-defaults nil)
-    (completion-category-overrides '((file (styles partial-completion)))))
-#+end_src
-
-** Transient
-
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package transient
-    :ensure t)
+(leaf orderless
+      :doc "Emacs completion style that matches multiple regexps in any order."
+      :url "https://github.com/oantolin/orderless"
+      :elpaca t
+      :custom ((completion-styles . '(orderless basic))
+               (completion-category-defaults . nil)
+               (completion-category-overrides '((file (styles partial-completion))))))
 #+end_src
 
 ** Magit
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package magit
-     :ensure t
-     :custom
-     (magit-no-message (list "Turning on magit-auto-revert-mode..."))
-     (magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
-     :hook
-     (after-save . magit-after-save-refresh-status))
+#+begin_src emacs-lisp :tangle "init.el" :noweb yes
+(leaf *magit
+      :config
+      <<magit>>
+      <<delta>>
+      <<forge>>
+      ;; https://github.com/progfolio/elpaca/issues/272
+      <<transient>>)
 #+end_src
 
-*** Magit Delta
-
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package magit-delta
-     :ensure t
-     :after magit
-     :hook (magit-mode . magit-delta-mode))
+#+name: magit
+#+begin_src emacs-lisp :tangle no
+(leaf magit
+      :doc "It's Magit! A Git porcelain inside Emacs."
+      :url "https://github.com/magit/magit"
+      :elpaca t)
 #+end_src
 
-** Forge
+*** Delta
+
+#+name: delta
+#+begin_src emacs-lisp :tangle no
+(leaf magit-delta
+      :doc "Use delta (https://github.com/dandavison/delta) when viewing diffs in Magit "
+      :url "https://github.com/dandavison/magit-delta"
+      :elpaca t
+      :hook
+      (magit-mode-hook . magit-delta-mode))
+#+end_src
+
+*** Forge
+
+#+name: forge
+#+begin_src emacs-lisp :tangle no
+(leaf forge
+      :doc "Work with Git forges from the comfort of Magit"
+      :url "https://github.com/magit/forge"
+      :elpaca t
+      :setq (auth-sources '("~/.authinfo")))
+#+end_src
+
+*** Transient
+
+#+name: transient
+#+begin_src emacs-lisp :tangle no
+(leaf transient
+      :doc "Transient commands"
+      :url "https://github.com/magit/transient"
+      :elpaca t)
+#+end_src
+
+** Dimmer
 
 #+begin_src emacs-lisp :tangle "init.el"
-  (use-package forge
-    :ensure t
-    :after magit
-    :config
-    (setq auth-sources '("~/.authinfo")))
+(leaf dimmer
+      :doc "Interactively highlight which buffer is active by dimming the others."
+      :url "https://github.com/gonewest818/dimmer.el"
+      :elpaca t
+      :global-minor-mode t
+      :custom
+      (dimmer-prevent-dimming-predicates . '(window-minibuffer-p))
+      (dimmer-fraction . 0.5)
+      (dimmer-adjustment-mode . :foreground)
+      (dimmer-use-colorspace . :rgb)
+      (dimmer-watch-frame-focus-events . nil) ; don't dim buffers when Emacs loses focus
+      ((lambda ()
+         "Exclude Vertico buffer from dimming."
+         (with-no-warnings
+           (add-to-list 'dimmer-buffer-exclusion-regexps "^ \\*Vertico\\*$")))))
 #+end_src
 
 ** Org
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package org
-    :ensure t)
+#+begin_src emacs-lisp :tangle "init.el" :noweb yes
+(leaf *org
+      :config
+      <<org>>
+      <<org-modern>>)
 #+end_src
 
-*** Modern
-
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package org-modern
-    :ensure t
-    :hook
-    (org-mode . org-modern-mode))
+#+name: org
+#+begin_src emacs-lisp :tangle no
+(leaf org
+      :doc "Fast and effective plain text system."
+      :url "https://orgmode.org/"
+      :elpaca t
+      :setq ((org-auto-align-tags                . nil)
+             (org-tags-column                    . 0)
+             (org-catch-invisible-edits          . 'show-and-error)
+             (org-special-ctrl-a/e               . t)
+             (org-insert-heading-respect-content . t)
+             (org-hide-emphasis-markers          . t)
+             (org-pretty-entities                . t)
+             (org-ellipsis                       . "…")))
 #+end_src
 
-** XClip
+*** Modern Org Style
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package xclip
-    :ensure t
-    :custom
-    (xclip-mode 1))
+#+name: org-modern
+#+begin_src emacs-lisp :tangle no
+  (leaf org-modern
+        :doc "Modern Org Style"
+        :url "https://github.com/minad/org-modern"
+        :elpaca t
+        :hook
+        (org-mode-hook . org-modern-mode))
 #+end_src
 
-** Undofu
+** Clipboard
 
 #+begin_src emacs-lisp :tangle "init.el"
-  (use-package undo-fu-session
-    :ensure t
-    :custom
-    (undo-fu-session-global-mode 1))
+(leaf xclip
+      :elpaca t
+      :global-minor-mode t)
 #+end_src
+
 
 * Language Server Protocol
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package eglot
-    :custom
-    (eglot-ignored-server-capabilities '(:documentHighlightProvider))
+Due to its inherent complexity, I treat Language Server Protocol (LSP) setup as its own distinct section, even though it still involves various packages.
 
-    :config
-    (add-to-list 'eglot-server-programs
-                 '((c-mode c++-mode)
-                   . ("clangd"
-                      "--all-scopes-completion=true"
-                      "--background-index-priority=normal"
-                      "--background-index=true"
-                      "--clang-tidy"
-                      "--completion-parse=always"
-                      "--completion-style=bundled"
-                      "--function-arg-placeholders=false"
-                      "--header-insertion=never"
-                      "--parse-forwarding-functions"
-                      "--pch-storage=memory"
-                      "--ranking-model=decision_forest")))
-
-    :hook
-    ((c-mode c++-mode) . eglot-ensure))
-
-  (use-package clangd-inactive-regions
-    :ensure (:host github :repo "fargiolas/clangd-inactive-regions.el")
-    :init
-    ;; FIXME: Using `:hook' behave strangely. (lisp recursion?)
-    (add-hook 'eglot-managed-mode-hook #'clangd-inactive-regions-mode)
-    :config
-    (clangd-inactive-regions-set-method "darken-foreground")
-    (clangd-inactive-regions-set-opacity 0.55))
+#+begin_src emacs-lisp :tangle "init.el" :noweb yes
+(leaf *language-server-protocol
+      :config
+      <<eglot>>
+      <<clangd-inactive-region>>
+      <<company>>)
 #+end_src
 
-** Completion
+** Eglot
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package company
-    :ensure t
-    :bind (:map company-active-map
-        	      ([tab] . company-complete-selection)
-        	      ("TAB" . company-complete-selection)
-        	      ("<return>" . nil)
-        	      ("RET" . nil))
-    :custom
-    ;; "Tooltip" is misleading; this actually refers to the completion
-    ;; menu.
-    (company-tooltip-limit 8)
-    (company-tooltip-align-annotations t)
-
-    ;; Instructs company to allow typing characters that don't match any
-    ;; completion candidates. When non-nil, typing characters not in the
-    ;; auto-completion list is restricted.
-    (company-require-match nil)
-
-    ;; XXX: We might want to set the prefix length and idle delay based
-    ;; on the language. Clangd is very fast, so it's not a concern, but
-    ;; what about slower LSP clients?
-    (company-minimum-prefix-length 1)
-    (company-idle-delay 0)
-
-    ;; Disable icons.
-    (company-format-margin-function nil)
-
-    ;; Collect candidates from the buffers with the same major mode.
-    (company-dabbrev-other-buffers t)
-
-    (global-company-mode 1))
+#+name: eglot
+#+begin_src emacs-lisp :tangle no
+(leaf eglot
+      :doc "a client for language server protocol servers"
+      :url "https://github.com/joaotavora/eglot"
+      :elpaca t
+      :defvar eglot-server-programs
+      :defer-config
+      (add-to-list 'eglot-server-programs
+                   '(c++-mode . ("clangd"
+                                 "--all-scopes-completion=true"
+                                 "--background-index-priority=normal"
+                                 "--background-index=true"
+                                 "--clang-tidy"
+                                 "--completion-parse=always"
+                                 "--completion-style=bundled"
+                                 "--function-arg-placeholders=false"
+                                 "--header-insertion=never"
+                                 "--parse-forwarding-functions"
+                                 "--pch-storage=memory"
+                                 "--ranking-model=decision_forest")))
+      :hook
+      ((c++-mode-hook) . eglot-ensure))
 #+end_src
 
-*** Org Block
+** Extensions
+*** Clangd Inactive Regions
 
-#+begin_src emacs-lisp :tangle "init.el"
-  (use-package company-org-block
-    :ensure t
-    :custom
-    (company-org-block-edit-style 'inline) ;; 'auto, 'prompt, or 'inline
-    :hook ((org-mode . (lambda ()
-                         (setq-local company-backends '(company-org-block))
-                         (company-mode +1)))))
+#+name: clangd-inactive-regions
+#+begin_src emacs-lisp :tangle no
+(leaf clangd-inactive-regions
+      :doc "Emacs Eglot support for clangd inactiveRegions LSP extension."
+      :url "https://github.com/fargiolas/clangd-inactive-regions.el"
+      :elpaca (clangd-inactive-regions :host github :repo "fargiolas/clangd-inactive-regions.el")
+      :setq  ((clangd-inactive-regions-set-method . "darken-foreground")
+              (clangd-inactive-regions-set-opacity . 0.55))
+      :init
+      (require  'clangd-inactive-regions)
+      (add-hook 'eglot-managed-mode-hook #'clangd-inactive-regions-mode))
+#+end_src
+
+** Company
+
+#+name: Company
+#+begin_src emacs-lisp :tangle no
+(leaf company
+      :doc "Modular text completion framework"
+      :url "http://company-mode.github.io/"
+      :elpaca t
+      :leaf-defer nil
+      :bind ((company-active-map
+               ("[tab]"    . company-complete-selection)
+               ("TAB"      . company-complete-selection)
+               ("<return>" . nil)
+               ("RET"      . nil)))
+      :custom ((company-dabbrev-other-buffers . t)
+               (company-format-margin-function . nil)
+               (company-idle-delay . 0)
+               (company-minimum-prefix-length . 1)
+               (company-tooltip-align-annotations . t)
+               (company-tooltip-limit . 8))
+      :global-minor-mode global-company-mode)
+#+end_src
+
+* Built-in packages
+
+Built-in packages come bundled with the default Emacs installation.
+
+#+begin_src emacs-lisp :tangle "init.el" :noweb yes
+(leaf *built-in
+      :config
+      <<savehist>>
+      <<saveplace>>
+      <<recentf>>
+      <<autorevert>>
+      <<winner>>
+      <<cua>>
+      <<contextmenu>>
+      <<editorconfig>>
+      <<xterm>>
+      <<compilationshell>>)
+#+end_src
+
+** Save History
+
+#+name: savehist
+#+begin_src emacs-lisp :tangle no
+(leaf savehist
+      :doc "Save minibuffer history"
+      :url "https://github.com/emacs-mirror/emacs/blob/master/lisp/savehist.el"
+      :global-minor-mode t)
+#+end_src
+
+** Save place
+
+#+name: saveplace
+#+begin_src emacs-lisp :tangle no
+(leaf save-place
+      :doc "Automatically save place in files"
+      :url "https://github.com/emacs-mirror/emacs/blob/master/lisp/saveplace.el"
+      :global-minor-mode t)
+#+end_src
+
+** Recent files
+
+#+name: recentf
+#+begin_src emacs-lisp :tangle no
+(leaf recentf
+      :disabled t
+      :doc "Keep track of recently opened files"
+      :url "https://github.com/emacs-mirror/emacs/blob/master/lisp/recentf.el"
+      :global-minor-mode t)
+#+end_src
+
+** Auto revert
+
+#+name: autorevert
+#+begin_src emacs-lisp :tangle no
+(leaf auto-revert
+      :doc "Revert buffers when files on disk change "
+      :url "https://github.com/emacs-mirror/emacs/blob/master/lisp/autorevert.el"
+      :global-minor-mode global-auto-revert)
+#+end_src
+
+** Winner
+
+#+name: winner
+#+begin_src emacs-lisp :tangle no
+(leaf winner
+      :doc "Restore old window configurations"
+      :url "https://github.com/emacs-mirror/emacs/blob/master/lisp/winner.el"
+      :global-minor-mode t)
+#+end_src
+
+** Common User Access
+
+#+name: cua
+#+begin_src emacs-lisp :tangle no
+(leaf cua
+      :doc "CUA mode for copy-paste conventions"
+      :url "https://www.gnu.org/software/emacs/manual/html_node/emacs/CUA-Bindings.html"
+      :custom ((cua-keep-region-after-copy . t))
+      :global-minor-mode t)
+#+end_src
+
+** Context menu
+
+#+name: contextmenu
+#+begin_src emacs-lisp :tangle no
+(leaf context-menu
+      :doc "Toggle context menu"
+      :url "https://github.com/emacs-mirror/emacs/blob/master/lisp/mouse.el"
+      :global-minor-mode t)
+#+end_src
+
+** Editorconfig
+
+#+name: editorconfig
+#+begin_src emacs-lisp :tangle no
+(leaf editorconfig
+      :doc "EditorConfig support"
+      :url "https://github.com/emacs-mirror/emacs/blob/master/lisp/editorconfig-core.el"
+      :global-minor-mode editorconfig-mode)
+#+end_src
+
+** XTerm
+
+#+name: xterm
+#+begin_src emacs-lisp :tangle no
+(leaf xterm-mouse
+      :doc "support the mouse when emacs run in an xterm"
+      :url "https://github.com/emacs-mirror/emacs/blob/master/lisp/xt-mouse.el"
+      :global-minor-mode xterm-mouse
+      :custom ((scroll-conservatively . 101)
+               (scroll-margin . 4)
+               (mouse-wheel-scroll-amount
+                 . '(3 ((shift) . 5) ((control) . nil)))
+               (mouse-wheel-progressive-speed . nil)))
+#+end_src
+
+** Compilation shell
+
+#+name: compilationshell
+#+begin_src emacs-lisp :tangle no
+(leaf compilation-shell-minor
+      :doc "Compilation shell minor mode"
+      :url "https://github.com/emacs-mirror/emacs/blob/master/lisp/progmodes/compile.el"
+      :hook ((compilation-mode . compilation-shell-minor-mode)))
+#+end_src
+
+* Volatile
+
+Things that are experimental in nature. They should be refactored or removed at some point.
+
+** Operating System Command (OSC)
+
+Modern terminals can send and receive Operating System Command (OSC) codes. In practice, this refers to the sequence of two ASCII characters: ~27~ and ~93 (ESC ])~. If the command takes ~parameters~, it will be followed by a semicolon, and the structure of the rest of the OSC sequence depends on the command. Well-behaved terminal emulators ignore OSC codes with unrecognized commands.
+
+Continuing forward, the string terminator (ST) ends an OSC sequence and consists of either two ASCII characters: ~27~ and ~92 (ESC )~ or—now deprecated—ASCII ~7 (BEL)~. The ~parameters~ (Ps) consist of a single (usually optional) numeric parameter, which is composed of one or more decimal digits.
+
+The XTerm specification states that the 10 colors listed below may be set or queried using codes ~10~ through ~19~. These are referred to as dynamic colors, as the corresponding control sequences were the first means for setting xterm's colors dynamically, i.e., after it was started. They are not the same as the ANSI colors; However, dynamic text foreground and background colors are used when ANSI colors are reset using SGR ~39~ and ~49~, respectively.
+
+| Resource                 | Description                                |
+|--------------------------+--------------------------------------------|
+| Ps = 1 0                 |  Change VT100 text foreground color to Pt. |
+| Ps = 1 1                 |  Change VT100 text background color to Pt. |
+| Ps = 1 2                 |  Change text cursor color to Pt.           |
+| Ps = 1 3                 |  Change pointer foreground color to Pt.    |
+| Ps = 1 4                 |  Change pointer background color to Pt.    |
+| Ps = 1 5                 |  Change Tektronix foreground color to Pt.  |
+| Ps = 1 6                 |  Change Tektronix background color to Pt.  |
+| Ps = 1 7                 |  Change highlight background color to Pt.  |
+| Ps = 1 8                 |  Change Tektronix cursor color to Pt.      |
+| Ps = 1 9                 |  Change highlight foreground color to Pt.  |
+
+Here we advise [[elisp:(describe-symbol 'load-theme)][load-theme]] to send an ANSI escape sequence to update the background color according to the current frame's background-color parameter. Moreover, we advise Emacs to reset the terminal background to its default state upon exit.
+
+https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h3-Operating-System-Commands
+
+#+begin_src emacs-lisp :tangle "early-init.el"
+  (defun dotemacs//xterm-change-text-background (&rest _args)
+    (send-string-to-terminal
+     (format "\e]11;%s\a" (frame-parameter nil 'background-color))))
+
+  (advice-add #'load-theme :after #'dotemacs//xterm-change-text-background)
+  (advice-add #'consult-theme :after #'dotemacs//xterm-change-text-background)
+
+  (add-hook 'resume-tty-functions #'dotemacs//xterm-change-text-background)
+  (dotemacs//xterm-change-text-background)
+#+end_src
+
+Dynamic colors can also be reset to their default.
+
+| Resource                 | Description                        |
+|--------------------------+------------------------------------|
+| Ps = 1 1 0               | Reset VT100 text foreground color. |
+| Ps = 1 1 1               | Reset VT100 text background color. |
+| Ps = 1 1 2               | Reset text cursor color.           |
+| Ps = 1 1 3               | Reset pointer foreground color.    |
+| Ps = 1 1 4               | Reset pointer background color.    |
+| Ps = 1 1 5               | Reset Tektronix foreground color.  |
+| Ps = 1 1 6               | Reset Tektronix background color.  |
+| Ps = 1 1 7               | Reset highlight color.             |
+| Ps = 1 1 8               | Reset Tektronix cursor color.      |
+| Ps = 1 1 9               | Reset highlight foreground color.  |
+
+#+begin_src emacs-lisp :tangle "early-init.el"
+  (defun dotemacs//xterm-reset-text-background (&rest _args)
+    (send-string-to-terminal "\e]111;\a"))
+
+  (add-hook 'kill-emacs-hook #'dotemacs//xterm-reset-text-background)
+  (add-hook 'suspend-tty-functions #'dotemacs//xterm-reset-text-background)
+#+end_src
+
+If necessary, OSC compatibility can be tested as follows:
+
+#+begin_src emacs-lisp :tangle no :results none
+(defun dotemacs//xterm-parse-osc11 ()
+  "Check if our Terminal supports OSC 11.
+Sends an OSC 11 query and returns the response if the terminal supports it,
+otherwise returns nil."
+  (send-string-to-terminal "\e]11;?\e\\")
+  (when (and (equal (read-event nil nil 2) ?\e)
+             (equal (read-event nil nil 2) ?\]))
+    (let ((response ""))
+      (while (not (equal (setq chr (read-event nil nil 2)) ?\\))
+             (setq response (concat response (string chr))))
+      (when (string-match
+              "11;rgb:\\([a-f0-9]+\\)/\\([a-f0-9]+\\)/\\([a-f0-9]+\\)" response)
+        response))))
 #+end_src

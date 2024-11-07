@@ -1,146 +1,9 @@
-;;; -*- mode: emacs-lisp; lexical-binding: t -*-
+;; [[file:README.org::*Initialization][Initialization:1]]
+;; init.el --- -*- lexical-binding: t -*-
+;; Initialization:1 ends here
 
-(defvar dotemacs--inhibit-startup-screen t
-  "When non-nil, inhibit the startup screen on Emacs launch.")
-
-(defun dotemacs//inhibit-startup-screen ()
-    "Set `inhibit-startup-screen' to the value of `dotemacs--inhibit-startup-screen'.
-This acts as a shortcut to disable the startup screen, splash screen,
-and startup message."
-  (setq inhibit-startup-screen 'dotemacs--inhibit-startup-screen))
-(defvar dotemacs--inhibit-startup-echo-area-message (user-login-name)
-  "When non-nil, inhibit the startup echo area message on Emacs launch.")
-
-(defun dotemacs//inhibit-startup-echo-area-message ()
-  "Set `inhibit-startup-echo-area-message' to the value of `dotemacs--inhibit-startup-echo-area-message'.
-This acts as a shortcut to disable the startup echo area message."
-  (setq-default inhibit-startup-echo-area-message dotemacs--inhibit-startup-echo-area-message)
-  ;; https://yrh.dev/blog/rant-obfuscation-in-emacs/
-  (put 'inhibit-startup-echo-area-message 'saved-value t))
-(defvar dotemacs--initial-scratch-message nil
-  "When non-nil, suppress the initial scratch message.")
-
-(defun dotemacs//initial-scratch-message ()
-    "Set `initial-scratch-message' to the value of
-`dotemacs--initial-scratch-message'.
-This acts as a shortcut to override the initial scratch message."
-  (setq-default initial-scratch-message dotemacs--initial-scratch-message))
-
-(defun dotemacs//tty-setup-hook (&rest _args)
-  (dotemacs//inhibit-startup-screen)
-  (dotemacs//inhibit-startup-echo-area-message)
-  (dotemacs//initial-scratch-message))
-
-(add-hook 'tty-setup-hook 'dotemacs//tty-setup-hook)
-
-(defun dotemacs//disable-themes (&rest _args)
-  (mapc #'disable-theme custom-enabled-themes))
-
-(advice-add #'load-theme :before #'dotemacs//disable-themes)
-
-(load-theme 'modus-vivendi)
-
-(xterm-mouse-mode)
-
-;; TODO: Terminals handle scrolling differently (e.g., Kitty's default is
-;; to scroll by 4, Ptyxis by 1, and so on). For now, set the default
-;; as if using Ptyxis, but later detect the terminal properly.
-(setq mouse-wheel-scroll-amount '(3 ((shift) . 5) ((control) . nil)))
-(setq mouse-wheel-progressive-speed nil)
-
-;; FIXME: Strange behavior with mouse wheel scroll when reading document end.
-;; (setq scroll-margin 4)
-
-(defun dotemacs//xterm-change-text-background (&rest _args)
-  (send-string-to-terminal
-   (format "\e]11;%s\a" (frame-parameter nil 'background-color))))
-
-(advice-add #'load-theme :after #'dotemacs//xterm-change-text-background)
-(add-hook 'resume-tty-functions #'dotemacs//xterm-change-text-background)
-
-;; Run once as pre-shot routine.
-(dotemacs//xterm-change-text-background)
-
-(defun dotemacs//xterm-reset-text-background (&rest _args)
-  (send-string-to-terminal "\e]111;\a"))
-
-(add-hook 'kill-emacs-hook #'dotemacs//xterm-reset-text-background)
-(add-hook 'suspend-tty-functions #'dotemacs//xterm-reset-text-background)
-
-(defvar dotemacs--ptyxis-open-files '()
-  "List of files currently opened in Ptyxis tabs.")
-
-(defvar dotemacs--tangling nil
-  "Non-nil if currently tangling with `org-babel-tangle'.")
-
-(defun dotemacs//with-tangling-active (orig-fun &rest args)
-  "Set `dotemacs--tangling` to non-nil during `org-babel-tangle`."
-  (let ((dotemacs--tangling t))
-    (apply orig-fun args)))
-
-(advice-add 'org-babel-tangle :around #'dotemacs//with-tangling-active)
-
-(defun dotemacs//ptyxis-generate-tab-command (file)
-  "Generate the command to open FILE in a new Ptyxis tab with Emacs client."
-  (let ((title (concat (file-name-nondirectory file) " - ")))
-    (format "/home/wroy/.local/bin/ptyxis/emacs-new-tab %s %s"
-            (shell-quote-argument title)
-            (shell-quote-argument file))))
-
-(defun dotemacs/ptyxis-open-file-in-tab (file)
-  "Open FILE in a new Ptyxis tab and launch new Emacs client.
-The file is also added to `dotemacs--ptyxis-open-files' for reopening
-purposes."
-  (interactive "FFile: ")
-  (let ((cmd (dotemacs//ptyxis-generate-tab-command file)))
-    (start-process-shell-command "ptyxis-open-file" nil cmd)
-    (add-to-list 'dotemacs--ptyxis-open-files file)))
-
-(defun dotemacs/ptyxis-reopen-tabs ()
-  "Reopen all files listed in `dotemacs--ptyxis-open-files' in new Ptyxis tabs.
-Use this function if a GTK crash occurs or tabs need to be restored."
-  (interactive)
-  (dolist (file dotemacs--ptyxis-open-files)
-    (dotemacs/ptyxis-open-file-in-tab file)))
-
-(defun dotemacs//ptyxis-open-file-advice (orig-fun &rest args)
-  "Advice to open files in a new Ptyxis tab by default.
-  ORIG-FUN is the original function, and ARGS are its arguments."
-  (if dotemacs--tangling
-      (apply orig-fun args)
-    (let ((file (car args)))
-      (if (and file (file-exists-p file) (not (file-directory-p file)))
-          (dotemacs/ptyxis-open-file-in-tab file)
-        (apply orig-fun args)))))
-
-(advice-add 'find-file :around #'dotemacs//ptyxis-open-file-advice)
-(advice-add 'dired-find-file :around #'dotemacs//ptyxis-open-file-advice)
-
-(setq enable-recursive-minibuffers t)
-
-(setq minibuffer-depth-indicate-mode t)
-
-(setq minibuffer-prompt-properties
-      '(read-only t cursor-intangible t face minibuffer-prompt))
-(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-
-(defun crm-indicator (args)
-  (cons (format "[CRM%s] %s"
-		(replace-regexp-in-string
-		 "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
-		 crm-separator)
-		(car args))
-	(cdr args)))
-(advice-add #'completing-read-multiple :filter-args #'crm-indicator)
-
-(savehist-mode)
-
-(cua-mode)
-(setq-default cua-keep-region-after-copy t)
-
-(editorconfig-mode)
-
-(defvar elpaca-installer-version 0.7)
+;; [[file:README.org::*Elpaca][Elpaca:1]]
+(defvar elpaca-installer-version 0.8)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
@@ -157,18 +20,18 @@ Use this function if a GTK crash occurs or tabs need to be restored."
     (make-directory repo t)
     (when (< emacs-major-version 28) (require 'subr-x))
     (condition-case-unless-debug err
-        (if-let ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-                 ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
-                                                 ,@(when-let ((depth (plist-get order :depth)))
-                                                     (list (format "--depth=%d" depth) "--no-single-branch"))
-                                                 ,(plist-get order :repo) ,repo))))
-                 ((zerop (call-process "git" nil buffer t "checkout"
-                                       (or (plist-get order :ref) "--"))))
-                 (emacs (concat invocation-directory invocation-name))
-                 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-                                       "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-                 ((require 'elpaca))
-                 ((elpaca-generate-autoloads "elpaca" repo)))
+        (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                  ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+                                                  ,@(when-let* ((depth (plist-get order :depth)))
+                                                      (list (format "--depth=%d" depth) "--no-single-branch"))
+                                                  ,(plist-get order :repo) ,repo))))
+                  ((zerop (call-process "git" nil buffer t "checkout"
+                                        (or (plist-get order :ref) "--"))))
+                  (emacs (concat invocation-directory invocation-name))
+                  ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                        "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                  ((require 'elpaca))
+                  ((elpaca-generate-autoloads "elpaca" repo)))
             (progn (message "%s" (buffer-string)) (kill-buffer buffer))
           (error "%s" (with-current-buffer buffer (buffer-string))))
       ((error) (warn "%s" err) (delete-directory repo 'recursive))))
@@ -178,189 +41,367 @@ Use this function if a GTK crash occurs or tabs need to be restored."
     (load "./elpaca-autoloads")))
 (add-hook 'after-init-hook #'elpaca-process-queues)
 (elpaca `(,@elpaca-order))
+(elpaca leaf)
+(elpaca leaf-keywords
+  (leaf-keywords-init))
+(elpaca leaf-tree)
+(elpaca leaf-convert)
+(elpaca-wait)
+;; Elpaca:1 ends here
 
-(elpaca elpaca-use-package
-  ;; Enable use-package :ensure support for Elpaca.
-  (elpaca-use-package-mode))
+;; [[file:README.org::*Meow][Meow:1]]
+(leaf meow
+      :doc "Yet another modal editing on Emacs / 猫态编辑"
+      :url "https://github.com/meow-edit/meow"
+      :elpaca t
+      :require (meow-helpers
+                 meow-cheatsheet)
+      :global-minor-mode meow-global
+      :init
+      (defun dotemacs//meow-setup ()
+        (with-eval-after-load 'meow-cheatsheet
+                              (setq meow-cheatsheet-layout
+                                    meow-cheatsheet-layout-colemak-dh))
+        (meow-leader-define-key
+          '("1" . meow-digit-argument)
+          '("2" . meow-digit-argument)
+          '("3" . meow-digit-argument)
+          '("4" . meow-digit-argument)
+          '("5" . meow-digit-argument)
+          '("6" . meow-digit-argument)
+          '("7" . meow-digit-argument)
+          '("8" . meow-digit-argument)
+          '("9" . meow-digit-argument)
+          '("0" . meow-digit-argument)
+          '("/" . meow-keypad-describe-key)
+           '("?" . meow-cheatsheet))
+        (meow-motion-overwrite-define-key
+          '("<escape>" . ignore))
+        (meow-normal-define-key
+          '("0" . meow-expand-0)
+          '("9" . meow-expand-9)
+          '("8" . meow-expand-8)
+          '("7" . meow-expand-7)
+          '("6" . meow-expand-6)
+          '("5" . meow-expand-5)
+          '("4" . meow-expand-4)
+          '("3" . meow-expand-3)
+          '("2" . meow-expand-2)
+          '("1" . meow-expand-1)
+          '("-" . negative-argument)
+          '(";" . meow-reverse)
+          '("," . meow-inner-of-thing)
+          '("." . meow-bounds-of-thing)
+          '("<" . meow-beginning-of-thing)
+          '(">" . meow-end-of-thing)
+          '("a" . meow-append)
+          '("A" . meow-open-below)
+          '("b" . meow-back-word)
+          '("B" . meow-back-symbol)
+          '("c" . meow-change)
+          '("d" . meow-delete)
+          '("D" . meow-backward-delete)
+          '("e" . meow-line)
+          '("E" . meow-goto-line)
+          '("f" . meow-find)
+          '("g" . meow-cancel-selection)
+          '("G" . meow-grab)
+          '("h" . meow-left)
+          '("H" . meow-left-expand)
+          '("i" . meow-insert)
+          '("I" . meow-open-above)
+          '("j" . meow-join)
+          '("k" . meow-kill)
+          '("l" . meow-till)
+          '("m" . meow-mark-word)
+          '("M" . meow-mark-symbol)
+          '("n" . meow-next)
+          '("N" . meow-next-expand)
+          '("o" . meow-block)
+          '("O" . meow-to-block)
+          '("p" . meow-prev)
+          '("P" . meow-prev-expand)
+          '("q" . meow-quit)
+          '("Q" . meow-goto-line)
+          '("r" . meow-replace)
+          '("R" . meow-swap-grab)
+          '("s" . meow-search)
+          '("t" . meow-right)
+          '("T" . meow-right-expand)
+          '("u" . meow-undo)
+          '("U" . meow-undo-in-selection)
+          '("v" . meow-visit)
+          '("w" . meow-next-word)
+          '("W" . meow-next-symbol)
+          '("x" . meow-save)
+          '("X" . meow-sync-grab)
+          '("y" . meow-yank)
+          '("z" . meow-pop-selection)
+          '("'" . repeat)
+          '("<escape>" . ignore)))
+      :config
+      (dotemacs//meow-setup))
+;; Meow:1 ends here
 
-(use-package vertico
-  :ensure t
-  :hook
-  (elpaca-after-init . vertico-mode))
+;; [[file:README.org::*Vertico][Vertico:1]]
+(leaf *vertico
+      :config
+      (leaf vertico
+            :doc "VERTical Interactive COmpletion"
+            :url "https://github.com/minad/vertico"
+            :elpaca t
+            :global-minor-mode t)
+      (leaf vertico-buffer
+            :doc "Display Vertico like a regular buffer."
+            :url "https://github.com/minad/vertico/blob/main/extensions/vertico-buffer.el"
+            :after vertico)
+      (leaf vertico-directory
+            :doc "Commands for Ido-like directory navigation."
+            :url "https://github.com/minad/vertico/blob/main/extensions/vertico-directory.el"
+            :after vertico
+            :bind (:vertico-map :package vertico
+                                ("RET"   . vertico-directory-enter)
+                                ("DEL"   . vertico-directory-delete-char)
+                                ("M-DEL" . vertico-directory-delete-word)))
+      (leaf vertico-flat
+            :doc "Enable a flat, horizontal display."
+            :url "https://github.com/minad/vertico/blob/main/extensions/vertico-flat.el"
+            :after vertico)
+      (leaf vertico-grid
+            :doc "Enable a grid display."
+            :url "https://github.com/minad/vertico/blob/main/extensions/vertico-grid.el"
+            :after vertico)
+      (leaf vertico-indexed
+            :doc "Select indexed candidates with prefix arguments."
+            :url "https://github.com/minad/vertico/blob/main/extensions/vertico-indexed.el"
+            :after vertico)
+      (leaf vertico-mouse
+            :doc "Support mouse for scrolling and candidate selection."
+            :url "https://github.com/minad/vertico/blob/main/extensions/vertico-mouse.el"
+            :after vertico
+            :hook
+            (vertico-mode-hook . vertico-mouse-mode))
+      (leaf vertico-multiform
+            :doc "Configure Vertico modes per command or completion category."
+            :url "https://github.com/minad/vertico/blob/main/extensions/vertico-multiform.el"
+            :after vertico)
+      (leaf vertico-quick
+            :doc "Commands to select using Avy-style quick keys."
+            :url "https://github.com/minad/vertico/blob/main/extensions/vertico-quick.el"
+            :after vertico)
+      (leaf vertico-repeat
+            :doc "Repeats the last completion session."
+            :url "https://github.com/minad/vertico/blob/main/extensions/vertico-repeat.el"
+            :after vertico)
+      (leaf vertico-reverse
+            :doc "Reverse the display."
+            :url "https://github.com/minad/vertico/blob/main/extensions/vertico-reverse.el"
+            :after vertico)
+      (leaf vertico-suspend
+            :doc "Suspends and restores the current session."
+            :url "https://github.com/minad/vertico/blob/main/extensions/vertico-suspend.el"
+            :after vertico)
+      )
+;; Vertico:1 ends here
 
-(use-package vertico-buffer
-  :after vertico)
+;; [[file:README.org::*Marginalia][Marginalia:1]]
+(leaf marginalia
+      :doc "Marginalia in the minibuffer"
+      :url "https://github.com/minad/marginalia"
+      :elpaca t
+      :global-minor-mode t)
+;; Marginalia:1 ends here
 
-(use-package vertico-directory
-  :after vertico
-  :bind (:map vertico-map
-              ("RET" . vertico-directory-enter)
-              ("DEL" . vertico-directory-delete-char)
-              ("M-DEL" . vertico-directory-delete-word))
-  ;; Tidy shadowed file names
-  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+;; [[file:README.org::*Consult][Consult:1]]
+(leaf consult
+      :doc "consult.el - Consulting completing-read"
+      :url "https://github.com/minad/consult"
+      :elpaca t
+      :disabled nil) ;; Consult is recommended. Learn about it later.
+;; Consult:1 ends here
 
-(use-package vertico-flat
-  :after vertico)
+;; [[file:README.org::*Embark][Embark:1]]
+(leaf embark
+      :doc "Emacs Mini-Buffer Actions Rooted in Keymaps"
+      :url "https://github.com/oantolin/embark"
+      :elpaca t
+      :disabled t) ;; Embark is recommended. Learn about it later.
+;; Embark:1 ends here
 
-(use-package vertico-grid
-  :after vertico)
+;; [[file:README.org::*Orderless][Orderless:1]]
+(leaf orderless
+      :doc "Emacs completion style that matches multiple regexps in any order."
+      :url "https://github.com/oantolin/orderless"
+      :elpaca t
+      :custom ((completion-styles . '(orderless basic))
+               (completion-category-defaults . nil)
+               (completion-category-overrides '((file (styles partial-completion))))))
+;; Orderless:1 ends here
 
-(use-package vertico-indexed
-  :after vertico)
+;; [[file:README.org::*Magit][Magit:1]]
+(leaf *magit
+      :config
+      (leaf magit
+            :doc "It's Magit! A Git porcelain inside Emacs."
+            :url "https://github.com/magit/magit"
+            :elpaca t)
+      (leaf magit-delta
+            :doc "Use delta (https://github.com/dandavison/delta) when viewing diffs in Magit "
+            :url "https://github.com/dandavison/magit-delta"
+            :elpaca t
+            :hook
+            (magit-mode-hook . magit-delta-mode))
+      (leaf forge
+            :doc "Work with Git forges from the comfort of Magit"
+            :url "https://github.com/magit/forge"
+            :elpaca t
+            :setq (auth-sources '("~/.authinfo")))
+      ;; https://github.com/progfolio/elpaca/issues/272
+      (leaf transient
+            :doc "Transient commands"
+            :url "https://github.com/magit/transient"
+            :elpaca t))
+;; Magit:1 ends here
 
-(use-package vertico-mouse
-  :after vertico
-  :hook
-  (vertico-mode . vertico-mouse-mode))
+;; [[file:README.org::*Dimmer][Dimmer:1]]
+(leaf dimmer
+      :doc "Interactively highlight which buffer is active by dimming the others."
+      :url "https://github.com/gonewest818/dimmer.el"
+      :elpaca t
+      :global-minor-mode t
+      :custom
+      (dimmer-prevent-dimming-predicates . '(window-minibuffer-p))
+      (dimmer-fraction . 0.5)
+      (dimmer-adjustment-mode . :foreground)
+      (dimmer-use-colorspace . :rgb)
+      (dimmer-watch-frame-focus-events . nil) ; don't dim buffers when Emacs loses focus
+      ((lambda ()
+         "Exclude Vertico buffer from dimming."
+         (with-no-warnings
+           (add-to-list 'dimmer-buffer-exclusion-regexps "^ \\*Vertico\\*$")))))
+;; Dimmer:1 ends here
 
-(use-package vertico-multiform
-  :after vertico)
+;; [[file:README.org::*Org][Org:1]]
+(leaf *org
+      :config
+      (leaf org
+            :doc "Fast and effective plain text system."
+            :url "https://orgmode.org/"
+            :elpaca t
+            :setq ((org-auto-align-tags                . nil)
+                   (org-tags-column                    . 0)
+                   (org-catch-invisible-edits          . 'show-and-error)
+                   (org-special-ctrl-a/e               . t)
+                   (org-insert-heading-respect-content . t)
+                   (org-hide-emphasis-markers          . t)
+                   (org-pretty-entities                . t)
+                   (org-ellipsis                       . "…")))
+      (leaf org-modern
+            :doc "Modern Org Style"
+            :url "https://github.com/minad/org-modern"
+            :elpaca t
+            :hook
+            (org-mode-hook . org-modern-mode)))
+;; Org:1 ends here
 
-(use-package vertico-quick
-  :after vertico)
+;; [[file:README.org::*Clipboard][Clipboard:1]]
+(leaf xclip
+      :elpaca t
+      :global-minor-mode t)
+;; Clipboard:1 ends here
 
-(use-package vertico-repeat
-  :after vertico)
+;; [[file:README.org::*Language Server Protocol][Language Server Protocol:1]]
+(leaf *language-server-protocol
+      :config
+      (leaf eglot
+            :doc "a client for language server protocol servers"
+            :url "https://github.com/joaotavora/eglot"
+            :elpaca t
+            :defvar eglot-server-programs
+            :defer-config
+            (add-to-list 'eglot-server-programs
+                         '(c++-mode . ("clangd"
+                                       "--all-scopes-completion=true"
+                                       "--background-index-priority=normal"
+                                       "--background-index=true"
+                                       "--clang-tidy"
+                                       "--completion-parse=always"
+                                       "--completion-style=bundled"
+                                       "--function-arg-placeholders=false"
+                                       "--header-insertion=never"
+                                       "--parse-forwarding-functions"
+                                       "--pch-storage=memory"
+                                       "--ranking-model=decision_forest")))
+            :hook
+            ((c++-mode-hook) . eglot-ensure))
+      
+      (leaf company
+            :doc "Modular text completion framework"
+            :url "http://company-mode.github.io/"
+            :elpaca t
+            :leaf-defer nil
+            :bind ((company-active-map
+                     ("[tab]"    . company-complete-selection)
+                     ("TAB"      . company-complete-selection)
+                     ("<return>" . nil)
+                     ("RET"      . nil)))
+            :custom ((company-dabbrev-other-buffers . t)
+                     (company-format-margin-function . nil)
+                     (company-idle-delay . 0)
+                     (company-minimum-prefix-length . 1)
+                     (company-tooltip-align-annotations . t)
+                     (company-tooltip-limit . 8))
+            :global-minor-mode global-company-mode))
+;; Language Server Protocol:1 ends here
 
-(use-package vertico-reverse
-  :after vertico)
-
-(use-package vertico-suspend
-  :after vertico)
-
-(use-package vertico-unobtrusive
-  :after vertico)
-
-(use-package marginalia
-  :ensure t
-  :hook
-  (vertico-mode . marginalia-mode))
-
-(use-package consult
-  :ensure t)
-
-(use-package embark
-  :ensure t)
-
-(use-package embark-consult
-  :ensure t)
-
-(use-package orderless
-  :ensure t
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles partial-completion)))))
-
-(use-package transient
-  :ensure t)
-
-(use-package magit
-   :ensure t
-   :custom
-   (magit-no-message (list "Turning on magit-auto-revert-mode..."))
-   (magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
-   :hook
-   (after-save . magit-after-save-refresh-status))
-
-(use-package magit-delta
-   :ensure t
-   :after magit
-   :hook (magit-mode . magit-delta-mode))
-
-(use-package forge
-  :ensure t
-  :after magit
-  :config
-  (setq auth-sources '("~/.authinfo")))
-
-(use-package org
-  :ensure t)
-
-(use-package org-modern
-  :ensure t
-  :hook
-  (org-mode . org-modern-mode))
-
-(use-package xclip
-  :ensure t
-  :custom
-  (xclip-mode 1))
-
-(use-package undo-fu-session
-  :ensure t
-  :custom
-  (undo-fu-session-global-mode 1))
-
-(use-package eglot
-  :custom
-  (eglot-ignored-server-capabilities '(:documentHighlightProvider))
-
-  :config
-  (add-to-list 'eglot-server-programs
-               '((c-mode c++-mode)
-                 . ("clangd"
-                    "--all-scopes-completion=true"
-                    "--background-index-priority=normal"
-                    "--background-index=true"
-                    "--clang-tidy"
-                    "--completion-parse=always"
-                    "--completion-style=bundled"
-                    "--function-arg-placeholders=false"
-                    "--header-insertion=never"
-                    "--parse-forwarding-functions"
-                    "--pch-storage=memory"
-                    "--ranking-model=decision_forest")))
-
-  :hook
-  ((c-mode c++-mode) . eglot-ensure))
-
-(use-package clangd-inactive-regions
-  :ensure (:host github :repo "fargiolas/clangd-inactive-regions.el")
-  :init
-  ;; FIXME: Using `:hook' behave strangely. (lisp recursion?)
-  (add-hook 'eglot-managed-mode-hook #'clangd-inactive-regions-mode)
-  :config
-  (clangd-inactive-regions-set-method "darken-foreground")
-  (clangd-inactive-regions-set-opacity 0.55))
-
-(use-package company
-  :ensure t
-  :bind (:map company-active-map
-      	      ([tab] . company-complete-selection)
-      	      ("TAB" . company-complete-selection)
-      	      ("<return>" . nil)
-      	      ("RET" . nil))
-  :custom
-  ;; "Tooltip" is misleading; this actually refers to the completion
-  ;; menu.
-  (company-tooltip-limit 8)
-  (company-tooltip-align-annotations t)
-
-  ;; Instructs company to allow typing characters that don't match any
-  ;; completion candidates. When non-nil, typing characters not in the
-  ;; auto-completion list is restricted.
-  (company-require-match nil)
-
-  ;; XXX: We might want to set the prefix length and idle delay based
-  ;; on the language. Clangd is very fast, so it's not a concern, but
-  ;; what about slower LSP clients?
-  (company-minimum-prefix-length 1)
-  (company-idle-delay 0)
-
-  ;; Disable icons.
-  (company-format-margin-function nil)
-
-  ;; Collect candidates from the buffers with the same major mode.
-  (company-dabbrev-other-buffers t)
-
-  (global-company-mode 1))
-
-(use-package company-org-block
-  :ensure t
-  :custom
-  (company-org-block-edit-style 'inline) ;; 'auto, 'prompt, or 'inline
-  :hook ((org-mode . (lambda ()
-                       (setq-local company-backends '(company-org-block))
-                       (company-mode +1)))))
+;; [[file:README.org::*Built-in packages][Built-in packages:1]]
+(leaf *built-in
+      :config
+      (leaf savehist
+            :doc "Save minibuffer history"
+            :url "https://github.com/emacs-mirror/emacs/blob/master/lisp/savehist.el"
+            :global-minor-mode t)
+      (leaf save-place
+            :doc "Automatically save place in files"
+            :url "https://github.com/emacs-mirror/emacs/blob/master/lisp/saveplace.el"
+            :global-minor-mode t)
+      (leaf recentf
+            :disabled t
+            :doc "Keep track of recently opened files"
+            :url "https://github.com/emacs-mirror/emacs/blob/master/lisp/recentf.el"
+            :global-minor-mode t)
+      (leaf auto-revert
+            :doc "Revert buffers when files on disk change "
+            :url "https://github.com/emacs-mirror/emacs/blob/master/lisp/autorevert.el"
+            :global-minor-mode global-auto-revert)
+      (leaf winner
+            :doc "Restore old window configurations"
+            :url "https://github.com/emacs-mirror/emacs/blob/master/lisp/winner.el"
+            :global-minor-mode t)
+      (leaf cua
+            :doc "CUA mode for copy-paste conventions"
+            :url "https://www.gnu.org/software/emacs/manual/html_node/emacs/CUA-Bindings.html"
+            :custom ((cua-keep-region-after-copy . t))
+            :global-minor-mode t)
+      (leaf context-menu
+            :doc "Toggle context menu"
+            :url "https://github.com/emacs-mirror/emacs/blob/master/lisp/mouse.el"
+            :global-minor-mode t)
+      (leaf editorconfig
+            :doc "EditorConfig support"
+            :url "https://github.com/emacs-mirror/emacs/blob/master/lisp/editorconfig-core.el"
+            :global-minor-mode editorconfig-mode)
+      (leaf xterm-mouse
+            :doc "support the mouse when emacs run in an xterm"
+            :url "https://github.com/emacs-mirror/emacs/blob/master/lisp/xt-mouse.el"
+            :global-minor-mode xterm-mouse
+            :custom ((scroll-conservatively . 101)
+                     (scroll-margin . 4)
+                     (mouse-wheel-scroll-amount
+                       . '(3 ((shift) . 5) ((control) . nil)))
+                     (mouse-wheel-progressive-speed . nil)))
+      (leaf compilation-shell-minor
+            :doc "Compilation shell minor mode"
+            :url "https://github.com/emacs-mirror/emacs/blob/master/lisp/progmodes/compile.el"
+            :hook ((compilation-mode . compilation-shell-minor-mode))))
+;; Built-in packages:1 ends here
