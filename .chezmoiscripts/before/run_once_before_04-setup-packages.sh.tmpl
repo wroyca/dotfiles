@@ -7,3 +7,20 @@ sudo dnf install -y winetricks
 sudo dnf install -y steam
 sudo dnf install -y firefoxpwa
 sudo dnf install -y adw-gtk3-theme
+
+# Install DirectShow filters based on the libavformat and libavcodec libraries
+# from the FFmpeg project. These filters enable Wine to play almost any media
+# format in a DirectShow-compatible player.
+#
+# This resolves a common issue in older games where in-game cutscenes or movies
+# display a black screen instead of the intended video content. Notable
+# examples include the Trails series from Nihon Falcom.
+#
+# Note: This is not included in .chezmoiexternals/ since chezmoi external
+# does not support post-hook commands.
+#
+if [ ! -d "$HOME/.wine/drive_c/Program Files (x86)/LAV Filters" ]; then
+  export WINEDEBUG=-all winetricks -q directshow
+  wget https://github.com/Nevcairiel/LAVFilters/releases/latest/download/LAVFilters-{{ (gitHubLatestTag "Nevcairiel/LAVFilters").Name | replace "v" "" -}}-Installer.exe \
+    && wine $(basename "$_") && sudo rm $HOME/LAVFilters-*
+fi
