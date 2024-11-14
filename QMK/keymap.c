@@ -1,6 +1,7 @@
 #include QMK_KEYBOARD_H
 
 #include "version.h"
+#include "achordion.h"
 
 enum custom_keycodes {
   RGB_SLD = EZ_SAFE_RANGE,
@@ -62,26 +63,26 @@ typedef enum {
 
 static TapDanceState dance_state[1];
 
-static TapDanceStep 
-evaluate_tap_dance_step (tap_dance_state_t *state) 
+static TapDanceStep
+evaluate_tap_dance_step (tap_dance_state_t *state)
 {
   if (state->count == 1)
     return (state->interrupted || !state->pressed) ? SINGLE_TAP : SINGLE_HOLD;
-  
-  if (state->count == 2) 
+
+  if (state->count == 2)
     {
       if (state->interrupted)
         return DOUBLE_SINGLE_TAP;
       return state->pressed ? DOUBLE_HOLD : DOUBLE_TAP;
     }
-  
+
   return MORE_TAPS;
 }
 
-static void 
-execute_tap_dance_action (TapDanceStep step) 
+static void
+execute_tap_dance_action (TapDanceStep step)
 {
-  switch (step) 
+  switch (step)
     {
       case SINGLE_TAP:
         register_code16 (LSFT (KC_PSCR));
@@ -101,12 +102,12 @@ execute_tap_dance_action (TapDanceStep step)
     }
 }
 
-static void  
-reset_tap_dance_action (TapDanceStep step) 
+static void
+reset_tap_dance_action (TapDanceStep step)
 {
   wait_ms(10);
-  
-  switch (step) 
+
+  switch (step)
     {
       case SINGLE_TAP:
         unregister_code16 (LSFT (KC_PSCR));
@@ -125,28 +126,28 @@ reset_tap_dance_action (TapDanceStep step)
     }
 }
 
-void 
-on_tap_dance_start (tap_dance_state_t *state, void *user_data) 
+void
+on_tap_dance_start (tap_dance_state_t *state, void *user_data)
 {
   if (state->count >= 3)
     tap_code16 (LSFT (KC_PSCR));
 }
 
 void
-on_tap_dance_finish (tap_dance_state_t *state, void *user_data) 
+on_tap_dance_finish (tap_dance_state_t *state, void *user_data)
 {
   TapDanceStep step = evaluate_tap_dance_step (state);
-  
+
   dance_state[0].step = step;
-  
+
   execute_tap_dance_action (step);
 }
 
-void 
-on_tap_dance_reset (tap_dance_state_t *state, void *user_data) 
+void
+on_tap_dance_reset (tap_dance_state_t *state, void *user_data)
 {
   reset_tap_dance_action (dance_state[0].step);
-  
+
   dance_state[0].step = 0;
 }
 
@@ -159,14 +160,14 @@ process_record_user (uint16_t keycode, keyrecord_t* record)
 {
   if (!process_achordion (keycode, record))
       return false;
-  
+
   return true;
 }
 
-void 
-matrix_scan_user (void) 
+void
+matrix_scan_user (void)
 {
-  achordion_task();
+  achordion_task ();
 }
 
 uint8_t
@@ -175,11 +176,11 @@ layer_state_set_user (uint8_t state)
   uint8_t layer = biton (state);
 
   ergodox_board_led_off ();
-  
+
   ergodox_right_led_1_off ();
   ergodox_right_led_2_off ();
   ergodox_right_led_3_off ();
-  
+
   switch (layer)
     {
     case 1:
