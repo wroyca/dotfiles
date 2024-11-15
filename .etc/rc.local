@@ -1,0 +1,11 @@
+#!/bin/bash
+
+device_path=$(grep -l "Ergodox EZ" /sys/bus/usb/devices/*/product | sed 's|/product||')
+
+# Disable wakeup signals for the Ergodox EZ keyboard to prevent the system
+# from continuously polling the device, which cause the keyboard's LED to
+# flash unnecessarily.
+#
+if [ -n "$device_path" ]; then
+  echo "disabled" > "$device_path/power/wakeup"
+fi
