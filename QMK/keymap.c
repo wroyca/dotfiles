@@ -164,6 +164,17 @@ process_record_user (uint16_t keycode, keyrecord_t* record)
   return true;
 }
 
+bool 
+achordion_chord (uint16_t, keyrecord_t*, uint16_t, keyrecord_t*) 
+{
+  // We ideally want to make exceptions for Ctrl chord, but I wasn't able to get
+  // it working on the left-hand side, even though it does function on the
+  // right-hand side. We should investigate and debug this at some point, but for
+  // now, let's disable bilateral combinations.
+  //
+  return true;
+}
+
 void
 matrix_scan_user (void)
 {
