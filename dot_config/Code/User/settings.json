@@ -1,0 +1,96 @@
+{
+  // Breadcrumbs
+  "breadcrumbs.enabled": false,
+
+  // CodeQL
+  "codeQL.telemetry.enableTelemetry": false,
+
+  // Editor
+  "editor.bracketPairColorization.enabled": false,
+  "editor.codeLensFontFamily": "MonoLisa",
+  "editor.cursorSurroundingLines": 4,
+  "editor.fontFamily": "MonoLisa",
+  "editor.fontLigatures": "'ss02' on",
+  "editor.fontWeight": 400,
+  "editor.formatOnType": true,
+  "editor.hideCursorInOverviewRuler": true,
+  "editor.linkedEditing": true,
+  "editor.minimap.enabled": false,
+  "editor.mouseWheelScrollSensitivity": 3,
+  "editor.mouseWheelZoom": true,
+  "editor.overviewRulerBorder": false,
+  "editor.padding.bottom": 10,
+  "editor.padding.top": 10,
+  "editor.renderWhitespace": "trailing",
+  "editor.scrollbar.horizontal": "hidden",
+  "editor.scrollbar.vertical": "hidden",
+  "editor.scrollbar.verticalScrollbarSize": 0,
+  "editor.smoothScrolling": true,
+  "editor.stickyScroll.enabled": false,
+  "editor.tabSize": 2,
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": "comment",
+        "settings": {
+          "fontStyle": "italic"
+        }
+      }
+    ]
+  },
+
+  // Explorer
+  "explorer.decorations.colors": false,
+  "explorer.sortOrderLexicographicOptions": "upper",
+
+  // Extensions
+  "extensions.ignoreRecommendations": true,
+
+  // Files
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+
+  // Git
+  "git.autofetch": true,
+
+  // Gitlens
+  "gitlens.graph.layout": "editor",
+
+  // Project manager
+  "projectManager.ignoreProjectsWithinProjects": true,
+  "projectManager.git.baseFolders": [
+    "~/Projects",
+    "~/.local/share/chezmoi"
+  ],
+
+  // Scm
+  "scm.diffDecorations": "gutter",
+
+  // Security
+  "security.workspace.trust.enabled": false,
+
+  // Terminal
+  "terminal.integrated.copyOnSelection": true,
+  "terminal.integrated.defaultProfile.linux": "fish",
+  "terminal.integrated.gpuAcceleration": "on",
+  "terminal.integrated.mouseWheelScrollSensitivity": 3,
+  "terminal.integrated.mouseWheelZoom": true,
+  "terminal.integrated.smoothScrolling": true,
+  "terminal.integrated.stickyScroll.enabled": true,
+
+  // Window
+  "window.autoDetectColorScheme": true,
+  "window.dialogStyle": "custom",
+  "window.menuBarVisibility": "toggle",
+  "window.zoomLevel": 1.0001, // https://github.com/microsoft/vscode/issues/224714
+
+  // Workbench
+  "workbench.editor.decorations.colors": false,
+  "workbench.iconTheme": "vs-minimal", // https://github.com/microsoft/vscode/issues/141428
+  "workbench.list.mouseWheelScrollSensitivity": 3,
+  "workbench.list.smoothScrolling": true,
+  "workbench.preferredDarkColorTheme": "Visual Studio Dark",
+  "workbench.preferredLightColorTheme": "Visual Studio Light",
+  "workbench.startupEditor": "none",
+  "workbench.statusBar.visible": true
+}
