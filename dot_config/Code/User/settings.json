@@ -2,6 +2,21 @@
   // Breadcrumbs
   "breadcrumbs.enabled": false,
 
+  // Clangd
+  "clangd.arguments": [
+    "--all-scopes-completion=true",
+    "--background-index=true",
+    "--background-index-priority=normal",
+    "--clang-tidy=true",
+    "--completion-parse=always",
+    "--ranking-model=decision_forest",
+    "--completion-style=bundled",
+    "--function-arg-placeholders=0",
+    "--header-insertion=never",
+    "--pch-storage=memory",
+    "--parse-forwarding-functions"
+  ],
+
   // CodeQL
   "codeQL.telemetry.enableTelemetry": false,
 
