@@ -20,7 +20,7 @@ sudo dnf install -y adw-gtk3-theme
 # does not support post-hook commands.
 #
 if [ ! -d "$HOME/.wine/drive_c/Program Files (x86)/LAV Filters" ]; then
-  export WINEDEBUG=-all winetricks -q directshow
+  winetricks -q directshow
   wget https://github.com/Nevcairiel/LAVFilters/releases/latest/download/LAVFilters-{{ (gitHubLatestTag "Nevcairiel/LAVFilters").Name | replace "v" "" -}}-Installer.exe \
     && wine $(basename "$_") && sudo rm $HOME/LAVFilters-*
 fi
