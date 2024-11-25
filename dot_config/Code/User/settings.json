@@ -22,6 +22,7 @@
 
   // Editor
   "editor.bracketPairColorization.enabled": false,
+  "editor.codeLens": false,
   "editor.codeLensFontFamily": "MonoLisa",
   "editor.cursorSurroundingLines": 4,
   "editor.fontFamily": "MonoLisa",
@@ -29,6 +30,7 @@
   "editor.fontWeight": 400,
   "editor.formatOnType": true,
   "editor.hideCursorInOverviewRuler": true,
+  "editor.inlayHints.enabled": "offUnlessPressed",
   "editor.linkedEditing": true,
   "editor.minimap.enabled": false,
   "editor.mouseWheelScrollSensitivity": 3,
@@ -70,6 +72,7 @@
 
   // Git
   "git.autofetch": true,
+  "git.defaultCloneDirectory": "~/Projects",
 
   // Gitlens
   "gitlens.graph.branchesVisibility": "smart",
@@ -117,5 +120,5 @@
   "workbench.preferredDarkColorTheme": "Visual Studio Dark",
   "workbench.preferredLightColorTheme": "Visual Studio Light",
   "workbench.startupEditor": "none",
-  "workbench.statusBar.visible": true
+  "workbench.statusBar.visible": false
 }
