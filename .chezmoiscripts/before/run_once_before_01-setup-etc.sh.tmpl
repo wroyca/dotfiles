@@ -20,3 +20,8 @@ sudo cp -rfT {{ .chezmoi.sourceDir }}/.etc /etc
 # performance degradation.
 #
 grep -sxF "options nvidia NVreg_EnableGpuFirmware=0" /etc/modprobe.d/nvidia-gsp.conf || echo "options nvidia NVreg_EnableGpuFirmware=0" | sudo tee -a /etc/modprobe.d/nvidia-gsp.conf
+
+# https://wiki.archlinux.org/title/GDM#Setup_default_monitor_settings
+#
+sudo cp ~/.config/monitors.xml ~gdm/.config/monitors.xml
+sudo chown gdm:gdm ~gdm/.config/monitors.xml
