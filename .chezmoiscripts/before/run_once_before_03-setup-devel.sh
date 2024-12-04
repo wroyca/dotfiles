@@ -6,6 +6,7 @@ sudo dnf install -y clang
 sudo dnf install -y clang-tools-extra
 sudo dnf install -y libcxx
 sudo dnf install -y libcxx-devel
+sudo dnf install -y mingw32-gcc-c++
 
 if ! command -v b > /dev/null 2>&1; then
  v=$(curl -sSf https://stage.build2.org/0/toolchain.sha256 | sed -n 's,^.*/build2-install-\(.*\)-stage\.sh$,\1,p')
