@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+sudo dnf install -y kitty
+sudo dnf install -y neovim
+sudo dnf install -y python3-pip && pip install pynvim
 sudo dnf install -y fish
 sudo dnf install -y git-delta
 sudo dnf install -y wine
@@ -20,7 +23,7 @@ sudo dnf install -y adw-gtk3-theme
 # does not support post-hook commands.
 #
 if [ ! -d "$HOME/.wine/drive_c/Program Files (x86)/LAV Filters" ]; then
-  winetricks -q directshow
   wget https://github.com/Nevcairiel/LAVFilters/releases/latest/download/LAVFilters-{{ (gitHubLatestTag "Nevcairiel/LAVFilters").Name | replace "v" "" -}}-Installer.exe \
     && wine $(basename "$_") && sudo rm $HOME/LAVFilters-*
+  winetricks -q directshow
 fi
