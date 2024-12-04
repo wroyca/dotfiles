@@ -8,6 +8,9 @@ local Spec = {
   ---@diagnostic disable: missing-fields
   opts = setmetatable({
     ensure_installed = "all",
+    ignore_install = {
+      "hoon" -- https://github.com/urbit-pilled/tree-sitter-hoon/issues/5
+    },
     ---@type { [string]: TSModule }
     modules = {
       highlight = {
