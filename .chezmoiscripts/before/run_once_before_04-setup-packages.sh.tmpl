@@ -27,3 +27,7 @@ if [ ! -d "$HOME/.wine/drive_c/Program Files (x86)/LAV Filters" ]; then
     && wine $(basename "$_") && sudo rm $HOME/LAVFilters-*
   winetricks -q directshow
 fi
+
+# Wine DPI settings for display scaling.
+#
+wine reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v LogPixels /t REG_DWORD /d 0xD8 /f
