@@ -1,5 +1,5 @@
 if vim.bo.filetype ~= "cpp" then
-  return
+	return
 end
 
 -- In Neovim, the cinkeys option controls the keys that trigger automatic
@@ -11,4 +11,4 @@ end
 -- For C++, this default behavior can be problematic because : is commonly used
 -- in contexts where reindentation is not desirable.
 --
-vim.opt_local.cinkeys:remove(":")
+vim.opt_local.cinkeys:remove (":")
