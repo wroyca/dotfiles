@@ -23,5 +23,5 @@ grep -sxF "options nvidia NVreg_EnableGpuFirmware=0" /etc/modprobe.d/nvidia-gsp.
 
 # https://wiki.archlinux.org/title/GDM#Setup_default_monitor_settings
 #
-sudo cp ~/.config/monitors.xml ~gdm/.config/monitors.xml
+sudo cp {{ .chezmoi.sourceDir }}/dot_config/monitors.xml ~gdm/.config/monitors.xml
 sudo chown gdm:gdm ~gdm/.config/monitors.xml
