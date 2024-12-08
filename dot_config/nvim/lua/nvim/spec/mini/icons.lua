@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "mini.icons", dev = true,
+  "mini.icons", virtual = true,
 
   -- opts shouldn't call setup, as mini modules self-export through _G.
   config = function(_, opts)

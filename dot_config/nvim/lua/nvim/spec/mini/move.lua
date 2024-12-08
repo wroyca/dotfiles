@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "mini.move", dev = true, opts = {},
+  "mini.move", virtual = true, opts = {},
 
   keys = {
     { "<A-h>", mode = { "n", "x" } },

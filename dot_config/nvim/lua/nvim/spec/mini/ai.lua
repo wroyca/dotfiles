@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "mini.ai", dev = true,
+  "mini.ai", virtual = true,
 
   keys = {
     { "a", mode = { "x", "o" } },

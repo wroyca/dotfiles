@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "mini.misc", dev = true, event = "VeryLazy",
+  "mini.misc", virtual = true, event = "VeryLazy",
 
   -- opts shouldn't call setup, as mini modules self-export through _G.
   config = function(_, opts)
