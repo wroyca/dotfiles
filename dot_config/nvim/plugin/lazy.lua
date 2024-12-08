@@ -108,4 +108,4 @@ vim.api.nvim_create_autocmd("User", {
   end,
 })
 
-require("lazy").setup("nvim.spec", opts)
+require("lazy").setup("spec", opts)

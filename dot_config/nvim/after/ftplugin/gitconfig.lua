@@ -1,5 +1,5 @@
 if vim.bo.filetype ~= "gitconfig" then
-  return
+	return
 end
 
 -- In gitconfig, both # and ; are recognized as comment leaders (characters
