@@ -8,4 +8,4 @@
 #
 # https://build2.org/build2/doc/build2-build-system-manual.xhtml#targets-types-doc
 #
---post-hook "sed -i -e 's/doc\{README.md\}/doc\{README.md\} legal\{LICENSE.md\}/g' buildfile"
+--post-hook "/usr/bin/sed -i -e '/doc{README.md}/!b; /legal{LICENSE.md}/b; s/doc{README.md}/doc{README.md} legal{LICENSE.md}/' buildfile"
