@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "mini.diff", dev = true, event = "VeryLazy",
+  "mini.diff", virtual = true, event = "VeryLazy",
 
   init = function()
     vim.o.signcolumn = "yes:1"
