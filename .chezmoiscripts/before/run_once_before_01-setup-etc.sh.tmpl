@@ -11,7 +11,7 @@
 # /tmp/dest: it could have been renamed to /tmp/dest/source instead. However,
 # if cp -T /tmp/source /tmp/dest succeeds, there is no question that
 # /tmp/source was renamed to /tmp/dest.
-
+#
 sudo cp -rfT {{ .chezmoi.sourceDir }}/.etc /etc
 
 # The GSP firmware is enabled by default for supported GPUs (Turing and Ampere+
