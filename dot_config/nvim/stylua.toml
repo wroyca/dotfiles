@@ -1,3 +1,8 @@
 # https://github.com/JohnnyMorganz/StyLua
 
 space_after_function_names = "Always"
+
+# Stylua doesn't compromise with .editorconfig—it takes precedence.
+#
+indent_type = "Spaces"
+indent_width = 2
