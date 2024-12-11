@@ -2,12 +2,12 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-	"machakann/vim-sandwich", event = "VeryLazy",
+  "machakann/vim-sandwich", event = "VeryLazy",
 
-	-- Use vim.cmd in this context to prevent any potential key remapping
-	-- mistakes.
-	config = function ()
-		vim.cmd ([[
+  -- Use vim.cmd in this context to prevent any potential key remapping
+  -- mistakes.
+  config = function ()
+    vim.cmd ([[
       runtime macros/sandwich/keymap/surround.vim
 
       nunmap sa
@@ -30,7 +30,7 @@ local Spec = {
       xmap gsd  <Plug>(sandwich-delete)
       nmap gsdb <Plug>(sandwich-delete-auto)
     ]])
-	end,
+  end,
 }
 
 return Spec

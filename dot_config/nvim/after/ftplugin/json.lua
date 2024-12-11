@@ -1,5 +1,5 @@
 if vim.bo.filetype ~= "json" then
-	return
+  return
 end
 
 -- JSONC (JSON with Comments) is an extended version of JSON that allows
