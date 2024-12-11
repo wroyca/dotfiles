@@ -11,6 +11,10 @@ sudo dnf install -y steam
 sudo dnf install -y firefoxpwa
 sudo dnf install -y adw-gtk3-theme
 
+# https://discussion.fedoraproject.org/t/i-am-no-longer-able-to-play-videos-with-totem-and-neither-with-some-gstreamer-based-players/115831/4
+#
+sudo dnf remove totem && flatpak install -y org.gnome.Showtime
+
 # Install DirectShow filters based on the libavformat and libavcodec libraries
 # from the FFmpeg project. These filters enable Wine to play almost any media
 # format in a DirectShow-compatible player.
