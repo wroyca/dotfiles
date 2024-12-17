@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Version=9.0
+Name=IDA
+Comment=
+Keywords=;
+Categories=Qt;;
+Icon=IDA
+Exec=/home/wroy/.local/bin/ida/ida
+Actions=
+MimeType=
+Terminal=false
+StartupNotify=true
+StartupWMClass=IDA
