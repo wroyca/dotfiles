@@ -1,7 +1,10 @@
 function fish_greeting
 end
 
-bind \t accept-autosuggestion
+# This break certain context-aware suggestions, such as Git remote branches no
+# longer being considered valid candidates.
+#
+# bind \t accept-autosuggestion
 
 # XDG Base directory specification
 #
