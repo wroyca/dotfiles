@@ -3,19 +3,22 @@ if package.loaded["lazy"] then
   return
 end
 
-local lazypath = vim.fs.joinpath (vim.fn.stdpath ("data") --[[ @as string ]], "lazy", "lazy.nvim")
-if not vim.uv.fs_stat (lazypath) then
+local data = vim.fn.stdpath ("data") --[[ @as string ]]
+local lazy = vim.fs.joinpath (data, "lazy", "lazy.nvim")
+local stat = vim.uv.fs_stat (lazy)
+
+if not stat then
   vim
     .system ({
       "git",
       "clone",
       "--filter=blob:none",
       "https://github.com/folke/lazy.nvim",
-      lazypath,
+      lazy,
     })
     :wait ()
 end
-vim.opt.rtp:prepend (lazypath)
+vim.opt.rtp:prepend (lazy)
 
 ---@type LazyConfig
 local opts = {
@@ -34,6 +37,10 @@ local opts = {
     enabled = false,
   },
 
+  rocks = {
+    enabled = true,
+  },
+
   dev = {
     path = vim.fs.joinpath (os.getenv ("HOME") or os.getenv ("USERPROFILE"), "Projects"),
     patterns = {
@@ -46,18 +53,14 @@ local opts = {
   },
 
   ui = {
-    border = "single",
     backdrop = 100,
-    pills = false,
+    size = { width = 0.9, height = 0.9 },
   },
 
   custom_keys = {
     ["<localleader>l"] = nil,
+    ["<localleader>i"] = nil,
     ["<localleader>t"] = nil,
-  },
-
-  diff = {
-    cmd = "diffview.nvim",
   },
 
   change_detection = {
