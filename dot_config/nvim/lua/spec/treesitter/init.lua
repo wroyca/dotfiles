@@ -3,22 +3,15 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "nvim-treesitter/nvim-treesitter", main = "nvim-treesitter.configs", build = ":TSUpdate", rsevent = "VeryLazy",
+  "nvim-treesitter/nvim-treesitter", main = "nvim-treesitter.configs", build = ":TSUpdate", event = "VeryLazy",
 
   ---@type TSConfig
   opts = setmetatable ({
     ensure_installed = "all",
-    ignore_install = {
-      "hoon", -- https://github.com/urbit-pilled/tree-sitter-hoon/issues/5
-    },
     ---@type { [string]: TSModule }
     modules = {
       highlight = {
         enable = true,
-        disable = function (_, bufnr)
-          -- https://github.com/neovim/neovim/issues/22426
-          return (vim.fn.getfsize (bufnr) > 1000000) or false
-        end,
       },
     },
   }, {
