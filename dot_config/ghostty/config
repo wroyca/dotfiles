@@ -1,0 +1,28 @@
+# Fonts
+font-family = "Monolisa Variable"
+font-family = "Symbols Nerd Font Mono"
+font-size = 13
+
+# Cursor
+adjust-cursor-thickness = 2
+adjust-cursor-height = 6
+
+# Cell height
+adjust-cell-height = 13%
+
+# Padding
+window-padding-x = 10,10
+window-padding-y = 10,10
+window-padding-balance = true
+
+# Close
+confirm-close-surface = false
+
+# Shell
+shell-integration = fish
+
+# Window
+window-decoration = false
+
+# Theme
+theme = dark:NvimDark,light:NvimLight
