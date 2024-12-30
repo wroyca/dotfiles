@@ -3,23 +3,6 @@ if package.loaded["lazy"] then
   return
 end
 
-local data = vim.fn.stdpath ("data") --[[ @as string ]]
-local lazy = vim.fs.joinpath (data, "lazy", "lazy.nvim")
-local stat = vim.uv.fs_stat (lazy)
-
-if not stat then
-  vim
-    .system ({
-      "git",
-      "clone",
-      "--filter=blob:none",
-      "https://github.com/folke/lazy.nvim",
-      lazy,
-    })
-    :wait ()
-end
-vim.opt.rtp:prepend (lazy)
-
 ---@type LazyConfig
 local opts = {
   defaults = {
@@ -27,6 +10,8 @@ local opts = {
   },
 
   local_spec = false,
+
+  lockfile =  vim.fs.joinpath (vim.fn.stdpath ("data"), "..", "chezmoi", "dot_config", "nvim") .. "/lazy-lock.json",
 
   git = {
     log = { "-4" },
