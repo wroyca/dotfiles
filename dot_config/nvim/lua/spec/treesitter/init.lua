@@ -1,23 +1,17 @@
 ---@module "nvim-treesitter"
 ---@diagnostic disable: missing-fields
 
-local parser_install_dir = vim.fs.joinpath (vim.fn.stdpath ("data"), "..", "chezmoi", "dot_config", "nvim")
-
 ---@type LazyPluginSpec
 local Spec = {
   "nvim-treesitter/nvim-treesitter", main = "nvim-treesitter.configs", build = ":TSUpdate", event = "VeryLazy",
-
-  init = function()
-    vim.opt.runtimepath:append (parser_install_dir)
-  end,
 
   ---@type TSConfig
   opts = setmetatable ({
     ensure_installed = "all",
     -- BUG: These can only generate parsers with ABI version 13 - 14, not 15.
     ignore_install = { "scfg", "ocamllex", "teal", "unison", "mlir", "swift", "latex" },
-    -- NOTE: remember to update vim.opt.runtimepath in init if location is changed.
-    parser_install_dir = parser_install_dir,
+    -- NOTE: remember to update vim.opt.runtimepath if location is changed.
+    parser_install_dir = vim.fs.joinpath (vim.fn.stdpath ("data"), "..", "chezmoi", "dot_config", "nvim"),
     ---@type { [string]: TSModule }
     modules = {
       highlight = {
@@ -44,4 +38,5 @@ local Spec = {
   }),
 }
 
+vim.opt.runtimepath:append (Spec.opts.parser_install_dir)
 return Spec
