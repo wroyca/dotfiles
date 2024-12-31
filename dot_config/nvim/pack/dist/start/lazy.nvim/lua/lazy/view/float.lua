@@ -184,6 +184,7 @@ function M:mount()
     Util.wo(self.win, "wrap", true)
     Util.wo(self.win, "winhighlight", "Normal:LazyNormal")
     Util.wo(self.win, "colorcolumn", "")
+    Util.wo(self.win, "winfixbuf", true)
   end
   opts()
 
