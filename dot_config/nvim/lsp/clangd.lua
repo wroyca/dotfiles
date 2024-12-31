@@ -1,5 +1,5 @@
 ---@type vim.lsp.config
-local config = {  
+local config = {
   cmd = {
     "clangd",
 
@@ -19,7 +19,7 @@ local config = {
     "--pch-storage=memory",
     "--parse-forwarding-functions",
   },
-  
+
   capabilities = {
     textDocument = {
       inactiveRegionsCapabilities = {
@@ -27,15 +27,13 @@ local config = {
       },
     },
   },
-  
-  filetypes = { 
-    "c", 
-    "cpp" 
+
+  filetypes = {
+    "c", "cpp"
   },
-  
-  root_markers = { 
-    ".clangd", 
-    "compile_commands.json" 
+
+  root_markers = {
+    ".clangd", "compile_commands.json"
   },
 }
 
