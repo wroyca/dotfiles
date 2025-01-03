@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Version=9.0
+Name=RAD Debugger
+Comment=
+Keywords=;
+Categories=Code;;
+Icon=RAD
+Exec=/home/wroy/.local/bin/raddbg.exe 
+Actions=
+MimeType=
+Terminal=false
+StartupNotify=true
+StartupWMClass=RAD

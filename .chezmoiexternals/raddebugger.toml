@@ -1,0 +1,4 @@
+[".local/bin"]
+type = "archive"
+url = "https://github.com/EpicGamesExt/raddebugger/releases/latest/download/raddbg.zip"
+
