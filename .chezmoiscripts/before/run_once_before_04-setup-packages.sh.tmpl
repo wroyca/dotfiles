@@ -11,9 +11,18 @@ sudo dnf install -y steam
 sudo dnf install -y firefoxpwa
 sudo dnf install -y adw-gtk3-theme
 
+# https://github.com/twpayne/chezmoi/discussions/1804
+#
+if [ ! -f "$HOME/.local/bin/raddbg.exe" ]; then
+  wget https://github.com/EpicGamesExt/raddebugger/releases/latest/download/raddbg.zip -P "$HOME/.local/bin"
+  unzip -o "$HOME/.local/bin/raddbg.zip" -d "$HOME/.local/bin"
+  chmod +x "$HOME/.local/bin/raddbg.exe"
+  rm "$HOME/.local/bin/raddbg.zip"
+fi
+
 # https://discussion.fedoraproject.org/t/i-am-no-longer-able-to-play-videos-with-totem-and-neither-with-some-gstreamer-based-players/115831/4
 #
-sudo dnf remove totem && flatpak install -y org.gnome.Showtime
+sudo dnf remove totem && flatpak install -y flathub org.gnome.Showtime
 
 # Install DirectShow filters based on the libavformat and libavcodec libraries
 # from the FFmpeg project. These filters enable Wine to play almost any media
@@ -27,8 +36,9 @@ sudo dnf remove totem && flatpak install -y org.gnome.Showtime
 # does not support post-hook commands.
 #
 if [ ! -d "$HOME/.wine/drive_c/Program Files (x86)/LAV Filters" ]; then
-  wget https://github.com/Nevcairiel/LAVFilters/releases/latest/download/LAVFilters-{{ (gitHubLatestTag "Nevcairiel/LAVFilters").Name | replace "v" "" -}}-Installer.exe \
-    && wine $(basename "$_") && sudo rm $HOME/LAVFilters-*
+  wget https://github.com/Nevcairiel/LAVFilters/releases/latest/download/LAVFilters-{{ (gitHubLatestTag "Nevcairiel/LAVFilters").Name | replace "v" "" -}}-Installer.exe
+  wine $(basename "$_")
+  sudo rm $HOME/LAVFilters-*
   winetricks -q directshow
 fi
 
