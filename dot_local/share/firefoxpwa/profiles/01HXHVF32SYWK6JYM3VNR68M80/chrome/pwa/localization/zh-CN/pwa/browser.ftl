@@ -4,17 +4,16 @@
 
 # The label for the tabs/icon bar, when the tabs mode is enabled
 toolbar-tabs-ffpwa =
-    .toolbarname = Tabs Bar
-    .aria-label = Tabs
+    .toolbarname = 标签栏
+    .aria-label = 标签页
     .accesskey = T
-
 # The label for the tabs/icon bar, when the tabs mode is disabled
 toolbar-icon-ffpwa =
-    .toolbarname = Icon Bar
-    .aria-label = Icon
+    .toolbarname = 图标栏
+    .aria-label = 图标
     .accesskey = I
 
 ## Popup inputs should be translated in imperative mood, without any end punctuation
 
 # The prompt for the address input popup
-popup-address-input = Enter site address
+popup-address-input = 输入网站地址

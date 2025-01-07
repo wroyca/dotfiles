@@ -36,7 +36,7 @@ class PwaBrowser {
     this.moveMenuButtons();
     this.switchPopupSides();
     this.makeUrlBarReadOnly();
-    this.setDisplayModeStandalone();
+    setTimeout(() => { this.setDisplayModeStandalone() });
     this.handleRegisteringProtocols();
     this.handleOutOfScopeNavigation();
     this.handleOpeningNewWindow();
@@ -50,6 +50,7 @@ class PwaBrowser {
     setTimeout(() => { this.renameOpenImageAction() });
     setTimeout(() => { this.disableNewTabShortcuts() });
     this.renameHomepageWidget();
+    this.handleKioskMode();
   }
 
   loadLocalizationSources () {
@@ -86,20 +87,22 @@ class PwaBrowser {
     const siteIcon = siteIcons.find(icon => icon.size >= 32) || siteIcons[siteIcons.length - 1];
     if (siteIcon) tabIconImage.setAttribute('src', siteIcon.icon.src);
 
-    const siteName = sanitizeString(window.gFFPWASiteConfig?.config.name || window.gFFPWASiteConfig?.manifest.name || window.gFFPWASiteConfig?.manifest.short_name) || new URL(site.manifest.scope).host;
+    const siteScope = window.gFFPWASiteConfig?.manifest.scope ? new URL(window.gFFPWASiteConfig.manifest.scope).host : null;
+    const siteName = sanitizeString(window.gFFPWASiteConfig?.config.name || window.gFFPWASiteConfig?.manifest.name || window.gFFPWASiteConfig?.manifest.short_name) || siteScope;
     tabLabel.replaceChildren(siteName);
     document.title = siteName;
 
     // Sync current tab favicon and title with custom info elements
     // This can be disabled by user using our preferences
     const docDS = document.documentElement.dataset;
-    docDS['contentTitleDefault'] = docDS['contentTitlePrivate'] = 'CONTENTTITLE'
-    docDS['titleDefault'] = docDS['titlePrivate'] = siteName
-
-    window.gBrowser.updateTitlebar = function () {
-      const dynamicTitle = xPref.get(ChromeLoader.PREF_DYNAMIC_WINDOW_TITLE);
-      if (dynamicTitle) document.title = this.getWindowTitleForBrowser(this.selectedBrowser);
-    };
+    docDS['contentTitleDefault'] = docDS['contentTitlePrivate'] = 'CONTENTTITLE';
+    docDS['titleDefault'] = docDS['titlePrivate'] = siteName;
+    setTimeout(() => {
+      window.gBrowser.updateTitlebar = function () {
+        const dynamicTitle = xPref.get(ChromeLoader.PREF_DYNAMIC_WINDOW_TITLE);
+        if (dynamicTitle) document.title = this.getWindowTitleForBrowser(this.selectedBrowser);
+      };
+    });
 
     function updateNameAndIcon (source) {
       const dynamicIcon = xPref.get(ChromeLoader.PREF_DYNAMIC_WINDOW_ICON);
@@ -617,7 +620,7 @@ class PwaBrowser {
     let shownByDefault = Services.xulStore.getValue(window.document.documentURI, iconBar.id, 'collapsed') !== 'true';
     if (!shownByDefault) {
       window.TabBarVisibility.update = function () {}
-      titleBar.setAttribute('autohide', 'true');
+      titleBar?.setAttribute('autohide', 'true');
       iconBar.setAttribute('collapsed', 'true');
     }
 
@@ -653,10 +656,10 @@ class PwaBrowser {
         (event.key !== 'AltGraph')
       ) {
         if (iconBar.hasAttribute('collapsed')) {
-          titleBar.removeAttribute('autohide');
+          titleBar?.removeAttribute('autohide');
           iconBar.removeAttribute('collapsed');
         } else {
-          titleBar.setAttribute('autohide', 'true');
+          titleBar?.setAttribute('autohide', 'true');
           iconBar.setAttribute('collapsed', 'true');
         }
       }
@@ -671,10 +674,10 @@ class PwaBrowser {
     hookFunction(window, 'setToolbarVisibility', (toolbar, visible, persist) => {
       if (toolbar === iconBar && persist) {
         if (!visible) {
-          titleBar.setAttribute('autohide', 'true');
+          titleBar?.setAttribute('autohide', 'true');
           window.TabBarVisibility.update = function () {};
         } else  {
-          titleBar.removeAttribute('autohide');
+          titleBar?.removeAttribute('autohide');
         }
 
         shownByDefault = visible;
@@ -683,11 +686,11 @@ class PwaBrowser {
 
     // Show/hide main titlebar when menu bar is active/inactive
     document.addEventListener('DOMMenuBarActive', () => {
-      titleBar.removeAttribute('autohide');
+      titleBar?.removeAttribute('autohide');
     });
 
     document.addEventListener('DOMMenuBarInactive', () => {
-      titleBar.setAttribute('autohide', 'true');
+      titleBar?.setAttribute('autohide', 'true');
     });
   }
 
@@ -840,9 +843,20 @@ class PwaBrowser {
           && content.document.location.protocol !== 'https:'
         ) return;
 
-        // Obtain initial theme color
+        // Store if we found a valid meta tag
+        let appliedColor = false;
+
+        // Obtain the initial theme color
         for (const metaElement of content.document.querySelectorAll('meta[name=theme-color]')) {
-          if (handleMetaElement(metaElement)) break;
+          if (handleMetaElement(metaElement)) {
+            appliedColor = true;
+            break;
+          }
+        }
+
+        // Remove the color if there is no valid tag
+        if (!appliedColor) {
+          sendAsyncMessage('firefoxpwa:theme-color', { color: null });
         }
 
         // Watch for meta[name=theme-color] changes
@@ -887,6 +901,15 @@ class PwaBrowser {
       try {
         document.l10n.setAttributes(document.getElementById('home-button'), 'toolbar-button-home-ffpwa');
       } catch (_) {}
+    });
+  }
+
+  handleKioskMode () {
+    window.addEventListener('MozAfterPaint', () => {
+      if (window.BrowserHandler.kiosk && window.toolbar.visible) {
+        // Enable fullscreen when kiosk mode is enabled for non-popup windows
+        window.fullScreen = true;
+      }
     });
   }
 
@@ -1790,9 +1813,10 @@ class PwaBrowser {
 
   configureAll () {
     this.configureLayout();
-    this.configureWidgets();
     this.configureSettings();
     this.disableOnboarding();
+
+    setTimeout(() => { this.configureWidgets() });
   }
 
   configureLayout () {
