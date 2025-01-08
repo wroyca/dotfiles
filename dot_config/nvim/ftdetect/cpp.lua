@@ -1,5 +1,5 @@
--- https://neovim.io/doc/user/lua.html#vim.filetype.add()
-
+---@diagnostic disable-next-line: undefined-doc-name
+---@type vim.filetype.add
 vim.filetype.add ({
   extension = {
     cxx = "cpp",
