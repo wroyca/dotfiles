@@ -5,7 +5,7 @@ alefragnani.project-manager
 github.codespaces
 github.github-vscode-theme
 github.remotehub
-github.vscode-codeql
+# github.vscode-codeql
 github.vscode-github-actions
 github.vscode-pull-request-github
 
