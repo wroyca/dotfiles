@@ -19,12 +19,12 @@ local Spec = {
   },
   {
     "folke/which-key.nvim",
-    opts_extend = { "spec" }
-  }
+    opts_extend = { "spec" },
+  },
 }
 
 Spec[2].opts = {
-  spec = Spec[1].keys
+  spec = Spec[1].keys,
 }
 
 return Spec

@@ -20,17 +20,21 @@ vim.o.mousescroll    = "ver:3,hor:0"
 vim.o.mousemoveevent = true
 vim.o.confirm        = true
 vim.o.list           = true
+vim.o.number         = true
 vim.o.gdefault       = true
+vim.o.undofile       = true
 vim.o.cursorline     = true
+vim.o.termguicolors  = true
 vim.o.scrolloff      = 4
-vim.o.pumheight      = 9
-vim.o.laststatus     = 3
-vim.o.wrap           = false
-vim.o.fillchars      = "eob: "
+vim.o.pumheight      = 8
+vim.o.cmdheight      = 0
+vim.o.laststatus     = 0
+vim.o.signcolumn     = "yes:1"
 vim.o.breakindent    = true
 vim.o.copyindent     = true
 vim.o.smartindent    = true
 vim.o.preserveindent = true
+vim.o.fillchars      = "eob: "
 
 local function create_autocmds (cmds)
   for _, c in ipairs (cmds) do
