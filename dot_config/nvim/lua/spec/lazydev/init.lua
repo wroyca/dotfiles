@@ -1,4 +1,4 @@
----@module @lazydev.nvim
+---@module "lazydev"
 
 ---@type LazyPluginSpec[]
 local Spec = {

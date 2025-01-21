@@ -1,4 +1,4 @@
----@module nvim-lspconfig
+---@module "lspconfig"
 
 ---@type LazyPluginSpec
 local Spec = {
@@ -6,7 +6,7 @@ local Spec = {
 
   dependencies = {
     "mason.nvim",
-    "mason-lspconfig",
+    "mason-lspconfig.nvim",
   },
 
   -- FIXME: This uses a direct hack to load LSP config files by searching for

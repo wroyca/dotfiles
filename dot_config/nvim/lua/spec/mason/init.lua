@@ -1,4 +1,4 @@
----@module mason.nvim
+---@module "mason"
 
 ---@type LazyPluginSpec
 local Spec = {

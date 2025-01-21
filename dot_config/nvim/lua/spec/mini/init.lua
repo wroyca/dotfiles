@@ -1,4 +1,4 @@
----@module "mini.nvim"
+---@module "mini"
 
 ---@type LazyPluginSpec
 local Spec = {

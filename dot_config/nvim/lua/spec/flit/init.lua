@@ -1,4 +1,4 @@
----@module "flit.nvim"
+---@module "flit"
 
 ---@type LazyPluginSpec[]
 local Spec = {
