@@ -11,7 +11,6 @@ local Spec = {
       mode = { "n", "x", "o" },
       desc = "Leap forward",
     },
-
     {
       "S",
       "<Plug>(leap-backward)",
