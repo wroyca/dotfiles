@@ -1,4 +1,4 @@
----@module "conform.nvim"
+---@module "conform"
 
 ---@type LazyPluginSpec
 local Spec = {
