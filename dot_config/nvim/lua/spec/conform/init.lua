@@ -5,15 +5,15 @@ local Spec = {
   "stevearc/conform.nvim", event = "VeryLazy",
 
   keys = {
-	  {
-		  "<leader>;",
-			function()
-				require ("conform").format ({ async = true, lsp_format = "fallback" })
-			end,
-			mode = "",
-			desc = "Format buffer",
-		},
-	},
+    {
+      "<leader>;",
+      function ()
+        require ("conform").format ({ async = true, lsp_format = "fallback" })
+      end,
+      mode = "",
+      desc = "Format",
+    },
+  },
 
   opts = {
     formatters_by_ft = {

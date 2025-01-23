@@ -75,3 +75,43 @@ create_autocmds ({
     end,
   },
 })
+
+local function hi (name, opts)
+  ---@diagnostic disable-next-line: deprecated
+  local is_ok, hl = pcall (vim.api.nvim_get_hl_by_name, name, true)
+  if is_ok then
+    vim.iter (opts):each (function (k, v)
+      hl[k] = v
+    end)
+    pcall (vim.api.nvim_set_hl, 0, name, hl)
+  end
+end
+
+hi ("comment",                      { italic = true                        })
+hi ("@comment.error",               { italic = true                        })
+hi ("@comment.warning",             { italic = true                        })
+hi ("@comment.todo",                { italic = true                        })
+hi ("@comment.note",                { italic = true                        })
+hi ("todo",                         { italic = true                        })
+hi ("minihipatternsfixme",          { italic = true                        })
+hi ("minihipatternshack",           { italic = true                        })
+hi ("minihipatternsnote",           { italic = true                        })
+hi ("minihipatternstodo",           { italic = true                        })
+hi ("gitcommitdiscarded",           { italic = false                       })
+hi ("gitcommitselected",            { italic = false                       })
+hi ("gitcommituntracked",           { italic = false                       })
+hi ("diagnosticunnecessary",        { italic = false                       })
+hi ("minidepsplaceholder",          { italic = false                       })
+hi ("ministarterfooter",            { italic = false                       })
+hi ("ministarterinactive",          { italic = false                       })
+hi ("lazydimmed",                   { italic = false                       })
+hi ("whichkeyvalue",                { italic = false                       })
+hi ("dashboardfooter",              { italic = false                       })
+hi ("cmpitemabbrdeprecated",        { italic = false, strikethrough = true })
+hi ("cocdisabled",                  { italic = false                       })
+hi ("cocfadeout",                   { italic = false                       })
+hi ("dapuibreakpointsdisabledline", { italic = false                       })
+hi ("masonmuted",                   { italic = false                       })
+hi ("lspcodelens",                  { italic = false                       })
+hi ("lspcodelensseparator",         { italic = false                       })
+hi ("leapbackdrop",                 { italic = false                       })
