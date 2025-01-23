@@ -5,10 +5,14 @@ local Spec = {
   "mini.move", virtual = true, opts = {},
 
   keys = {
-    { "<A-h>", mode = { "n", "x" } },
-    { "<A-j>", mode = { "n", "x" } },
-    { "<A-k>", mode = { "n", "x" } },
-    { "<A-l>", mode = { "n", "x" } },
+    { "<A-h>", mode = { "x" }, desc = "Move left" },
+    { "<A-j>", mode = { "x" }, desc = "Move down" },
+    { "<A-k>", mode = { "x" }, desc = "Move up" },
+    { "<A-l>", mode = { "x" }, desc = "Move right" },
+    { "<A-h>", mode = { "n" }, desc = "Move line left" },
+    { "<A-j>", mode = { "n" }, desc = "Move line down" },
+    { "<A-k>", mode = { "n" }, desc = "Move line up" },
+    { "<A-l>", mode = { "n" }, desc = "Move line right" },
   },
 }
 

@@ -34,6 +34,7 @@ local Spec = {
         create_keymap_if_supported ("textDocument/implementation", "<leader>li", vim.lsp.buf.implementation,  "Go to Implementation")
         create_keymap_if_supported ("textDocument/references",     "<leader>lr", vim.lsp.buf.references,      "Go to References")
         create_keymap_if_supported ("textDocument/typeDefinition", "<leader>lt", vim.lsp.buf.type_definition, "Go to Type Definition")
+        create_keymap_if_supported ("textDocument/codeAction",     "<leader>.",  vim.lsp.buf.code_action,     "Code Action")
       end,
     })
 

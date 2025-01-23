@@ -4,6 +4,7 @@
 if exists('b:current_compiler')
   finish
 endif
+
 let b:current_compiler = 'b'
 
 let s:save_cpoptions = &cpoptions

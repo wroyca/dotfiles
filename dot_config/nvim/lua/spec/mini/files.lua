@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "mini.files", virtual = true, dependencies = { { "mini.icons", virtual = true } },
+  "mini.files", virtual = true,
 
   keys = {
     {
