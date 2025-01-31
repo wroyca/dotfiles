@@ -58,6 +58,17 @@ for _, cmd in ipairs ({
   })
 end
 
+local function hi (name, opts)
+  ---@diagnostic disable-next-line: deprecated
+  local is_ok, hl = pcall (vim.api.nvim_get_hl_by_name, name, true)
+  if is_ok then
+    vim.iter (opts):each (function (k, v)
+      hl[k] = v
+    end)
+    pcall (vim.api.nvim_set_hl, 0, name, hl)
+  end
+end
+
 hi ("comment",                      { italic = true                        })
 hi ("@comment.error",               { italic = true                        })
 hi ("@comment.warning",             { italic = true                        })
