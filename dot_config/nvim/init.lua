@@ -27,23 +27,13 @@ vim.o.cursorline     = true
 vim.o.termguicolors  = true
 vim.o.scrolloff      = 4
 vim.o.pumheight      = 8
-vim.o.cmdheight      = 0
-vim.o.laststatus     = 0
-vim.o.signcolumn     = "yes:1"
+vim.o.laststatus     = 3
 vim.o.breakindent    = true
 vim.o.copyindent     = true
 vim.o.smartindent    = true
 vim.o.preserveindent = true
-vim.o.fillchars      = "eob: "
 
-local function create_autocmds (cmds)
-  for _, c in ipairs (cmds) do
-    local e, d, cb = unpack (c)
-    vim.api.nvim_create_autocmd (e, { desc = d, callback = cb })
-  end
-end
-
-create_autocmds ({
+for _, cmd in ipairs ({
   {
     { "InsertLeave", "WinEnter" },
     "Show cursor line in active window",
@@ -59,32 +49,13 @@ create_autocmds ({
     function ()
       vim.opt_local.cursorline = false
     end,
-  },
-  {
-    { "VimEnter", "VimResume", "ColorScheme" },
-    "Sync terminal background color",
-    function ()
-      io.stdout:write (string.format ("\027]11;#%06x\007", vim.api.nvim_get_hl (0, { name = "Normal" }).bg))
-    end,
-  },
-  {
-    { "VimLeavePre", "VimSuspend" },
-    "Revert terminal background color",
-    function ()
-      io.stdout:write ("\027]111;;\007")
-    end,
-  },
-})
-
-local function hi (name, opts)
-  ---@diagnostic disable-next-line: deprecated
-  local is_ok, hl = pcall (vim.api.nvim_get_hl_by_name, name, true)
-  if is_ok then
-    vim.iter (opts):each (function (k, v)
-      hl[k] = v
-    end)
-    pcall (vim.api.nvim_set_hl, 0, name, hl)
-  end
+  }
+}) do
+  local event, desc, callback = unpack (cmd)
+  vim.api.nvim_create_autocmd (event, {
+    desc = desc,
+    callback = callback
+  })
 end
 
 hi ("comment",                      { italic = true                        })
