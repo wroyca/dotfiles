@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+# As of 0.38.0, kitty can automatically switch color themes when the operating
+# system toggles between light and dark modes. However, this functionality does
+# not seem to work properly with GNOME (at least for now).
+#
+# Until this is resolved, we'll keep our existing setup for managing theme
+# changes and revisit the issue when kitty 0.39/0.40 is released.
+#
+# https://sw.kovidgoyal.net/kitty/kittens/themes/#change-color-themes-automatically-when-the-os-switches-between-light-and-dark
+
 v=`gsettings get org.gnome.desktop.interface color-scheme`
 d="dark"
 l="light"
