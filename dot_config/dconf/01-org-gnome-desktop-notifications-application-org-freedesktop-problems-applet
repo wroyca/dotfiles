@@ -8,4 +8,7 @@
 # other means, crash notifications have been disabled to reduce unnecessary
 # alerts and/or spam.
 #
+# One such example:
+# https://bugzilla.rpmfusion.org/show_bug.cgi?id=7143#c5
+#
 enable=false
