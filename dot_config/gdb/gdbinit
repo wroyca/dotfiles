@@ -1,41 +1,70 @@
-# Disable prompts for user confirmation
+# Disables confirmation prompts for potentially destructive commands.
+# Streamlines debugging workflow by assuming we understand command impact.
+#
 set confirm off
 
-# Turn off verbose output
+# Suppresses detailed internal operation messages. Reduces noise while
+# maintaining essential debugging output and error messages.
+#
 set verbose off
 
-# Specify the file path for saving command history
+# Configures command history persistence. Stores history in our home directory,
+# maintaining chronological record of debug sessions.
+#
 set history filename ~/.gdb_history
 
-# Keep the last 10 unique commands in history
+# Deduplicates history entries within sliding window of 10 commands. Prevents
+# history pollution from repeated command sequences while preserving distinct
+# command variations.
+#
 set history remove-duplicates 10
 
-# Automatically save command history on exit
+# Enables automatic history persistence between sessions.
+#
 set history save
 
-# Suppress array contents automatic printing
+# Disables array value printing by default. Prevents output flooding when
+# examining large arrays, values still accessible via indexing.
+#
 set print array off
 
-# Pretty-printing for array indexes
+# Shows array indices during element printing. Critical for correlating values
+# with their positions, especially in multidimensional arrays.
+#
 set print array-indexes on
 
-# Pretty-printing for data structures
+# Enables structured pretty-printing of complex data types. Formats output with
+# indentation and line breaks for readability.
+#
 set print pretty on
 
-# Remove any limit on output width
+# Removes terminal width restrictions on output formatting. Prevents data
+# truncation and line wrapping in wide displays.
+#
 set width unlimited
 
-# Remove any limit on output height
+# Disables terminal height limits. Ensures continuous output display without
+# manual interaction for long data dumps.
+#
 set height unlimited
 
-# Disable output pagination
+# Disables output pagination. Allows continuous scrolling through large outputs
+# without 'more' style interruptions.
+#
 set pagination off
 
-# Set disassembly format to Intel syntax
+# Sets x86 assembly syntax to Intel format. Provides more readable disassembly
+# with explicit operand order and simpler notation. Life is too short for
+# AT&T's reversed operands and % prefixes.
+#
 set disassembly-flavor intel
 
-# Skip debugging information for C++ standard library headers
+# Skips debugging into C++ standard library implementation. Prevents debugger
+# from entering internal stdlib functions, focusing on our code. GDB's path
+# matching requires explicit wildcards per directory (/*/ instead of /**/) due
+# to its recursive glob implementation quirk.
+#
+skip -gfi /usr/include/c++/*
 skip -gfi /usr/include/c++/*/*
-
-# Skip debugging information for C++ standard library headers (depth)
 skip -gfi /usr/include/c++/*/*/*
+skip -gfi /usr/include/c++/*/*/*/*
