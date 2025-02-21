@@ -1,18 +1,16 @@
-// Web pages (and web servers) can ask a browser to automatically refresh a
-// page after a given timeout by including the HTML element <meta
-// http-equiv="refresh"> or by sending a Refresh: HTTP header. This can be
-// helpful in the case of a webpage whose content is updated constantly, but it
-// can also be irritating and, at worst, abused.
+// Web pages request automatic refreshes through <meta http-equiv="refresh">
+// tags or Refresh: HTTP headers. While useful for auto-updating content,
+// this can be disruptive to reading and potentially abused for redirects.
 //
 user_pref("accessibility.blockautorefresh", true);
 
-// Approximately one year ago, Mozilla added a button to certain suggestions in
-// the URL bar. This change breaks the ability to tab through results, as the
-// focus is placed on the button instead of the item.
+// Firefox 89+ URL bar buttons break keyboard navigation - tab key focuses
+// buttons instead of cycling through search results.
 //
 user_pref("browser.urlbar.resultMenu.keyboardAccessible", false);
 
-// I already have a trash can under my desk.
+// Remove Pocket integration, sponsored stories, top sites recommendations,
+// and promotional content from the new tab page.
 //
 user_pref("browser.newtabpage.activity-stream.discoverystream.saveToPocketCard.enabled", false);
 user_pref("browser.newtabpage.activity-stream.discoverystream.sendToPocket.enabled", false);
@@ -23,10 +21,9 @@ user_pref("browser.newtabpage.activity-stream.showSponsored", false);
 user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);
 user_pref("extensions.pocket.enabled", false);
 
-// Make Firefox look more at home on GNOME desktop. By default this remodels
-// Mozilla’s browser into something that closely resembles GNOME Web.
+// Apply GNOME theme styling with rounded corners, GTK colors, and native UI elements.
 //
-// https://github.com/rafaelmardojai/firefox-gnome-theme
+// Source: https://github.com/rafaelmardojai/firefox-gnome-theme
 //
 user_pref("gnomeTheme.hideSingleTab", true);
 user_pref("gnomeTheme.bookmarksToolbarUnderTabs", true);
@@ -36,17 +33,14 @@ user_pref("svg.context-properties.content.enabled", true);
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 user_pref("widget.gtk.rounded-bottom-corners.enabled", true);
 
-// Force (enable) hardware video acceleration (VA-API) when available.
+// Forces GPU video acceleration regardless of Firefox's hardware support
+// detection. VA-API must be properly configured in the system.
 //
 user_pref("widget.dmabuf.force-enabled", true);
 user_pref("media.ffmpeg.vaapi.enabled", true);
 user_pref("media.hardware-video-decoding.force-enabled", true);
 
-// Force Firefox to always use xdg-desktop-portal.
+// Use XDG desktop portal for file dialogs with native appearance and
+// system-wide access controls.
 //
 user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
-
-// Firefox 129 introduces a tab hover preview feature. Since I find this
-// distracting, I disable it by default.
-//
-user_pref("browser.tabs.hoverPreview.enabled", false)
