@@ -12,3 +12,7 @@
 # operations, which we need to check if LICENSE.md is already present.
 #
 --post-hook "/usr/bin/sed -i -e '/doc{README.md}/!b; /legal{LICENSE.md}/b; s/doc{README.md}/doc{README.md} legal{LICENSE.md}/' buildfile"
+
+# Replace example.org URL with GitHub repository URL in manifest if not set.
+#
+--post-hook "sed -i -e 's#https://example.org/#https://github.com/wroyca/#g' manifest"
