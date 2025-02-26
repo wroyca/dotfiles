@@ -1,0 +1,35 @@
+[org/gnome/shell/extensions/rounded-window-corners-reborn]
+
+# Configure rounded window corners for specific applications. Note that we use
+# a fork of the Gnome Rounded Window Corners Extension that supports customizable
+# whitelist.
+#
+# https://github.com/wroyca/rounded-window-corners
+
+# Disable artificial window borders globally. This looks out of place in most
+# cases.
+#
+border-width='0'
+
+# There's only a few application that we need rounded corners for, so we
+# certainely don't want to apply rounded window corners in a global context.
+# Thus, treat the blacklist array as a whitelist.
+#
+whitelist=true
+
+# Whitelist applications. Mostly for applications built with UI toolkits that
+# don't support rounded corners by default.
+#
+# E.g.:
+# - https://github.com/electron/electron/issues/33036
+# - https://youtrack.jetbrains.com/issue/JBR-7476/No-rounded-corners-and-no-shadow-in-Linux-KDE-Plasma-using-pure-Wayland
+#
+blacklist=['jetbrains-clion']
+
+# Configure per-application settings. For now, only CLion is configured.
+#
+# CLion settings:
+# - Padding = 2 on all sides for proper corner clipping.
+# - Everything else is default.
+#
+custom-rounded-corner-settings={'jetbrains-clion': <{'padding': <{'left': uint32 2, 'right': 2, 'top': 2, 'bottom': 2}>, 'keepRoundedCorners': <{'maximized': false, 'fullscreen': false}>, 'borderRadius': <uint32 10>, 'smoothing': <0.0>, 'borderColor': <(0.5, 0.5, 0.5, 1.0)>, 'enabled': <true>}>}
