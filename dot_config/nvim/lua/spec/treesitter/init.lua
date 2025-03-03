@@ -1,16 +1,14 @@
 ---@module "nvim-treesitter"
----@diagnostic disable: missing-fields
 
 ---@type LazyPluginSpec
 local Spec = {
   "nvim-treesitter/nvim-treesitter", main = "nvim-treesitter.configs", build = ":TSUpdate", event = "VeryLazy",
 
   ---@type TSConfig
+  ---@diagnostic disable: missing-fields
   opts = setmetatable ({
     ensure_installed = "all",
-    -- BUG: These can only generate parsers with ABI version 13 - 14, not 15.
     ignore_install = { "scfg", "ocamllex", "teal", "unison", "mlir", "swift", "latex" },
-    -- NOTE: remember to update vim.opt.runtimepath if location is changed.
     parser_install_dir = vim.fs.joinpath (vim.fn.stdpath ("data"), "..", "chezmoi", "dot_config", "nvim"),
     ---@type { [string]: TSModule }
     modules = {

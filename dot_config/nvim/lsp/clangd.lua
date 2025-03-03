@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields
 ---@type vim.lsp.config
 local config = {
   cmd = {
@@ -29,11 +30,13 @@ local config = {
   },
 
   filetypes = {
-    "c", "cpp"
+    "c",
+    "cpp",
   },
 
   root_markers = {
-    ".clangd", "compile_commands.json"
+    ".clangd",
+    "compile_commands.json",
   },
 }
 
