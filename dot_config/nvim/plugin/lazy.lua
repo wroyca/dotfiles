@@ -11,8 +11,6 @@ local opts = {
 
   local_spec = false,
 
-  lockfile =  vim.fs.joinpath (vim.fn.stdpath ("data"), "..", "chezmoi", "dot_config", "nvim") .. "/lazy-lock.json",
-
   git = {
     log = { "-4" },
     timeout = 60,
@@ -39,7 +37,6 @@ local opts = {
 
   ui = {
     backdrop = 100,
-    size = { width = 0.9, height = 0.9 },
   },
 
   custom_keys = {
