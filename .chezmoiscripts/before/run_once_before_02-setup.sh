@@ -12,6 +12,11 @@ sudo dnf group install -y multimedia
 sudo dnf install -y intel-media-driver
 sudo dnf swap -y ffmpeg-free ffmpeg --allowerasing
 
+# Automatic DNF updates.
+#
+sudo dnf install dnf-automatic
+systemctl enable --now dnf-automatic.timer
+
 # Fedora 41 uses fractional scaling by default, but we prefer to maintain
 # integer scaling. Undo this change by resetting the experimental features in
 # Mutter.
