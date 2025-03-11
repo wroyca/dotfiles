@@ -22,25 +22,7 @@ fi
 
 # https://discussion.fedoraproject.org/t/i-am-no-longer-able-to-play-videos-with-totem-and-neither-with-some-gstreamer-based-players/115831/4
 #
-sudo dnf remove totem && flatpak install -y flathub org.gnome.Showtime
-
-# Install DirectShow filters based on the libavformat and libavcodec libraries
-# from the FFmpeg project. These filters enable Wine to play almost any media
-# format in a DirectShow-compatible player.
-#
-# This resolves a common issue in older games where in-game cutscenes or movies
-# display a black screen instead of the intended video content. Notable
-# examples include the Trails series from Nihon Falcom.
-#
-# Note: This is not included in .chezmoiexternals/ since chezmoi external
-# does not support post-hook commands.
-#
-if [ ! -d "$HOME/.wine/drive_c/Program Files (x86)/LAV Filters" ]; then
-  wget https://github.com/Nevcairiel/LAVFilters/releases/latest/download/LAVFilters-{{ (gitHubLatestTag "Nevcairiel/LAVFilters").Name | replace "v" "" -}}-Installer.exe
-  wine $(basename "$_")
-  sudo rm $HOME/LAVFilters-*
-  winetricks -q directshow
-fi
+sudo dnf remove -y totem && flatpak install -y flathub org.gnome.Showtime
 
 # Wine DPI settings for display scaling.
 #
