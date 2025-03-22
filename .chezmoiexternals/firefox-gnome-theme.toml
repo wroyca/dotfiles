@@ -1,4 +1,4 @@
-['.mozilla/firefox/default-release/chrome/firefox-gnome-theme']
+[".mozilla/firefox/default-release/chrome/firefox-gnome-theme"]
 url = "https://github.com/rafaelmardojai/firefox-gnome-theme"
 type = "git-repo"
 refreshPeriod = "168h"

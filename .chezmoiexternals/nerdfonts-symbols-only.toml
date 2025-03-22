@@ -1,4 +1,4 @@
 [".local/share/fonts/NerdFontsSymbolsOnly"]
-type = "archive"
 url = "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/nerdfontssymbolsonly.zip"
+type = "archive"
 refreshPeriod = "730h"
