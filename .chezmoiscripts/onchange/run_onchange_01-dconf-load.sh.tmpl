@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+{{ $sourceDir := .chezmoi.sourceDir }}
+{{ $dconfDir := joinPath $sourceDir "dot_config/dconf" }}
+{{ $files := glob (joinPath $dconfDir "*") }}
+
+{{ range $files }}
+  {{- $filename := base . -}}
+  {{- $targetFilename := $filename -}}
+  {{- if hasSuffix ".tmpl" $targetFilename -}}
+    {{- $targetFilename = trimSuffix ".tmpl" $targetFilename -}}
+  {{- end -}}
+  {{- $targetPath := joinPath $.chezmoi.homeDir ".config/dconf" $targetFilename -}}
+
+  # File: {{ $targetFilename }}
+  # Hash: {{ include . | sha256sum }}
+  echo "loading dconf settings from {{ $targetFilename }}"
+  cat "{{ $targetPath }}" | dconf load /
+
+{{ end }}
