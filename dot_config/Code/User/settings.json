@@ -105,8 +105,9 @@
 
   // Window
   "window.autoDetectColorScheme": true,
-  "window.dialogStyle": "custom",
+  "window.customTitleBarVisibility": "never",
   "window.menuBarVisibility": "toggle",
+  "window.titleBarStyle": "native",
   "window.zoomLevel": 1.0001, // https://github.com/microsoft/vscode/issues/224714
 
   // Workbench
