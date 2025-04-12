@@ -1,0 +1,6 @@
+dot_etc
+
+{{ if ne .chezmoi.os "linux" }}
+.chezmoiscripts/linux/**
+.chezmoiexternals/linux/**
+{{ end }}
