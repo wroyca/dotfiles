@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
-cd ~/ || exit
+set -x # Print commands and their arguments as they are executed.
+set -e # Exit immediately if a command exits with a non-zero status.
 
 [[ ! -d Projects ]] && mkdir Projects
-[[ ! -d Games ]]    && mkdir Games
+[[ ! -d Games    ]] && mkdir Games
 
 # https://gitlab.gnome.org/GNOME/nautilus/-/issues/1481
 #

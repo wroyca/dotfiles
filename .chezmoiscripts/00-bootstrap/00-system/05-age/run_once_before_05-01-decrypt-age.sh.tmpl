@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# chezmoi has builtin support for age encryption which is automatically used if
-# the age command is not found in $PATH.
+set -x # Print commands and their arguments as they are executed.
+set -e # Exit immediately if a command exits with a non-zero status.
 
 mkdir -p {{ .chezmoi.homeDir }}/.age
 
