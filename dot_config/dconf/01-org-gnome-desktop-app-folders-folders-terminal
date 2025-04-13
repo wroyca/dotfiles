@@ -1,4 +1,0 @@
-[org/gnome/desktop/app-folders/folders/Terminal]
-
-name='Terminal'
-apps=['Alacritty.desktop', 'kitty.desktop', 'fish.desktop']

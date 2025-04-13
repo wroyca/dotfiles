@@ -1,7 +1,6 @@
 [org/gnome/desktop/interface]
 
 enable-hot-corners=false
-show-battery-percentage=true
 gtk-theme='adw-gtk3'
 icon-theme='morewaita'
 monospace-font-name='MonoLisa 10'

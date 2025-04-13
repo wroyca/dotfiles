@@ -1,4 +1,0 @@
-[org/gnome/desktop/app-folders/folders/Steam]
-
-name='Steam'
-apps=['steam.desktop', 'Steam Linux Runtime 3.0 (sniper).desktop', 'Proton Experimental.desktop', 'Age of Empires II Definitive Edition.desktop']
