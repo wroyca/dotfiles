@@ -1,0 +1,5 @@
+[org/gnome/desktop/interface]
+
+enable-hot-corners=false
+gtk-theme='adw-gtk3'
+icon-theme='morewaita'

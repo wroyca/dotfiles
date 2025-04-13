@@ -1,0 +1,111 @@
+{
+  "profiles": {
+    "00000000000000000000000000": {
+      "ulid": "00000000000000000000000000",
+      "name": "Default",
+      "description": "Default profile for all web apps",
+      "sites": []
+    },
+    "01HW5RBHXMSDC1KQYN1DC76N8C": {
+      "ulid": "01HW5RBHXMSDC1KQYN1DC76N8C",
+      "name": "Discord",
+      "description": null,
+      "sites": [
+        "01HW5RBHY8ZBZXVSNNANKPGA8X"
+      ]
+    },
+    "01HXHVF32SYWK6JYM3VNR68M80": {
+      "ulid": "01HXHVF32SYWK6JYM3VNR68M80",
+      "name": "Slack",
+      "description": null,
+      "sites": [
+        "01HXHVF33FFGK3BWN8XPYNY7VT"
+      ]
+    }
+  },
+  "sites": {
+    "01HW5RBHY8ZBZXVSNNANKPGA8X": {
+      "ulid": "01HW5RBHY8ZBZXVSNNANKPGA8X",
+      "profile": "01HW5RBHXMSDC1KQYN1DC76N8C",
+      "config": {
+        "name": null,
+        "description": null,
+        "start_url": null,
+        "document_url": "https://discord.com/login",
+        "manifest_url": "data:application/manifest+json;base64,eyJzdGFydF91cmwiOiJodHRwczovL2Rpc2NvcmQuY29tL2xvZ2luIiwibmFtZSI6IkRpc2NvcmQiLCJpY29ucyI6W3sic3JjIjoiaHR0cHM6Ly9kaXNjb3JkLmNvbS9hc3NldHMvaW1hZ2VzL2Zhdmljb24uaWNvIiwidHlwZSI6bnVsbCwicHVycG9zZSI6ImFueSIsInNpemVzIjoiIn1dfQ==",
+        "categories": null,
+        "keywords": null,
+        "enabled_url_handlers": [],
+        "enabled_protocol_handlers": [],
+        "custom_protocol_handlers": [],
+        "launch_on_login": false,
+        "launch_on_browser": false
+      },
+      "manifest": {
+        "start_url": "https://discord.com/login",
+        "scope": "https://discord.com/",
+        "name": "Discord",
+        "categories": [],
+        "keywords": [],
+        "dir": "auto",
+        "display": "browser",
+        "orientation": "any",
+        "prefer_related_applications": false,
+        "related_applications": [],
+        "protocol_handlers": [],
+        "shortcuts": [],
+        "icons": [
+          {
+            "src": "https://discord.com/assets/images/favicon.ico",
+            "sizes": "",
+            "purpose": "any"
+          }
+        ],
+        "screenshots": []
+      }
+    },
+    "01HXHVF33FFGK3BWN8XPYNY7VT": {
+      "ulid": "01HXHVF33FFGK3BWN8XPYNY7VT",
+      "profile": "01HXHVF32SYWK6JYM3VNR68M80",
+      "config": {
+        "name": "Slack",
+        "description": null,
+        "start_url": "https://app.slack.com/client",
+        "document_url": "https://app.slack.com/client",
+        "manifest_url": "data:application/manifest+json;base64,eyJzdGFydF91cmwiOiJodHRwczovL2FwcC5zbGFjay5jb20vY2xpZW50IiwibmFtZSI6IlNsYWNrIiwiaWNvbnMiOlt7InNyYyI6ImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOU1VoRVVnQUFBRUFBQUFCQUNBWUFBQUNxYVhIZUFBQUZ5a2xFUVZSNG5PMmJQWE1UVnhpRnozdGx5eVNGc3BxQlRDaUFWZWZHUWk3Q0RBRm5yQlltd2VvSWpmVVBMSGNVRUV1QklsM2tYNEJWQk5OSkRobWN6a3FSRHpDRk1CUjBYZ3d6eVdUTWVDRXptY0gyN2traFk0eTFrdlphVi81SS9NeTR1ZmZxN0x0bnRPdTdaMThKREpPYVc3SDcrdFFZeVdFQUZnVU9mYzZzcjZGU1M4ZWRNQnI5czFmdEtLS2o4UDBSaUZnRUhBRm1WdCtzVlo1bXZnMmxFUll4S1hibWwxY1RBUE5OcGgwUlR0Ny9MRjVzcFpIODZlc3grR3kyeGdWUVdMaHdvNldHRHNZTWFIUHk3MUFxKytCc3JCUTBsWnk5TmdGS2V3MWczSlFKUmd4SXphM1kwYWdzaGx6dXJxNHlVVXZIM2EyRC9iTlg3U2g3UTJ1b04zOG5hcG1pMjNabEcxU25BZ0RRRjFVVEdzdXR2bDVrdHcvMm9sZEx3NC9HY2hycm0yTEVBSklwcmZXQzRlMWo0b3VXQnBUZU1adkttQkNCSUtXem5DSWZOV3BvbmhCeFdtdDlFOHdZQURpR2RIWWRJd1lJVURPaHN4Y1lNY0R6T1dsQ1p5OHdZc0REb1hpVkI5UUVVL2NBekEvRmN3ZlJCR01HQUJzbWdJTWdTeUJxcU44Y0cvNmt2cVhkRi9TWUZwdy9GNjhCalJ1ZC9ZclJiOEJCNU5DQXZTNWdyM252SHBDYVc3R2pSOVFveUJTb3Q3MXRna3VCQzdLMHRvcHEyRURFQkhZNVo4V094TVpJcG9TMEtlSUdoU3FiajhPZi92cHFUTmcwaURDQkE0L2pEejZQVjRJbWsvZXVVMWR2NGNLTlJLQldQVlRKQTdBQ3BsMXNDVlVVVUE4enVuenlBR0FqSXVVenY3MGU3ZVpCa3JQWEpqWVNKYXZKRWd2QWQ4bDcxM01Bb0ZKekszYW9KTWNVdmw5TXphMVkzWkR1bjcxcWgweVVBR0FpVmM1WlNqUE1NRUZnSUdLQ25ZUXF5Z2RIdWxGTUs0SUNFUlBzSkZSUjB2eGE2UnFCZ1lpK2l0c3dKTFQwSkhCYWNmL3N5eDJkeFlTNG5SNlFnS01VZHovTVVENW5Bc3I1V1VkRHlFZWQxaUhrSStXUmhVNkZ0QThjUVdYN21POWhTa2REcmZZVU82MURyZllVMWNPaGVKVms0SXVLN3NEQzcyY2JkNFJQdnJoWkJVUG1DWlJDTFpOdjBOQXJvNjZoQUdEK2ZEeTdHMkdHa09NUHpzWHp6ZVlYTHQ3TXRUV0JVbGk0K0UxVGpWQnMwZGg4R0pvZml1ZDhuMmtBRlpoTmVSMEJKd2tPM2ovZityMGdVRGZCOTVnR1dBSlplNnNCY2xJeE10akJ5VHNnSjMyUDZZNE5QT1NRUS80enZQZDZmTkVhc1ZUc3c3R05sNTFXNEFkRTFVNHRmVC9lVERCSWc1QVMxdnhxNHM4N1RwaWlGc3UyRmV1SnRheGpKL2hBeWZQV3FzY3pUemZyMkRUZzJja3JZNFRrZ1RiN2FiSnFQNTlPQjAyMTBYQklqaWVlVDFkYXliKzhteHdEa1dlWG5sRUVjRHl3OFBHWGo2ZUFqWCtEejA1ZW1TQlFiSHZ5TFFpaFlZdEllZkhFVnlQTk5GN2VUVTZRS0hicjVBR0FnSzBndDVaL1RJNENnQ3grY3RtV3FBcmJtUkg0RGREVWNQbjZuMFRDcmJoYkIvOG85OXU5a1dqNE9qckhqWGdxb1ZSdjU0R0lwb2FGMkFmWjdZTzlFYTB3d3dUV3V2Snppb0tSVHBVb21rRUVPTHg5UkxRMWpKQlNNSEs5NlhWM0NCc0RFWnFKNGJWUWd0TUsreVFRRWU1K2x3bEJSMEdrcHZVaFFVQ1kwVGtlb0JXSUdJSHlTTkh6OUFJUnhVbzNhaEhmbitxR2JpdldmRlZVaVJkM1FnY2lCQW9KSjl4dVRwZGptU2RWRUx2V1lFR2ljRHhUcXdjaWllZlRXYUwxd1FtT0o1WnU1N3RaMU5GTEM3bmRNSUZFNGRpbGhUeXdKUkJKTE4zT2tjeEFVTUc3RzZORGNKSUtnNG1sNldLM0N3UHFKdER6MHdBckpqdEo2amRaVHRIejAyOVBIakRVSyt5Y3ZLTDNZclBGODhSdTg3L3ZEemcwWUs4TDJHdU1kNG50bE9VZkJ1WmFUTHMrTUxNOXpEREJ2akVBa09GV3N3b1lpVVNpem5KNVlQeG81bkhGMUZFUDFDWEFqUzZUNWZMQWlDbk5BMlhBSmhHNXRWSk9XU2FrRHFZQmdMVWU4Yk1taEE2cUFRRE5kSmtjV0FNVWNNcVFqaEhjVGdWMEF4RktRSXZNRGpCakFGSFZXazQwZEhkUWJiNEpEaWtpSFhlSUFNWitOdWZyUGNMMk5EWmxjbDJ2UDJITlZ3MGFPOEdJQVNaQ0ZaMUE1RzJZb1ZkbE1NWnVndUZDRlJSYWhTcGhBcEd0WVlZSmpQNTZIQUFXVDF6T2lvclVPODdya2JzalFOWDMvVkxpeFoxcUdJMi95Z05aRmNFbGdRd1RzQVJ3Q1Zib3NYUXM4eVNVUmxqK0JUam5pZkRvM3BnQ0FBQUFBRWxGVGtTdVFtQ0MiLCJ0eXBlIjoiaW1hZ2UvcG5nIiwicHVycG9zZSI6ImFueSIsInNpemVzIjoiMTZ4MTYgMzJ4MzIgNDh4NDgifV19",
+        "categories": null,
+        "keywords": null,
+        "enabled_url_handlers": [],
+        "enabled_protocol_handlers": [],
+        "custom_protocol_handlers": [],
+        "launch_on_login": false,
+        "launch_on_browser": false
+      },
+      "manifest": {
+        "start_url": "https://app.slack.com/client",
+        "scope": "https://app.slack.com/",
+        "name": "Slack",
+        "categories": [],
+        "keywords": [],
+        "dir": "auto",
+        "display": "browser",
+        "orientation": "any",
+        "prefer_related_applications": false,
+        "related_applications": [],
+        "protocol_handlers": [],
+        "shortcuts": [],
+        "icons": [],
+        "screenshots": []
+      }
+    }
+  },
+  "arguments": [],
+  "variables": {},
+  "config": {
+    "always_patch": false,
+    "runtime_enable_wayland": true,
+    "runtime_use_xinput2": false,
+    "runtime_use_portals": false
+  }
+}
+

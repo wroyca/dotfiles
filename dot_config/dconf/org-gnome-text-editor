@@ -1,0 +1,5 @@
+[org/gnome/TextEditor]
+
+indent-style='space'
+spellcheck=false
+tab-width=uint32 2

@@ -1,0 +1,4 @@
+[org/gnome/desktop/privacy]
+
+remove-old-temp-files=true
+remove-old-trash-files=true

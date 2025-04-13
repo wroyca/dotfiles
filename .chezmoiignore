@@ -1,6 +1,7 @@
-dot_etc
+.etc
 
 {{ if ne .chezmoi.os "linux" }}
 .chezmoiscripts/linux/**
-.chezmoiexternals/linux/**
+.chezmoiexternals/**
+.config/dconf
 {{ end }}
