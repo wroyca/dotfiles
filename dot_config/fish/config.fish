@@ -1,0 +1,10 @@
+function fish_greeting
+end
+
+# User specific environment and startup programs
+#
+set -gx STARSHIP_CONFIG $HOME/.config/starship/starship.toml
+
+# Minimal cross-shell prompt. https://starship.rs/
+#
+starship init fish | source

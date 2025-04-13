@@ -1,0 +1,44 @@
+# Get editor completions based on the config schema.
+#
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Disable blank line between shell prompts.
+#
+add_newline = false
+
+# Configures the display format.
+#
+format = '$container\[$username@$hostname$directory$git_branch$git_commit\]$character'
+
+# Modules configuration.
+#
+# NOTE: Whitespace and parenthesis escape \( are intended.
+# https://github.com/starship/starship/issues/1724
+#
+[container]
+format = '[$symbol](purple)'
+symbol = '⬢'
+
+[username]
+format = '$user'
+show_always = true
+
+[hostname]
+format = '$hostname'
+ssh_only = false
+
+[directory]
+format = ' $path'
+truncation_length = 1
+
+[git_branch]
+format = ''' \($branch\)'''
+only_attached = true
+
+[git_commit]
+format = ''' \($hash\)'''
+only_detached = true
+
+[character]
+error_symbol = '\$'
+success_symbol = '\$'
