@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+set -x # Print commands and their arguments as they are executed.
+set -e # Exit immediately if a command exits with a non-zero status.
+
+# https://wiki.archlinux.org/title/GDM#Setup_default_monitor_settings
+#
+sudo cp {{ .chezmoi.sourceDir }}/dot_config/monitors.xml ~gdm/.config/monitors.xml
+sudo chown gdm:gdm ~gdm/.config/monitors.xml

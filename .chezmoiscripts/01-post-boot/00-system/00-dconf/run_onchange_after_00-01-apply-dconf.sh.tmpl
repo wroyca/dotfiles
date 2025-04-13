@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -x # Print commands and their arguments as they are executed.
+set -e # Exit immediately if a command exits with a non-zero status.
 
 {{ $sourceDir := .chezmoi.sourceDir }}
 {{ $dconfDir := joinPath $sourceDir "dot_config/dconf" }}
@@ -16,7 +17,5 @@ set -euo pipefail
 
   # File: {{ $targetFilename }}
   # Hash: {{ include . | sha256sum }}
-  echo "loading dconf settings from {{ $targetFilename }}"
   cat "{{ $targetPath }}" | dconf load /
-
 {{ end }}
