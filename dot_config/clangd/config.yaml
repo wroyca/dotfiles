@@ -5,7 +5,7 @@ Index:
   # stdlib types/functions. Builds AST-based index of declarations, maintaining
   # symbol-location mappings and type hierarchies. Increases memory usage but
   # provides richer language support.
-  #
+  #r
   StandardLibrary: Yes
 
 Diagnostics:
