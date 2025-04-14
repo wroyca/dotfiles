@@ -15,6 +15,6 @@
 #
 --post-hook "sed -i -e 's/doc\{README.md\}/doc\{README.md\} legal\{LICENSE.md\}/g' buildfile"
 
-# Replace example.org URL with GitHub repository URL in manifest
+# Replace example.org URL with GitHub repository URL in manifest.
 #
 --post-hook "sed -i -e 's#https://example.org/#https://github.com/wroyca/#g' manifest"
