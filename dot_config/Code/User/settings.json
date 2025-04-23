@@ -19,9 +19,11 @@
     "--parse-forwarding-functions"
   ],
 
-  // CodeQL
+  // Diff Editor
   //
-  "codeQL.telemetry.enableTelemetry": false,
+  "diffEditor.experimental.showMoves": true,
+  "diffEditor.experimental.useTrueInlineView": true,
+  "diffEditor.hideUnchangedRegions.enabled": true,
 
   // Editor
   //
@@ -32,7 +34,7 @@
   "editor.fontFamily": "MonoLisa",
   "editor.fontLigatures": "'ss02' on",
   "editor.fontWeight": 400,
-  "editor.formatOnType": true,
+  "editor.formatOnType": false,
   "editor.hideCursorInOverviewRuler": true,
   "editor.inlayHints.enabled": "offUnlessPressed",
   "editor.linkedEditing": true,
@@ -79,6 +81,13 @@
   //
   "git.autofetch": true,
   "git.defaultCloneDirectory": "~/Projects",
+
+  // GitHub Pull Requests
+  //
+  "githubPullRequests.experimental.notificationsView": true,
+  "githubPullRequests.notifications": "pullRequests",
+  "githubPullRequests.defaultMergeMethod": "rebase",
+  "githubPullRequests.quickDiff": true,
 
   // Gitlens
   //
@@ -135,5 +144,5 @@
   "workbench.preferredDarkColorTheme": "Visual Studio Dark",
   "workbench.preferredLightColorTheme": "Visual Studio Light",
   "workbench.startupEditor": "none",
-  "workbench.statusBar.visible": false
+  "workbench.statusBar.visible": true
 }
