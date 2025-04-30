@@ -59,6 +59,12 @@
 
 ;;
 
+(load-file (expand-file-name "lisp/dotemacs-mouse.el" user-emacs-directory))
+(global-dotemacs-mouse-selection-mode 1)
+(xterm-mouse-mode 1)
+
+;;
+
 (provide 'init)
 
 ;;; init.el ends here
