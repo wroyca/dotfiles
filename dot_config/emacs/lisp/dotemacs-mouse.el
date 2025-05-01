@@ -2,6 +2,83 @@
 
 ;;; Commentary:
 ;;
+;; Architectural Overview
+;;
+;; Overlay-Based Selection Model
+;;
+;; Selections are implemented via overlays rather than the point/mark pair.
+;; This design enables:
+;;
+;; - Spatial independence: Overlay visibility is decoupled from `point'.
+;;   Selections remain visually active during cursor motion or scroll operations.
+;;
+;; - Display priority enforcement: Overlays are assigned priority 1001 to override
+;;   concurrent visual properties applied by external packages.
+;;
+;; - Cached positional metadata: Character positions are maintained in
+;;   `dotemacs-mouse--region-begin' and `dotemacs-mouse--region-end' to avoid
+;;   runtime overlay introspection during command execution.
+;;
+;; Input Event Interception
+;;
+;; Existing interactive commands are intercepted using the following strategies:
+;;
+;; - Function remapping: Mouse-related commands (e.g. `mwheel-scroll') are remapped
+;;   to wrappers that preserve overlay selections during event handling.
+;;
+;; - Advice instrumentation: Mutating commands such as `self-insert-command' are
+;;   advised to detect active overlay regions and apply type-to-replace behavior.
+;;
+;; - Pre-command hook monitoring: Drag initiations and state transitions are detected
+;;   via `pre-command-hook' to enable synchronized state teardown and reinitialization.
+;;
+;; Selection State Management
+;;
+;; Selection state is represented via three cooperating mechanisms:
+;;
+;; 1. `dotemacs-mouse--region-begin' / `dotemacs-mouse--region-end': Store absolute
+;;    buffer positions as integers. Markers are avoided to prevent drift during
+;;    unrelated buffer edits.
+;;
+;; 2. `dotemacs-mouse--overlays': List of active overlay objects defining the
+;;    rendered selection.
+;;
+;; 3. `dotemacs-mouse-selection-mode': Minor mode flag indicating whether overlay
+;;    selection functionality is active in the current buffer.
+;;
+;; Compatibility Layer with Emacs Primitives
+;;
+;; Interoperates with core selection-related subsystems:
+;;
+;; - `delete-selection-mode': Integrates with overwrite semantics by treating active
+;;   overlays as virtual regions.
+;;
+;; - `transient-mark-mode': Temporarily enabled where native region behavior is
+;;   required, e.g., when delegating to internal selection logic.
+;;
+;; - Scroll subsystem (`mwheel.el'): Mouse wheel input is processed in conformance
+;;   with `scroll-command' conventions to retain compatibility with motion behavior.
+;;
+;; Transition Handling Between Selection Models
+;;
+;; Transitional logic in `dotemacs-mouse-activate-mark' detects the current
+;; selection state and executes stateful transitions between overlay-backed
+;; selections and point/mark-based regions. This permits seamless fallback
+;; to native behavior when required.
+;;
+;; Performance and Resource Control
+;;
+;; Optimizations are applied to minimize runtime overhead:
+;;
+;; - Localized hooks: `pre-command-hook' and others are added buffer-locally and
+;;   deactivated when not in use.
+;;
+;; - Overlay lifecycle control: Overlay creation is demand-driven. Cleanup occurs
+;;   deterministically to avoid orphaned overlays.
+;;
+;; - Cached position tracking: Buffer positions are updated transactionally to
+;;   avoid repeated calls to `overlay-start'/`overlay-end' during high-frequency
+;;   operations.
 
 
 ;;; Code:
