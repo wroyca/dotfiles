@@ -501,6 +501,8 @@ When enabled, text selections are maintained when scrolling."
 
 (put 'dotemacs-mouse-scroll 'scroll-command t)
 
+(global-dotemacs-mouse-selection-mode 1)
+
 (provide 'dotemacs-mouse)
 
 ;;; dotemacs-mouse.el ends here 

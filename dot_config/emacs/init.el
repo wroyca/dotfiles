@@ -6,6 +6,10 @@
 
 ;;; Code:
 
+(load (setopt custom-file (expand-file-name "custom.el" user-emacs-directory)))
+
+;;
+
 (defvar elpaca-installer-version 0.11)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
@@ -50,8 +54,6 @@
 (elpaca (leaf))
 (elpaca (leaf-keywords)
   (leaf-keywords-init))
-(elpaca (leaf-tree))
-(elpaca (leaf-convert))
 
 ;;
 
@@ -59,9 +61,110 @@
 
 ;;
 
+;; NOTE:
+;;
+;; In nested `leaf' declarations, child packages are configured as part of the parent’s
+;; `:config' block. If a child package is processed before the actual package it depends on
+;; has been installed, this can result in errors or incomplete setup.
+;;
+;; To work around this, we introduce an intermediate dummy block. The dummy serves two
+;; purposes:
+;;
+;; 1. It defers configuration of real packages until their dependencies are available.
+;; 2. It groups related packages cleanly without tying their configuration directly to
+;;    the logical parent.
+
+(leaf +completion
+  :config
+  (leaf +engine
+    :config
+    (leaf +vertico
+      :config
+      (leaf vertico
+        :elpaca t
+        :global-minor-mode t)))
+
+  (leaf +interface
+    :config
+    (leaf marginalia
+      :elpaca t
+      :global-minor-mode t)))
+
+(leaf +syntax
+  :config
+  (leaf +checking
+    :config
+    (leaf flymake
+      :elpaca t
+      :global-minor-mode t)))
+
+(leaf +language-services
+  :config
+  (leaf +lsp
+    :config
+    (leaf +client
+      :config
+      (leaf +eglot
+        :config
+        (leaf eglot
+          :elpaca t
+          :defvar eglot-server-programs
+          :defer-config
+          (add-to-list 'eglot-server-programs
+            '(c++-mode . ("clangd"
+                          "--all-scopes-completion=true"
+                          "--background-index=true"
+                          "--background-index-priority=normal"
+                          "--clang-tidy=true"
+                          "--completion-parse=always"
+                          "--ranking-model=decision_forest"
+                          "--completion-style=bundled"
+                          "--fallback-style=GNU"
+                          "--function-arg-placeholders=0"
+                          "--header-insertion=never"
+                          "--pch-storage=memory"
+                          "--parse-forwarding-functions")))
+          :hook
+          ((prog-mode-hook) . eglot-ensure))
+
+        (leaf eglot-inactive-regions
+          :elpaca t
+          :require t
+          :global-minor-mode t
+          :custom (eglot-inactive-regions-style . 'darken-foreground)
+                  (eglot-inactive-regions-opacity . 0.4))
+
+    (leaf +completion
+      :config
+      (leaf +corfu
+        :config
+        (leaf corfu
+          :elpaca t
+          :global-minor-mode global-corfu-mode
+          :custom ((corfu-auto . t)
+                   (corfu-auto-delay . 0)
+                   (corfu-auto-prefix . 1)))))))))
+
+(leaf +vcs
+  :config
+  (leaf +git
+    :config
+    (leaf +magit
+      :config
+      (leaf magit
+        :elpaca t)
+
+      (leaf forge
+        :elpaca t)
+
+      (leaf transient
+        :elpaca t))))
+
+;;
+
 (load-file (expand-file-name "lisp/dotemacs-mouse.el" user-emacs-directory))
+
 (global-dotemacs-mouse-selection-mode 1)
-(xterm-mouse-mode 1)
 
 ;;
 
