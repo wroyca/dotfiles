@@ -78,19 +78,17 @@
   :config
   (leaf +input
     :config
-    (leaf evil
+    ;; Configured in lisp/dotemacs-meow.el
+    (leaf meow
+      :elpaca t
+      :global-minor-mode meow-global)
+      :setq (meow-clipboard-save . t))
+  (leaf +feedback
+    :config
+    (leaf which-key
       :elpaca t
       :global-minor-mode t
-      :setq (evil-x-system-clipboard . t))
-    (leaf evil-terminal-cursor-changer
-      :elpaca t
-      :config (evil-terminal-cursor-changer-activate))
-    (leaf +feedback
-      :config
-      (leaf which-key
-        :elpaca t
-        :global-minor-mode t
-        :setq (which-key-max-description-length . 40)))))
+      :setq (which-key-max-description-length . 40))))
 
 (leaf +editing
   :config
@@ -183,9 +181,20 @@
 
 ;;
 
+(elpaca-wait)
+
+;;
+
 (load-file (expand-file-name "lisp/dotemacs-mouse.el" user-emacs-directory))
+(load-file (expand-file-name "lisp/dotemacs-meow.el" user-emacs-directory))
+
+;;
 
 (global-dotemacs-mouse-selection-mode 1)
+
+(require 'dotemacs-meow)
+
+(dotemacs-meow-setup)
 
 ;;
 
