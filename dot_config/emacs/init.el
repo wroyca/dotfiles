@@ -1,4 +1,4 @@
-;;; init.el --- -*- lexical-binding: t -*-
+;; init.el --- -*- lexical-binding: t -*-
 
 ;;; Commentary:
 ;;
@@ -74,6 +74,32 @@
 ;; 2. It groups related packages cleanly without tying their configuration directly to
 ;;    the logical parent.
 
+(leaf +interface
+  :config
+  (leaf +input
+    :config
+    (leaf evil
+      :elpaca t
+      :global-minor-mode t
+      :setq (evil-x-system-clipboard . t))
+    (leaf evil-terminal-cursor-changer
+      :elpaca t
+      :config (evil-terminal-cursor-changer-activate))
+    (leaf +feedback
+      :config
+      (leaf which-key
+        :elpaca t
+        :global-minor-mode t
+        :setq (which-key-max-description-length . 40)))))
+
+(leaf +editing
+  :config
+  (leaf +text
+    :config
+    (leaf xclip
+      :elpaca t
+      :global-minor-mode t)))
+
 (leaf +completion
   :config
   (leaf +engine
@@ -83,7 +109,6 @@
       (leaf vertico
         :elpaca t
         :global-minor-mode t)))
-
   (leaf +interface
     :config
     (leaf marginalia
@@ -126,14 +151,12 @@
                           "--parse-forwarding-functions")))
           :hook
           ((prog-mode-hook) . eglot-ensure))
-
         (leaf eglot-inactive-regions
           :elpaca t
           :require t
           :global-minor-mode t
           :custom (eglot-inactive-regions-style . 'darken-foreground)
                   (eglot-inactive-regions-opacity . 0.4))
-
     (leaf +completion
       :config
       (leaf +corfu
@@ -153,10 +176,8 @@
       :config
       (leaf magit
         :elpaca t)
-
       (leaf forge
         :elpaca t)
-
       (leaf transient
         :elpaca t))))
 
