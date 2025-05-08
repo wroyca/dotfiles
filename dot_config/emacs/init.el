@@ -84,14 +84,14 @@
     ;; Configured in lisp/dotemacs-meow.el
     (leaf meow
       :elpaca t
-      :global-minor-mode meow-global)
+      :global-minor-mode meow-global
       :setq (meow-clipboard-save . t))
   (leaf +feedback
     :config
     (leaf which-key
       :elpaca t
       :global-minor-mode t
-      :setq (which-key-max-description-length . 40))))
+      :setq (which-key-max-description-length . 40)))))
 
 (leaf +editing
   :config
