@@ -63,16 +63,19 @@
 
 ;; NOTE:
 ;;
-;; In nested `leaf' declarations, child packages are configured as part of the parent’s
-;; `:config' block. If a child package is processed before the actual package it depends on
-;; has been installed, this can result in errors or incomplete setup.
+;; In nested `leaf' declarations, child packages are configured as
+;; part of the parent’s `:config' block. If a child package is
+;; processed before the actual package it depends on has been
+;; installed, this can result in errors or incomplete setup.
 ;;
-;; To work around this, we introduce an intermediate dummy block. The dummy serves two
-;; purposes:
+;; To work around this, we introduce an intermediate dummy block. The
+;; dummy serves two purposes:
 ;;
-;; 1. It defers configuration of real packages until their dependencies are available.
-;; 2. It groups related packages cleanly without tying their configuration directly to
-;;    the logical parent.
+;; 1. It defers configuration of real packages until their
+;;    dependencies are available.
+;;
+;; 2. It groups related packages cleanly without tying their
+;;    configuration directly to the logical parent.
 
 (leaf +interface
   :config
@@ -106,7 +109,9 @@
       :config
       (leaf vertico
         :elpaca t
-        :global-minor-mode t)))
+        :global-minor-mode t)
+      (leaf vertico-mouse
+        :hook (vertico-mode-hook . vertico-mouse-mode))))
   (leaf +interface
     :config
     (leaf marginalia
@@ -164,7 +169,10 @@
           :global-minor-mode global-corfu-mode
           :custom ((corfu-auto . t)
                    (corfu-auto-delay . 0)
-                   (corfu-auto-prefix . 1)))))))))
+                   (corfu-auto-prefix . 1)))
+        (leaf corfu-terminal
+          :elpaca t
+          :global-minor-mode t)))))))
 
 (leaf +vcs
   :config
