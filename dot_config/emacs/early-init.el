@@ -29,8 +29,7 @@ A higher value defers garbage collection, reducing allocation
 interruptions during init. This value is expected to be reset at a later
 stage in user configuration.")
 
-(defvar dotemacs-early-init-gc-cons-percentage
-  0.6
+(defvar dotemacs-early-init-gc-cons-percentage 0.6
   "Value to assign to `gc-cons-percentage' during early startup.
 
 Combined with `dotemacs-early-init-gc-cons-threshold', this suppresses
@@ -41,6 +40,14 @@ premature collection events during the initial bootstrap.")
 
 This disables legacy `package.el' autoloading behavior to reduce startup
 cost and delegate package system initialization to dotemacs core.")
+
+(defvar dotemacs-early-init-disable-site-run-file t
+  "If non-nil, inhibit `site-start.el' automatic initialization.
+
+This disable site-wide configurations that may be injected by system
+package managers (e.g., those used in distributions like Fedora), which
+can introduce unintended or non-standard behavior into Emacs'
+environment.")
 
 (defvar dotemacs-early-init-prefer-source t
   "If non-nil, prioritize `.el' over `.elc' during `load' resolution.
@@ -54,8 +61,7 @@ byte-compiled files and can improve traceability during development.")
 This prevents implicit sourcing of legacy `default.el' behavior,
 ensuring a clean and fully deterministic startup environment.")
 
-(defvar dotemacs-early-init-load-suffixes
-  '(".elc" ".el")
+(defvar dotemacs-early-init-load-suffixes '(".elc" ".el")
   "List of file extensions to consider during `load' resolution.
 
 This defines the suffix priority used by the Emacs `load' mechanism,
@@ -85,13 +91,17 @@ if `dotemacs-early-init-prefer-source' is non-nil, sets
   "Disable legacy startup mechanisms that interfere with deterministic
 bootstrap.
 
-This sets `package-enable-at-startup' and `inhibit-default-init'
-according to `dotemacs-early-init-disable-package-el' and
+This sets `package-enable-at-startup', 'site-run-file' and
+`inhibit-default-init' according to
+`dotemacs-early-init-disable-package-el',
+`dotemacs-early-init-disable-site-run-file' and
 `dotemacs-early-init-inhibit-default-init', respectively, avoiding
 unnecessary loading of obsolete user configuration layers."
   (when dotemacs-early-init-disable-package-el
     (setq package-enable-at-startup nil
-          package--init-file-ensured t))
+      package--init-file-ensured t))
+  (when dotemacs-early-init-disable-site-run-file
+    (setq site-run-file nil))
   (when dotemacs-early-init-inhibit-default-init
     (setq inhibit-default-init t)))
 
