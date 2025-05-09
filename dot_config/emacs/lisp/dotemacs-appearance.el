@@ -1,8 +1,16 @@
 ;;; dotemacs-appearance.el --- System theme integration via D-Bus -*- lexical-binding: t -*-
 
 ;;; Commentary:
-;; 
-
+;; This module provides first-class synchronization between Emacs and
+;; the system's appearance settings as exposed via the freedesktop.org
+;; D-Bus appearance portal.
+;;
+;; NOTE: It strictly avoids probing or inspecting Emacs' theme state
+;; beyond its own scope. That is, it does not attempt to infer the
+;; current theme visually or restore a previous state across
+;; sessions. Instead, it operates as a deterministic, event-driven
+;; interface responding to system notifications with minimal side
+;; effects.
 
 ;;; Code:
 
@@ -30,7 +38,9 @@
   "Value representing dark color scheme from freedesktop portal.")
 
 (defconst dotemacs-appearance--color-scheme-default 0
-  "Value representing default (usually light) color scheme from freedesktop portal.")
+  "Value representing default color scheme from freedesktop portal.
+
+NOTE: This value typically implies light color scheme, but may be treated as ambiguous.")
 
 (defvar dotemacs-appearance--current-theme nil
   "Currently active theme set by appearance module.")
@@ -38,8 +48,9 @@
 ;;;###autoload
 (defun dotemacs-appearance-parse-color-scheme (value)
   "Apply appropriate theme based on system color scheme VALUE.
+
 VALUE is an integer as defined by the freedesktop.org appearance portal:
-- 0: Default (typically light)
+- 0: Default (usually implies light preference, see above.)
 - 1: Dark preference
 - 2: Light preference"
   (let ((theme (cond
@@ -125,4 +136,4 @@ based on the system appearance settings."
 
 (provide 'dotemacs-appearance)
 
-;;; dotemacs-appearance.el ends here 
+;;; dotemacs-appearance.el ends here

@@ -105,6 +105,30 @@ unnecessary loading of obsolete user configuration layers."
   (when dotemacs-early-init-inhibit-default-init
     (setq inhibit-default-init t)))
 
+(defun dotemacs--early-init-appearance ()
+  "Load appearance-related modules required during early initialization.
+
+This loads `dotemacs-appearance.el' and
+`dotemacs-appearance-control-sequences.el' from the user configuration
+directory. These modules synchronize Emacs theme state with system and
+terminal background settings."
+  (load-file (expand-file-name "lisp/dotemacs-appearance.el" user-emacs-directory))
+  (load-file (expand-file-name "lisp/dotemacs-appearance-control-sequences.el" user-emacs-directory)))
+
+(defun dotemacs--early-init-startup ()
+  "Load the startup module and invoke `dotemacs-startup-init'.
+
+This validates the presence of `dotemacs-startup.el' in the user
+configuration directory and loads it in noninteractive mode. If the
+function `dotemacs-startup-init' is defined, it is invoked
+immediately."
+  (let ((startup-file (expand-file-name "lisp/dotemacs-startup.el" user-emacs-directory)))
+    (unless (file-readable-p startup-file)
+      (error "Missing required startup module at %s" startup-file))
+    (load startup-file nil 'nomessage))
+  (when (fboundp 'dotemacs-startup-init)
+    (dotemacs-startup-init)))
+
 ;;;###autoload
 (defun dotemacs-early-init ()
   "Apply early-stage configuration to Emacs runtime.
@@ -125,17 +149,8 @@ temporarily bound to nil to ensure stateless performance."
   (dotemacs--early-init-optimize-gc)
   (dotemacs--early-init-configure-load-behavior)
   (dotemacs--early-init-disable-defaults)
-
-  (load-file (expand-file-name "lisp/dotemacs-appearance.el" user-emacs-directory))
-  (load-file (expand-file-name "lisp/dotemacs-appearance-control-sequences.el" user-emacs-directory))
-
-  (let ((startup-file (expand-file-name "lisp/dotemacs-startup.el" user-emacs-directory)))
-    (unless (file-readable-p startup-file)
-      (error "Missing required startup module at %s" startup-file))
-    (load startup-file nil 'nomessage))
-
-  (when (fboundp 'dotemacs-startup-init)
-    (dotemacs-startup-init)))
+  (dotemacs--early-init-appearance)
+  (dotemacs--early-init-startup))
 
 ;; Entrypoint: perform all latency-critical adjustments before init.el
 (let (file-name-handler-alist)
