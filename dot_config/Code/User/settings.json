@@ -3,6 +3,14 @@
   //
   "breadcrumbs.enabled": false,
 
+  // Chat
+  //
+  "chat.agent.maxRequests": 999,
+  "chat.edits2.enabled": true,
+  "chat.implicitContext.enabled": {
+    "panel": "never"
+  },
+
   // Clangd
   //
   "clangd.arguments": [
@@ -21,22 +29,29 @@
 
   // Diff Editor
   //
+  "diffEditor.codeLens": true,
   "diffEditor.experimental.showMoves": true,
   "diffEditor.experimental.useTrueInlineView": true,
   "diffEditor.hideUnchangedRegions.enabled": true,
 
   // Editor
   //
+  "editor.acceptSuggestionOnCommitCharacter": false,
+  "editor.acceptSuggestionOnEnter": "off",
   "editor.bracketPairColorization.enabled": false,
   "editor.codeLens": false,
   "editor.codeLensFontFamily": "MonoLisa",
   "editor.cursorSurroundingLines": 4,
+  "editor.cursorSurroundingLinesStyle": "all",
   "editor.fontFamily": "MonoLisa",
   "editor.fontLigatures": "'ss02' on",
   "editor.fontWeight": 400,
+  "editor.formatOnPaste": true,
   "editor.formatOnType": false,
   "editor.hideCursorInOverviewRuler": true,
   "editor.inlayHints.enabled": "offUnlessPressed",
+  "editor.inlineSuggest.enabled": false,
+  "editor.inlineSuggest.syntaxHighlightingEnabled": false,
   "editor.linkedEditing": true,
   "editor.minimap.enabled": false,
   "editor.mouseWheelScrollSensitivity": 3,
@@ -67,6 +82,8 @@
   //
   "explorer.decorations.colors": false,
   "explorer.sortOrderLexicographicOptions": "upper",
+  "explorer.confirmDragAndDrop": false,
+  "explorer.confirmPasteNative": false,
 
   // Extensions
   //
@@ -82,20 +99,32 @@
   "git.autofetch": true,
   "git.defaultCloneDirectory": "~/Projects",
 
+  // Github Copilot
+  //
+  "github.copilot.chat.agent.thinkingTool": true,
+  "github.copilot.chat.codesearch.enabled": true,
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "github.copilot.nextEditSuggestions.fixes": true,
+
   // GitHub Pull Requests
   //
-  "githubPullRequests.experimental.notificationsView": true,
-  "githubPullRequests.notifications": "pullRequests",
+  "githubPullRequests.assignCreated": "${user}",
   "githubPullRequests.defaultMergeMethod": "rebase",
+  "githubPullRequests.experimental.chat": true,
+  "githubPullRequests.experimental.notificationsView": true,
+  "githubPullRequests.experimental.useQuickChat": true,
+  "githubPullRequests.notifications": "pullRequests",
   "githubPullRequests.quickDiff": true,
+  "githubPullRequests.showPullRequestNumberInTree": true,
+  "githubPullRequests.terminalLinksHandler": "vscode",
 
-  // Gitlens
+  // Inline Chat
   //
-  "gitlens.graph.branchesVisibility": "smart",
-  "gitlens.graph.dimMergeCommits": true,
-  "gitlens.graph.layout": "editor",
-  "gitlens.graph.scrollMarkers.enabled": false,
-  "gitlens.graph.sidebar.enabled": false,
+  "inlineChat.enableV2": true,
+
+  // Outline
+  //
+  "outline.problems.colors": false,
 
   // Project manager
   //
@@ -107,7 +136,12 @@
 
   // Scm
   //
+  "scm.alwaysShowRepositories": true,
   "scm.diffDecorations": "gutter",
+
+  // Search
+  //
+  "search.decorations.colors": false,
 
   // Security
   //
@@ -115,26 +149,40 @@
 
   // Terminal
   //
+  "terminal.integrated.confirmOnExit": "hasChildProcesses",
   "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.defaultProfile.linux": "fish",
+  "terminal.integrated.enableImages": true,
+  "terminal.integrated.enableMultiLinePasteWarning": "never",
+  "terminal.integrated.fontLigatures.enabled": true,
   "terminal.integrated.gpuAcceleration": "on",
+  "terminal.integrated.ignoreProcessNames": [
+    "starship",
+    "oh-my-posh",
+    "bash",
+    "zsh",
+    "fish"
+  ],
   "terminal.integrated.mouseWheelScrollSensitivity": 3,
   "terminal.integrated.mouseWheelZoom": true,
   "terminal.integrated.smoothScrolling": true,
   "terminal.integrated.stickyScroll.enabled": true,
+  "terminal.integrated.suggest.enabled": true,
 
   // Window
   //
   "window.autoDetectColorScheme": true,
+  "window.controlsStyle": "hidden",
   "window.customTitleBarVisibility": "never",
   "window.dialogStyle": "custom",
   "window.menuBarVisibility": "toggle",
-  "window.titleBarStyle": "native",
+  "window.titleBarStyle": "custom",
   "window.zoomLevel": 1.0001, // https://github.com/microsoft/vscode/issues/224714
 
   // Workbench
   //
   "workbench.colorTheme": "Visual Studio Dark",
+  "workbench.commandPalette.experimental.suggestCommands": true,
   "workbench.editor.decorations.colors": false,
   "workbench.iconTheme": "vs-minimal", // https://github.com/microsoft/vscode/issues/141428
   "workbench.list.mouseWheelScrollSensitivity": 3,
@@ -144,5 +192,9 @@
   "workbench.preferredDarkColorTheme": "Visual Studio Dark",
   "workbench.preferredLightColorTheme": "Visual Studio Light",
   "workbench.startupEditor": "none",
-  "workbench.statusBar.visible": true
+  "workbench.statusBar.visible": true,
+
+  // ZenMode
+  //
+  "zenMode.fullScreen": false
 }
