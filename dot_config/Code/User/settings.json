@@ -167,7 +167,7 @@
   "terminal.integrated.mouseWheelZoom": true,
   "terminal.integrated.smoothScrolling": true,
   "terminal.integrated.stickyScroll.enabled": true,
-  "terminal.integrated.suggest.enabled": true,
+  "terminal.integrated.suggest.enabled": false, // meh
 
   // Window
   //
