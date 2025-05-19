@@ -50,7 +50,7 @@
   "editor.formatOnType": false,
   "editor.hideCursorInOverviewRuler": true,
   "editor.inlayHints.enabled": "offUnlessPressed",
-  "editor.inlineSuggest.enabled": false,
+  "editor.inlineSuggest.enabled": true,
   "editor.inlineSuggest.syntaxHighlightingEnabled": false,
   "editor.linkedEditing": true,
   "editor.minimap.enabled": false,
@@ -103,6 +103,8 @@
   //
   "github.copilot.chat.agent.thinkingTool": true,
   "github.copilot.chat.codesearch.enabled": true,
+  "github.copilot.chat.editor.temporalContext.enabled": true,
+  "github.copilot.chat.edits.temporalContext.enabled": true,
   "github.copilot.nextEditSuggestions.enabled": true,
   "github.copilot.nextEditSuggestions.fixes": true,
 
@@ -189,8 +191,8 @@
   "workbench.list.smoothScrolling": true,
   "workbench.localHistory.maxFileEntries": 1000,
   "workbench.localHistory.maxFileSize": 1024,
-  "workbench.preferredDarkColorTheme": "Visual Studio Dark",
-  "workbench.preferredLightColorTheme": "Visual Studio Light",
+  "workbench.preferredDarkColorTheme": "Modus Vivendi",
+  "workbench.preferredLightColorTheme": "Modus Operandi",
   "workbench.startupEditor": "none",
   "workbench.statusBar.visible": true,
 
