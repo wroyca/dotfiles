@@ -1,5 +1,7 @@
 editorconfig.editorconfig
 
+bierner.markdown-mermaid
+
 alefragnani.project-manager
 
 github.codespaces

@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-# Shell-based implementation of the proposed Default Terminal Execution
-# Specification.
-
-exec kitty -e "$@"
