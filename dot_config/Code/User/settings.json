@@ -46,7 +46,6 @@
   "editor.fontFamily": "MonoLisa",
   "editor.fontLigatures": "'ss02' on",
   "editor.fontWeight": 400,
-  "editor.formatOnPaste": true,
   "editor.formatOnType": false,
   "editor.hideCursorInOverviewRuler": true,
   "editor.inlayHints.enabled": "offUnlessPressed",
@@ -152,24 +151,22 @@
   // Terminal
   //
   "terminal.integrated.confirmOnExit": "hasChildProcesses",
-  "terminal.integrated.copyOnSelection": true,
+  "terminal.integrated.copyOnSelection": false, // Bug: some actions induce unwanted selection.
   "terminal.integrated.defaultProfile.linux": "fish",
   "terminal.integrated.enableImages": true,
   "terminal.integrated.enableMultiLinePasteWarning": "never",
   "terminal.integrated.fontLigatures.enabled": true,
   "terminal.integrated.gpuAcceleration": "on",
   "terminal.integrated.ignoreProcessNames": [
-    "starship",
-    "oh-my-posh",
     "bash",
-    "zsh",
-    "fish"
+    "fish",
+    "starship"
   ],
   "terminal.integrated.mouseWheelScrollSensitivity": 3,
   "terminal.integrated.mouseWheelZoom": true,
   "terminal.integrated.smoothScrolling": true,
   "terminal.integrated.stickyScroll.enabled": true,
-  "terminal.integrated.suggest.enabled": false, // meh
+  "terminal.integrated.suggest.enabled": false, // Trust me, you don't want this.
 
   // Window
   //
