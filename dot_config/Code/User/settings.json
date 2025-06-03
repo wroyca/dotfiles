@@ -44,12 +44,14 @@
   "editor.cursorSurroundingLines": 4,
   "editor.cursorSurroundingLinesStyle": "all",
   "editor.fontFamily": "MonoLisa",
-  "editor.fontLigatures": "'ss02' on",
+  "editor.fontLigatures": "'liga' off, 'calt' on, 'ss02' on",
+  "editor.fontSize": 16,
   "editor.fontWeight": 400,
+  "editor.lineHeight": 1.6,
   "editor.formatOnType": false,
   "editor.hideCursorInOverviewRuler": true,
   "editor.inlayHints.enabled": "offUnlessPressed",
-  "editor.inlineSuggest.enabled": true,
+  "editor.inlineSuggest.enabled": false,
   "editor.inlineSuggest.syntaxHighlightingEnabled": false,
   "editor.linkedEditing": true,
   "editor.minimap.enabled": false,
@@ -59,6 +61,7 @@
   "editor.padding.bottom": 10,
   "editor.padding.top": 10,
   "editor.renderWhitespace": "trailing",
+  "editor.rulers": [80],
   "editor.scrollbar.horizontal": "hidden",
   "editor.scrollbar.vertical": "hidden",
   "editor.scrollbar.verticalScrollbarSize": 0,
@@ -104,8 +107,8 @@
   "github.copilot.chat.codesearch.enabled": true,
   "github.copilot.chat.editor.temporalContext.enabled": true,
   "github.copilot.chat.edits.temporalContext.enabled": true,
-  "github.copilot.nextEditSuggestions.enabled": true,
-  "github.copilot.nextEditSuggestions.fixes": true,
+  "github.copilot.nextEditSuggestions.enabled": false,
+  "github.copilot.nextEditSuggestions.fixes": false,
 
   // GitHub Pull Requests
   //
@@ -195,5 +198,5 @@
 
   // ZenMode
   //
-  "zenMode.fullScreen": false
+  "zenMode.fullScreen": false,
 }
