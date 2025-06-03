@@ -1,4 +1,3 @@
----@diagnostic disable: missing-fields
 ---@type vim.lsp.config
 local config = {
   cmd = {
@@ -7,14 +6,7 @@ local config = {
 
   filetypes = {
     "lua",
-  },
-
-  root_markers = {
-    ".luarc.json",
-    ".luarc.jsonc",
-    ".stylua.toml",
-    "stylua.toml",
-  },
+  }
 }
 
 return config

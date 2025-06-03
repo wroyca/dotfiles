@@ -1,6 +1,5 @@
 require ("lsp.handlers.inactive_regions").setup ()
 
----@diagnostic disable: missing-fields
 ---@type vim.lsp.config
 local config = {
   cmd = {
@@ -30,12 +29,7 @@ local config = {
   filetypes = {
     "c",
     "cpp",
-  },
-
-  root_markers = {
-    ".clangd",
-    "compile_commands.json",
-  },
+  }
 }
 
 return config
