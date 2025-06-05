@@ -2,19 +2,22 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "mini.misc", virtual = true, event = "VeryLazy",
+  "mini.misc", virtual = true, lazy = false,
 
-  -- opts shouldn't call setup, as mini modules self-export through _G.
+  -- opts shouldn't call setup, as this module self-export through _G.
   config = function (_, opts)
     require ("mini.misc").setup (opts)
 
-    -- Finds root directory for current buffer file and sets
-    -- |current-directory| to it (using |chdir()|).
+    -- Automatically sets the working directory to the root of the current buffer
+    -- using common project markers (e.g. `.git`).
     MiniMisc.setup_auto_root ({ ".git" })
 
-    -- When reopening a file this will make sure the cursor is placed back to
-    -- the position where we left before.
+    -- Restores the cursor to its last known position when reopening a file.
     MiniMisc.setup_restore_cursor ()
+      
+    -- Synchronizes the terminal emulator's background color with the editor's
+    -- current background (`Normal` highlight group's `guibg`).
+    MiniMisc.setup_termbg_sync ()
   end,
 }
 
