@@ -49,25 +49,6 @@ local opts = {
     notify = false,
   },
 
-  performance = {
-    rtp = {
-      disabled_plugins = {
-        "gzip",
-        "man",
-        "matchit",
-        "matchparen",
-        "netrwPlugin",
-        "osc52",
-        "rplugin",
-        "spellfile",
-        "tarPlugin",
-        "tohtml",
-        "tutor",
-        "zipPlugin",
-      },
-    },
-  },
-
   readme = {
     enabled = false,
   },
