@@ -6,17 +6,17 @@ local Spec = {
 
   ---@type wk.Opts
   opts = {
-    preset = "helix",
+    preset = "modern",
 
-    delay = function(ctx)
+    delay = function (ctx)
       return ctx.plugin and 0 or 500
     end,
 
-    filter = function(ctx)
+    filter = function (ctx)
       return ctx.desc and ctx.desc ~= ""
     end,
 
-    defer = function(ctx)
+    defer = function (ctx)
       return ctx.mode == "v" or ctx.mode == "V" or ctx.mode == "<C-V>"
     end,
 
@@ -38,7 +38,11 @@ local Spec = {
     },
 
     win = {
-      border = "single"
+      border = "single",
+    },
+
+    sort = {
+      "manual"
     },
 
     icons = {
@@ -49,9 +53,8 @@ local Spec = {
     show_help = false,
     show_keys = false,
 
-    spec = {
-    }
-  }
+    spec = {},
+  },
 }
 
 return Spec

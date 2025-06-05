@@ -4,7 +4,7 @@
 local Spec = {
   "mini.icons", virtual = true, event = "VeryLazy",
 
-  -- opts shouldn't call setup, as mini modules self-export through _G.
+  -- opts shouldn't call setup, as this module self-export through _G.
   config = function (_, opts)
     require ("mini.icons").setup (opts)
 

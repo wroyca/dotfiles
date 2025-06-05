@@ -23,6 +23,10 @@ local Spec = {
   },
 }
 
+-- When Flit is first configured, it overrides our key mapping descriptions. We
+-- need to explicitly re-register those mappings with which-key to restore the
+-- correct descriptions.
+
 Spec[2].opts = {
   spec = Spec[1].keys,
 }
