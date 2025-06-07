@@ -9,7 +9,14 @@ local Spec = {
   end,
 
   keys = {
-    { "go", function () MiniDiff.toggle_overlay (0) end, mode = "n", desc = "Toggle hunks overlay" },
+    {
+      "go",
+      function ()
+        MiniDiff.toggle_overlay (0)
+      end,
+      mode = "n",
+      desc = "Toggle hunks overlay"
+    },
   },
 
   opts = {
@@ -26,7 +33,7 @@ local Spec = {
     },
   },
 
-  -- opts shouldn't call setup, as mini modules self-export through _G.
+  -- opts shouldn't call setup, as this module self-export through _G.
   config = function (_, opts)
     require ("mini.diff").setup (opts)
   end,

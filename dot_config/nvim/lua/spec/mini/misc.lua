@@ -14,7 +14,7 @@ local Spec = {
 
     -- Restores the cursor to its last known position when reopening a file.
     MiniMisc.setup_restore_cursor ()
-      
+
     -- Synchronizes the terminal emulator's background color with the editor's
     -- current background (`Normal` highlight group's `guibg`).
     MiniMisc.setup_termbg_sync ()
