@@ -2,14 +2,25 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "williamboman/mason.nvim",
+  "mason-org/mason.nvim",
+
+  cmd = {
+    "Mason",
+    "MasonInstall",
+    "MasonInstallAll",
+    "MasonUninstall",
+    "MasonUninstallAll",
+    "MasonLog"
+  },
 
   opts = {
-    max_concurrent_installers = 10,
     pip = {
-      upgrade_pip = true,
+      upgrade_pip = true
     },
-  },
+    ui = {
+      backdrop = 100,
+    }
+  }
 }
 
 return Spec

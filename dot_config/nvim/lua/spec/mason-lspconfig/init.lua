@@ -1,11 +1,12 @@
----@module "mason-lspconfig"
+---@module "mason"
 
 ---@type LazyPluginSpec
 local Spec = {
-  "williamboman/mason-lspconfig.nvim",
+ "mason-org/mason-lspconfig.nvim", event = "VeryLazy", opts = {},
 
-  opts = {
-    automatic_installation = true,
+  dependencies = {
+    "mason.nvim",
+    "nvim-lspconfig",
   },
 }
 
