@@ -1,10 +1,11 @@
 [org/gnome/settings-daemon/plugins/power]
 
 # GNOME's ability to reliably resume from suspend is inconsistent, making it
-# unpredictable—essentially a coin toss. To avoid potential issues, disable
+# unpredictable, essentially a coin toss. To avoid potential issues, disable
 # suspend when the system is on AC power (i.e., plugged into a power source).
 #
 # Note: When changing this, we must also update org.gnome.desktop.session
 # idle-delay.
 #
 sleep-inactive-ac-type='nothing'
+sleep-inactive-ac-timeout=0
