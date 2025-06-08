@@ -3,4 +3,4 @@
 enable-hot-corners=false
 gtk-theme='adw-gtk3'
 icon-theme='morewaita'
-monospace-font-name='MonoLisa 10'
+monospace-font-name='MonoLisa 11'
