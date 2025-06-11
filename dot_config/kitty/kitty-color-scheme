@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+# As of version 0.38.0, Kitty can automatically switch color themes when the
+# system toggles between light and dark modes. Unfortunately, this does not work
+# properly with GNOME:
+#
+# https://github.com/kovidgoyal/kitty/commit/1c18cd9680b835268516a1b00f292a076191d525
+
+v=`gsettings get org.gnome.desktop.interface color-scheme`
+d="dark"
+l="light"
+
+# Valid values are “default”, “prefer-dark”, “prefer-light”.
+#
+case $v in
+  *default* )
+    kitty +kitten themes --reload-in=all $l 2>/dev/null
+    ;;
+  *prefer-dark* )
+    kitty +kitten themes --reload-in=all $d 2>/dev/null
+    ;;
+  *prefer-light* )
+    kitty +kitten themes --reload-in=all $l 2>/dev/null
+    ;;
+esac
+
+
+
