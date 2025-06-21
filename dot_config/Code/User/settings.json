@@ -167,6 +167,7 @@
   ],
   "terminal.integrated.mouseWheelScrollSensitivity": 3,
   "terminal.integrated.mouseWheelZoom": true,
+  "terminal.integrated.scrollback": 10000,
   "terminal.integrated.smoothScrolling": true,
   "terminal.integrated.stickyScroll.enabled": true,
   "terminal.integrated.suggest.enabled": false, // Trust me, you don't want this.
