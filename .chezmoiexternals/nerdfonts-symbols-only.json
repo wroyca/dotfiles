@@ -1,7 +1,0 @@
-{
-  ".local/share/fonts/NerdFontsSymbolsOnly": {
-    "url": "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/nerdfontssymbolsonly.zip",
-    "type": "archive",
-    "refreshPeriod": "24h"
-  }
-}

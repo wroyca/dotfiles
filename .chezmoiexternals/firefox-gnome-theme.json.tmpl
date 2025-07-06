@@ -1,0 +1,49 @@
+{{- $operatingSystem := .chezmoi.os -}}
+{{- if ne $operatingSystem "linux" -}}
+{{-   fail "Firefox GNOME theme is exclusively supported on Linux distributions" -}}
+{{- end -}}
+
+{{- $desktopEnvironment := env "XDG_CURRENT_DESKTOP" | default "" -}}
+{{- $gnomeSession := env "GNOME_DESKTOP_SESSION_ID" | default "" -}}
+{{- $gtkTheme := env "GTK_THEME" | default "" -}}
+
+{{- $isGnomeDesktop := false -}}
+{{- if or (contains "GNOME" $desktopEnvironment)
+         (contains "gnome" $desktopEnvironment)
+         (ne $gnomeSession "")
+         (contains "Adwaita" $gtkTheme) -}}
+{{-   $isGnomeDesktop = true -}}
+{{- end -}}
+
+{{- if not $isGnomeDesktop -}}
+{{-   fail "Firefox GNOME theme requires GNOME desktop environment. Current desktop: %s" $desktopEnvironment -}}
+{{- end -}}
+
+{{- $firefoxProfilePath := joinPath .chezmoi.homeDir ".mozilla/firefox" -}}
+{{- $defaultProfilePath := joinPath $firefoxProfilePath "default-release" -}}
+
+{{- $profileDirectory := "default-release" -}}
+{{- if stat (joinPath $firefoxProfilePath "profiles.ini") -}}
+{{/* Profile directory exists, proceed with default naming */}}
+{{- else -}}
+{{-   printf "Firefox profile directory not found at: %s" $firefoxProfilePath | fail -}}
+{{- end -}}
+
+{{- $themeInstallationPath := printf ".mozilla/firefox/%s/chrome/firefox-gnome-theme" $profileDirectory -}}
+
+{{- $themeRepository := "rafaelmardojai/firefox-gnome-theme" -}}
+{{- $repositoryUrl := printf "https://github.com/%s" $themeRepository -}}
+
+{{/* Firefox GNOME Desktop Integration Theme Configuration */}}
+{
+  "{{ $themeInstallationPath }}": {
+    "url": "{{ $repositoryUrl }}",
+    "type": "git-repo",
+    "refreshPeriod": "24h",
+    "clone": {
+      "depth": 1,
+      "singleBranch": true,
+      "branch": "master"
+    }
+  }
+}
