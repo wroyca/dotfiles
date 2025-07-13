@@ -1,0 +1,20 @@
+{{- /* This file exists as a deliberate countermeasure against the increasingly
+common problem of applications being overzealous in claiming MIME type
+associations without consent.
+
+Too many applications assume ownership over a wide range of file types, from
+plain text and configuration files to source code, on the assumption that every
+file might relate to their use case. This behavior is not just presumptuous,
+it's actively disruptive.
+
+The problem is systemic: many applications follow a "claim everything, ask
+later" philosophy. IDEs grab every programming language extension, media players
+seize control of all audio and video formats, and office suites appropriate
+every document type. The result is that double-clicking a simple .txt file may
+launch a heavyweight IDE instead of a lightweight text editor.
+
+To mitigate this, the associations defined here are explicit and intentional.
+That is, they reflect actual usage patterns rather than speculative defaults. */ -}}
+
+[Default Applications]
+text/plain=org.gnome.TextEditor.desktop

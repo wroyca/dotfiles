@@ -1,7 +1,0 @@
-[Default Applications]
-text/plain=org.gnome.TextEditor.desktop
-application/xml=org.gnome.TextEditor.desktop
-
-[Added Associations]
-text/plain=org.gnome.TextEditor.desktop
-application/xml=org.gnome.TextEditor.desktop
