@@ -18,11 +18,6 @@
 {{-   fail "Morewaita icon theme requires GNOME desktop environment. Current desktop: %s" $desktopEnvironment -}}
 {{- end -}}
 
-{{- $targetDirectory := joinPath .chezmoi.homeDir ".local/share/icons" -}}
-{{- if not (stat $targetDirectory).isDir -}}
-{{/* Directory will be created automatically by chezmoi */}}
-{{- end -}}
-
 {{- $repositoryUrl := "https://github.com/somepaulo/morewaita" -}}
 {{- $themeName := "morewaita" -}}
 
