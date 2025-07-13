@@ -1,3 +1,13 @@
 # https://www.chezmoi.io/reference/special-files-and-directories/chezmoiignore/
 
+README.md
+
 .etc
+
+{{- if ne .chezmoi.os "linux" }}
+.config/mimeapps.list
+Templates/
+{{- else if not (or (lookPath "gnome-shell") (env "GNOME_DESKTOP_SESSION_ID")) }}
+.config/mimeapps.list
+Templates/
+{{- end }}
