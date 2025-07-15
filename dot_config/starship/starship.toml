@@ -1,0 +1,108 @@
+# Get editor completions based on the config schema.
+#
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Disable automatic newline insertion before each prompt.
+#
+# This is a stylistic preference. We favor a denser vertical layout,
+# especially in multiplexed terminal environments or when using stacked
+# panes. Omitting the leading line avoids unnecessary whitespace without
+# impacting alignment or correctness.
+#
+add_newline = false
+
+# Define the prompt structure as a linear sequence of modules.
+#
+# The format string specifies evaluation and rendering order. Each
+# module expands into its configured string, conditionally omitted if
+# inactive.
+#
+# Prompt layout is as follows:
+#
+# - Execution context: container, username, hostname
+# - Session state: working directory, VCS information
+# - Input marker: prompt character
+#
+# Note that the entire state block is enclosed in brackets for visual
+# grouping.
+#
+format = '$container\[$username@$hostname$directory$git_branch$git_commit\]$character'
+
+# Container context indicator.
+#
+# Displays when the shell is running inside a container. Used to detect
+# and signal containerized execution contexts (e.g., dev containers, CI
+# runners).
+#
+# Symbol and color are chosen for visual contrast. The glyph ('⬢') is
+# commonly used across distributions (Fedora, etc.) and the color is
+# fixed (purple) to avoid accidental semantic associations.
+#
+[container]
+format = '[$symbol](purple)'
+symbol = '⬢'
+
+# User identity.
+#
+# Always shows the effective username. Useful when switching accounts,
+# escalating privileges, or operating inside ephemeral environments.
+#
+# Note that it's enabled unconditionally to provide persistent session
+# context.
+#
+[username]
+format = '$user'
+show_always = true
+
+# Host identity.
+#
+# Always displays the hostname, regardless of SSH context. While Starship
+# supports limiting display to remote connections, we retain it to disambiguate
+# between concurrent environments (e.g., local, VM, container).
+#
+[hostname]
+format = '$hostname'
+ssh_only = false
+
+# Working directory.
+#
+# Displays the current directory name (final path segment only).
+#
+# One-level truncation reduces noise in nested paths while preserving
+# enough information for orientation. Works well in both monorepos and
+# isolated projects.
+#
+[directory]
+format = ' $path'
+truncation_length = 1
+
+# Git branch name.
+#
+# Displays the branch name if attached. Detached HEAD states are ignored
+# and handled separately. Output is wrapped in parentheses for visual
+# grouping.
+#
+[git_branch]
+format = ''' \($branch\)'''
+only_attached = true
+
+# Git commit hash.
+#
+# Displays the current commit hash in detached HEAD mode. Complements
+# `git_branch` and follows the same visual format.
+#
+[git_commit]
+format = ''' \($hash\)'''
+only_detached = true
+
+# Input prompt marker.
+#
+# Defines the shell input marker. We use the same symbol (`$`) for both
+# success and error states to avoid visual jitter and keep the layout
+# uniform.
+#
+# Color and shape are not used for signaling.
+#
+[character]
+error_symbol = '\$'
+success_symbol = '\$'
