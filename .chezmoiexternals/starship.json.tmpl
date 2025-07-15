@@ -1,0 +1,86 @@
+{{- $latestRelease := gitHubLatestRelease "starship/starship" -}}
+{{- if not $latestRelease -}}
+{{-   fail "Failed to retrieve Starship release information from GitHub API" -}}
+{{- end -}}
+
+{{- $starshipVersion := $latestRelease.TagName -}}
+{{- if not $starshipVersion -}}
+{{-   fail "Invalid or missing version tag in GitHub release metadata" -}}
+{{- end -}}
+
+{{- $targetArchitecture := .chezmoi.arch -}}
+{{- if not $targetArchitecture -}}
+{{-   fail "Target architecture specification is undefined or empty" -}}
+{{- end -}}
+
+{{- if eq $targetArchitecture "arm64" -}}
+{{-   $targetArchitecture = "aarch64" -}}
+{{- else if eq $targetArchitecture "amd64" -}}
+{{-   $targetArchitecture = "x86_64" -}}
+{{- else if eq $targetArchitecture "386" -}}
+{{-   $targetArchitecture = "i686" -}}
+{{- else if ne $targetArchitecture "x86_64" -}}
+{{-   printf "Unsupported target architecture: %s" $targetArchitecture | fail -}}
+{{- end -}}
+
+{{- $operatingSystem := .chezmoi.os -}}
+{{- if not $operatingSystem -}}
+{{-   fail "Operating system detection failed or returned empty value" -}}
+{{- end -}}
+
+{{- $clibImplementation := "gnu" -}}
+{{- if eq $operatingSystem "linux" -}}
+{{/* Detect MUSL vs GNU C Library */}}
+{{-   if or (stat "/lib/ld-musl-x86_64.so.1")
+            (stat "/lib/ld-musl-aarch64.so.1")
+            (stat "/lib/ld-musl-armhf.so.1")
+            (stat "/lib/ld-musl-i386.so.1") -}}
+{{-     $clibImplementation = "musl" -}}
+{{-   else if lookPath "ldd" -}}
+{{/* Fall back to ldd version check if musl loader not found */}}
+{{-     $lddOutput := output "ldd" "--version" | lower -}}
+{{-     if contains "musl" $lddOutput -}}
+{{-       $clibImplementation = "musl" -}}
+{{-     end -}}
+{{-   end -}}
+{{- end -}}
+
+{{- $platformTriplet := "" -}}
+{{- if eq $operatingSystem "linux" -}}
+{{-   $platformTriplet = printf "%s-unknown-linux-%s" $targetArchitecture $clibImplementation -}}
+{{- else if eq $operatingSystem "darwin" -}}
+{{-   $platformTriplet = printf "%s-apple-darwin" $targetArchitecture -}}
+{{- else if eq $operatingSystem "windows" -}}
+{{-   $platformTriplet = printf "%s-pc-windows-msvc" $targetArchitecture -}}
+{{- else if eq $operatingSystem "freebsd" -}}
+{{-   $platformTriplet = printf "%s-unknown-freebsd" $targetArchitecture -}}
+{{- else -}}
+{{-   printf "Unsupported operating system: %s" $operatingSystem | fail -}}
+{{- end -}}
+
+{{- if not $platformTriplet -}}
+{{-   fail "Platform triplet construction failed or returned empty value" -}}
+{{- end -}}
+
+{{- $archiveExtension := "" -}}
+{{- if eq $operatingSystem "windows" -}}
+{{-   $archiveExtension = "zip" -}}
+{{- else -}}
+{{-   $archiveExtension = "tar.gz" -}}
+{{- end -}}
+
+{{- $distributionUrl := printf "https://github.com/starship/starship/releases/download/%s/starship-%s.%s"
+    (toString $starshipVersion)
+    (toString $platformTriplet)
+    (toString $archiveExtension) -}}
+
+{{/* https://starship.rs/ */}}
+{
+  ".local/bin": {
+    "url": "{{ $distributionUrl }}",
+    "type": "archive",
+    "refreshPeriod": "24h",
+    "executable": true,
+    "stripComponents": 0
+  }
+}
