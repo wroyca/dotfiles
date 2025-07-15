@@ -1,0 +1,73 @@
+{{- $latestRelease := gitHubLatestRelease "kovidgoyal/kitty" -}}
+{{- if not $latestRelease -}}
+{{-   fail "Failed to retrieve Kitty release information from GitHub API" -}}
+{{- end -}}
+
+{{- $kittyVersion := $latestRelease.TagName -}}
+{{- if not $kittyVersion -}}
+{{-   fail "Invalid or missing version tag in GitHub release metadata" -}}
+{{- end -}}
+
+{{- $targetArchitecture := .chezmoi.arch -}}
+{{- if not $targetArchitecture -}}
+{{-   fail "Target architecture specification is undefined or empty" -}}
+{{- end -}}
+
+{{- if eq $targetArchitecture "arm64" -}}
+{{-   $targetArchitecture = "arm64" -}}
+{{- else if eq $targetArchitecture "amd64" -}}
+{{-   $targetArchitecture = "x86_64" -}}
+{{- else if eq $targetArchitecture "386" -}}
+{{-   $targetArchitecture = "x86_64" -}}
+{{- else if ne $targetArchitecture "x86_64" -}}
+{{-   printf "Unsupported target architecture: %s" $targetArchitecture | fail -}}
+{{- end -}}
+
+{{- $operatingSystem := .chezmoi.os -}}
+{{- if not $operatingSystem -}}
+{{-   fail "Operating system detection failed or returned empty value" -}}
+{{- end -}}
+
+{{- $supportedPlatforms := list "linux" "darwin" -}}
+{{- if not (has $operatingSystem $supportedPlatforms) -}}
+{{-   printf "Unsupported operating system: %s. Kitty supports: %s (Windows excluded by design)"
+      $operatingSystem (join ", " $supportedPlatforms) | fail -}}
+{{- end -}}
+
+{{- $distributionUrl := "" -}}
+{{- $installPath := "" -}}
+{{- $stripComponents := 0 -}}
+{{- $archiveType := "" -}}
+
+{{- if eq $operatingSystem "linux" -}}
+{{-   $distributionUrl = printf "https://github.com/kovidgoyal/kitty/releases/download/%s/kitty-%s-%s.txz"
+      (toString $kittyVersion)
+      (regexReplaceAll "^v" (toString $kittyVersion) "")
+      (toString $targetArchitecture) -}}
+{{-   $installPath = ".local" -}}
+{{-   $stripComponents = 1 -}}
+{{-   $archiveType = "archive" -}}
+{{- else if eq $operatingSystem "darwin" -}}
+{{-   $distributionUrl = printf "https://github.com/kovidgoyal/kitty/releases/download/%s/kitty-%s.dmg"
+      (toString $kittyVersion)
+      (regexReplaceAll "^v" (toString $kittyVersion) "") -}}
+{{-   $installPath = "Applications" -}}
+{{-   $stripComponents = 0 -}}
+{{-   $archiveType = "dmg" -}}
+{{- else -}}
+{{-   printf "Unsupported operating system for URL construction: %s" $operatingSystem | fail -}}
+{{- end -}}
+
+{{- if not $distributionUrl -}}
+{{-   fail "Distribution URL construction failed or returned empty value" -}}
+{{- end -}}
+
+{{/* https://sw.kovidgoyal.net/kitty/ */}}
+{
+  "{{ $installPath }}": {
+    "url": "{{ $distributionUrl }}",
+    "type": "{{ $archiveType }}",
+    "refreshPeriod": "24h",
+    "executable": true
+  }
+}
