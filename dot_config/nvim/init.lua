@@ -31,6 +31,7 @@ vim.o.preserveindent = true
 vim.o.pumheight      = 8
 vim.o.scrolloff      = 4
 vim.o.shortmess      = vim.o.shortmess .. "A"
+vim.o.signcolumn     = "yes:1"
 vim.o.smartindent    = true
 vim.o.termguicolors  = true
 vim.o.undofile       = true
