@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "saghen/blink.cmp", build = "cargo build --release", event = "VeryLazy",
+  "saghen/blink.cmp", version = "1.*", event = "VeryLazy",
 
   ---@type blink.cmp.Config
   opts = {
