@@ -4,8 +4,7 @@
 ---@type LazyPluginSpec[]
 local Spec = {
   {
-    "folke/lazydev.nvim",
-    ft = "lua",
+    "folke/lazydev.nvim", ft = "lua",
 
     ---@type lazydev.Config
     opts = {
@@ -34,7 +33,7 @@ local Spec = {
       },
     },
     opts_extend = { "sources.default", "sources.providers" },
-  }
+  },
 }
 
 return Spec

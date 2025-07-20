@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "neovim/nvim-lspconfig", event = "User LazyFile",
+  "neovim/nvim-lspconfig",
 }
 
 return Spec

@@ -10,14 +10,14 @@ local Spec = {
     "MasonInstallAll",
     "MasonUninstall",
     "MasonUninstallAll",
-    "MasonLog"
+    "MasonLog",
   },
 
   opts = {
     pip = {
-      upgrade_pip = true
-    }
-  }
+      upgrade_pip = true,
+    },
+  },
 }
 
 return Spec

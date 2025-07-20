@@ -7,7 +7,7 @@ local Spec = {
   cmd = {
     "KittyScrollbackGenerateKittens",
     "KittyScrollbackCheckHealth",
-    "KittyScrollbackGenerateCommandLineEditing"
+    "KittyScrollbackGenerateCommandLineEditing",
   },
 }
 

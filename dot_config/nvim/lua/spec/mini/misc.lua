@@ -106,7 +106,7 @@ local Spec = {
       -- appearance to be synchronized from the outset, rather than lagging
       -- behind until the next event hook.
       sync ()
-    end)()
+    end) ()
   end,
 }
 

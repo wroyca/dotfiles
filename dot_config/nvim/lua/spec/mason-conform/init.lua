@@ -2,10 +2,11 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "zapling/mason-conform.nvim", event = "VeryLazy", opts = {}
+  "zapling/mason-conform.nvim", event = "VeryLazy", opts = {},
 
   dependencies = {
-    "mason.nvim", "conform.nvim"
+    "mason.nvim",
+    "conform.nvim",
   },
 }
 

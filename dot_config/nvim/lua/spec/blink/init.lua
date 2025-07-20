@@ -7,7 +7,7 @@ local Spec = {
   ---@type blink.cmp.Config
   opts = {
     keymap = {
-      preset = "super-tab"
+      preset = "super-tab",
     },
     completion = {
       menu = {

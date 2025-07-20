@@ -9,22 +9,22 @@ local Spec = {
       {
         "f",
         mode = { "n", "x", "o" },
-        desc = "Flit forward to"
+        desc = "Flit forward to",
       },
       {
         "F",
         mode = { "n", "x", "o" },
-        desc = "Flit backward to"
+        desc = "Flit backward to",
       },
       {
         "t",
         mode = { "n", "x", "o" },
-        desc = "Flit forward till"
+        desc = "Flit forward till",
       },
       {
         "T",
         mode = { "n", "x", "o" },
-        desc = "Flit backward till"
+        desc = "Flit backward till",
       },
     },
 
