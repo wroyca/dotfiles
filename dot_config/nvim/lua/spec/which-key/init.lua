@@ -54,6 +54,8 @@ local Spec = {
     show_keys = false,
 
     spec = {
+      { "<leader>b", group = "Buffer" },
+      { "<leader>n", group = "Notify" },
     },
   },
 }
