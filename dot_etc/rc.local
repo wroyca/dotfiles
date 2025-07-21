@@ -2,9 +2,15 @@
 
 device_path=$(grep -l "Ergodox EZ" /sys/bus/usb/devices/*/product | sed 's|/product||')
 
-# Disable wakeup signals for the Ergodox EZ keyboard to prevent the system
-# from continuously polling the device, which cause the keyboard's LED to
-# flash unnecessarily.
+# The Ergodox EZ has this lovely habit of flashing its LEDs when the system
+# keeps waking it up for no good reason, which it *will* do, thanks to USB
+# wakeup being enabled by default.
+#
+# The fix is to just tell the kernel to stop treating the keyboard like an alarm
+# button. We're not planning to wake the machine by slapping keys anyway, and
+# this spares us the distracting light show (and maybe a little power too).
+#
+# So: locate the device path, and if it's there, disable its wakeup trigger.
 #
 if [ -n "$device_path" ]; then
   echo "disabled" > "$device_path/power/wakeup"
