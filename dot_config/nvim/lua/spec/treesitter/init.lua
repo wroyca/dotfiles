@@ -1,79 +1,56 @@
----@module "treesitter"
+---@module "nvim-treesitter"
 
 ---@type LazyPluginSpec
 local Spec = {
-  "nvim-treesitter/nvim-treesitter",
-  branch = "main",
-  build = ":TSUpdate",
-  event = "User LazyFile",
+  "nvim-treesitter/nvim-treesitter", branch = "main", build = ":TSUpdate", lazy = false,
 
+  ---@type TSConfig
   opts = {
-    install_dir = vim.fs.joinpath (
-      vim.fn.stdpath ("data"),
-      "..",
-      "chezmoi",
-      "dot_config",
-      "nvim"
-    ),
-
-    -- Treesitter grammars that are required by Neovim's runtime. These are
-    -- mandatory and must not be removed.
-    grammars = {
+    ensure_installed = {
       "c",
+      "cpp",
       "lua",
-      "vim",
-      "vimdoc",
-      "query",
       "markdown",
       "markdown_inline",
-    },
-
-    -- Additional grammars we wish to support, but which are not strictly
-    -- required.
-    --
-    -- Note: care must be taken when adding auxiliary grammars that are
-    -- designed to operate *in parallel* with primary language grammars. When
-    -- active, these may attach concurrently and introduce performance overhead
-    -- and/or conflicting syntax nodes.
-    --
-    -- For example, "comment" alongside "cpp" result in degraded performance on
-    -- large C++ files with extensive comment blocks.
-    optional_grammars = {
-      "cpp",
+      "query",
+      "vim",
+      "vimdoc",
     },
   },
 
   config = function (_, opts)
-    require ("nvim-treesitter").setup (opts)
+    vim.iter (opts.ensure_installed):each (function (ft)
+      vim.api.nvim_create_autocmd ("FileType", {
+        pattern = { ft },
+        callback = function ()
+          require ("nvim-treesitter").install (ft) -- noop if already installed.
 
-    local function not_installed (lang)
-      return vim.fn.empty (
-        vim.fn.glob (opts.install_dir .. "/" .. lang .. ".*")
-      ) == 1
-    end
-
-    local ensure_installed = vim.list_extend (
-      vim.tbl_extend ("force", {}, opts.grammars),
-      opts.optional_grammars
-    )
-    local missing = vim.tbl_filter (not_installed, ensure_installed)
-
-    if #missing > 0 then
-      require ("nvim-treesitter").install (missing)
-    end
-
-    vim.api.nvim_create_autocmd ("FileType", {
-      pattern = vim
-        .iter (ensure_installed)
-        :map (vim.treesitter.language.get_filetypes)
-        :flatten ()
-        :totable (),
-      callback = function (ev)
-        vim.treesitter.start (ev.buf)
-      end,
-    })
+          -- On first glance, vim.treesitter.highlighter.new` looks like a
+          -- harmless constructor. In practice, it manages to chew up 130+ ms
+          -- during startup *if* Neovim is launched directly into a file (e.g.,
+          -- `nvim foo.cxx`). Not great for those of us who like snappy cold
+          -- boots.
+          --
+          -- Profiling shows the delay happens deep inside Treesitter's internal
+          -- startup path, so rather than waiting on a fix or
+          -- reverse-engineering their init sequence, we just dodge the whole
+          -- mess by deferring `treesitter.start()` to the next event loop tick.
+          --
+          -- This buys us a faster startup at the cost of one mildly annoying
+          -- side effect: Neovim may attempt a redraw while the parser is still
+          -- mid-parse, which can lead to a momentary highlight flicker.
+          --
+          -- Fortunately, this specific race condition is already being
+          -- addressed upstream: https://github.com/neovim/neovim/pull/33145
+          --
+          -- So for now, we just punt and schedule the start call.
+          vim.schedule(function()
+            vim.treesitter.start ()
+          end)
+        end,
+      })
+    end)
   end,
 }
 
-vim.opt.runtimepath:append (Spec.opts.install_dir)
 return Spec
