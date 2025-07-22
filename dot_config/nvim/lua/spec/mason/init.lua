@@ -2,16 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "mason-org/mason.nvim",
-
-  cmd = {
-    "Mason",
-    "MasonInstall",
-    "MasonInstallAll",
-    "MasonUninstall",
-    "MasonUninstallAll",
-    "MasonLog",
-  },
+  "mason-org/mason.nvim", event = "VeryLazy",
 
   opts = {
     pip = {
