@@ -1,0 +1,86 @@
+{{- $latestRelease := gitHubLatestRelease "jesseduffield/lazygit" -}}
+{{- if not $latestRelease -}}
+{{-   fail "Failed to retrieve Lazygit release information from GitHub API" -}}
+{{- end -}}
+
+{{- $lazygitVersion := $latestRelease.TagName -}}
+{{- if not $lazygitVersion -}}
+{{-   fail "Invalid or missing version tag in GitHub release metadata" -}}
+{{- end -}}
+
+{{- $targetArchitecture := .chezmoi.arch -}}
+{{- if not $targetArchitecture -}}
+{{-   fail "Target architecture specification is undefined or empty" -}}
+{{- end -}}
+
+{{- if eq $targetArchitecture "arm64" -}}
+{{-   $targetArchitecture = "arm64" -}}
+{{- else if eq $targetArchitecture "amd64" -}}
+{{-   $targetArchitecture = "x86_64" -}}
+{{- else if eq $targetArchitecture "386" -}}
+{{-   $targetArchitecture = "32-bit" -}}
+{{- else if ne $targetArchitecture "x86_64" -}}
+{{-   printf "Unsupported target architecture: %s" $targetArchitecture | fail -}}
+{{- end -}}
+
+{{- $operatingSystem := .chezmoi.os -}}
+{{- if not $operatingSystem -}}
+{{-   fail "Operating system detection failed or returned empty value" -}}
+{{- end -}}
+
+{{- $supportedPlatforms := list "linux" "darwin" "windows" "freebsd" -}}
+{{- if not (has $operatingSystem $supportedPlatforms) -}}
+{{-   printf "Unsupported operating system: %s. Lazygit supports: %s"
+      $operatingSystem (join ", " $supportedPlatforms) | fail -}}
+{{- end -}}
+
+{{- $osName := "" -}}
+{{- if eq $operatingSystem "linux" -}}
+{{-   $osName = "Linux" -}}
+{{- else if eq $operatingSystem "darwin" -}}
+{{-   $osName = "Darwin" -}}
+{{- else if eq $operatingSystem "windows" -}}
+{{-   $osName = "Windows" -}}
+{{- else if eq $operatingSystem "freebsd" -}}
+{{-   $osName = "freebsd" -}}
+{{- else -}}
+{{-   printf "Unsupported operating system for OS name mapping: %s" $operatingSystem | fail -}}
+{{- end -}}
+
+{{- $archiveExtension := "" -}}
+{{- if eq $operatingSystem "windows" -}}
+{{-   $archiveExtension = "zip" -}}
+{{- else -}}
+{{-   $archiveExtension = "tar.gz" -}}
+{{- end -}}
+
+{{- $sanitizedVersion := regexReplaceAll "^v" (toString $lazygitVersion) "" -}}
+{{- if not $sanitizedVersion -}}
+{{-   fail "Version sanitization resulted in empty string" -}}
+{{- end -}}
+
+{{- $distributionUrl := printf "https://github.com/jesseduffield/lazygit/releases/download/%s/lazygit_%s_%s_%s.%s"
+    (toString $lazygitVersion)
+    (toString $sanitizedVersion)
+    (toString $osName)
+    (toString $targetArchitecture)
+    (toString $archiveExtension) -}}
+
+{{- if not $distributionUrl -}}
+{{-   fail "Distribution URL construction failed or returned empty value" -}}
+{{- end -}}
+
+{{/* https://github.com/jesseduffield/lazygit */}}
+{
+  ".local/bin": {
+    "url": "{{ $distributionUrl }}",
+    "type": "archive",
+    "refreshPeriod": "24h",
+    "executable": true,
+    "stripComponents": 0,
+    "exclude": [
+      "LICENSE",
+      "README.md"
+    ]
+  }
+}

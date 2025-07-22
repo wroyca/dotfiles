@@ -1,0 +1,89 @@
+{{- $latestRelease := gitHubLatestRelease "dandavison/delta" -}}
+{{- if not $latestRelease -}}
+{{-   fail "Failed to retrieve Delta release information from GitHub API" -}}
+{{- end -}}
+
+{{- $deltaVersion := $latestRelease.TagName -}}
+{{- if not $deltaVersion -}}
+{{-   fail "Invalid or missing version tag in GitHub release metadata" -}}
+{{- end -}}
+
+{{- $targetArchitecture := .chezmoi.arch -}}
+{{- if not $targetArchitecture -}}
+{{-   fail "Target architecture specification is undefined or empty" -}}
+{{- end -}}
+
+{{- $operatingSystem := .chezmoi.os -}}
+{{- if not $operatingSystem -}}
+{{-   fail "Operating system detection failed or returned empty value" -}}
+{{- end -}}
+
+{{- $supportedPlatforms := list "linux" "darwin" "windows" -}}
+{{- if not (has $operatingSystem $supportedPlatforms) -}}
+{{-   printf "Unsupported operating system: %s. Delta supports: %s"
+      $operatingSystem (join ", " $supportedPlatforms) | fail -}}
+{{- end -}}
+
+{{- $targetTriplet := "" -}}
+{{- if eq $operatingSystem "linux" -}}
+{{-   if eq $targetArchitecture "amd64" -}}
+{{-     $targetTriplet = "x86_64-unknown-linux-gnu" -}}
+{{-   else if eq $targetArchitecture "arm64" -}}
+{{-     $targetTriplet = "aarch64-unknown-linux-gnu" -}}
+{{-   else if eq $targetArchitecture "386" -}}
+{{-     $targetTriplet = "i686-unknown-linux-gnu" -}}
+{{-   else -}}
+{{-     printf "Unsupported Linux architecture: %s" $targetArchitecture | fail -}}
+{{-   end -}}
+{{- else if eq $operatingSystem "darwin" -}}
+{{-   if eq $targetArchitecture "amd64" -}}
+{{-     $targetTriplet = "x86_64-apple-darwin" -}}
+{{-   else if eq $targetArchitecture "arm64" -}}
+{{-     $targetTriplet = "aarch64-apple-darwin" -}}
+{{-   else -}}
+{{-     printf "Unsupported macOS architecture: %s" $targetArchitecture | fail -}}
+{{-   end -}}
+{{- else if eq $operatingSystem "windows" -}}
+{{-   if eq $targetArchitecture "amd64" -}}
+{{-     $targetTriplet = "x86_64-pc-windows-msvc" -}}
+{{-   else -}}
+{{-     printf "Unsupported Windows architecture: %s" $targetArchitecture | fail -}}
+{{-   end -}}
+{{- else -}}
+{{-   printf "Unsupported operating system for target triplet mapping: %s" $operatingSystem | fail -}}
+{{- end -}}
+
+{{- if not $targetTriplet -}}
+{{-   fail "Target triplet construction failed or returned empty value" -}}
+{{- end -}}
+
+{{- $archiveExtension := "" -}}
+{{- if eq $operatingSystem "windows" -}}
+{{-   $archiveExtension = "zip" -}}
+{{- else -}}
+{{-   $archiveExtension = "tar.gz" -}}
+{{- end -}}
+
+{{- $distributionUrl := printf "https://github.com/dandavison/delta/releases/download/%s/delta-%s-%s.%s"
+    (toString $deltaVersion)
+    (toString $deltaVersion)
+    (toString $targetTriplet)
+    (toString $archiveExtension) -}}
+
+{{- if not $distributionUrl -}}
+{{-   fail "Distribution URL construction failed or returned empty value" -}}
+{{- end -}}
+
+{{/* https://github.com/dandavison/delta */}}
+{
+  ".local/bin": {
+    "url": "{{ $distributionUrl }}",
+    "type": "archive",
+    "refreshPeriod": "24h",
+    "executable": true,
+    "stripComponents": 1,
+    "include": [
+      "delta"
+    ]
+  }
+}

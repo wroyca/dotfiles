@@ -1,0 +1,78 @@
+{{- $latestRelease := gitHubLatestRelease "neovim/neovim" -}}
+{{- if not $latestRelease -}}
+{{-   fail "Failed to retrieve Neovim release information from GitHub API" -}}
+{{- end -}}
+
+{{- $neovimVersion := $latestRelease.TagName -}}
+{{- if not $neovimVersion -}}
+{{-   fail "Invalid or missing version tag in GitHub release metadata" -}}
+{{- end -}}
+
+{{- $targetArchitecture := .chezmoi.arch -}}
+{{- if not $targetArchitecture -}}
+{{-   fail "Target architecture specification is undefined or empty" -}}
+{{- end -}}
+
+{{- if eq $targetArchitecture "arm64" -}}
+{{-   $targetArchitecture = "arm64" -}}
+{{- else if eq $targetArchitecture "amd64" -}}
+{{-   $targetArchitecture = "x86_64" -}}
+{{- else if eq $targetArchitecture "x86_64" -}}
+{{-   $targetArchitecture = "x86_64" -}}
+{{- else -}}
+{{-   printf "Unsupported target architecture: %s" $targetArchitecture | fail -}}
+{{- end -}}
+
+{{- $operatingSystem := .chezmoi.os -}}
+{{- if not $operatingSystem -}}
+{{-   fail "Operating system detection failed or returned empty value" -}}
+{{- end -}}
+
+{{- $supportedPlatforms := list "linux" "darwin" "windows" -}}
+{{- if not (has $operatingSystem $supportedPlatforms) -}}
+{{-   printf "Unsupported operating system: %s. Supported platforms: %s"
+      $operatingSystem (join ", " $supportedPlatforms) | fail -}}
+{{- end -}}
+
+{{- $archiveExtension := "" -}}
+{{- if eq $operatingSystem "windows" -}}
+{{-   $archiveExtension = "zip" -}}
+{{- else -}}
+{{-   $archiveExtension = "tar.gz" -}}
+{{- end -}}
+
+{{- $distributionUrl := "" -}}
+{{- if eq $operatingSystem "linux" -}}
+{{-   $distributionUrl = printf "https://github.com/neovim/neovim/releases/download/%s/nvim-linux-%s.tar.gz"
+      (toString $neovimVersion) (toString $targetArchitecture) -}}
+{{- else if eq $operatingSystem "darwin" -}}
+{{-   $distributionUrl = printf "https://github.com/neovim/neovim/releases/download/%s/nvim-macos-%s.tar.gz"
+      (toString $neovimVersion) (toString $targetArchitecture) -}}
+{{- else if eq $operatingSystem "windows" -}}
+{{-   if eq $targetArchitecture "x86_64" -}}
+{{-     $distributionUrl = printf "https://github.com/neovim/neovim/releases/download/%s/nvim-win64.zip"
+        (toString $neovimVersion) -}}
+{{-   else -}}
+{{-     printf "Windows architecture %s not supported by Neovim releases" $targetArchitecture | fail -}}
+{{-   end -}}
+{{- else -}}
+{{-   printf "Unsupported operating system for URL construction: %s" $operatingSystem | fail -}}
+{{- end -}}
+
+{{- if not $distributionUrl -}}
+{{-   fail "Distribution URL construction failed or returned empty value" -}}
+{{- end -}}
+
+{{- $installPath := ".local" -}}
+{{- $stripComponents := 1 -}}
+
+{{/* https://neovim.io/ */}}
+{
+  "{{ $installPath }}": {
+    "url": "{{ $distributionUrl }}",
+    "type": "archive",
+    "refreshPeriod": "24h",
+    "executable": true,
+    "stripComponents": {{ $stripComponents }}
+  }
+}
