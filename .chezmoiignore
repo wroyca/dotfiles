@@ -2,12 +2,32 @@
 
 README.md
 
-.etc
-
 {{- if ne .chezmoi.os "linux" }}
 .config/mimeapps.list
 Templates/
+.etc
+.local/bin/executable_xdg-open
 {{- else if not (or (lookPath "gnome-shell") (env "GNOME_DESKTOP_SESSION_ID")) }}
 .config/mimeapps.list
 Templates/
+.config/dconf/
+.config/gtk-3.0/
+.config/monitors.xml
+.local/share/icons/
+.local/share/firefoxpwa/
+.local/share/applications/
+.local/share/backgrounds/
+.local/share/gnome-background-properties/
+{{- end }}
+
+{{- if ne .chezmoi.osRelease.id "fedora" }}
+.mozilla/
+.etc/dnf/
+.etc/yum.repos.d/
+{{- end }}
+
+{{- if eq .chezmoi.os "windows" }}
+.config/kitty/
+.config/fish/
+.config/gdb/
 {{- end }}
