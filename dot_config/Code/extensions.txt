@@ -7,7 +7,7 @@ alefragnani.project-manager
 github.codespaces
 github.github-vscode-theme
 github.remotehub
-# github.vscode-codeql
+github.vscode-codeql
 github.vscode-github-actions
 github.vscode-pull-request-github
 
@@ -17,12 +17,10 @@ ms-vscode-remote.remote-ssh
 ms-vscode-remote.remote-ssh-edit
 ms-vscode-remote.remote-wsl
 ms-vscode.azure-repos
-# ms-vscode.cpptools
+ms-vscode.cpptools
 ms-vscode.hexeditor
 ms-vscode.live-server
 ms-vscode.remote-explorer
 ms-vscode.remote-repositories
 ms-vscode.remote-server
 ms-vscode.vscode-github-issue-notebooks
-
-llvm-vs-code-extensions.vscode-clangd
