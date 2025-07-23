@@ -27,7 +27,11 @@ local config = {
   filetypes = {
     "c",
     "cpp",
-  }
+  },
+
+  root_markers = {
+    ".git",
+  },
 }
 
 return config

@@ -28,6 +28,19 @@ local Spec = {
     },
   },
 
+  opts = function ()
+    local filterout_lua_diagnosing = function (notif_arr)
+      local not_diagnosing = function (notif)
+        return not vim.startswith (notif.msg, "lua_ls: Diagnosing")
+      end
+      notif_arr = vim.tbl_filter (not_diagnosing, notif_arr)
+      return MiniNotify.default_sort (notif_arr)
+    end
+    return {
+      content = { sort = filterout_lua_diagnosing },
+    }
+  end,
+
   -- opts shouldn't call setup, as mini modules self-export through _G.
   config = function (_, opts)
     require ("mini.notify").setup (opts)
@@ -36,7 +49,7 @@ local Spec = {
     -- General idea is that notification is shown right away (as soon as safely
     -- possible, see |vim.schedule()|) and removed after a configurable amount
     -- of time.
-    vim.notify = MiniNotify.make_notify (opts)
+    vim.notify = MiniNotify.make_notify ()
 
     -- Install a buffer-local 'q' key mapping to close 'mininotify-history'
     -- buffers.

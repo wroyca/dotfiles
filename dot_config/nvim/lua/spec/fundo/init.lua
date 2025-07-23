@@ -31,11 +31,9 @@ local Spec = {
 
     local uv = vim.uv
     local archive_dir = vim.fs.joinpath (vim.fn.stdpath ("cache"), "fundo")
-
     for _, name in ipairs (vim.fn.readdir (archive_dir) or {}) do
       local path = vim.fs.joinpath (archive_dir, name)
       local stat = uv.fs_stat (path)
-
       -- Files older than 7 days are considered stale and deleted.
       if stat and stat.mtime and (os.time () - stat.mtime.sec > 7 * 24 * 60 * 60) then
         vim.fn.delete (path)

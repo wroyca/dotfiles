@@ -48,7 +48,9 @@ local Spec = {
     MiniBufremove.wipeout = function (buf_id, force)
       local buf = buf_id or vim.api.nvim_get_current_buf ()
       local bufname = vim.api.nvim_buf_get_name (buf)
+
       original_wipeout (buf, force)
+
       if bufname ~= "" then
         pcall (vim.cmd.wshada, { bang = true })
         vim.v.oldfiles = vim.tbl_filter (function (file)

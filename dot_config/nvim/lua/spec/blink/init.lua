@@ -44,7 +44,6 @@ local Spec = {
               item.label = strip_whitespace (item.label)
               item.insertText = strip_whitespace (item.insertText)
               item.filterText = strip_whitespace (item.filterText)
-
               if item.textEdit and item.textEdit.newText then
                 item.textEdit.newText = strip_whitespace (item.textEdit.newText)
               end
@@ -56,7 +55,6 @@ local Spec = {
       },
     },
   },
-  opts_extend = { "sources.default", "sources.providers" },
 }
 
 return Spec

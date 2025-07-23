@@ -2,12 +2,12 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "mini.align", virtual = true, opts = {},
+  "mini.align", virtual = true, event = "VeryLazy", opts = {},
 
-  keys = {
-    { "gA", mode = { "n", "x" }, desc = "Align with preview" },
-    { "ga", mode = { "n", "x" }, desc = "Align" },
-  },
+  init = function ()
+    -- github.com/echasnovski/mini.nvim/issues/1875
+    vim.o.showmode = false
+  end
 }
 
 return Spec

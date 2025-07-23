@@ -56,6 +56,7 @@ local Spec = {
     spec = {
       { "<leader>b", group = "Buffer" },
       { "<leader>n", group = "Notify" },
+      { "<leader>s", group = "Search" },
     },
   },
 }

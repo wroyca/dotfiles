@@ -45,7 +45,7 @@ local Spec = {
           --
           -- So for now, we just punt and schedule the start call.
           vim.schedule(function()
-            vim.treesitter.start ()
+            pcall (vim.treesitter.start)
           end)
         end,
       })
