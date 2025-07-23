@@ -9,5 +9,6 @@ set -e # Exit immediately if a command exits with a non-zero status.
 #
 # https://gitlab.freedesktop.org/libinput/libinput/-/issues/1160
 #
-sudo dnf swap -y libinput https://kojipkgs.fedoraproject.org/packages/libinput/1.28.0/1.fc42/x86_64/libinput-1.28.0-1.fc42.x86_64.rpm
-sudo dnf versionlock add libinput
+
+sudo dnf downgrade -y --allowerasing https://kojipkgs.fedoraproject.org/packages/libinput/1.28.0/1.fc42/x86_64/libinput-1.28.0-1.fc42.x86_64.rpm
+sudo dnf versionlock add libinput-1.28.0-1.fc42
