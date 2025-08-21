@@ -1,0 +1,88 @@
+{{- $baseUrl := "https://stage.build2.org/0" -}}
+
+{{- /* Fetch the build2 version from toolchain.sha256 */ -}}
+{{- $toolchainSha256 := output "curl" "-s" (printf "%s/toolchain.sha256" $baseUrl) | trim -}}
+{{- if not $toolchainSha256 -}}
+{{-   fail "Failed to retrieve build2 toolchain version information" -}}
+{{- end -}}
+
+{{- $lines := splitList "\n" $toolchainSha256 -}}
+{{- if lt (len $lines) 2 -}}
+{{-   fail "Invalid toolchain.sha256 format" -}}
+{{- end -}}
+
+{{- $build2VersionLine := index $lines 0 -}}
+{{- $build2VersionFull := trimPrefix "# " $build2VersionLine -}}
+{{- $versionParts := splitList "." $build2VersionFull -}}
+{{- $build2Version := printf "%s.%s.%s.%s" (index $versionParts 0) (index $versionParts 1) (index $versionParts 2) (index $versionParts 3) -}}
+{{- if not $build2Version -}}
+{{-   fail "Invalid or missing version in toolchain.sha256" -}}
+{{- end -}}
+
+{{- $targetArchitecture := .chezmoi.arch -}}
+{{- if not $targetArchitecture -}}
+{{-   fail "Target architecture specification is undefined or empty" -}}
+{{- end -}}
+
+{{- if eq $targetArchitecture "arm64" -}}
+{{-   $targetArchitecture = "aarch64" -}}
+{{- else if eq $targetArchitecture "amd64" -}}
+{{-   $targetArchitecture = "x86_64" -}}
+{{- else if eq $targetArchitecture "386" -}}
+{{-   $targetArchitecture = "x86_64" -}}
+{{- else if ne $targetArchitecture "x86_64" -}}
+{{-   printf "Unsupported target architecture: %s" $targetArchitecture | fail -}}
+{{- end -}}
+
+{{- $operatingSystem := .chezmoi.os -}}
+{{- if not $operatingSystem -}}
+{{-   fail "Operating system detection failed or returned empty value" -}}
+{{- end -}}
+
+{{- if ne $operatingSystem "linux" -}}
+{{-   printf "Unsupported operating system: %s. Build2 binaries only available for Linux" $operatingSystem | fail -}}
+{{- end -}}
+
+{{- $bindistPath := "bindist/linux/linux-glibc2.31" -}}
+{{- $packagesUrl := printf "%s/%s/%s/%s/packages.sha256" $baseUrl $build2Version $bindistPath $targetArchitecture -}}
+
+{{- /* Fetch the exact package filename from packages.sha256 */ -}}
+{{- $packagesSha256 := output "curl" "-s" $packagesUrl | trim -}}
+{{- if not $packagesSha256 -}}
+{{-   fail "Failed to retrieve build2 packages checksum information" -}}
+{{- end -}}
+
+{{- $packageLine := "" -}}
+{{- range (splitList "\n" $packagesSha256) -}}
+{{-   if and (contains ".tar.xz" .) (contains "build2-toolchain" .) (contains $targetArchitecture .) -}}
+{{-     $packageLine = . -}}
+{{-     break -}}
+{{-   end -}}
+{{- end -}}
+
+{{- if not $packageLine -}}
+{{-   fail "Failed to find build2-toolchain package in packages.sha256" -}}
+{{- end -}}
+
+{{- $packageName := last (splitList "*" $packageLine) -}}
+{{- if not $packageName -}}
+{{-   fail "Failed to extract package name from packages.sha256" -}}
+{{- end -}}
+
+{{- $distributionUrl := printf "%s/%s/%s/%s/%s" $baseUrl $build2Version $bindistPath $targetArchitecture $packageName -}}
+
+{{- if not $distributionUrl -}}
+{{-   fail "Distribution URL construction failed or returned empty value" -}}
+{{- end -}}
+
+{{/* https://build2.org/ */}}
+{
+  ".local": {
+    "url": "{{ $distributionUrl }}",
+    "type": "archive",
+    "refreshPeriod": "24h",
+    "executable": true,
+    "stripComponents": 1
+  }
+}
+
