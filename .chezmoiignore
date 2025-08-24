@@ -5,3 +5,7 @@ README.md
 {{- if eq .chezmoi.os "windows" }}
 .config/kitty/
 {{- end }}
+
+{{- if ne .chezmoi.os "linux" }}
+.config/mimeapps.list
+{{- end }}
