@@ -1,0 +1,291 @@
+; https://git-scm.com/docs/git-config
+
+[user]
+  name = {{ .name | quote }}
+  email = {{ .email | quote }}
+
+[advice]
+  detachedHead = false
+
+[branch]
+  sort = -committerdate
+
+[column]
+  ui = auto
+
+[commit]
+  verbose = true
+
+[commitGraph]
+  ; Uses xxHash instead of murmur3 and stores path prefixes more
+  ; efficiently through prefix compression.
+  ;
+  changedPathsVersion = 2
+
+[core]
+  editor = emacs --nw
+
+  ; A central ignore file to allows repository-agnostic exclusions. Git reads it
+  ; before .gitignore, so common patterns such as editor swap files or build
+  ; artifacts are filtered early, reducing parse overhead.
+  ;
+  excludesFile = ~/.config/git/excludes
+
+  ; The attributes file collects path-specific rules for filters, merges, and
+  ; diffs. It centralizes settings for binary handling, line-ending
+  ; normalization, and other content filters.
+  ;
+  attributesFile = ~/.config/git/attributes
+
+  ; The repository format number selects the internal storage layout. Version 1
+  ; unlocks alternates, quarantine, and the multi-pack-index while remaining
+  ; backward compatible.
+  ;
+  repositoryFormatVersion = 1
+
+  ; Untracked cache maintains a filesystem monitoring daemon that watches for
+  ; file additions and deletions outside Git's control. When enabled, Git
+  ; caches the untracked file list and invalidates entries only when the
+  ; corresponding directories change.
+  ;
+  untrackedCache = true
+
+[credential]
+  ; Git Credential Manager stores credentials in the system keychain. It handles
+  ; multiple protocols (basic, OAuth, SSH) and applies protocol-specific
+  ; encryption. The cache backend keeps a copy in memory for a configurable
+  ; time-to-live.
+  ;
+  helper = /usr/bin/git-credential-manager
+  credentialStore = cache
+
+  ; A 24-hour (86,400 s) cache lifetime balances security and convenience.
+  ; Credentials survive a typical workday yet still require regular token
+  ; refresh.
+  ;
+  cacheOptions = --timeout 86400
+
+[diff]
+  ; The histogram algorithm builds a frequency map of every line, treats rare
+  ; lines as anchors, and uses dynamic programming to align them, diffing the
+  ; gaps recursively. Compared with patience diff, which relies on unique lines,
+  ; histogram weights by frequency, so it keeps block boundaries when code is
+  ; moved. It performs better on repeated lines, trading an O(n²) worst-case for
+  ; more accurate moved code detection than patience's O(n log n).
+  ;
+  algorithm = histogram
+
+  ; Rename detection scores similarity between removed and added files, then
+  ; uses the Munkres assignment to match pairs above a threshold. Setting
+  ; copies=true also compares unchanged files, so copies are detected as well.
+  ; The wider search costs more CPU, yet it preserves history when files are
+  ; duplicated and edited.
+  ;
+  renames = copies
+
+[extensions]
+  ; Reftable stores refs in a B-tree of roughly 1,000-entry blocks. Each block
+  ; header records the minimal and maximal ref names, which allows binary
+  ; search. Updates touch only the affected blocks. Compared with loose files
+  ; (fast writes, slow reads) and packed-refs (fast reads, slow writes),
+  ; Reftable gives O(log n) lookups, atomic updates, lock-free reads, and prefix
+  ; compression.
+  ;
+  refStorage = "reftable"
+
+  ; SHA-256 object format replaces SHA-1 as the cryptographic hash function for
+  ; Git objects (commits, trees, blobs, tags). SHA-256 provides 256-bit digests
+  ; versus SHA-1's 160-bit, offering exponentially stronger collision resistance
+  ; and immunity to known cryptanalytic attacks. Object IDs become 64 hex
+  ; characters instead of 40. This format requires repositories to be
+  ; initialized with --object-format=sha256 and is incompatible with SHA-1
+  ; repositories without explicit translation.
+  ;
+  objectFormat = sha256
+
+[feature]
+  ; manyFiles speeds up large repositories. Packed bitmaps track object
+  ; reachability, letting Git answer history queries quickly. The
+  ; directory-entry cache memory-maps paths and caches stat() metadata, avoiding
+  ; filesystem calls. Path scanning uses worker threads with dedicated iterators
+  ; and buffers, so directory traversal is parallel. Other aids include
+  ; bulk-loading tree objects, prefix-compressing paths in pack indices, and
+  ; deferring parent validation.
+  ;
+  manyFiles = true
+
+  ; The experimental toggle grants access to features still under development,
+  ; useful for evaluating new protocol or storage capabilities before they
+  ; stabilize.
+  ;
+  experimental = true
+
+[fetch]
+  ; The “skipping” negotiation algorithm sends only the latest commit timestamps
+  ; (about ten thousand) instead of the full graph. The server assumes the
+  ; client already has earlier objects and returns only the missing ones. This
+  ; avoids deep history walks, saving network and CPU, but can miss commits if
+  ; the assumption is wrong.
+  ;
+  negotiationAlgorithm = skipping
+
+[filter "lfs"]
+  ; Git LFS replaces large files with small text pointers; the real content
+  ; lives in a separate object store. Clean and smudge filters convert between
+  ; pointer and content during commit and checkout, and a process filter
+  ; supports incremental transfer.
+  ;
+  required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+
+[gc]
+  ; The commit-graph stores pre-computed commit metadata (parents, generation
+  ; numbers, Bloom filters) in a compact binary format. With constant-time
+  ; generation checks, reachability and history queries become much faster.
+  ; Updates are chunked: recent commits sit in a small tip file, while older
+  ; history remains in larger base files.
+  ;
+  writeCommitGraph = true
+
+[help]
+  ; Command correction matches mistyped commands with a Levenshtein search.
+  ; autoCorrect=1 inserts a 100 ms delay before running the guess, giving time
+  ; to cancel. It is handy for muscle-memory typos in frequent commands yet
+  ; still keeps the user in control.
+  ;
+  autoCorrect = 1
+
+[init]
+  ; The default branch name applies at repository init and in templates.
+  ; Choosing "main" matches current practice while remaining compatible with
+  ; branch-agnostic tooling.
+  ;
+  defaultBranch = main
+
+  ; Default reference format for new repositories. For more informations, refer
+  ; to [extension].
+  ;
+  defaultRefFormat = reftable
+
+  ; Default object format for new repositories. For more informations, refer
+  ; to [extension].
+  ;
+  defaultObjectFormat = sha256
+
+[index]
+  ; Skip hash verification during index operations. Git normally checksums
+  ; index entries to detect corruption, but this adds CPU overhead during
+  ; large operations like checkout or reset.
+  ;;
+  skipHash = true
+
+  ; Index format version 4 uses path compression and stores only path
+  ; differences between adjacent entries. Unlike version 2's full paths,
+  ; version 4 eliminates redundant directory prefixes and uses variable-length
+  ; encoding for timestamps and file sizes. This reduces index file size by
+  ; 30-50% in typical repositories.
+  ;
+  version = 4
+
+[merge]
+  ; The zdiff3 style adds the original base to conflict markers, so divergent
+  ; lines are clearer. Its sequence matcher keeps whitespace significant. Seeing
+  ; the base helps catch accidental edits and guides a correct resolution.
+  ;
+  conflictStyle = zdiff3
+
+[pack]
+  ; Git stores objects in packs. When allowPackReuse=multi Git scans existing
+  ; packs for matches and emits deltas only for new objects, reusing multiple
+  ; packs to cut I/O and CPU.
+  ;
+  allowPackReuse = multi
+
+  ; Bitmap indices pre-compute reachability. Boundary traversal chops the graph
+  ; into sections and loads bitmaps only for the needed parts, so reading recent
+  ; history in large, old repositories avoids loading ancient bitmaps and saves
+  ; memory and CPU.
+  ;
+  useBitmapBoundaryTraversal = true
+
+  ; Path-walk enumeration traverses the repository by filesystem paths rather
+  ; than Git's default object-based traversal. This approach groups related
+  ; objects spatially, improving pack compression ratios and reducing I/O when
+  ; accessing files in similar directory structures. The path-based ordering
+  ; creates better delta chains for files that are logically related but may
+  ; not be temporally adjacent in Git's object graph.
+  ;
+  usePathWalk = true
+
+[pull]
+  ; Internally, ORT constructs merge_options_internal with cached rename
+  ; detection matrices, processes directory/file conflicts through a separate
+  ; conflict resolution phase, and maintains stricter invariants about tree
+  ; consistency. It uses a two-phase approach: first collecting all potential
+  ; conflicts in memory, then resolving them with full context awareness. The
+  ; strategy also employs improved basename-based rename scoring and similarity
+  ; thresholds, reducing false positives in rename detection.
+  ;
+  twohead = ort
+
+  ; Rebase pull rewrites local commits on top of upstream changes, keeping
+  ; history linear and easing conflict resolution.
+  ;
+  rebase = true
+
+[push]
+  autoSetupRemote = true
+
+  ; Tag following walks annotated tags reachable from the pushed commits,
+  ; pushing any that are missing on the remote.
+  ;
+  followTags = true
+
+[rebase]
+  ; Abbreviated rebase commands map full Git verbs to short aliases, trimming
+  ; the instruction list without losing clarity.
+  ;
+  abbreviateCommands = true
+
+  ; instructionFormat injects environment variables that keep the original
+  ; committer details, avoiding gaps in timestamps or author fields during a
+  ; rebase.
+  ;
+  ; Note that this also taint interactive rebase, the proposed approach here
+  ; is to conceal those lines via your editor of choice.
+  ;
+  instructionFormat = %s%nexec GIT_COMMITTER_DATE=\"%cI\" GIT_COMMITTER_NAME=\"%cN\" GIT_COMMITTER_EMAIL=\"%cE\" git commit --amend --no-edit%n
+
+[rerere]
+  ; rerere hashes conflict hunks with surrounding context and caches the
+  ; resolution in .git/rr-cache/. On a new conflict it hashes the hunk again
+  ; and, if the signature matches, replays the saved fix. Because signatures
+  ; include context, a match is safe. This pays off on long feature branches or
+  ; repeated rebases where the same conflicts recur.
+  ;
+  enabled = true
+
+  ; autoUpdate stages files whose conflicts were resolved and updates the index,
+  ; leaving only failures unstaged. This is a time-saver during big rebases with
+  ; many repeated conflicts.
+  ;
+  autoUpdate = true
+
+[submodule]
+  ; Recursive submodule commands walk the dependency graph depth-first, so
+  ; nested submodules stay in sync with the top-level project.
+  ;
+  recurse = true
+
+  ; Parallel fetch spawns several workers, each with its own connection pool and
+  ; transfer state, to speed up submodule downloads.
+  ;
+  fetchJobs = 10
+
+[url "https://github.com/"]
+  ; URL rewriting hooks remote-URL construction and converts SSH forms to HTTPS
+  ; before the connection is opened.
+  ;
+  insteadOf = git@github.com:
