@@ -2,18 +2,24 @@
 
 README.md
 
-{{- if eq .chezmoi.os "windows" }}
+{{- $isLinux   := eq .chezmoi.os "linux" }}
+{{- $isWindows := eq .chezmoi.os "windows" }}
+{{- $isDarwin  := eq .chezmoi.os "darwin" }}
+{{- $isFedora  := and $isLinux (contains "fedora" .chezmoi.osRelease.id) }}
+{{- $isGnome   := or (contains "GNOME" (env "XDG_CURRENT_DESKTOP")) (env "GNOME_DESKTOP_SESSION_ID") }}
+
+{{- if $isWindows }}
 .config/kitty/
 .local/share/fonts/
 Library/
 {{- end }}
 
-{{- if eq .chezmoi.os "darwin" }}
+{{- if $isDarwin }}
 .local/share/fonts/
 AppData/
 {{- end }}
 
-{{- if ne .chezmoi.os "linux" }}
+{{- if not $isLinux }}
 .config/mimeapps.list
 .local/bin/xdg-open
 .local/share/firefoxpwa/
@@ -24,13 +30,11 @@ AppData/
 .etc/rc.local
 {{- end }}
 
-{{- $isFedora := and (eq .chezmoi.os "linux") (contains "fedora" .chezmoi.osRelease.id) }}
 {{- if not $isFedora }}
 .etc/dnf/
 .etc/yum.repos.d/
 {{- end }}
 
-{{- $isGnome := or (contains "GNOME" (env "XDG_CURRENT_DESKTOP")) (env "GNOME_DESKTOP_SESSION_ID") }}
 {{- if not $isGnome }}
 .config/dconf/
 .config/gtk-3.0/
