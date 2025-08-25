@@ -11,6 +11,16 @@ README.md
 .local/bin/xdg-open
 .local/share/firefoxpwa/
 .local/share/icons/
+.etc/bluetooth/
+.etc/libinput/
+.etc/modprobe.d/
+.etc/rc.local
+{{- end }}
+
+{{- $isFedora := and (eq .chezmoi.os "linux") (contains "fedora" .chezmoi.osRelease.id) }}
+{{- if not $isFedora }}
+.etc/dnf/
+.etc/yum.repos.d/
 {{- end }}
 
 {{- $isGnome := or (contains "GNOME" (env "XDG_CURRENT_DESKTOP")) (env "GNOME_DESKTOP_SESSION_ID") }}

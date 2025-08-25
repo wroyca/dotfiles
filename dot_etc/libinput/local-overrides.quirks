@@ -1,0 +1,27 @@
+# The MX Master 3 supports high-resolution scrolling, which libinput handles via
+# REL_WHEEL_HI_RES and REL_HWHEEL_HI_RES events. This is what enables the
+# smooth, pixel-precise scrolling experience on capable applications.
+#
+# However, there's a subtle issue: the mouse continues to emit high-resolution
+# scroll events even when in "ratcheting" mode. That is, when the physical
+# scroll wheel is clicked into tactile detents. This leads to an inconsistent
+# user experience: the scroll behaves as if it were still in smooth mode,
+# ignoring the physical feel of the wheel.
+#
+# The problem appears to be upstream in how libinput interprets scroll state; it
+# doesn't distinguish between ratcheting and free-spin modes and sends
+# high-resolution deltas regardless.
+#
+# As a workaround, we explicitly disable high-resolution scroll events for this
+# device. While this downgrades the scroll fidelity slightly, it makes the
+# tactile detents meaningful again: each click translates to a predictable
+# scroll event, restoring consistency between physical input and UI behavior.
+#
+# Note that we also invert horizontal scrolling, which otherwise feels reversed
+# in typical usage (e.g., with touchpads or other mice).
+#
+[Logitech MX Master 3]
+MatchVendor=0x46D
+MatchProduct=0x4082
+ModelInvertHorizontalScrolling=1
+AttrEventCode=-REL_WHEEL_HI_RES;-REL_HWHEEL_HI_RES;
