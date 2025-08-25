@@ -1,3 +1,4 @@
+{{- if and (eq .chezmoi.os "linux") (contains "fedora" .chezmoi.osRelease.id) -}}
 #!/usr/bin/env bash
 
 if ! command -v code >/dev/null 2>&1; then
@@ -12,3 +13,4 @@ done < {{ joinPath .chezmoi.sourceDir "dot_config/Code/extensions.txt" | quote }
 #
 sudo chown -R $(whoami) "$(which code)"
 sudo chown -R $(whoami) /usr/share/code
+{{- end }}

@@ -1,3 +1,4 @@
+{{- if and (eq .chezmoi.os "linux") (contains "fedora" .chezmoi.osRelease.id) -}}
 #!/usr/bin/env bash
 
 set -x # Print commands and their arguments as they are executed.
@@ -9,3 +10,4 @@ chezmoi age decrypt --output {{ .chezmoi.homeDir }}/.age/key.txt \
                     --passphrase {{ .chezmoi.sourceDir }}/dot_age/key.txt.age
 
 chmod 600 {{ .chezmoi.homeDir }}/.age/key.txt
+{{- end }}

@@ -1,3 +1,4 @@
+{{- if and (eq .chezmoi.os "linux") (contains "fedora" .chezmoi.osRelease.id) -}}
 #!/usr/bin/env bash
 
 set -x # Print commands and their arguments as they are executed.
@@ -10,3 +11,4 @@ set -e # Exit immediately if a command exits with a non-zero status.
 #
 gio set Projects metadata::custom-icon "file:///home/{{ .chezmoi.username }}/.local/share/icons/morewaita/scalable/places/folder-projects.svg"
 gio set Games    metadata::custom-icon "file:///home/{{ .chezmoi.username }}/.local/share/icons/morewaita/scalable/places/folder-games.svg"
+{{- end }}
