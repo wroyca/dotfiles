@@ -1,0 +1,21 @@
+{{- $id := "0" -}}
+{{- if eq .chezmoi.os "windows" -}}
+{{-   $id = mozillaInstallHash "C:\\Program Files\\Mozilla Firefox" -}}
+{{- else if eq .chezmoi.os "darwin" -}}
+{{-   $id = mozillaInstallHash "/Applications/Firefox.app/Contents/MacOS" -}}
+{{- else if eq .chezmoi.os "linux" -}}
+{{-   $id = mozillaInstallHash "/usr/lib/firefox" -}}
+{{- end -}}
+
+[General]
+StartWithLastProfile=1
+Version=2
+
+[Install{{- $id -}}]
+Default=default-release
+Locked=1
+
+[Profile0]
+IsRelative=1
+Name=default-release
+Path=default-release
