@@ -4,6 +4,13 @@ README.md
 
 {{- if eq .chezmoi.os "windows" }}
 .config/kitty/
+.local/share/fonts/
+Library/
+{{- end }}
+
+{{- if eq .chezmoi.os "darwin" }}
+.local/share/fonts/
+AppData/
 {{- end }}
 
 {{- if ne .chezmoi.os "linux" }}
