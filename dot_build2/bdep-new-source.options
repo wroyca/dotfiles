@@ -1,0 +1,3 @@
+# Replace example.org URL with GitHub repository URL in manifest.
+#
+--post-hook "sed -i -e 's#https://example.org/#https://github.com/wroyca/#g' manifest"
