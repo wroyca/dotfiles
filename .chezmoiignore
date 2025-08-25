@@ -14,6 +14,7 @@ README.md
 {{- $isGnome := or (contains "GNOME" (env "XDG_CURRENT_DESKTOP")) (env "GNOME_DESKTOP_SESSION_ID") }}
 {{- if not $isGnome }}
 .config/gtk-3.0/
-.config/dconf/
+.local/share/backgrounds/
+.local/share/gnome-background-properties/
 .mozilla/chrome/
 {{- end }}
