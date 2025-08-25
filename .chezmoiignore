@@ -9,3 +9,9 @@ README.md
 {{- if ne .chezmoi.os "linux" }}
 .config/mimeapps.list
 {{- end }}
+
+{{- $isGnome := or (contains "GNOME" (env "XDG_CURRENT_DESKTOP")) (env "GNOME_DESKTOP_SESSION_ID") }}
+{{- if not $isGnome }}
+.config/gtk-3.0/
+.config/dconf/
+{{- end }}

@@ -1,0 +1,6 @@
+[org/gnome/Ptyxis]
+
+audible-bell=false
+enable-a11y=false
+restore-session=false
+restore-window-size=false

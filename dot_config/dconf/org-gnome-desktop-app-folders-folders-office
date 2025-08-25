@@ -1,0 +1,4 @@
+[org/gnome/desktop/app-folders/folders/Office]
+
+name='Office'
+apps=['libreoffice.desktop', 'libreoffice-writer.desktop', 'libreoffice-draw.desktop',  'libreoffice-calc.desktop', 'libreoffice-base.desktop', 'libreoffice-impress.desktop' ]
