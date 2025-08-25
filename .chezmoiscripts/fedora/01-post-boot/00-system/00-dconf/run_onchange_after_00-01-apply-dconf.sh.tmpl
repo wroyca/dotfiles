@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -x # Print commands and their arguments as they are executed.
+set -e # Exit immediately if a command exits with a non-zero status.
+
+{{ $sourceDir := .chezmoi.sourceDir }}
+{{ $dconfDir := joinPath $sourceDir "dot_config/dconf" }}
+{{ $files := glob (joinPath $dconfDir "*") }}
+
+{{ range $files }}
+  {{- $filename := base . -}}
+  {{- $targetFilename := $filename -}}
+  {{- if hasSuffix ".tmpl" $targetFilename -}}
+    {{- $targetFilename = trimSuffix ".tmpl" $targetFilename -}}
+  {{- end -}}
+  {{- $targetPath := joinPath $.chezmoi.homeDir ".config/dconf" $targetFilename -}}
+
+  # File: {{ $targetFilename }}
+  # Hash: {{ include . | sha256sum }}
+  cat "{{ $targetPath }}" | dconf load /
+{{ end }}
