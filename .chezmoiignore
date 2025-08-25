@@ -30,4 +30,5 @@ README.md
 .local/share/backgrounds/
 .local/share/gnome-background-properties/
 .mozilla/chrome/
+Templates/
 {{- end }}
