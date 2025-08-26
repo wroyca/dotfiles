@@ -2,32 +2,48 @@
 
 README.md
 
-{{- if ne .chezmoi.os "linux" }}
+{{- $isLinux   := eq .chezmoi.os "linux" }}
+{{- $isWindows := eq .chezmoi.os "windows" }}
+{{- $isDarwin  := eq .chezmoi.os "darwin" }}
+{{- $isFedora  := and $isLinux (contains "fedora" .chezmoi.osRelease.id) }}
+{{- $isGnome   := or (contains "GNOME" (env "XDG_CURRENT_DESKTOP")) (env "GNOME_DESKTOP_SESSION_ID") }}
+
+{{- if $isLinux }}
+Library/
+AppData/
+{{- end }}
+
+{{- if $isWindows }}
+.config/kitty/
+.local/share/fonts/
+Library/
+{{- end }}
+
+{{- if $isDarwin }}
+.local/share/fonts/
+AppData/
+{{- end }}
+
+{{- if not $isLinux }}
 .config/mimeapps.list
-Templates/
-.etc
-.local/bin/executable_xdg-open
-{{- else if not (or (lookPath "gnome-shell") (env "GNOME_DESKTOP_SESSION_ID")) }}
-.config/mimeapps.list
-Templates/
+.config/monitors.xml
+.config/gdb
+.config/fish
+.local/bin/xdg-open
+.local/share/firefoxpwa/
+.local/share/icons/
+{{- end }}
+
+{{- if not $isFedora }}
+{{- end }}
+
+{{- if not $isGnome }}
 .config/dconf/
 .config/gtk-3.0/
-.config/monitors.xml
-.local/share/icons/
-.local/share/firefoxpwa/
-.local/share/applications/
 .local/share/backgrounds/
 .local/share/gnome-background-properties/
+.mozilla/chrome/
+Templates/
 {{- end }}
 
-{{- if ne .chezmoi.osRelease.id "fedora" }}
-.mozilla/
-.etc/dnf/
-.etc/yum.repos.d/
-{{- end }}
-
-{{- if eq .chezmoi.os "windows" }}
-.config/kitty/
-.config/fish/
-.config/gdb/
-{{- end }}
+.etc/
