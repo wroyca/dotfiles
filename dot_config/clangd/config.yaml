@@ -1,32 +1,10 @@
-# https://clangd.llvm.org/config
-
+---
 Index:
-  # Enables indexing of standard library headers to support completion,
-  # navigation, and diagnostics for standard types and functions. This requires
-  # building an AST-based index that tracks symbol definitions, locations, and
-  # relationships. Increases memory usage but provides richer language support.
-  #
   StandardLibrary: Yes
-
 Diagnostics:
   ClangTidy:
-    # Disables fast-path filtering based on file patterns. By default, only a
-    # subset of checks is applied to reduce latency during editing. Setting this
-    # to 'None' disables that optimization and runs all checks unconditionally,
-    # providing complete diagnostics at the cost of responsiveness.
-    #
     FastCheckFilter: None
-
-  # Disables warnings about unused includes. These checks are imprecise in the
-  # presence of macros and templates, where usage may be indirect or difficult
-  # to determine statically. Disabling avoids noise in such cases.
-  #
   UnusedIncludes: None
-
 Completion:
-  # Enables completion from all visible scopes, not just the immediate context.
-  # This includes surrounding namespaces, the global scope, and imported
-  # modules. Useful in generic code where symbols are often introduced
-  # non-locally.
-  #
   AllScopes: true
+...
