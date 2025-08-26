@@ -1,0 +1,35 @@
+{{- $operatingSystem := .chezmoi.os -}}
+{{- if ne $operatingSystem "linux" -}}
+{{-   fail "Morewaita icon theme is exclusively supported on Linux distributions" -}}
+{{- end -}}
+
+{{- $desktopEnvironment := env "XDG_CURRENT_DESKTOP" | lower -}}
+{{- $sessionType := env "XDG_SESSION_TYPE" | lower -}}
+{{- $gnomeVersion := env "GNOME_DESKTOP_SESSION_ID" -}}
+
+{{- $isGnomeEnvironment := false -}}
+{{- if or (contains "gnome" $desktopEnvironment)
+          (contains "gnome" $sessionType)
+          (ne $gnomeVersion "") -}}
+{{-   $isGnomeEnvironment = true -}}
+{{- end -}}
+
+{{- if not $isGnomeEnvironment -}}
+{{-   fail "Morewaita icon theme requires GNOME desktop environment. Current desktop: %s" $desktopEnvironment -}}
+{{- end -}}
+
+{{- $repositoryUrl := "https://github.com/somepaulo/morewaita" -}}
+{{- $themeName := "morewaita" -}}
+
+{{/* Morewaita Icon Theme Installation Configuration */}}
+{
+  ".local/share/icons/{{ $themeName }}": {
+    "url": "{{ $repositoryUrl }}",
+    "type": "git-repo",
+    "refreshPeriod": "24h",
+    "clone": {
+      "depth": 1,
+      "recursive": false
+    }
+  }
+}

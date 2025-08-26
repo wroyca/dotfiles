@@ -26,6 +26,7 @@ AppData/
 
 {{- if not $isLinux }}
 .config/mimeapps.list
+.config/monitors.xml
 .local/bin/xdg-open
 .local/share/firefoxpwa/
 .local/share/icons/

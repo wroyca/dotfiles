@@ -91,7 +91,9 @@
   ; Reftable gives O(log n) lookups, atomic updates, lock-free reads, and prefix
   ; compression.
   ;
-  refStorage = "reftable"
+  ; FIXME: Microsoft.Build.Tasks.Git.targets(25,5): error :
+  ;   Error reading git repository information: Unsupported repository extension 'refstorage'
+  ; refStorage = "reftable"
 
   ; SHA-256 object format replaces SHA-1 as the cryptographic hash function for
   ; Git objects (commits, trees, blobs, tags). SHA-256 provides 256-bit digests

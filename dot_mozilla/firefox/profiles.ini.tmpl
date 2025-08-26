@@ -4,7 +4,7 @@
 {{- else if eq .chezmoi.os "darwin" -}}
 {{-   $id = mozillaInstallHash "/Applications/Firefox.app/Contents/MacOS" -}}
 {{- else if eq .chezmoi.os "linux" -}}
-{{-   $id = mozillaInstallHash "/usr/lib/firefox" -}}
+{{-   $id = mozillaInstallHash "/usr/lib64/firefox" -}}
 {{- end -}}
 
 [General]
