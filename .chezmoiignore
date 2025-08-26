@@ -8,6 +8,11 @@ README.md
 {{- $isFedora  := and $isLinux (contains "fedora" .chezmoi.osRelease.id) }}
 {{- $isGnome   := or (contains "GNOME" (env "XDG_CURRENT_DESKTOP")) (env "GNOME_DESKTOP_SESSION_ID") }}
 
+{{- if $isLinux }}
+Library/
+AppData/
+{{- end }}
+
 {{- if $isWindows }}
 .config/kitty/
 .local/share/fonts/
@@ -24,15 +29,9 @@ AppData/
 .local/bin/xdg-open
 .local/share/firefoxpwa/
 .local/share/icons/
-.etc/bluetooth/
-.etc/libinput/
-.etc/modprobe.d/
-.etc/rc.local
 {{- end }}
 
 {{- if not $isFedora }}
-.etc/dnf/
-.etc/yum.repos.d/
 {{- end }}
 
 {{- if not $isGnome }}
@@ -43,3 +42,5 @@ AppData/
 .mozilla/chrome/
 Templates/
 {{- end }}
+
+.etc/
