@@ -44,6 +44,8 @@ user_pref("browser.newtabpage.activity-stream.showSponsored", false);
 user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);
 user_pref("extensions.pocket.enabled", false);
 
+{{- if eq .chezmoi.os "linux" -}}
+
 // Firefox has never quite looked right under GNOME. The default theme is close
 // enough to pass on a screenshot, but not close enough to feel native. This
 // pulls in the community GNOME theme, which corrects most of the obvious
@@ -84,3 +86,5 @@ user_pref("media.hardware-video-decoding.force-enabled", true);
 // outside the sandbox. With it, things feel like part of the system again.
 //
 user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
+
+{{- end -}}
