@@ -1,0 +1,15 @@
+{{- if and (eq .chezmoi.os "linux") (contains "fedora" .chezmoi.osRelease.id) -}}
+#!/usr/bin/env bash
+
+set -x # Print commands and their arguments as they are executed.
+set -e # Exit immediately if a command exits with a non-zero status.
+
+# Pin firefox to version 141.0.3.fc42 because 142-0.fc42 introduced a
+# regression in widget.gtk.rounded-bottom-corners, which result in visual artifacts.
+#
+# https://bugzilla.mozilla.org/show_bug.cgi?id=1982979
+#
+
+sudo dnf downgrade -y --allowerasing https://kojipkgs.fedoraproject.org/packages/firefox/141.0.3/1.fc42/x86_64/firefox-141.0.3-1.fc42.x86_64.rpm
+sudo dnf versionlock add firefox-141.0.3-1.fc42
+{{- end }}
