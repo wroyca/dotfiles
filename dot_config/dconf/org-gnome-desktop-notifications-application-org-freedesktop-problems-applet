@@ -5,7 +5,7 @@
 # recover on their own. Some applications may crash and immediately recover,
 # while others may not crash at all yet still generate alerts in the problems
 # applet for various reasons. Since crash dumps and logs are accessible through
-# other means, crash notifications have been disabled to reduce unnecessary
+# other means, disable crash notifications to reduce unnecessary
 # alerts and/or spam.
 #
 # One such example:
