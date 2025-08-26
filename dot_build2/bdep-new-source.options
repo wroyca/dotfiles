@@ -1,15 +1,3 @@
-# List README.md and LICENSE files as prerequisites in the new source
-# subdirectory. This achieves two things: first, they will be installed if/when
-# our project is installed and second, they will be included into the project
-# source distribution.
-#
-# doc           share/doc/<project>/           config.install.doc
-# legal         doc/                           config.install.legal
-#
-# https://build2.org/build2/doc/build2-build-system-manual.xhtml#targets-types-doc
-#
---post-hook "/usr/bin/sed -i -e '/doc{README.md}/!b; /legal{LICENSE.md}/b; s/doc{README.md}/doc{README.md} legal{LICENSE.md}/' buildfile"
-
 # Replace example.org URL with GitHub repository URL in manifest.
 #
 --post-hook "sed -i -e 's#https://example.org/#https://github.com/wroyca/#g' manifest"
