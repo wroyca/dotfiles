@@ -39,12 +39,24 @@
 {{-   fail "Operating system detection failed or returned empty value" -}}
 {{- end -}}
 
-{{- if ne $operatingSystem "linux" -}}
-{{-   printf "Unsupported operating system: %s. Build2 binaries only available for Linux" $operatingSystem | fail -}}
+{{- $bindistPath := "" -}}
+{{- $fileExtension := "" -}}
+{{- if eq $operatingSystem "linux" -}}
+{{-   $bindistPath = "bindist/linux/linux-glibc2.31" -}}
+{{-   $fileExtension = ".tar.xz" -}}
+{{- else if eq $operatingSystem "windows" -}}
+{{-   $bindistPath = "bindist/windows/windows10" -}}
+{{-   $fileExtension = ".zip" -}}
+{{- else -}}
+{{-   printf "Unsupported operating system: %s. Build2 binaries only available for Linux and Windows" $operatingSystem | fail -}}
 {{- end -}}
 
-{{- $bindistPath := "bindist/linux/linux-glibc2.31" -}}
-{{- $packagesUrl := printf "%s/%s/%s/%s/packages.sha256" $baseUrl $build2Version $bindistPath $targetArchitecture -}}
+{{- $packagesUrl := "" -}}
+{{- if eq $operatingSystem "linux" -}}
+{{-   $packagesUrl = printf "%s/%s/%s/%s/packages.sha256" $baseUrl $build2Version $bindistPath $targetArchitecture -}}
+{{- else if eq $operatingSystem "windows" -}}
+{{-   $packagesUrl = printf "%s/%s/%s/%s/msvc/packages.sha256" $baseUrl $build2Version $bindistPath $targetArchitecture -}}
+{{- end -}}
 
 {{- /* Fetch the exact package filename from packages.sha256 */ -}}
 {{- $packagesSha256 := output "curl" "-s" $packagesUrl | trim -}}
@@ -54,7 +66,7 @@
 
 {{- $packageLine := "" -}}
 {{- range (splitList "\n" $packagesSha256) -}}
-{{-   if and (contains ".tar.xz" .) (contains "build2-toolchain" .) (contains $targetArchitecture .) -}}
+{{-   if and (contains $fileExtension .) (contains "build2-toolchain" .) (contains $targetArchitecture .) -}}
 {{-     $packageLine = . -}}
 {{-     break -}}
 {{-   end -}}
@@ -69,7 +81,12 @@
 {{-   fail "Failed to extract package name from packages.sha256" -}}
 {{- end -}}
 
-{{- $distributionUrl := printf "%s/%s/%s/%s/%s" $baseUrl $build2Version $bindistPath $targetArchitecture $packageName -}}
+{{- $distributionUrl := "" -}}
+{{- if eq $operatingSystem "linux" -}}
+{{-   $distributionUrl = printf "%s/%s/%s/%s/%s" $baseUrl $build2Version $bindistPath $targetArchitecture $packageName -}}
+{{- else if eq $operatingSystem "windows" -}}
+{{-   $distributionUrl = printf "%s/%s/%s/%s/msvc/%s" $baseUrl $build2Version $bindistPath $targetArchitecture $packageName -}}
+{{- end -}}
 
 {{- if not $distributionUrl -}}
 {{-   fail "Distribution URL construction failed or returned empty value" -}}
