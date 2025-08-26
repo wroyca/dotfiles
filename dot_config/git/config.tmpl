@@ -23,7 +23,7 @@
   changedPathsVersion = 2
 
 [core]
-  editor = emacs --nw
+  editor = emacs -nw
 
   ; A central ignore file to allows repository-agnostic exclusions. Git reads it
   ; before .gitignore, so common patterns such as editor swap files or build
@@ -91,7 +91,9 @@
   ; Reftable gives O(log n) lookups, atomic updates, lock-free reads, and prefix
   ; compression.
   ;
-  refStorage = "reftable"
+  ; FIXME: Microsoft.Build.Tasks.Git.targets(25,5): error :
+  ;   Error reading git repository information: Unsupported repository extension 'refstorage'
+  ; refStorage = "reftable"
 
   ; SHA-256 object format replaces SHA-1 as the cryptographic hash function for
   ; Git objects (commits, trees, blobs, tags). SHA-256 provides 256-bit digests
@@ -101,7 +103,9 @@
   ; initialized with --object-format=sha256 and is incompatible with SHA-1
   ; repositories without explicit translation.
   ;
-  objectFormat = sha256
+  ; FIXME: https://github.com/orgs/community/discussions/12490
+  ;
+  ; objectFormat = sha256
 
 [feature]
   ; manyFiles speeds up large repositories. Packed bitmaps track object
@@ -172,7 +176,9 @@
   ; Default object format for new repositories. For more informations, refer
   ; to [extension].
   ;
-  defaultObjectFormat = sha256
+  ; FIXME: https://github.com/orgs/community/discussions/12490
+  ;
+  ; defaultObjectFormat = sha256
 
 [index]
   ; Skip hash verification during index operations. Git normally checksums
