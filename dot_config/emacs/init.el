@@ -1275,4 +1275,144 @@
 
 ;;
 
+;; The problem we are solving here is in some sense mundane, yet
+;; annoyingly subtle: making prefix keymaps both self-documenting
+;; and properly integrated with `which-key` when the key in question
+;; comes from the keypad (or any other less conventional source).
+;;
+;; By default, Emacs keymap definitions are only half the story:
+;; one can bind keys to functions, but the descriptions shown in
+;; `which-key` (and other helpers) require an extra, parallel set
+;; of declarations. This redundancy is tolerable when you have a
+;; handful of bindings, but once you start introducing structured
+;; prefix keymaps (e.g., "File", "Buffers", "Windows"), the boilerplate
+;; multiplies quickly. Worse still, consistency between what's bound
+;; and what's shown becomes fragile: update one without the other and
+;; you've invited confusion.
+;;
+;; There is also the keypad wrinkle: Emacs treats keypad keys as
+;; distinct from their regular counterparts (e.g., `kp-1` versus `1`),
+;; yet `which-key` doesn't really care and would happily show nothing
+;; or something misleading. Out of the box, there's no clean way to
+;; say "bind this here, and describe it there, and do so recursively
+;; for nested prefixes."
+;;
+;; The result is this macro, which may look monstrous at first sight,
+;; but whose monstrosity is deliberate: we take on complexity once,
+;; centrally, so that we can write succinct, declarative
+;; prefix specifications thereafter.
+
+(defmacro define-prefix-keymap (var-name prefix description &rest bindings)
+  "Define a prefix keymap VAR-NAME bound to PREFIX with DESCRIPTION shown in which-key.
+BINDINGS is a list of (key function description) or (key nested-description &rest nested-bindings)."
+  (declare (indent defun))
+  (let ((map-name (make-symbol "map")))
+    `(progn
+       (defvar ,var-name nil ,(format "Keymap for %s" description))
+       (let ((,map-name (make-sparse-keymap)))
+         ,@(cl-loop for binding in bindings
+             collect
+             (pcase binding
+               (`(,key ,func ,desc)
+                 `(progn
+                    (define-key ,map-name (kbd ,key) ,func)
+                    (let ((full-key (concat ,prefix " " ,key)))
+                      (with-eval-after-load 'which-key
+                        (when (symbolp ,func)
+                          (push (cons (cons nil (symbol-name ,func))
+                                  (cons nil ,desc))
+                            which-key-replacement-alist))
+                        (which-key-add-key-based-replacements full-key ,desc)))))
+               (`(,key ,nested-desc . ,nested-bindings)
+                 (let ((nested-var (intern (format "%s-%s-keymap"
+                                             (symbol-name var-name)
+                                             (replace-regexp-in-string " " "-" key)))))
+                   `(progn
+                      (define-prefix-keymap ,nested-var
+                        ,(concat prefix " " key) ,nested-desc
+                        ,@nested-bindings)
+                      (define-key ,map-name (kbd ,key) ,nested-var))))))
+         (setq ,var-name ,map-name)
+         (global-set-key (kbd ,prefix) ,var-name)
+         (with-eval-after-load 'which-key
+           (which-key-add-key-based-replacements ,prefix ,description)
+           (which-key-add-keymap-based-replacements global-map ,prefix ,description)
+           (push (cons (cons nil (symbol-name ',var-name))
+                   (cons nil ,description))
+             which-key-replacement-alist))
+         ,var-name))))
+
+(define-prefix-keymap dotemacs-consult-buffer-keymap "C-c c b" "Buffers"
+  ("b" #'consult-buffer "Switch buffer")
+  ("w" #'consult-buffer-other-window "Switch buffer (other window)")
+  ("f" #'consult-buffer-other-frame "Switch buffer (other frame)")
+  ("t" #'consult-buffer-other-tab "Switch buffer (other tab)")
+  ("p" #'consult-project-buffer "Switch project buffer")
+  ("k" #'consult-bookmark "Jump to bookmark")
+  ("r" #'consult-recent-file "Visit recent file"))
+(define-prefix-keymap dotemacs-consult-editing-keymap "C-c c e" "Editing"
+  ("y" #'consult-yank-from-kill-ring "Yank from kill ring")
+  ("p" #'consult-yank-pop "Yank pop")
+  ("r" #'consult-yank-replace "Yank replace")
+  ("k" #'consult-kmacro "Call keyboard macro"))
+(define-prefix-keymap dotemacs-consult-register-keymap "C-c c r" "Registers"
+  ("r" #'consult-register "Insert register")
+  ("l" #'consult-register-load "Load register")
+  ("s" #'consult-register-store "Store register"))
+(define-prefix-keymap dotemacs-consult-navigation-keymap "C-c c n" "Navigation"
+  ("g" #'consult-goto-line "Go to line")
+  ("m" #'consult-mark "Jump to mark")
+  ("M" #'consult-global-mark "Jump to global mark")
+  ("o" #'consult-outline "Jump to outline")
+  ("i" #'consult-imenu "Jump via imenu")
+  ("I" #'consult-imenu-multi "Jump via imenu (multi-buffer)"))
+(define-prefix-keymap dotemacs-consult-search-keymap "C-c c s" "Search"
+  ("l" #'consult-line "Search line")
+  ("L" #'consult-line-multi "Search line (multi-buffer)")
+  ("k" #'consult-keep-lines "Keep matching lines")
+  ("f" #'consult-focus-lines "Focus matching lines"))
+(define-prefix-keymap dotemacs-consult-grep-keymap "C-c c g" "Grep & find"
+  ("g" #'consult-grep "Search with grep")
+  ("r" #'consult-ripgrep "Search with ripgrep")
+  ("G" #'consult-git-grep "Search with git-grep")
+  ("f" #'consult-find "Find file")
+  ("d" #'consult-fd "Find file with fd")
+  ("l" #'consult-locate "Locate file"))
+(define-prefix-keymap dotemacs-consult-compilation-keymap "C-c c c" "Diagnostics"
+  ("c" #'consult-compile-error "Jump to compile error")
+  ("f" #'consult-flymake "List Flymake diagnostics")
+  ("x" #'consult-xref "Find references (xref)"))
+(define-prefix-keymap dotemacs-consult-history-keymap "C-c c h" "Histories"
+  ("c" #'consult-complex-command "Repeat complex command")
+  ("h" #'consult-history "Repeat command")
+  ("i" #'consult-isearch-history "Repeat isearch"))
+(define-prefix-keymap dotemacs-consult-modes-keymap "C-c c m" "Modes"
+  ("m" #'consult-minor-mode-menu "Minor mode menu")
+  ("c" #'consult-mode-command "Major mode commands"))
+(define-prefix-keymap dotemacs-consult-org-keymap "C-c c o" "Org mode"
+  ("h" #'consult-org-heading "Jump to heading")
+  ("a" #'consult-org-agenda "Open agenda"))
+(define-prefix-keymap dotemacs-consult-help-keymap "C-c c H" "Help"
+  ("m" #'consult-man "Display man page")
+  ("i" #'consult-info "Display info manual"))
+(define-prefix-keymap dotemacs-consult-misc-keymap "C-c c M" "Miscellaneous"
+  ("t" #'consult-theme "Load theme")
+  ("p" #'consult-preview-at-point "Preview at point")
+  ("c" #'consult-completion-in-region "Completion in region"))
+(define-prefix-keymap dotemacs-consult-keymap "C-c c" "Consult"
+  ("b" dotemacs-consult-buffer-keymap "Buffers")
+  ("e" dotemacs-consult-editing-keymap "Editing")
+  ("r" dotemacs-consult-register-keymap "Registers")
+  ("n" dotemacs-consult-navigation-keymap "Navigation")
+  ("s" dotemacs-consult-search-keymap "Search")
+  ("g" dotemacs-consult-grep-keymap "Grep & find")
+  ("c" dotemacs-consult-compilation-keymap "Diagnostics")
+  ("h" dotemacs-consult-history-keymap "Histories")
+  ("m" dotemacs-consult-modes-keymap "Modes")
+  ("o" dotemacs-consult-org-keymap  "Org mode")
+  ("H" dotemacs-consult-help-keymap "Help")
+  ("M" dotemacs-consult-misc-keymap "Miscellaneous"))
+
+;;
+
 (provide 'init)
