@@ -43,6 +43,8 @@
     (elpaca-generate-autoloads "elpaca" repo)
     (let ((load-source-file-function nil)) (load "./elpaca-autoloads"))))
 (add-hook 'after-init-hook #'elpaca-process-queues)
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(add-hook 'elpaca-after-init-hook (lambda () (load custom-file 'noerror)))
 (elpaca `(,@elpaca-order))
 (when (member system-type '(windows-nt ms-dos))
   (elpaca-no-symlink-mode))
@@ -98,7 +100,9 @@
 
 (leaf auto-revert
   :doc "Toggle reverting buffer when the file changes (Auto-Revert Mode)"
-  :tag "builtin" "files")
+  :tag "builtin" "files"
+  :custom ((auto-revert-interval . 1)
+            auto-revert-verbose . nil))
 
 (leaf auto-revert-tail
   :doc "Toggle reverting tail of buffer when the file grows"
@@ -158,7 +162,8 @@
 
 (leaf compilation-shell-minor
   :doc "Toggle Compilation Shell minor mode"
-  :tag "builtin" "compilation")
+  :tag "builtin" "compilation"
+  :hook ((compilation-mode . compilation-shell-minor-mode)))
 
 (leaf completion-in-region
   :doc "Transient minor mode used during 'completion-in-region'"
@@ -170,7 +175,8 @@
 
 (leaf context-menu
   :doc "Toggle Context Menu mode"
-  :tag "builtin" "menu")
+  :tag "builtin" "menu"
+  :global-minor-mode t)
 
 (leaf cperl-extra-paired-delimiters
   :doc "Toggle treatment of extra paired delimiters in Perl"
@@ -178,7 +184,8 @@
 
 (leaf cua
   :doc "Toggle Common User Access style editing (CUA mode)"
-  :tag "builtin" "editing")
+  :tag "builtin" "editing"
+  :global-minor-mode t)
 
 (leaf cua-rectangle-mark
   :doc "Toggle the region as rectangular"
@@ -206,7 +213,8 @@
 
 (leaf delete-selection
   :doc "Toggle Delete Selection mode"
-  :tag "builtin" "editing")
+  :tag "builtin" "editing"
+  :global-minor-mode t)
 
 (leaf desktop-save
   :doc "Toggle desktop saving (Desktop Save mode)"
@@ -282,7 +290,8 @@
 
 (leaf editorconfig
   :doc "Toggle EditorConfig feature"
-  :tag "external" "editorconfig")
+  :tag "external" "editorconfig"
+  :global-minor-mode t)
 
 (leaf eldoc
   :doc "Toggle echo area display of Lisp objects at point (ElDoc mode)"
@@ -378,7 +387,8 @@
 
 (leaf global-auto-revert
   :doc "Toggle Global Auto-Revert Mode"
-  :tag "builtin" "files")
+  :tag "builtin" "files"
+  :global-minor-mode t)
 
 (leaf global-completion-preview
   :doc "Toggle Completion-Preview mode in all buffers"
@@ -694,7 +704,10 @@
 
 (leaf mouse-wheel
   :doc "Toggle mouse wheel support (Mouse Wheel mode)"
-  :tag "builtin" "mouse")
+  :tag "builtin" "mouse"
+  :global-minor-mode t
+  :custom ((mouse-wheel-scroll-amount . '(3 ((shift) . 5) ((control) . nil)))
+           (mouse-wheel-progressive-speed . nil)))
 
 (leaf msb
   :doc "Toggle Msb mode"
@@ -786,7 +799,10 @@
 
 (leaf recentf
   :doc "Toggle keeping track of opened files (Recentf mode)"
-  :tag "builtin" "files")
+  :tag "builtin" "files"
+  :global-minor-mode t
+  :custom ((recentf-filename-handlers . '(substring-no-properties))
+            recentf-auto-cleanup . 'never))
 
 (leaf rectangle-mark
   :doc "Toggle the region as rectangular"
@@ -830,7 +846,8 @@
 
 (leaf savehist
   :doc "Toggle saving of minibuffer history (Savehist mode)"
-  :tag "builtin" "minibuffer")
+  :tag "builtin" "minibuffer"
+  :global-minor-mode t)
 
 (leaf scroll-all
   :doc "Toggle shared scrolling in same-frame windows (Scroll-All mode)"
@@ -886,7 +903,8 @@
 
 (leaf show-paren
   :doc "Toggle visualization of matching parens (Show Paren mode)"
-  :tag "builtin" "convenience")
+  :tag "builtin" "convenience"
+  :global-minor-mode t)
 
 (leaf size-indication
   :doc "Toggle buffer size display in the mode line (Size Indication mode)"
@@ -954,7 +972,8 @@
 
 (leaf transient-mark
   :doc "Toggle Transient Mark mode"
-  :tag "builtin" "editing")
+  :tag "builtin" "editing"
+  :global-minor-mode t)
 
 (leaf treesit-explore
   :doc "Enable exploring the current buffer's syntax tree"
@@ -1050,7 +1069,8 @@
 
 (leaf winner
   :doc "Restore old window configurations"
-  :tag "window" "layout" "workspace" "builtin" "navigation")
+  :tag "window" "layout" "workspace" "builtin" "navigation"
+  :global-minor-mode t)
 
 (leaf xref-etags
   :doc "Minor mode to make xref use etags again"
@@ -1058,14 +1078,20 @@
 
 (leaf xterm-mouse
   :doc "Toggle XTerm mouse mode"
-  :tag "builtin" "mouse")
+  :tag "builtin" "mouse"
+  :unless (display-graphic-p)
+  :global-minor-mode t)
 
 ;;
 
 (leaf vertico
   :doc "VERTical Interactive COmpletion"
   :tag "completion" "ui" "backend"
-  :url "https://github.com/minad/vertico")
+  :url "https://github.com/minad/vertico"
+  :elpaca t
+  :global-minor-mode t
+  :custom ((vertico-cycle . t)
+           (vertico-scroll-margin . 4)))
 
 (leaf vertico-buffer
   :doc "Display Vertico like a regular buffer."
@@ -1077,7 +1103,11 @@
   :doc "Commands for Ido-like directory navigation."
   :tag "completion" "files" "navigation"
   :url "https://github.com/minad/vertico/blob/main/extensions/vertico-directory.el"
-  :after vertico)
+  :after vertico
+  :bind ((:vertico-map :package vertico
+         ("RET" . vertico-directory-enter)
+         ("DEL" . vertico-directory-delete-char)
+         ("C-DEL" . vertico-directory-delete-word))))
 
 (leaf vertico-flat
   :doc "Enable a flat, horizontal display."
@@ -1101,7 +1131,8 @@
   :doc "Support mouse for scrolling and candidate selection."
   :tag "completion" "ui" "mouse" "accessibility"
   :url "https://github.com/minad/vertico/blob/main/extensions/vertico-mouse.el"
-  :after vertico)
+  :after vertico
+  :hook (vertico-mode-hook . vertico-mouse-mode))
 
 (leaf vertico-multiform
   :doc "Configure Vertico modes per command or completion category."
@@ -1144,84 +1175,104 @@
 (leaf marginalia
   :doc "Marginalia in the minibuffer"
   :tag "completion" "ui" "annotation"
-  :url "https://github.com/minad/marginalia")
+  :url "https://github.com/minad/marginalia"
+  :elpaca t
+  :global-minor-mode t)
 
 (leaf orderless
   :doc "Emacs completion style that matches multiple regexps in any order."
   :tag "completion" "style" "matching" "regex"
-  :url "https://github.com/oantolin/orderless")
+  :url "https://github.com/oantolin/orderless"
+  :elpaca t
+  :custom ((completion-styles . '(orderless basic))
+           (completion-category-defaults . nil)
+           (completion-category-overrides . '((file (styles partial-completion))))))
 
 (leaf consult
   :doc "consult.el - Consulting completing-read"
   :tag "completion" "ui" "command" "search" "navigation"
-  :url "https://github.com/minad/consult")
+  :url "https://github.com/minad/consult"
+  :elpaca t)
 
 (leaf embark
   :doc "Emacs Mini-Buffer Actions Rooted in Keymaps."
   :tag "minibuffer" "completion" "convenience"
-  :url "https://github.com/oantolin/embark")
+  :url "https://github.com/oantolin/embark"
+  :elpaca t)
 
 (leaf embark-consult
   :doc "Emacs Mini-Buffer Actions Rooted in Keymaps."
   :tag "minibuffer" "completion" "convenience"
-  :url "https://github.com/oantolin/embark")
+  :url "https://github.com/oantolin/embark"
+  :elpaca t)
 
 (leaf cape
   :doc "Completion At Point Extensions."
   :url "https://github.com/minad/cape"
-  :tag "completion", "editing" "extensions")
+  :tag "completion", "editing" "extensions"
+  :elpaca t)
 
 (leaf corfu
   :doc "COmpletion in Region FUnction"
   :tag "text" "completion" "matching" "convenience"
-  :url "https://github.com/minad/corfu")
+  :url "https://github.com/minad/corfu"
+  :elpaca t)
 
 (leaf corfu-mouse
   :doc "Mouse support for Corfu completion"
   :tag "completion" "ui" "mouse" "convenience"
-  :url "https://codeberg.org/materus/emacs-corfu-mouse")
+  :url "https://codeberg.org/materus/emacs-corfu-mouse"
+  :elpaca (corfu-mouse :host codeberg :repo "materus/emacs-corfu-mouse"))
 
 ;;
 
 (leaf magit
   :doc "It's Magit! A Git porcelain inside Emacs."
   :tag "vcs" "git" "tooling" "interface"
-  :url "https://github.com/magit/magit")
+  :url "https://github.com/magit/magit"
+  :elpaca t)
 
 (leaf forge
   :doc "Work with Git forges from the comfort of Magit"
   :tag "vcs" "git" "integration"
-  :url "https://github.com/magit/forge")
+  :url "https://github.com/magit/forge"
+  :elpaca t)
 
 (leaf transient
   :doc "Transient commands"
   :tag "ui" "keybinding" "command" "infrastructure"
-  :url "https://github.com/magit/transient")
+  :url "https://github.com/magit/transient"
+  :elpaca t)
 
 ;;
 
 (leaf xclip
   :doc "Copy&paste GUI clipboard from terminal Emacs"
   :tag "clipboard" "integration" "ux" "external"
-  :url "https://github.com/emacsmirror/xclip")
+  :url "https://github.com/emacsmirror/xclip"
+  :elpaca t
+  :global-minor-mode t)
 
 (leaf kkp
   :doc "Emacs support for the Kitty Keyboard Protocol"
   :tag "internal"
-  :url "https://github.com/benotn/kkp")
+  :url "https://github.com/benotn/kkp"
+  :elpaca t
+  :global-minor-mode global-kkp-mode)
 
 (leaf gcmh
   :doc "The GNU Emacs Garbage Collector Magic Hack"
   :tag "internal"
-  :url "https://gitlab.com/koral/gcmh")
+  :url "https://gitlab.com/koral/gcmh"
+  :elpaca t
+  :global-minor-mode t)
 
 (leaf hide-comnt
   :doc "Hide/show comments in code."
   :tag "comment" "hide" "show"
-  :url "https://www.emacswiki.org/emacs/download/hide-comnt.el")
+  :url "https://www.emacswiki.org/emacs/download/hide-comnt.el"
+  :elpaca (hide-comnt :host github :repo "emacsmirror/hide-comnt"))
 
 ;;
 
 (provide 'init)
-
-;;; init.el ends here
