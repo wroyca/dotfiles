@@ -1246,6 +1246,25 @@
 
 ;;
 
+(leaf spacious-padding
+  :elpaca t
+  :global-minor-mode t)
+
+(leaf ef-themes
+  :elpaca t)
+
+(leaf modus-themes
+  :elpaca t)
+
+(leaf doric-themes
+  :elpaca (doric-themes :host github :repo "protesilaos/doric-themes"))
+
+(leaf remember-last-theme
+  :elpaca t
+  :init (remember-last-theme-enable))
+
+;;
+
 (leaf xclip
   :doc "Copy&paste GUI clipboard from terminal Emacs"
   :tag "clipboard" "integration" "ux" "external"
@@ -1412,6 +1431,12 @@ BINDINGS is a list of (key function description) or (key nested-description &res
   ("o" dotemacs-consult-org-keymap  "Org mode")
   ("H" dotemacs-consult-help-keymap "Help")
   ("M" dotemacs-consult-misc-keymap "Miscellaneous"))
+
+;;
+
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
+(require 'dotemacs-mouse)
 
 ;;
 
