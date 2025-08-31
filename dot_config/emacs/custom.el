@@ -34,23 +34,26 @@
 
 
  ;; ---------------------------
- ;; UI / startup / scratch
+ ;; UI / Frame / startup / scratch
  ;; ---------------------------
-
- ;; Do not show the startup screen.
- ;'(inhibit-startup-screen t)
-
- ;; Start with empty *scratch* message.
- ;'(initial-scratch-message nil)
 
  ;; Treat themes as safe by default (avoid prompts).
  '(custom-safe-themes t)
 
- ;; Silence audible/visual bells.
- '(ring-bell-function 'ignore)
-
  ;; Inhibit frame resizing triggered by font changes.
  '(frame-inhibit-implied-resize t)
+
+ ;; Allow pixel-wise frame resizing (good for HiDPI / tiling).
+ '(frame-resize-pixelwise t)
+
+ ;; Do not show the startup screen.
+ '(inhibit-startup-screen t)
+
+ ;; Start with empty *scratch* message.
+ '(initial-scratch-message nil)
+
+ ;; Silence audible/visual bells.
+ '(ring-bell-function 'ignore)
 
  ;; Do not show dialog
  '(use-dialog-box nil)
@@ -78,11 +81,11 @@
  ;; Prefer spaces over tabs.
  '(indent-tabs-mode nil)
 
- ;; Logical default when a literal tab appears.
- '(tab-width 2)
-
  ;; Modern sentence handling: single space after period.
  '(sentence-end-double-space nil)
+
+ ;; Logical default when a literal tab appears.
+ '(tab-width 2)
 
 
  ;; ---------------------------
@@ -105,27 +108,11 @@
 
 
  ;; ---------------------------
- ;; Frames / display
- ;; ---------------------------
-
- ;; Allow pixel-wise frame resizing (good for HiDPI / tiling).
- '(frame-resize-pixelwise t)
-
-
- ;; ---------------------------
- ;; VC / general
- ;; ---------------------------
-
- ;; Make `M-x` predicate and VC behaviors predictable.
- ;; (vc-follow-symlinks already set above in file handling)
-
-
- ;; ---------------------------
  ;; Defaults
  ;; ---------------------------
 
- ;;
- '(custom-enabled-themes '(ef-night))
+ ;; Remember the last used theme between Emacs' sessions.
+ '(custom-enabled-themes '(modus-vivendi))
 
  ;; Set the default starting directory for new buffers and file prompts.
  ;; This expression is evaluated when this file is loaded so "~" expands.
@@ -140,9 +127,11 @@
 ;; --------------------------------------------------------------------------
 ;; Projects
 ;; --------------------------------------------------------------------------
-;; Update projects list from
+;; Refresh known projects list so it stays in sync with the file system.
 (require 'project)
-(let ((search-dirs (list "~/Projects/")))
+(let ((project-search-dirs '("~/Projects/")))
+  ;; Remove invalid or non-existent projects from the list.
   (project-forget-zombie-projects)
-  (mapc (lambda (dir) (project-remember-projects-under dir t))
-  search-dirs))
+  ;; Remember all projects under the configured search directories.
+  (dolist (dir project-search-dirs)
+    (project-remember-projects-under dir t)))

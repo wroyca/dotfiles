@@ -1279,6 +1279,7 @@
   :tag "internal"
   :url "https://github.com/benotn/kkp"
   :elpaca t
+  :unless (display-graphic-p)
   :global-minor-mode global-kkp-mode)
 
 (leaf gcmh
