@@ -7,6 +7,7 @@
 ;;; Code:
 
 (set-frame-parameter nil 'undecorated t)
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (defvar elpaca-installer-version 0.11)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
