@@ -1233,13 +1233,23 @@
   :doc "It's Magit! A Git porcelain inside Emacs."
   :tag "vcs" "git" "tooling" "interface"
   :url "https://github.com/magit/magit"
-  :elpaca t)
+  :elpaca t
+  :preface (defun magit-display-buffer-same-window (buffer)
+             "Display BUFFER in the selected window."
+             (display-buffer
+              buffer '(display-buffer-same-window)))
+  :custom (magit-bury-buffer-function . #'magit-restore-window-configuration)
+          (magit-display-buffer-function . 'magit-display-buffer-same-window)
+          (magit-popup-display-buffer-action . '((display-buffer-same-window)))
+          (magit-wip-mode . t))
 
 (leaf forge
   :doc "Work with Git forges from the comfort of Magit"
   :tag "vcs" "git" "integration"
   :url "https://github.com/magit/forge"
-  :elpaca t)
+  :elpaca t
+  :custom ((github.user . "wroyca")
+           (auth-sources . '("~/.config/forge/.github-authinfo"))))
 
 (leaf transient
   :doc "Transient commands"
