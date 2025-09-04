@@ -1450,7 +1450,7 @@ BINDINGS is a list of (key function description) or (key nested-description &res
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
-(require 'dotemacs-mouse)
+(require 'dotemacs-persistent-regions)
 
 ;;
 
