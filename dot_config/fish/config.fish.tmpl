@@ -5,6 +5,11 @@ end
 #
 set -gx STARSHIP_CONFIG $HOME/.config/starship/starship.toml
 
+# Silence wine and dxvk output.
+#
+set -gx WINEDEBUG -all
+set -gx DXVK_LOG_LEVEL none
+
 # User specific aliases.
 #
 source ~/.config/fish/alias.fish
