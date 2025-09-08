@@ -171,6 +171,8 @@
   ; Default reference format for new repositories. For more informations, refer
   ; to [extension].
   ;
+  ; FIXME: Microsoft.Build.Tasks.Git.targets(25,5): error :
+  ;   Error reading git repository information: Unsupported repository extension 'refstorage'
   defaultRefFormat = reftable
 
   ; Default object format for new repositories. For more informations, refer
@@ -283,7 +285,8 @@
   ; Recursive submodule commands walk the dependency graph depth-first, so
   ; nested submodules stay in sync with the top-level project.
   ;
-  recurse = true
+  ; FIXME: This conflict with build2 cache mechanism.
+  ; recurse = true
 
   ; Parallel fetch spawns several workers, each with its own connection pool and
   ; transfer state, to speed up submodule downloads.
