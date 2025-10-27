@@ -1,0 +1,9 @@
+[org/gnome/settings-daemon/plugins/housekeeping]
+
+# GNOME occasionally feels compelled to remind users that free software
+# doesn't fund itself. The sentiment is fair; the implementation, less so.
+#
+# https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/issues/896
+# https://gitlab.gnome.org/GNOME/gnome-settings-daemon/-/merge_requests/432
+#
+donation-reminder-enabled=false
