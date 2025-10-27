@@ -44,6 +44,18 @@ user_pref("browser.newtabpage.activity-stream.showSponsored", false);
 user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);
 user_pref("extensions.pocket.enabled", false);
 
+// Keep the browser a browser.
+//
+// Recent Firefox builds have grown a full "ml/ai" stack: chat prompts, sidebar
+// panels, summary previews, assorted neural curiosities, ...
+//
+// None of this belongs on the critical path from request to response. Here we
+// disables the browser.ml.* machinery in one stroke. If later releases scatter
+// the knobs behind new flags, start from the root again; complexity has a way
+// of regrowing when left unattended.
+//
+user_pref("browser.ml.enable", false);
+
 {{- if eq .chezmoi.os "linux" -}}
 
 // Firefox has never quite looked right under GNOME. The default theme is close
