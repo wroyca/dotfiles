@@ -10,6 +10,18 @@ set -gx STARSHIP_CONFIG $HOME/.config/starship/starship.toml
 set -gx WINEDEBUG -all
 set -gx DXVK_LOG_LEVEL none
 
+# Toggle wine debug output between silent and verbose.
+#
+function toggle_wine_debug
+  if test "$WINEDEBUG" = "-all"
+    set -gx WINEDEBUG ""
+    echo "Wine debug: enabled"
+  else
+    set -gx WINEDEBUG -all
+    echo "Wine debug: disabled"
+  end
+end
+
 # User specific aliases.
 #
 source ~/.config/fish/alias.fish
