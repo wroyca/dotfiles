@@ -91,9 +91,7 @@
   ; Reftable gives O(log n) lookups, atomic updates, lock-free reads, and prefix
   ; compression.
   ;
-  ; FIXME: Microsoft.Build.Tasks.Git.targets(25,5): error :
-  ;   Error reading git repository information: Unsupported repository extension 'refstorage'
-  ; refStorage = "reftable"
+  refStorage = "reftable"
 
   ; SHA-256 object format replaces SHA-1 as the cryptographic hash function for
   ; Git objects (commits, trees, blobs, tags). SHA-256 provides 256-bit digests
@@ -171,8 +169,6 @@
   ; Default reference format for new repositories. For more informations, refer
   ; to [extension].
   ;
-  ; FIXME: Microsoft.Build.Tasks.Git.targets(25,5): error :
-  ;   Error reading git repository information: Unsupported repository extension 'refstorage'
   defaultRefFormat = reftable
 
   ; Default object format for new repositories. For more informations, refer
@@ -285,8 +281,7 @@
   ; Recursive submodule commands walk the dependency graph depth-first, so
   ; nested submodules stay in sync with the top-level project.
   ;
-  ; FIXME: This conflict with build2 cache mechanism.
-  ; recurse = true
+  recurse = true
 
   ; Parallel fetch spawns several workers, each with its own connection pool and
   ; transfer state, to speed up submodule downloads.
