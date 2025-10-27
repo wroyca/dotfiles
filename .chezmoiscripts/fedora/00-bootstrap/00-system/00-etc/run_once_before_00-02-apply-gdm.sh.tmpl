@@ -4,8 +4,9 @@
 set -x # Print commands and their arguments as they are executed.
 set -e # Exit immediately if a command exits with a non-zero status.
 
-# https://wiki.archlinux.org/title/GDM#Setup_default_monitor_settings
+# GDM 49+ uses dynamic users (via userdb) and no longer uses static user home
+# dir
 #
-sudo cp {{ .chezmoi.sourceDir }}/dot_config/monitors.xml ~gdm/.config/monitors.xml
-sudo chown gdm:gdm ~gdm/.config/monitors.xml
+sudo mkdir -p /etc/xdg
+sudo cp {{ .chezmoi.sourceDir }}/dot_config/monitors.xml /etc/xdg/monitors.xml
 {{- end }}
