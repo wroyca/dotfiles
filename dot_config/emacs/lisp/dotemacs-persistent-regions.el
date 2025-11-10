@@ -125,10 +125,18 @@ Used to prevent recursive undo handling.")
 
 (defvar dotemacs-persistent-regions--typing-commands
   '(self-insert-command
-    org-self-insert-command)
+    org-self-insert-command
+    c-electric-semi&comma
+    c-electric-colon
+    c-electric-lt-gt
+    c-electric-paren
+    c-electric-brace
+    c-electric-slash
+    c-electric-star)
   "List of commands that should trigger type-to-replace behavior.
 These commands typically insert text and should replace any existing
-persistent selection with the inserted content.")
+persistent selection with the inserted content. Includes electric
+commands from various major modes like C-mode.")
 
 (defvar dotemacs-persistent-regions--selection-commands
   '(dotemacs-persistent-regions-select-forward-word
@@ -801,6 +809,11 @@ All bindings are set up as buffer-local to avoid conflicts with global key bindi
   "Pre-command hook to handle persistent selection deletion before self-insert.
 This runs in pre-command-hook to ensure we delete our persistent selection
 BEFORE delete-selection-mode or any other mechanism can interfere."
+  ;; Debug log for typing commands to help identify missing commands
+  (when (dotemacs-persistent-regions--has-selection-p)
+    (dotemacs-persistent-regions--debug-log "PRE-COMMAND: this-command=%s is-typing=%s"
+                                   this-command
+                                   (memq this-command dotemacs-persistent-regions--typing-commands)))
   (when (and (dotemacs-persistent-regions--has-selection-p)
              (memq this-command dotemacs-persistent-regions--typing-commands))
     (let* ((begin dotemacs-persistent-regions--selection-begin)
