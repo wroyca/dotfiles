@@ -73,6 +73,14 @@ persistent selections."
   :group 'dotemacs-persistent-regions-integration
   :safe 'booleanp)
 
+(defcustom dotemacs-persistent-regions-enable-cua-integration t
+  "When non-nil, keep region active for CUA mode compatibility.
+This allows CUA keybindings like C-c (copy) and C-x (cut) to work
+with persistent selections."
+  :type 'boolean
+  :group 'dotemacs-persistent-regions-integration
+  :safe 'booleanp)
+
 (defcustom dotemacs-persistent-regions-debug-mode nil
   "When non-nil, debug messages are sent to the *Messages*
 buffer with a `PR-DEBUG:' prefix."
@@ -250,6 +258,10 @@ automatically normalized."
         (dotemacs-persistent-regions--create-overlay
          dotemacs-persistent-regions--selection-begin
          dotemacs-persistent-regions--selection-end)
+        ;; Keep region active for CUA mode compatibility
+        (when dotemacs-persistent-regions-enable-cua-integration
+          (goto-char dotemacs-persistent-regions--selection-end)
+          (push-mark dotemacs-persistent-regions--selection-begin t t))
         (dotemacs-persistent-regions--debug-log "Set selection from %d to %d"
                                        dotemacs-persistent-regions--selection-begin
                                        dotemacs-persistent-regions--selection-end)
@@ -275,6 +287,9 @@ selection exists."
   (dotemacs-persistent-regions--clear-overlays)
   (setq dotemacs-persistent-regions--selection-begin nil
         dotemacs-persistent-regions--selection-end nil)
+  ;; Deactivate mark when clearing selection
+  (when dotemacs-persistent-regions-enable-cua-integration
+    (deactivate-mark))
   (dotemacs-persistent-regions--debug-log "Selection cleared"))
 
 (defun dotemacs-persistent-regions--has-selection-p ()
@@ -301,7 +316,6 @@ be a function that moves point, such as `forward-word' or `forward-paragraph'."
         (let ((begin (region-beginning))
               (end (region-end)))
           (dotemacs-persistent-regions--set-selection begin end)
-          (deactivate-mark t)
           (goto-char end)
           (funcall move-function)
           (dotemacs-persistent-regions--update-selection-end (point))))
@@ -375,6 +389,33 @@ ARGS are the arguments passed to the original command."
         (apply orig-fun args)
         (run-hook-with-args 'dotemacs-persistent-regions-selection-replaced-hook
                             begin end))
+    (apply orig-fun args)))
+
+(defun dotemacs-persistent-regions--cua-copy-advice (orig-fun &rest args)
+  "Advice for CUA copy to work with persistent selections.
+ORIG-FUN is the original cua-copy-region function.
+ARGS are the arguments passed to the original command."
+  (if (dotemacs-persistent-regions--has-selection-p)
+      (progn
+        (copy-region-as-kill dotemacs-persistent-regions--selection-begin
+                             dotemacs-persistent-regions--selection-end)
+        (message "Copied persistent selection")
+        ;; Keep the persistent selection active after copying
+        (when dotemacs-persistent-regions-enable-cua-integration
+          (goto-char dotemacs-persistent-regions--selection-end)
+          (set-mark dotemacs-persistent-regions--selection-begin)))
+    (apply orig-fun args)))
+
+(defun dotemacs-persistent-regions--cua-cut-advice (orig-fun &rest args)
+  "Advice for CUA cut to work with persistent selections.
+ORIG-FUN is the original cua-cut-region function.
+ARGS are the arguments passed to the original command."
+  (if (dotemacs-persistent-regions--has-selection-p)
+      (progn
+        (kill-region dotemacs-persistent-regions--selection-begin
+                     dotemacs-persistent-regions--selection-end)
+        (message "Cut persistent selection")
+        (dotemacs-persistent-regions--clear-selection))
     (apply orig-fun args)))
 
 ;;;###autoload
@@ -513,8 +554,8 @@ while moving the cursor."
   "Copy the dotemacs-persistent selection to the kill ring.
 If a dotemacs-persistent selection exists, copy its contents to the kill ring
 and provide user feedback.  If no dotemacs-persistent selection exists but a
-standard Emacs region is active, copy that instead.  After copying,
-the dotemacs-persistent selection is cleared."
+standard Emacs region is active, copy that instead.  The persistent selection
+remains active after copying."
   (interactive)
   (cond
    ((dotemacs-persistent-regions--has-selection-p)
@@ -524,7 +565,10 @@ the dotemacs-persistent selection is cleared."
              (dotemacs-persistent-regions--format-preview
               dotemacs-persistent-regions--selection-begin
               dotemacs-persistent-regions--selection-end))
-    (dotemacs-persistent-regions--clear-selection))
+    ;; Keep the selection active after copying
+    (when dotemacs-persistent-regions-enable-cua-integration
+      (goto-char dotemacs-persistent-regions--selection-end)
+      (set-mark dotemacs-persistent-regions--selection-begin)))
    ((region-active-p)
     (copy-region-as-kill (region-beginning) (region-end))
     (message "Copied region")
@@ -587,7 +631,8 @@ appropriate."
       (dotemacs-persistent-regions--debug-log "Converting region (%d to %d) to dotemacs-persistent selection" begin end)
       (when (< begin end)  ; Only convert non-empty regions
         (dotemacs-persistent-regions--set-selection begin end)
-        (deactivate-mark t)
+        (unless dotemacs-persistent-regions-enable-cua-integration
+          (deactivate-mark t))
         (dotemacs-persistent-regions--debug-log "Successfully converted region to dotemacs-persistent selection")))))
 
 (defun dotemacs-persistent-regions--clear-on-mouse-start ()
@@ -610,7 +655,8 @@ be converted to a dotemacs-persistent selection."
       (dotemacs-persistent-regions--debug-log "Post-command: Converting region (%d to %d) from command %s" begin end this-command)
       (when (< begin end)  ; Only convert non-empty regions
         (dotemacs-persistent-regions--set-selection begin end)
-        (deactivate-mark t)
+        (unless dotemacs-persistent-regions-enable-cua-integration
+          (deactivate-mark t))
         (dotemacs-persistent-regions--debug-log "Post-command: Successfully converted region to dotemacs-persistent selection")))))
 
 (defun dotemacs-persistent-regions--handle-mouse-drag (event)
@@ -749,13 +795,36 @@ All bindings are set up as buffer-local to avoid conflicts with global key bindi
   "Set up function advice for type-to-replace behavior."
   (dolist (cmd dotemacs-persistent-regions--typing-commands)
     (when (fboundp cmd)
-      (advice-add cmd :around #'dotemacs-persistent-regions--replace-selection-advice))))
+      (advice-add cmd :around #'dotemacs-persistent-regions--replace-selection-advice)))
+  ;; Add CUA integration advice
+  (when dotemacs-persistent-regions-enable-cua-integration
+    (when (fboundp 'cua-copy-region)
+      (advice-add 'cua-copy-region :around #'dotemacs-persistent-regions--cua-copy-advice))
+    (when (fboundp 'cua-cut-region)
+      (advice-add 'cua-cut-region :around #'dotemacs-persistent-regions--cua-cut-advice))
+    (when (fboundp 'cua--prefix-override-handler)
+      (advice-add 'cua--prefix-override-handler :before
+                  (lambda (&rest _)
+                    (when (dotemacs-persistent-regions--has-selection-p)
+                      (goto-char dotemacs-persistent-regions--selection-end)
+                      (set-mark dotemacs-persistent-regions--selection-begin)))))))
 
 (defun dotemacs-persistent-regions--remove-advice ()
   "Remove function advice when disabling dotemacs-persistent-regions."
   (dolist (cmd dotemacs-persistent-regions--typing-commands)
     (when (fboundp cmd)
-      (advice-remove cmd #'dotemacs-persistent-regions--replace-selection-advice))))
+      (advice-remove cmd #'dotemacs-persistent-regions--replace-selection-advice)))
+  ;; Remove CUA integration advice
+  (when (fboundp 'cua-copy-region)
+    (advice-remove 'cua-copy-region #'dotemacs-persistent-regions--cua-copy-advice))
+  (when (fboundp 'cua-cut-region)
+    (advice-remove 'cua-cut-region #'dotemacs-persistent-regions--cua-cut-advice))
+  (when (fboundp 'cua--prefix-override-handler)
+    (advice-remove 'cua--prefix-override-handler
+                   (lambda (&rest _)
+                     (when (dotemacs-persistent-regions--has-selection-p)
+                       (goto-char dotemacs-persistent-regions--selection-end)
+                       (set-mark dotemacs-persistent-regions--selection-begin))))))
 
 (defun dotemacs-persistent-regions--setup-global-mouse-bindings ()
   "Set up global mouse bindings when the first buffer enables the mode.
