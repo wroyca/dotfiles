@@ -113,9 +113,15 @@ helping distinguish between intentional selection operations and
 incidental cursor movement.")
 
 (defvar-local dotemacs-persistent-regions--last-modified-region nil
-  "Stores the last modified persistent region as (BEGIN . END) for undo support.
+  "Stores the last modified persistent region as (BEGIN END DELETED-LENGTH DELETED-TEXT) for undo support.
 When a persistent selection is modified (cut, replaced, etc.), this variable
-stores its bounds so it can be recreated after an undo operation.")
+stores its bounds, the length and actual text of deleted content so it can be
+recreated after an undo operation. We check if the deleted text has been
+restored before recreating the selection.")
+
+(defvar-local dotemacs-persistent-regions--undo-in-progress nil
+  "Non-nil when we're in the middle of processing an undo operation.
+Used to prevent recursive undo handling.")
 
 (defvar dotemacs-persistent-regions--typing-commands
   '(self-insert-command
@@ -391,10 +397,12 @@ ARGS are the arguments passed to the original command."
 ORIG-FUN is the original cua-cut-region function.
 ARGS are the arguments passed to the original command."
   (if (dotemacs-persistent-regions--has-selection-p)
-      (let ((begin dotemacs-persistent-regions--selection-begin)
-            (end dotemacs-persistent-regions--selection-end))
+      (let* ((begin dotemacs-persistent-regions--selection-begin)
+             (end dotemacs-persistent-regions--selection-end)
+             (deleted-length (- end begin))
+             (deleted-text (buffer-substring-no-properties begin end)))
         ;; Store the cut region for potential undo recreation
-        (setq dotemacs-persistent-regions--last-modified-region (cons begin end))
+        (setq dotemacs-persistent-regions--last-modified-region (list begin end deleted-length deleted-text))
         (kill-region begin end)
         (message "Cut persistent selection")
         (dotemacs-persistent-regions--clear-selection))
@@ -566,10 +574,12 @@ from the buffer in addition to copying it to the kill ring."
   (interactive)
   (cond
    ((dotemacs-persistent-regions--has-selection-p)
-    (let ((begin dotemacs-persistent-regions--selection-begin)
-          (end dotemacs-persistent-regions--selection-end))
+    (let* ((begin dotemacs-persistent-regions--selection-begin)
+           (end dotemacs-persistent-regions--selection-end)
+           (deleted-length (- end begin))
+           (deleted-text (buffer-substring-no-properties begin end)))
       ;; Store the cut region for potential undo recreation
-      (setq dotemacs-persistent-regions--last-modified-region (cons begin end))
+      (setq dotemacs-persistent-regions--last-modified-region (list begin end deleted-length deleted-text))
       (kill-region begin end)
       (message "Killed dotemacs-persistent selection")
       (dotemacs-persistent-regions--clear-selection)))
@@ -627,14 +637,26 @@ drag operations have completed and left an active region that should
 be converted to a dotemacs-persistent selection."
   ;; Check for undo after any modification to recreate the persistent selection
   (when (and dotemacs-persistent-regions--last-modified-region
-             (memq this-command '(undo undo-only undo-redo)))
-    (let ((begin (car dotemacs-persistent-regions--last-modified-region))
-          (end (cdr dotemacs-persistent-regions--last-modified-region)))
-      ;; Check if the text was restored at the expected position
-      (when (and (>= begin (point-min))
-                 (<= end (point-max)))
-        (dotemacs-persistent-regions--set-selection begin end)
-        (setq dotemacs-persistent-regions--last-modified-region nil))))
+             (memq this-command '(undo undo-only undo-redo))
+             (not dotemacs-persistent-regions--undo-in-progress))
+    (setq dotemacs-persistent-regions--undo-in-progress t)
+    (let* ((region-info dotemacs-persistent-regions--last-modified-region)
+           (original-begin (nth 0 region-info))
+           (original-end (nth 1 region-info))
+           (deleted-length (nth 2 region-info))
+           (deleted-text (nth 3 region-info)))
+      ;; Check if the deleted text has been restored at the original position
+      (when (and (>= original-begin (point-min))
+                 (<= (+ original-begin deleted-length) (point-max)))
+        (let* ((check-end (min (point-max) (+ original-begin deleted-length)))
+               (actual-text (buffer-substring-no-properties original-begin check-end))
+               (text-matches (string= actual-text deleted-text)))
+          ;; Only recreate selection if the deleted text has been restored
+          (when text-matches
+            (dotemacs-persistent-regions--set-selection original-begin (+ original-begin deleted-length))
+            ;; Clear the stored region so we don't re-create on subsequent undos
+            (setq dotemacs-persistent-regions--last-modified-region nil))))
+      (setq dotemacs-persistent-regions--undo-in-progress nil)))
   ;; Original mouse drag check
   (when (and (region-active-p)
              dotemacs-persistent-regions-enable-mouse-support
@@ -781,9 +803,13 @@ This runs in pre-command-hook to ensure we delete our persistent selection
 BEFORE delete-selection-mode or any other mechanism can interfere."
   (when (and (dotemacs-persistent-regions--has-selection-p)
              (memq this-command dotemacs-persistent-regions--typing-commands))
-    (let ((begin dotemacs-persistent-regions--selection-begin)
-          (end dotemacs-persistent-regions--selection-end))
-      (setq dotemacs-persistent-regions--last-modified-region (cons begin end))
+    (let* ((begin dotemacs-persistent-regions--selection-begin)
+           (end dotemacs-persistent-regions--selection-end)
+           (deleted-length (- end begin))
+           (deleted-text (buffer-substring-no-properties begin end)))
+      ;; Store for undo: (begin end deleted-length deleted-text)
+      (setq dotemacs-persistent-regions--last-modified-region
+            (list begin end deleted-length deleted-text))
       (deactivate-mark)
       (delete-region begin end)
       (dotemacs-persistent-regions--clear-selection)
