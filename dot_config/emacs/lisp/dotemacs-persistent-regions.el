@@ -88,6 +88,34 @@ buffer with a `PR-DEBUG:' prefix."
   :group 'dotemacs-persistent-regions-integration
   :safe 'booleanp)
 
+(defvar dotemacs-persistent-regions--override-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c") #'dotemacs-persistent-regions-copy)
+    (define-key map (kbd "C-x") #'dotemacs-persistent-regions-kill)
+    map)
+  "Keymap for persistent region copy/cut commands.
+Active only when a persistent selection exists.")
+
+(defvar dotemacs-persistent-regions--override-map-active nil
+  "Whether the override keymap is currently active.")
+
+(defun dotemacs-persistent-regions--keep-override-map ()
+  "Predicate function to keep override map active.
+Returns non-nil if the override map should remain active."
+  (and (dotemacs-persistent-regions--has-selection-p)
+       (bound-and-true-p cua-mode)))
+
+(defun dotemacs-persistent-regions--update-override-map ()
+  "Update the override keymap based on selection state.
+Only activates C-c/C-x bindings if CUA mode is enabled, to respect user preferences."
+  (let ((should-be-active (and (dotemacs-persistent-regions--has-selection-p)
+                               (bound-and-true-p cua-mode))))
+    (unless (eq dotemacs-persistent-regions--override-map-active should-be-active)
+      (setq dotemacs-persistent-regions--override-map-active should-be-active)
+      (when should-be-active
+        (set-transient-map dotemacs-persistent-regions--override-map
+                           #'dotemacs-persistent-regions--keep-override-map)))))
+
 (defvar-local dotemacs-persistent-regions--selection-begin nil
   "Beginning position of the current dotemacs-persistent selection.
 This variable holds the buffer position as an integer marking the
@@ -385,36 +413,10 @@ and command context."
 
 
 
-(defun dotemacs-persistent-regions--cua-copy-advice (orig-fun &rest args)
-  "Advice for CUA copy to work with persistent selections.
-ORIG-FUN is the original cua-copy-region function.
-ARGS are the arguments passed to the original command."
-  (if (dotemacs-persistent-regions--has-selection-p)
-      (progn
-        (copy-region-as-kill dotemacs-persistent-regions--selection-begin
-                             dotemacs-persistent-regions--selection-end)
-        (message "Copied persistent selection")
-        ;; Keep the persistent selection active after copying
-        (when dotemacs-persistent-regions-enable-cua-integration
-          (goto-char dotemacs-persistent-regions--selection-end)
-          (set-mark dotemacs-persistent-regions--selection-begin)))
-    (apply orig-fun args)))
-
-(defun dotemacs-persistent-regions--cua-cut-advice (orig-fun &rest args)
-  "Advice for CUA cut to work with persistent selections.
-ORIG-FUN is the original cua-cut-region function.
-ARGS are the arguments passed to the original command."
-  (if (dotemacs-persistent-regions--has-selection-p)
-      (let* ((begin dotemacs-persistent-regions--selection-begin)
-             (end dotemacs-persistent-regions--selection-end)
-             (deleted-length (- end begin))
-             (deleted-text (buffer-substring-no-properties begin end)))
-        ;; Store the cut region for potential undo recreation
-        (setq dotemacs-persistent-regions--last-modified-region (list begin end deleted-length deleted-text))
-        (kill-region begin end)
-        (message "Cut persistent selection")
-        (dotemacs-persistent-regions--clear-selection))
-    (apply orig-fun args)))
+;; CUA advice functions - no longer used, kept for reference
+;; We now directly bind C-c/C-x using set-transient-map instead
+;; (defun dotemacs-persistent-regions--cua-copy-advice (orig-fun &rest args) ...)
+;; (defun dotemacs-persistent-regions--cua-cut-advice (orig-fun &rest args) ...)
 
 ;;;###autoload
 (defun dotemacs-persistent-regions-select-forward-word ()
@@ -586,6 +588,11 @@ from the buffer in addition to copying it to the kill ring."
            (end dotemacs-persistent-regions--selection-end)
            (deleted-length (- end begin))
            (deleted-text (buffer-substring-no-properties begin end)))
+      ;; Jump to selection if it's out of view
+      (unless (and (pos-visible-in-window-p begin)
+                   (pos-visible-in-window-p end))
+        (goto-char begin)
+        (recenter))
       ;; Store the cut region for potential undo recreation
       (setq dotemacs-persistent-regions--last-modified-region (list begin end deleted-length deleted-text))
       (kill-region begin end)
@@ -774,14 +781,7 @@ All bindings are set up as buffer-local to avoid conflicts with global key bindi
   (local-set-key (kbd "C-<right>") (lambda () (interactive) (dotemacs-persistent-regions--move-point #'forward-word)))
   (local-set-key (kbd "C-<left>") (lambda () (interactive) (dotemacs-persistent-regions--move-point #'backward-word)))
   (local-set-key (kbd "C-<down>") (lambda () (interactive) (dotemacs-persistent-regions--move-point #'forward-paragraph)))
-  (local-set-key (kbd "C-<up>") (lambda () (interactive) (dotemacs-persistent-regions--move-point #'backward-paragraph)))
-  (local-set-key (kbd "C-c r c") #'dotemacs-persistent-regions-copy)
-  (local-set-key (kbd "C-c r k") #'dotemacs-persistent-regions-kill)
-  (local-set-key (kbd "C-c r x") #'dotemacs-persistent-regions-clear)
-  (local-set-key (kbd "C-c r a") #'dotemacs-persistent-regions-mark-whole-buffer)
-  (local-set-key (kbd "C-c r l") #'dotemacs-persistent-regions-select-line)
-  (local-set-key (kbd "C-c r s") #'dotemacs-persistent-regions-select-sexp)
-  (local-set-key (kbd "C-c r w") #'dotemacs-persistent-regions-select-symbol))
+  (local-set-key (kbd "C-<up>") (lambda () (interactive) (dotemacs-persistent-regions--move-point #'backward-paragraph))))
 
 (defun dotemacs-persistent-regions--restore-keybindings ()
   "Restore original key bindings when disabling dotemacs-persistent regions mode."
@@ -796,14 +796,7 @@ All bindings are set up as buffer-local to avoid conflicts with global key bindi
   (local-unset-key (kbd "C-<right>"))
   (local-unset-key (kbd "C-<left>"))
   (local-unset-key (kbd "C-<down>"))
-  (local-unset-key (kbd "C-<up>"))
-  (local-unset-key (kbd "C-c r c"))
-  (local-unset-key (kbd "C-c r k"))
-  (local-unset-key (kbd "C-c r x"))
-  (local-unset-key (kbd "C-c r a"))
-  (local-unset-key (kbd "C-c r l"))
-  (local-unset-key (kbd "C-c r s"))
-  (local-unset-key (kbd "C-c r w")))
+  (local-unset-key (kbd "C-<up>")))
 
 (defun dotemacs-persistent-regions--before-self-insert (&rest _args)
   "Pre-command hook to handle persistent selection deletion before self-insert.
@@ -834,34 +827,17 @@ BEFORE delete-selection-mode or any other mechanism can interfere."
   "Set up function advice for type-to-replace behavior."
   ;; Use pre-command-hook instead of advice to run before delete-selection-mode
   (add-hook 'pre-command-hook #'dotemacs-persistent-regions--before-self-insert nil t)
-  ;; Add CUA integration advice
-  (when dotemacs-persistent-regions-enable-cua-integration
-    (when (fboundp 'cua-copy-region)
-      (advice-add 'cua-copy-region :around #'dotemacs-persistent-regions--cua-copy-advice))
-    (when (fboundp 'cua-cut-region)
-      (advice-add 'cua-cut-region :around #'dotemacs-persistent-regions--cua-cut-advice))
-    (when (fboundp 'cua--prefix-override-handler)
-      (advice-add 'cua--prefix-override-handler :before
-                  (lambda (&rest _)
-                    (when (dotemacs-persistent-regions--has-selection-p)
-                      (goto-char dotemacs-persistent-regions--selection-end)
-                      (set-mark dotemacs-persistent-regions--selection-begin)))))))
+  ;; Add hook to update override map for C-c/C-x bindings
+  (add-hook 'post-command-hook #'dotemacs-persistent-regions--update-override-map nil t))
 
 (defun dotemacs-persistent-regions--remove-advice ()
   "Remove function advice when disabling dotemacs-persistent-regions."
   ;; Remove pre-command hook
   (remove-hook 'pre-command-hook #'dotemacs-persistent-regions--before-self-insert t)
-  ;; Remove CUA integration advice
-  (when (fboundp 'cua-copy-region)
-    (advice-remove 'cua-copy-region #'dotemacs-persistent-regions--cua-copy-advice))
-  (when (fboundp 'cua-cut-region)
-    (advice-remove 'cua-cut-region #'dotemacs-persistent-regions--cua-cut-advice))
-  (when (fboundp 'cua--prefix-override-handler)
-    (advice-remove 'cua--prefix-override-handler
-                   (lambda (&rest _)
-                     (when (dotemacs-persistent-regions--has-selection-p)
-                       (goto-char dotemacs-persistent-regions--selection-end)
-                       (set-mark dotemacs-persistent-regions--selection-begin))))))
+  ;; Remove override map hook
+  (remove-hook 'post-command-hook #'dotemacs-persistent-regions--update-override-map t)
+  ;; Reset override map state
+  (setq dotemacs-persistent-regions--override-map-active nil))
 
 (defun dotemacs-persistent-regions--setup-global-mouse-bindings ()
   "Set up global mouse bindings when the first buffer enables the mode.
