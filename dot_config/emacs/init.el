@@ -316,7 +316,8 @@
 (leaf editorconfig
   :doc "Toggle EditorConfig feature"
   :tag "external" "editorconfig"
-  :global-minor-mode t)
+  :global-minor-mode t
+  :custom ((editorconfig-get-properties-function . #'editorconfig-get-properties)))
 
 (leaf eldoc
   :doc "Toggle echo area display of Lisp objects at point (ElDoc mode)"
