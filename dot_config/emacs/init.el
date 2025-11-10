@@ -7,6 +7,7 @@
 ;;; Code:
 
 (set-frame-parameter nil 'undecorated t)
+
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (defvar elpaca-installer-version 0.11)
@@ -58,6 +59,27 @@
 ;;
 
 (elpaca-wait)
+
+;;
+
+(leaf spacious-padding
+  :elpaca t
+  :global-minor-mode t)
+
+;;
+
+(leaf ef-themes
+  :elpaca t)
+
+(leaf modus-themes
+  :elpaca t)
+
+(leaf doric-themes
+  :elpaca (doric-themes :host github :repo "protesilaos/doric-themes"))
+
+(leaf remember-last-theme
+  :elpaca t
+  :init (remember-last-theme-enable))
 
 ;;
 
@@ -1256,25 +1278,6 @@
   :tag "ui" "keybinding" "command" "infrastructure"
   :url "https://github.com/magit/transient"
   :elpaca t)
-
-;;
-
-(leaf spacious-padding
-  :elpaca t
-  :global-minor-mode t)
-
-(leaf ef-themes
-  :elpaca t)
-
-(leaf modus-themes
-  :elpaca t)
-
-(leaf doric-themes
-  :elpaca (doric-themes :host github :repo "protesilaos/doric-themes"))
-
-(leaf remember-last-theme
-  :elpaca t
-  :init (remember-last-theme-enable))
 
 ;;
 
