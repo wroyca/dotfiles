@@ -123,15 +123,3 @@
 ;; --------------------------------------------------------------------------
 ;; Make the minibuffer prompt cursor-intangible so the point cannot enter it.
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
-
-;; --------------------------------------------------------------------------
-;; Projects
-;; --------------------------------------------------------------------------
-;; Refresh known projects list so it stays in sync with the file system.
-(require 'project)
-(let ((project-search-dirs '("~/Projects/")))
-  ;; Remove invalid or non-existent projects from the list.
-  (project-forget-zombie-projects)
-  ;; Remember all projects under the configured search directories.
-  (dolist (dir project-search-dirs)
-    (project-remember-projects-under dir t)))
