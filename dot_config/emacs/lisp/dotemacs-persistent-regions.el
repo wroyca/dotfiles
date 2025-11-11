@@ -140,6 +140,16 @@ This variable is used to implement intelligent selection behavior,
 helping distinguish between intentional selection operations and
 incidental cursor movement.")
 
+(defvar-local dotemacs-persistent-regions--selection-anchor nil
+  "The anchor point of the selection (the point that doesn't move during extension).
+This is set to the opposite end from where we're extending, so scrolling
+doesn't affect which direction we continue extending.")
+
+(defvar-local dotemacs-persistent-regions--extension-direction nil
+  "The current direction of selection extension: 'up, 'down, or nil.
+Used to track if we're extending upward or downward, so we can properly
+handle direction reversals (shrinking the selection).")
+
 (defvar-local dotemacs-persistent-regions--last-modified-region nil
   "Stores the last modified persistent region as (BEGIN END DELETED-LENGTH DELETED-TEXT) for undo support.
 When a persistent selection is modified (cut, replaced, etc.), this variable
@@ -309,19 +319,8 @@ automatically normalized."
         (dotemacs-persistent-regions--create-overlay
          dotemacs-persistent-regions--selection-begin
          dotemacs-persistent-regions--selection-end)
-        ;; Keep region active for CUA mode compatibility
-        (when dotemacs-persistent-regions-enable-cua-integration
-          (let ((sel-begin dotemacs-persistent-regions--selection-begin)
-                (sel-end dotemacs-persistent-regions--selection-end)
-                (current-point (point)))
-            ;; Set mark and point to match selection, but preserve cursor position
-            ;; by restoring point after setting the region
-            (set-mark sel-begin)
-            (goto-char sel-end)
-            (activate-mark)
-            ;; Restore original point if it was within the selection
-            (when (and (>= current-point sel-begin) (<= current-point sel-end))
-              (goto-char current-point))))
+        ;; Deactivate mark to prevent region extension during scrolling
+        (deactivate-mark)
         (run-hook-with-args 'dotemacs-persistent-regions-selection-created-hook
                             dotemacs-persistent-regions--selection-begin
                             dotemacs-persistent-regions--selection-end))
@@ -339,7 +338,9 @@ selection exists."
                         dotemacs-persistent-regions--selection-end))
   (dotemacs-persistent-regions--clear-overlays)
   (setq dotemacs-persistent-regions--selection-begin nil
-        dotemacs-persistent-regions--selection-end nil)
+        dotemacs-persistent-regions--selection-end nil
+        dotemacs-persistent-regions--selection-anchor nil
+        dotemacs-persistent-regions--extension-direction nil)
   ;; Deactivate mark when clearing selection
   (when dotemacs-persistent-regions-enable-cua-integration
     (deactivate-mark)))
@@ -478,25 +479,122 @@ additional complete lines based on the cursor position."
 (defun dotemacs-persistent-regions-select-line-above ()
   "Extend dotemacs-persistent selection to include the line above.
 If no selection exists, create a new selection from the current line
-to the line above.  If a selection already exists, extend it to include
-the line above."
+to the line above.  If a selection already exists, extend it upward
+by one line from the current top of the selection, regardless of point position."
   (interactive)
-  (dotemacs-persistent-regions--extend-selection
-   (lambda ()
-     (forward-line -1)
-     (beginning-of-line))))
+  (setq dotemacs-persistent-regions--last-command-was-selection t)
+  (if (dotemacs-persistent-regions--has-selection-p)
+      (cond
+       ;; If we were extending down, shrink from the bottom
+       ((eq dotemacs-persistent-regions--extension-direction 'down)
+        (let* ((anchor dotemacs-persistent-regions--selection-anchor)
+               (current-begin dotemacs-persistent-regions--selection-begin)
+               (current-end dotemacs-persistent-regions--selection-end)
+               (new-end (save-excursion
+                          (goto-char current-end)
+                          (beginning-of-line)
+                          ;; If we're at the beginning of a line, move to end of previous line
+                          (when (= (point) current-end)
+                            (forward-line -1))
+                          (forward-line -1)
+                          (end-of-line)
+                          (point))))
+          ;; Check if we're at or past the anchor line (need to extend up instead of shrink)
+          (let ((new-end-line (save-excursion (goto-char new-end) (line-beginning-position)))
+                (anchor-line (save-excursion (goto-char anchor) (line-beginning-position))))
+            (if (<= new-end-line anchor-line)
+                ;; At or past anchor line, switch to extending up instead
+                (let ((new-begin (save-excursion
+                                   (goto-char anchor-line)
+                                   (forward-line -1)
+                                   (beginning-of-line)
+                                   (point)))
+                      (anchor-end (save-excursion (goto-char anchor-line) (end-of-line) (point))))
+                  (dotemacs-persistent-regions--set-selection new-begin anchor-end)
+                  (setq dotemacs-persistent-regions--selection-anchor anchor-end
+                        dotemacs-persistent-regions--extension-direction 'up))
+              ;; Still above anchor, continue shrinking
+              (dotemacs-persistent-regions--set-selection anchor new-end)))))
+       ;; Otherwise extend upward from the beginning
+       (t
+        (let* ((anchor (or dotemacs-persistent-regions--selection-anchor
+                           dotemacs-persistent-regions--selection-end))
+               (current-begin dotemacs-persistent-regions--selection-begin)
+               (new-begin (save-excursion
+                            (goto-char current-begin)
+                            (goto-char (line-beginning-position))
+                            (forward-line -1)
+                            (beginning-of-line)
+                            (point))))
+          (dotemacs-persistent-regions--set-selection new-begin anchor)
+          (setq dotemacs-persistent-regions--selection-anchor anchor
+                dotemacs-persistent-regions--extension-direction 'up))))
+    ;; Create new selection
+    (let* ((start (line-beginning-position))
+           (end (save-excursion (beginning-of-line) (forward-line -1) (beginning-of-line) (point))))
+      (dotemacs-persistent-regions--set-selection (min start end) (max start end))
+      (setq dotemacs-persistent-regions--selection-anchor (max start end)
+            dotemacs-persistent-regions--extension-direction 'up))))
 
 ;;;###autoload
 (defun dotemacs-persistent-regions-select-line-below ()
   "Extend dotemacs-persistent selection to include the line below.
 If no selection exists, create a new selection from the current line
-to the line below.  If a selection already exists, extend it to include
-the line below."
+to the line below.  If a selection already exists, extend it downward
+by one line from the current bottom of the selection, regardless of point position."
   (interactive)
-  (dotemacs-persistent-regions--extend-selection
-   (lambda ()
-     (forward-line 1)
-     (end-of-line))))
+  (setq dotemacs-persistent-regions--last-command-was-selection t)
+  (if (dotemacs-persistent-regions--has-selection-p)
+      (cond
+       ;; If we were extending up, shrink from the top
+       ((eq dotemacs-persistent-regions--extension-direction 'up)
+        (let* ((anchor dotemacs-persistent-regions--selection-anchor)
+               (current-begin dotemacs-persistent-regions--selection-begin)
+               (current-end dotemacs-persistent-regions--selection-end)
+               (new-begin (save-excursion
+                            (goto-char current-begin)
+                            ;; Move to the end of current line then to next line's beginning
+                            (end-of-line)
+                            (forward-line 1)
+                            (beginning-of-line)
+                            (point))))
+          ;; Check if we're at or past the anchor line (need to extend down instead of shrink)
+          (let ((new-begin-line (save-excursion (goto-char new-begin) (line-beginning-position)))
+                (anchor-line (save-excursion (goto-char anchor) (line-beginning-position))))
+            (if (>= new-begin-line anchor-line)
+                ;; At or past anchor line, switch to extending down instead
+                (let ((anchor-begin (save-excursion (goto-char anchor-line) (beginning-of-line) (point)))
+                      (new-end (save-excursion
+                                 (goto-char anchor-line)
+                                 (end-of-line)
+                                 (forward-line 1)
+                                 (end-of-line)
+                                 (point))))
+                  (dotemacs-persistent-regions--set-selection anchor-begin new-end)
+                  (setq dotemacs-persistent-regions--selection-anchor anchor-begin
+                        dotemacs-persistent-regions--extension-direction 'down))
+              ;; Still below anchor, continue shrinking
+              (dotemacs-persistent-regions--set-selection new-begin anchor)))))
+       ;; Otherwise extend downward from the end
+       (t
+        (let* ((anchor (or dotemacs-persistent-regions--selection-anchor
+                           dotemacs-persistent-regions--selection-begin))
+               (current-end dotemacs-persistent-regions--selection-end)
+               (new-end (save-excursion
+                          (goto-char current-end)
+                          (goto-char (line-beginning-position))
+                          (forward-line 1)
+                          (end-of-line)
+                          (point))))
+          (dotemacs-persistent-regions--set-selection anchor new-end)
+          (setq dotemacs-persistent-regions--selection-anchor anchor
+                dotemacs-persistent-regions--extension-direction 'down))))
+    ;; Create new selection
+    (let ((start (line-beginning-position))
+          (end (save-excursion (end-of-line) (forward-line 1) (end-of-line) (point))))
+      (dotemacs-persistent-regions--set-selection start end)
+      (setq dotemacs-persistent-regions--selection-anchor start
+            dotemacs-persistent-regions--extension-direction 'down))))
 
 ;;;###autoload
 (defun dotemacs-persistent-regions-select-sexp ()
@@ -570,11 +668,7 @@ remains active after copying."
     (message "Copied: %s"
              (dotemacs-persistent-regions--format-preview
               dotemacs-persistent-regions--selection-begin
-              dotemacs-persistent-regions--selection-end))
-    ;; Keep the selection active after copying
-    (when dotemacs-persistent-regions-enable-cua-integration
-      (goto-char dotemacs-persistent-regions--selection-end)
-      (set-mark dotemacs-persistent-regions--selection-begin)))
+              dotemacs-persistent-regions--selection-end)))
    ((region-active-p)
     (copy-region-as-kill (region-beginning) (region-end))
     (message "Copied region")
