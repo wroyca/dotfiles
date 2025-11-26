@@ -33,6 +33,7 @@
   "diffEditor.experimental.showMoves": true,
   "diffEditor.experimental.useTrueInlineView": true,
   "diffEditor.hideUnchangedRegions.enabled": true,
+  "diffEditor.ignoreTrimWhitespace": false,
 
   // Editor
   //
@@ -103,19 +104,18 @@
 
   // Github Copilot
   //
-  "github.copilot.chat.agent.thinkingTool": true,
   "github.copilot.chat.codesearch.enabled": true,
   "github.copilot.chat.editor.temporalContext.enabled": true,
   "github.copilot.chat.edits.temporalContext.enabled": true,
   "github.copilot.nextEditSuggestions.enabled": false,
   "github.copilot.nextEditSuggestions.fixes": false,
+  "github.copilot.chat.summarizeAgentConversationHistory.enabled": false,
 
   // GitHub Pull Requests
   //
   "githubPullRequests.assignCreated": "${user}",
   "githubPullRequests.defaultMergeMethod": "rebase",
   "githubPullRequests.experimental.chat": true,
-  "githubPullRequests.experimental.notificationsView": true,
   "githubPullRequests.experimental.useQuickChat": true,
   "githubPullRequests.notifications": "pullRequests",
   "githubPullRequests.quickDiff": true,
@@ -196,6 +196,7 @@
   "workbench.preferredLightColorTheme": "Modus Operandi",
   "workbench.startupEditor": "none",
   "workbench.statusBar.visible": true,
+  "workbench.editor.empty.hint": "hidden",
 
   // ZenMode
   //
