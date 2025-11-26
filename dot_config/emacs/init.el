@@ -1067,7 +1067,9 @@
 
 (leaf which-key
   :doc "Toggle 'which-key'"
-  :tag "external" "help")
+  :tag "external" "help"
+  :global-minor-mode t
+  :custom (which-key-idle-delay . 0.3))
 
 (leaf whitespace
   :doc "Toggle whitespace visualization (Whitespace mode)"
@@ -1097,12 +1099,6 @@
   :doc "Restore old window configurations"
   :tag "window" "layout" "workspace" "builtin" "navigation"
   :global-minor-mode t)
-
-(leaf which-key
-  :doc "Displays key bindings following entered incomplete command"
-  :tag "window" "navigation" "help"
-  :global-minor-mode t
-  :custom (which-key-idle-delay . 0.1))
 
 (leaf xref-etags
   :doc "Minor mode to make xref use etags again"
