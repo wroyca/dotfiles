@@ -1098,6 +1098,12 @@
   :tag "window" "layout" "workspace" "builtin" "navigation"
   :global-minor-mode t)
 
+(leaf which-key
+  :doc "Displays key bindings following entered incomplete command"
+  :tag "window" "navigation" "help"
+  :global-minor-mode t
+  :custom (which-key-idle-delay . 0.1))
+
 (leaf xref-etags
   :doc "Minor mode to make xref use etags again"
   :tag "builtin" "navigation")
@@ -1264,7 +1270,8 @@
   :custom (magit-bury-buffer-function . #'magit-restore-window-configuration)
           (magit-display-buffer-function . 'magit-display-buffer-same-window)
           (magit-popup-display-buffer-action . '((display-buffer-same-window)))
-          (magit-wip-mode . t))
+          (magit-wip-mode . t)
+          (magit-save-repository-buffers . nil))
 
 (leaf forge
   :doc "Work with Git forges from the comfort of Magit"
