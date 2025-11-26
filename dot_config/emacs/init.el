@@ -1455,6 +1455,33 @@ BINDINGS is a list of (key function description) or (key nested-description &res
 
 ;;
 
+(define-prefix-keymap dotemacs-magit-status-keymap "C-c g s" "Status"
+  ("s" #'magit-status "Open Magit status")
+  ("l" #'magit-log "Show repository log")
+  ("c" #'magit-commit "Commit changes")
+  ("S" #'magit-stage-file "Stage file")
+  ("u" #'magit-unstage-file "Unstage file"))
+(define-prefix-keymap dotemacs-magit-branch-keymap "C-c g b" "Branch"
+  ("b" #'magit-branch "Manage branches")
+  ("c" #'magit-checkout "Checkout branch")
+  ("n" #'magit-branch-and-checkout "Create and checkout branch"))
+(define-prefix-keymap dotemacs-magit-remote-keymap "C-c g r" "Remote"
+  ("f" #'magit-fetch "Fetch from remote")
+  ("p" #'magit-push-current "Push current branch")
+  ("P" #'magit-pull "Pull changes")
+  ("R" #'magit-remote "Manage remotes"))
+(define-prefix-keymap dotemacs-magit-stash-keymap "C-c g z" "Stash"
+  ("s" #'magit-stash "Stash")
+  ("p" #'magit-stash-pop "Pop stash")
+  ("l" #'magit-stash-list "List stashes"))
+(define-prefix-keymap dotemacs-magit-keymap "C-c g" "Magit"
+  ("s" dotemacs-magit-status-keymap "Status")
+  ("b" dotemacs-magit-branch-keymap "Branch")
+  ("r" dotemacs-magit-remote-keymap "Remote")
+  ("z" dotemacs-magit-stash-keymap "Stash")
+  ("d" #'magit-dispatch "Dispatch"))
+
+
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 (require 'dotemacs-persistent-regions)
