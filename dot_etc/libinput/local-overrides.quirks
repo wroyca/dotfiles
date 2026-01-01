@@ -1,24 +1,24 @@
-# The MX Master 3 supports high-resolution scrolling, which libinput handles via
-# REL_WHEEL_HI_RES and REL_HWHEEL_HI_RES events. This is what enables the
-# smooth, pixel-precise scrolling experience on capable applications.
+# The MX Master 3 supports high-resolution scrolling via libinput
+# (REL_WHEEL_HI_RES / REL_HWHEEL_HI_RES), which enables smooth, pixel-precise
+# scrolling in applications that support it.
 #
-# However, there's a subtle issue: the mouse continues to emit high-resolution
-# scroll events even when in "ratcheting" mode. That is, when the physical
-# scroll wheel is clicked into tactile detents. This leads to an inconsistent
-# user experience: the scroll behaves as if it were still in smooth mode,
-# ignoring the physical feel of the wheel.
+# In practice, the device continues to emit high-resolution scroll events even
+# when the wheel is switched into ratcheting (detented) mode. Libinput does not
+# currently distinguish between free-spin and ratcheting states, so scroll
+# deltas remain smooth regardless of the physical wheel mode.
 #
-# The problem appears to be upstream in how libinput interprets scroll state; it
-# doesn't distinguish between ratcheting and free-spin modes and sends
-# high-resolution deltas regardless.
+# This results in a mismatch between physical feedback and UI behavior: the
+# wheel provides tactile detents, but scrolling still behaves as if it were in
+# free-spin mode.
 #
 # As a workaround, we explicitly disable high-resolution scroll events for this
-# device. While this downgrades the scroll fidelity slightly, it makes the
-# tactile detents meaningful again: each click translates to a predictable
-# scroll event, restoring consistency between physical input and UI behavior.
+# device. This slightly reduces scroll fidelity, but restores a consistent and
+# predictable mapping: each detent produces a discrete scroll step that matches
+# the physical input.
 #
-# Note that we also invert horizontal scrolling, which otherwise feels reversed
-# in typical usage (e.g., with touchpads or other mice).
+# Note that horizontal scrolling is also inverted here, as the default
+# direction feels reversed in typical usage (e.g., relative to touchpads and
+# other mice).
 #
 [Logitech MX Master 3]
 MatchVendor=0x46D

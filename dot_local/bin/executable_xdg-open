@@ -1,18 +1,11 @@
 #!/usr/bin/env bash
 
-# Opens a file or URL in the user's preferred application.
-#
-# If a URL is provided the URL will be opened in the user's preferred web
-# browser. If a file is provided the file will be opened in the preferred
-# application for files of that type. xdg-open supports file, ftp, http and
-# https URLs.
+# Applications running in a Flatpak sandbox cannot normally launch arbitrary
+# subprocesses outside the container to open files and URLs. To address this,
+# we rely on D-Bus session bus to communicate with the xdg-desktop-portal
+# service outside the container.
 
 if [[ -f "/run/.containerenv" ]]; then
-  # Applications running in a Flatpak sandbox cannot normally launch arbitrary
-  # subprocesses outside the container to open files and URLs. To address this,
-  # we rely on D-Bus session bus to communicate with the xdg-desktop-portal
-  # service outside the container.
-  #
   ${TOOLBOX_PATH:+flatpak-spawn --host} /usr/bin/xdg-open "$@"
 else
   /usr/bin/xdg-open "$@"
