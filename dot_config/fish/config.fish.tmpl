@@ -5,6 +5,13 @@ end
 #
 set -gx STARSHIP_CONFIG $HOME/.config/starship/starship.toml
 
+# GCM stopped honoring `credentialStore` from the git config.
+#
+# Rather than trying to debug why, we force the setting via the environment,
+# which is the only thing GCM seems to reliably listen to.
+#
+set -gx GCM_CREDENTIAL_STORE cache
+
 # Silence wine and dxvk output.
 #
 set -gx WINEDEBUG -all
