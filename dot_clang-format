@@ -256,7 +256,7 @@ SpaceBeforeParensOptions:
   AfterRequiresInExpression: true
   BeforeNonEmptyParentheses: true
 SpaceBeforeRangeBasedForLoopColon: true
-SpaceBeforeSquareBrackets: true
+SpaceBeforeSquareBrackets: false
 SpaceInEmptyBlock: false
 SpacesBeforeTrailingComments: 1
 SpacesInAngles: Never
