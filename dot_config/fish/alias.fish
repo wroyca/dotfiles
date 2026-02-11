@@ -9,3 +9,4 @@ alias mkdir='mkdir -pv'
 alias mv='mv -iv'
 alias rm='rm -iv'
 alias tree='tree --filesfirst -a -I ".git"'
+alias clear "printf '\033[2J\033[3J\033[1;1H'"
