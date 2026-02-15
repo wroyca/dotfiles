@@ -126,8 +126,11 @@
 (leaf auto-revert
   :doc "Toggle reverting buffer when the file changes (Auto-Revert Mode)"
   :tag "builtin" "files"
-  :custom ((auto-revert-interval . 1)
-            auto-revert-verbose . nil))
+  :custom (;; Disable periodic polling. We can trust file notifications to trigger
+           ;; updates in the common case.
+           ;;
+           (auto-revert-avoid-polling . 1))
+  :global-minor-mode t)
 
 (leaf auto-revert-tail
   :doc "Toggle reverting tail of buffer when the file grows"
