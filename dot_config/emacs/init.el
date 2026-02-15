@@ -1485,6 +1485,19 @@ BINDINGS is a list of (key function description) or (key nested-description &res
   ("z" dotemacs-magit-stash-keymap "Stash")
   ("d" #'magit-dispatch "Dispatch"))
 
+;;
+
+;; Remap C-x f to find-file to handle "fat-finger" errors.
+;;
+;; We frequently miss the Control modifier on the second keystroke when
+;; intending to type C-x C-f. Since the default binding for C-x f
+;; (set-fill-column) is rarely used interactively, it is safe for us to
+;; override it. This saves us the frustration of accidentally triggering
+;; column formatting when we just wanted to open a file.
+;;
+(global-set-key (kbd "C-x f") #'find-file)
+
+;;
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
