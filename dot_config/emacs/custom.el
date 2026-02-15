@@ -7,119 +7,130 @@
 ;;; Code:
 
 (custom-set-variables
- ;; ---------------------------
- ;; File handling / backups
- ;; ---------------------------
-
- ;; Disable backup files like `file~`.
+ ;; File system and Version Control.
+ ;;
+ ;; We rely on git for version control. Having Emacs spray `~` and `#`
+ ;; files all over the source tree is just noise that confuses file
+ ;; watchers and `grep`. Kill them.
+ ;;
  '(make-backup-files nil)
-
- ;; Disable auto-save files like `#file#`.
  '(auto-save-default nil)
-
- ;; Remove leftover auto-save files after proper saves.
  '(delete-auto-save-files t)
 
- ;; Do not create lockfiles like `.#file`.
+ ;; Lockfiles (`.#`) cause more trouble than they are worth, especially
+ ;; with some aggressive file sync tools or when the editor crashes and
+ ;; leaves them behind. We are the only user; disable them to avoid the
+ ;; stale lock prompts.
+ ;;
  '(create-lockfiles nil)
 
- ;; Use system trash when deleting files through Emacs.
+ ;; Safety net: when we delete via Dired, move to trash rather than
+ ;; unlinking immediately. We've shot ourselves in the foot enough times
+ ;; to need this.
+ ;;
  '(delete-by-moving-to-trash t)
 
- ;; When opening files, visit the real file (resolve symlinks).
+ ;; Always resolve symlinks to the real path. Otherwise, we end up
+ ;; visiting the same file under two names, and `find-file` gets confused
+ ;; about which buffer is which. Plus, compilation commands need the
+ ;; real path to resolve relative includes correctly.
+ ;;
  '(find-file-visit-truename t)
-
- ;; Follow VC-managed symlinks without prompting.
  '(vc-follow-symlinks t)
 
-
- ;; ---------------------------
- ;; UI / Frame / startup / scratch
- ;; ---------------------------
-
- ;; Treat themes as safe by default (avoid prompts).
- '(custom-safe-themes t)
-
- ;; Inhibit frame resizing triggered by font changes.
+ ;; UI and Frame Geometry.
+ ;;
+ ;; Tiling window managers (and even some stacking ones) struggle when
+ ;; the application tries to resize itself based on font metrics or
+ ;; character cells. We need Emacs to be obedient and fill the tile it
+ ;; is given, pixel-perfect. Disable implied resizing.
+ ;;
  '(frame-inhibit-implied-resize t)
-
- ;; Allow pixel-wise frame resizing (good for HiDPI / tiling).
  '(frame-resize-pixelwise t)
 
- ;; Do not show the startup screen.
+ ;; Skip the GNU splash; we know what editor we are using. Also, keep
+ ;; the scratch buffer empty so we can paste/eval immediately without
+ ;; having to clear the default text first.
+ ;;
  '(inhibit-startup-screen t)
-
- ;; Start with empty *scratch* message.
  '(initial-scratch-message nil)
 
- ;; Silence audible/visual bells.
+ ;; We are keyboard-centric. Audible bells break flow, and dialog boxes
+ ;; force a context switch to the mouse (or weird keyboard navigation).
+ ;; Suppress both to keep the focus in the buffer.
+ ;;
  '(ring-bell-function 'ignore)
-
- ;; Do not show dialog
  '(use-dialog-box nil)
 
+ ;; Assume themes are safe. We wrote the config, so we trust the theme
+ ;; we are loading.
+ ;;
+ '(custom-safe-themes t)
 
- ;; ---------------------------
- ;; Minibuffer & completion
- ;; ---------------------------
-
- ;; Allow recursive use of the minibuffer.
+ ;; Minibuffer and Completion.
+ ;;
+ ;; Recursive minibuffers are essential. Often we are in the middle of
+ ;; a `find-file` and need to check a variable or run a quick command
+ ;; (M-:) without canceling the current prompt.
+ ;;
  '(enable-recursive-minibuffers t)
 
- ;; Make the minibuffer prompt read-only and cursor-intangible.
+ ;; Keep the prompt distinct from the input area. We make it cursor-intangible
+ ;; to prevent accidentally backspacing into the prompt text, which is annoying
+ ;; to fix.
+ ;;
  '(minibuffer-prompt-properties
    '(read-only t cursor-intangible t face minibuffer-prompt))
 
- ;; Filter what appears in `M-x` completion.
+ ;; Filter M-x noise. There are too many internal symbols that match
+ ;; common prefixes.
+ ;;
  '(read-extended-command-predicate #'command-completion-default-include-p)
 
-
- ;; ---------------------------
- ;; Editing / indentation
- ;; ---------------------------
-
- ;; Prefer spaces over tabs.
+ ;; Formatting and Indentation.
+ ;;
+ ;; Tabs are display-dependent and therefore evil. We want the code to look the
+ ;; same in the editor, on GitHub, and in `less`. Force spaces.
+ ;;
  '(indent-tabs-mode nil)
-
- ;; Modern sentence handling: single space after period.
- '(sentence-end-double-space nil)
-
- ;; Logical default when a literal tab appears.
  '(tab-width 2)
 
+ ;; Modern typography conventions suggest a single space after a period.
+ ;; Double-spacing is a typewriter artifact we don't need.
+ ;;
+ ;; @@: may re-enable if we decide to time-travel back to 1997 and impress
+ ;; people in email
+ ;;
+ '(sentence-end-double-space nil)
 
- ;; ---------------------------
- ;; Scrolling / navigation
- ;; ---------------------------
-
- ;; Conservative scrolling to avoid recentering.
+ ;; Navigation.
+ ;;
+ ;; Default scrolling is jumpy (recentering the screen). We want smooth
+ ;; scrolling when we hit the edge, but we need to keep a bit of margin
+ ;; (4 lines) so we can see the context of where we are moving.
+ ;;
  '(scroll-conservatively 101)
-
- ;; Keep a small margin when the point approaches the window edge.
  '(scroll-margin 4)
 
-
- ;; ---------------------------
- ;; Performance / safety
- ;; ---------------------------
-
- ;; Don't warn on large files
+ ;; Performance.
+ ;;
+ ;; We often inspect massive log files or build artifacts. The warning
+ ;; just adds an extra keystroke to the workflow. We know the file is
+ ;; big; open it anyway.
+ ;;
  '(large-file-warning-threshold nil)
 
+ ;; Visuals.
+ ;;
+ ;; We need a high-contrast theme that remains legible during long
+ ;; coding sessions. Modus Vivendi fits the bill.
+ ;;
+ '(custom-enabled-themes '(modus-vivendi)))
 
- ;; ---------------------------
- ;; Defaults
- ;; ---------------------------
-
- ;; Remember the last used theme between Emacs' sessions.
- '(custom-enabled-themes '(modus-vivendi))
-
- ;; Set the default starting directory for new buffers and file prompts.
- ;; This expression is evaluated when this file is loaded so "~" expands.
- `(default-directory ,(expand-file-name "~/Projects/")))
-
-;; --------------------------------------------------------------------------
-;; Hooks
-;; --------------------------------------------------------------------------
-;; Make the minibuffer prompt cursor-intangible so the point cannot enter it.
+;; Hooks.
+;;
+;; Apply the intangibility property set in the variables above. We
+;; have to hook this in because the variable setting alone just defines
+;; the property list, it doesn't activate the minor mode.
+;;
 (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
