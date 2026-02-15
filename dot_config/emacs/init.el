@@ -52,6 +52,9 @@
 (elpaca `(,@elpaca-order))
 (when (member system-type '(windows-nt ms-dos))
   (elpaca-no-symlink-mode))
+
+;;
+
 (elpaca (leaf))
 (elpaca (leaf-keywords)
   (leaf-keywords-init))
@@ -59,12 +62,6 @@
 ;;
 
 (elpaca-wait)
-
-;;
-
-(leaf spacious-padding
-  :elpaca t
-  :global-minor-mode t)
 
 ;;
 
@@ -80,6 +77,10 @@
 (leaf remember-last-theme
   :elpaca t
   :init (remember-last-theme-enable))
+
+;;
+
+(elpaca-wait)
 
 ;;
 
