@@ -84,6 +84,12 @@
 
 ;;
 
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+
+(require 'dotemacs-context-menu)
+
+;;
+
 (leaf abbrev
   :doc "Toggle Abbrev mode in the current buffer"
   :tag "builtin" "text")
