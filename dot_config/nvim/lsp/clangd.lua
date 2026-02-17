@@ -14,7 +14,8 @@ local config = {
     "--header-insertion=never",
     "--parse-forwarding-functions",
     "--pch-storage=memory",
-    "--ranking-model=decision_forest"
+    "--ranking-model=decision_forest",
+    "--limit-results=10000",
   },
 
   capabilities = {
