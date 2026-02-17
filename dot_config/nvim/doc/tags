@@ -1,0 +1,4 @@
+DEFAULT_CONFIG	dotnvim.txt	/*DEFAULT_CONFIG*
+MiniFilesGitignore	dotnvim.txt	/*MiniFilesGitignore*
+Spec	dotnvim.txt	/*Spec*
+additional_language_servers	dotnvim.txt	/*additional_language_servers*
