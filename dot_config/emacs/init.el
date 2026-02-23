@@ -6,41 +6,37 @@
 
 ;;; Code:
 
-(set-frame-parameter nil 'undecorated t)
-
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-
 (defvar elpaca-installer-version 0.11)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
-                        :ref nil :depth 1 :inherit ignore
-                        :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-                        :build (:not elpaca--activate-package)))
+                              :ref nil :depth 1 :inherit ignore
+                              :files (:defaults "elpaca-test.el" (:exclude "extensions"))
+                              :build (:not elpaca--activate-package)))
 (let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
-        (build (expand-file-name "elpaca/" elpaca-builds-directory))
-        (order (cdr elpaca-order))
-        (default-directory repo))
+       (build (expand-file-name "elpaca/" elpaca-builds-directory))
+       (order (cdr elpaca-order))
+       (default-directory repo))
   (add-to-list 'load-path (if (file-exists-p build) build repo))
   (unless (file-exists-p repo)
     (make-directory repo t)
     (when (<= emacs-major-version 28) (require 'subr-x))
     (condition-case-unless-debug err
-      (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
-                 ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
+        (if-let* ((buffer (pop-to-buffer-same-window "*elpaca-bootstrap*"))
+                  ((zerop (apply #'call-process `("git" nil ,buffer t "clone"
                                                   ,@(when-let* ((depth (plist-get order :depth)))
                                                       (list (format "--depth=%d" depth) "--no-single-branch"))
                                                   ,(plist-get order :repo) ,repo))))
-                 ((zerop (call-process "git" nil buffer t "checkout"
-                           (or (plist-get order :ref) "--"))))
-                 (emacs (concat invocation-directory invocation-name))
-                 ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
-                           "--eval" "(byte-recompile-directory \".\" 0 'force)")))
-                 ((require 'elpaca))
-                 ((elpaca-generate-autoloads "elpaca" repo)))
-        (progn (message "%s" (buffer-string)) (kill-buffer buffer))
-        (error "%s" (with-current-buffer buffer (buffer-string))))
+                  ((zerop (call-process "git" nil buffer t "checkout"
+                                        (or (plist-get order :ref) "--"))))
+                  (emacs (concat invocation-directory invocation-name))
+                  ((zerop (call-process emacs nil buffer nil "-Q" "-L" "." "--batch"
+                                        "--eval" "(byte-recompile-directory \".\" 0 'force)")))
+                  ((require 'elpaca))
+                  ((elpaca-generate-autoloads "elpaca" repo)))
+            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
+          (error "%s" (with-current-buffer buffer (buffer-string))))
       ((error) (warn "%s" err) (delete-directory repo 'recursive))))
   (unless (require 'elpaca-autoloads nil t)
     (require 'elpaca)
@@ -50,14 +46,9 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (add-hook 'elpaca-after-init-hook (lambda () (load custom-file 'noerror)))
 (elpaca `(,@elpaca-order))
-(when (member system-type '(windows-nt ms-dos))
-  (elpaca-no-symlink-mode))
-
-;;
-
 (elpaca (leaf))
 (elpaca (leaf-keywords)
-  (leaf-keywords-init))
+        (leaf-keywords-init))
 
 ;;
 
@@ -66,1264 +57,1337 @@
 ;;
 
 (leaf ef-themes
-  :elpaca t)
+      :doc "Colorful and legible maximalist themes for GNU Emacs"
+      :tag "theme" "faces" "accessibility"
+      :url "https://github.com/protesilaos/ef-themes"
+      :elpaca (ef-themes :host github
+                         :repo "protesilaos/ef-themes"))
 
 (leaf modus-themes
-  :elpaca t)
+      :doc "Highly accessible themes for GNU Emacs (WCAG AAA compliant)"
+      :tag "theme" "faces" "accessibility"
+      :url "https://github.com/protesilaos/modus-themes"
+      :elpaca (modus-themes :host github
+                            :repo "protesilaos/modus-themes"))
 
 (leaf doric-themes
-  :elpaca (doric-themes :host github :repo "protesilaos/doric-themes"))
+      :doc "Minimalist, monochromatic themes for GNU Emacs relying on typography"
+      :tag "theme" "faces" "minimalist"
+      :url "https://github.com/protesilaos/doric-themes"
+      :elpaca (doric-themes :host github
+                            :repo "protesilaos/doric-themes"))
 
-(leaf remember-last-theme
-  :elpaca t
-  :init (remember-last-theme-enable))
+(leaf gnome-accent-theme-switcher
+      :doc "Match GNOME accent color and light/dark mode."
+      :tag "theme" "faces" "minimalist"
+      :url "https://github.com/protesilaos/gnome-accent-theme-switcher"
+      :elpaca (gnome-accent-theme-switcher :host github
+                            :repo "protesilaos/gnome-accent-theme-switcher")
+      :global-minor-mode gnome-accent-theme-switcher-mode
+      :custom
+      (gnome-accent-theme-switcher-collection . '(("blue"   :light (modus-operandi) :dark (modus-vivendi))
+                                                  ("teal"   :light (modus-operandi) :dark (modus-vivendi))
+                                                  ("green"  :light (modus-operandi) :dark (modus-vivendi))
+                                                  ("yellow" :light (modus-operandi) :dark (modus-vivendi))
+                                                  ("orange" :light (modus-operandi) :dark (modus-vivendi))
+                                                  ("red"    :light (modus-operandi) :dark (modus-vivendi))
+                                                  ("pink"   :light (modus-operandi) :dark (modus-vivendi))
+                                                  ("purple" :light (modus-operandi) :dark (modus-vivendi))
+                                                  ("slate"  :light (modus-operandi) :dark (modus-vivendi)))))
 
-;;
-
-(elpaca-wait)
-
-;;
-
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-
-(require 'dotemacs-context-menu)
 
 ;;
 
 (leaf abbrev
-  :doc "Toggle Abbrev mode in the current buffer"
-  :tag "builtin" "text")
+      :doc "Toggle Abbrev mode in the current buffer"
+      :tag "builtin" "text")
 
 (leaf allout
-  :doc "Toggle Allout outline mode"
-  :tag "builtin" "outline")
+      :doc "Toggle Allout outline mode"
+      :tag "builtin" "outline")
 
 (leaf allout-widgets
-  :doc "Toggle Allout Widgets mode"
-  :tag "builtin" "outline")
+      :doc "Toggle Allout Widgets mode"
+      :tag "builtin" "outline")
 
 (leaf artist
-  :doc "Toggle Artist mode"
-  :tag "builtin" "graphics")
+      :doc "Toggle Artist mode"
+      :tag "builtin" "graphics")
 
 (leaf auto-composition
-  :doc "Toggle Auto Composition mode"
-  :tag "builtin" "composition")
+      :doc "Toggle Auto Composition mode"
+      :tag "builtin" "composition")
 
 (leaf auto-compression
-  :doc "Toggle Auto Compression mode"
-  :tag "builtin" "compression")
+      :doc "Toggle Auto Compression mode"
+      :tag "builtin" "compression")
 
 (leaf auto-encryption
-  :doc "Toggle automatic file encryption/decryption (Auto Encryption mode)"
-  :tag "builtin" "encryption")
+      :doc "Toggle automatic file encryption/decryption (Auto Encryption mode)"
+      :tag "builtin" "encryption")
 
 (leaf auto-fill
-  :doc "Toggle automatic line breaking (Auto Fill mode)"
-  :tag "builtin" "text")
+      :doc "Toggle automatic line breaking (Auto Fill mode)"
+      :tag "builtin" "text")
 
 (leaf auto-image-file
-  :doc "Toggle visiting of image files as images (Auto Image File mode)"
-  :tag "builtin" "image")
+      :doc "Toggle visiting of image files as images (Auto Image File mode)"
+      :tag "builtin" "image")
 
 (leaf auto-insert
-  :doc "Toggle Auto-insert mode, a global minor mode"
-  :tag "builtin" "convenience")
+      :doc "Toggle Auto-insert mode, a global minor mode"
+      :tag "builtin" "convenience")
 
 (leaf auto-revert
-  :doc "Toggle reverting buffer when the file changes (Auto-Revert Mode)"
-  :tag "builtin" "files"
-  :custom (;; Disable periodic polling. We can trust file notifications to trigger
-           ;; updates in the common case.
-           ;;
-           (auto-revert-avoid-polling . 1))
-  :global-minor-mode t)
+      :doc "Toggle reverting buffer when the file changes (Auto-Revert Mode)"
+      :tag "builtin" "files"
+      :custom
+      ;; Disable periodic polling. We can trust file notifications to trigger
+      ;; updates in the common case.
+      ;;
+      (auto-revert-avoid-polling . 1))
 
 (leaf auto-revert-tail
-  :doc "Toggle reverting tail of buffer when the file grows"
-  :tag "builtin" "files")
+      :doc "Toggle reverting tail of buffer when the file grows"
+      :tag "builtin" "files")
 
 (leaf auto-save
-  :doc "Toggle auto-saving in the current buffer (Auto Save mode)"
-  :tag "builtin" "files")
+      :doc "Toggle auto-saving in the current buffer (Auto Save mode)"
+      :tag "builtin" "files")
 
 (leaf auto-save-visited
-  :doc "Toggle automatic saving of file-visiting buffers to their files"
-  :tag "builtin" "files")
+      :doc "Toggle automatic saving of file-visiting buffers to their files"
+      :tag "builtin" "files")
 
 (leaf blink-cursor
-  :doc "Toggle cursor blinking (Blink Cursor mode)"
-  :tag "builtin" "cursor")
+      :doc "Toggle cursor blinking (Blink Cursor mode)"
+      :tag "builtin" "cursor")
 
 (leaf buffer-face
-  :doc "Minor mode for a buffer-specific default face"
-  :tag "builtin" "faces")
+      :doc "Minor mode for a buffer-specific default face"
+      :tag "builtin" "faces")
 
 (leaf bug-reference
-  :doc "Toggle hyperlinking bug references in the buffer (Bug Reference mode)"
-  :tag "builtin" "convenience")
+      :doc "Toggle hyperlinking bug references in the buffer (Bug Reference mode)"
+      :tag "builtin" "convenience")
 
 (leaf bug-reference-prog
-  :doc "Like 'bug-reference', but only buttonize in comments and strings"
-  :tag "builtin" "convenience")
+      :doc "Like 'bug-reference', but only buttonize in comments and strings"
+      :tag "builtin" "convenience")
 
 (leaf button
-  :doc "A minor mode for navigating to buttons with the TAB key"
-  :tag "builtin" "navigation")
+      :doc "A minor mode for navigating to buttons with the TAB key"
+      :tag "builtin" "navigation")
 
 (leaf checkdoc-minor
-  :doc "Toggle automatic docstring checking (Checkdoc minor mode)"
-  :tag "builtin" "lisp")
+      :doc "Toggle automatic docstring checking (Checkdoc minor mode)"
+      :tag "builtin" "lisp")
 
 (leaf cl-font-lock-built-in
-  :doc "Highlight built-in functions, variables, and types in 'lisp'"
-  :tag "builtin" "lisp")
+      :doc "Highlight built-in functions, variables, and types in 'lisp'"
+      :tag "builtin" "lisp")
 
 (leaf cl-old-struct-compat
-  :doc "Enable backward compatibility with old-style structs"
-  :tag "builtin" "lisp")
+      :doc "Enable backward compatibility with old-style structs"
+      :tag "builtin" "lisp")
 
 (leaf column-number
-  :doc "Toggle column number display in the mode line (Column Number mode)"
-  :tag "builtin" "mode-line")
+      :doc "Toggle column number display in the mode line (Column Number mode)"
+      :tag "builtin" "mode-line")
 
 (leaf comint-fontify-input
-  :doc "Enable input fontification in the current comint buffer"
-  :tag "builtin" "comint")
+      :doc "Enable input fontification in the current comint buffer"
+      :tag "builtin" "comint")
 
 (leaf compilation-minor
-  :doc "Toggle Compilation minor mode"
-  :tag "builtin" "compilation")
+      :doc "Toggle Compilation minor mode"
+      :tag "builtin" "compilation")
 
 (leaf compilation-shell-minor
-  :doc "Toggle Compilation Shell minor mode"
-  :tag "builtin" "compilation"
-  :hook ((compilation-mode . compilation-shell-minor-mode)))
+      :doc "Toggle Compilation Shell minor mode"
+      :tag "builtin" "compilation")
 
 (leaf completion-in-region
-  :doc "Transient minor mode used during 'completion-in-region'"
-  :tag "builtin" "completion")
+      :doc "Transient minor mode used during 'completion-in-region'"
+      :tag "builtin" "completion")
 
 (leaf completion-preview
-  :doc "Show in-buffer completion suggestions in a preview as you type"
-  :tag "builtin" "completion")
+      :doc "Show in-buffer completion suggestions in a preview as you type"
+      :tag "builtin" "completion")
 
 (leaf context-menu
-  :doc "Toggle Context Menu mode"
-  :tag "builtin" "menu"
-  :global-minor-mode t)
+      :doc "Toggle Context Menu mode"
+      :tag "builtin" "menu")
 
 (leaf cperl-extra-paired-delimiters
-  :doc "Toggle treatment of extra paired delimiters in Perl"
-  :tag "builtin" "perl")
+      :doc "Toggle treatment of extra paired delimiters in Perl"
+      :tag "builtin" "perl")
 
 (leaf cua
-  :doc "Toggle Common User Access style editing (CUA mode)"
-  :tag "builtin" "editing"
-  :global-minor-mode t)
+      :doc "Toggle Common User Access style editing (CUA mode)"
+      :tag "builtin" "editing")
 
 (leaf cua-rectangle-mark
-  :doc "Toggle the region as rectangular"
-  :tag "builtin" "editing")
+      :doc "Toggle the region as rectangular"
+      :tag "builtin" "editing")
 
 (leaf cursor-face-highlight
-  :doc "When enabled, highlight text that has 'cursor-face' property near point"
-  :tag "builtin" "cursor")
+      :doc "When enabled, highlight text that has 'cursor-face' property near point"
+      :tag "builtin" "cursor")
 
 (leaf cursor-intangible
-  :doc "Keep cursor outside of any 'cursor-intangible' text property"
-  :tag "builtin" "cursor")
+      :doc "Keep cursor outside of any 'cursor-intangible' text property"
+      :tag "builtin" "cursor")
 
 (leaf cursor-sensor
-  :doc "Handle the 'cursor-sensor-functions' text property"
-  :tag "builtin" "cursor")
+      :doc "Handle the 'cursor-sensor-functions' text property"
+      :tag "builtin" "cursor")
 
 (leaf cvs-minor
-  :doc "This mode is used for buffers related to a main *cvs* buffer"
-  :tag "builtin" "vc")
+      :doc "This mode is used for buffers related to a main *cvs* buffer"
+      :tag "builtin" "vc")
 
 (leaf cwarn
-  :doc "Minor mode that highlights suspicious C and C++ constructions"
-  :tag "builtin" "c")
+      :doc "Minor mode that highlights suspicious C and C++ constructions"
+      :tag "builtin" "c")
 
 (leaf delete-selection
-  :doc "Toggle Delete Selection mode"
-  :tag "builtin" "editing"
-  :global-minor-mode t)
+      :doc "Toggle Delete Selection mode"
+      :tag "builtin" "editing")
 
 (leaf desktop-save
-  :doc "Toggle desktop saving (Desktop Save mode)"
-  :tag "builtin" "session")
+      :doc "Toggle desktop saving (Desktop Save mode)"
+      :tag "builtin" "session")
 
 (leaf dictionary-tooltip
-  :doc "Display tooltips for the current word"
-  :tag "builtin" "dictionary")
+      :doc "Display tooltips for the current word"
+      :tag "builtin" "dictionary")
 
 (leaf diff-auto-refine
-  :doc "Toggle automatic diff hunk finer highlighting (Diff Auto Refine mode)"
-  :tag "builtin" "diff")
+      :doc "Toggle automatic diff hunk finer highlighting (Diff Auto Refine mode)"
+      :tag "builtin" "diff")
 
 (leaf diff-minor
-  :doc "Toggle Diff minor mode"
-  :tag "builtin" "diff")
+      :doc "Toggle Diff minor mode"
+      :tag "builtin" "diff")
 
 (leaf dired-click-to-select
-  :doc "Toggle click-to-select inside this Dired buffer"
-  :tag "builtin" "dired")
+      :doc "Toggle click-to-select inside this Dired buffer"
+      :tag "builtin" "dired")
 
 (leaf dired-hide-details
-  :doc "Toggle visibility of detailed information in current Dired buffer"
-  :tag "builtin" "dired")
+      :doc "Toggle visibility of detailed information in current Dired buffer"
+      :tag "builtin" "dired")
 
 (leaf dirtrack-debug
-  :doc "Toggle Dirtrack debugging"
-  :tag "builtin" "shell")
+      :doc "Toggle Dirtrack debugging"
+      :tag "builtin" "shell")
 
 (leaf dirtrack
-  :doc "Toggle directory tracking in shell buffers (Dirtrack mode)"
-  :tag "builtin" "shell")
+      :doc "Toggle directory tracking in shell buffers (Dirtrack mode)"
+      :tag "builtin" "shell")
 
 (leaf display-battery
-  :doc "Toggle battery status display in mode line (Display Battery mode)"
-  :tag "builtin" "mode-line")
+      :doc "Toggle battery status display in mode line (Display Battery mode)"
+      :tag "builtin" "mode-line")
 
 (leaf display-fill-column-indicator
-  :doc "Toggle display of 'fill-column' indicator"
-  :tag "builtin" "display")
+      :doc "Toggle display of 'fill-column' indicator"
+      :tag "builtin" "display")
 
 (leaf display-line-numbers
-  :doc "Toggle display of line numbers in the buffer"
-  :tag "builtin" "display")
+      :doc "Toggle display of line numbers in the buffer"
+      :tag "builtin" "display")
 
 (leaf display-time
-  :doc "Toggle display of time, load level, and mail flag in mode lines"
-  :tag "builtin" "mode-line")
+      :doc "Toggle display of time, load level, and mail flag in mode lines"
+      :tag "builtin" "mode-line")
 
 (leaf doc-view-minor
-  :doc "Toggle displaying buffer via Doc View (Doc View minor mode)"
-  :tag "builtin" "doc-view")
+      :doc "Toggle displaying buffer via Doc View (Doc View minor mode)"
+      :tag "builtin" "doc-view")
 
 (leaf doc-view-presentation
-  :doc "Minor mode used while in presentation mode"
-  :tag "builtin" "doc-view")
+      :doc "Minor mode used while in presentation mode"
+      :tag "builtin" "doc-view")
 
 (leaf double
-  :doc "Toggle special insertion on double keypresses (Double mode)"
-  :tag "builtin" "input")
+      :doc "Toggle special insertion on double keypresses (Double mode)"
+      :tag "builtin" "input")
 
 (leaf dynamic-completion
-  :doc "Toggle dynamic word-completion on or off"
-  :tag "builtin" "completion")
+      :doc "Toggle dynamic word-completion on or off"
+      :tag "builtin" "completion")
 
 (leaf ede-dired-minor
-  :doc "A minor mode that should only be activated in DIRED buffers"
-  :tag "builtin" "ede")
+      :doc "A minor mode that should only be activated in DIRED buffers"
+      :tag "builtin" "ede")
 
 (leaf ede-minor
-  :doc "Toggle EDE (Emacs Development Environment) minor mode"
-  :tag "builtin" "ede")
+      :doc "Toggle EDE (Emacs Development Environment) minor mode"
+      :tag "builtin" "ede")
 
 (leaf editorconfig
-  :doc "Toggle EditorConfig feature"
-  :tag "external" "editorconfig"
-  :global-minor-mode t
-  :custom ((editorconfig-get-properties-function . #'editorconfig-get-properties)))
+      :doc "Toggle EditorConfig feature"
+      :tag "external" "editorconfig"
+      :global-minor-mode t)
 
 (leaf eldoc
-  :doc "Toggle echo area display of Lisp objects at point (ElDoc mode)"
-  :tag "builtin" "documentation")
+      :doc "Toggle echo area display of Lisp objects at point (ElDoc mode)"
+      :tag "builtin" "documentation")
 
 (leaf electric-indent
-  :doc "Toggle on-the-fly reindentation of text lines (Electric Indent mode)"
-  :tag "builtin" "editing")
+      :doc "Toggle on-the-fly reindentation of text lines (Electric Indent mode)"
+      :tag "builtin" "editing")
 
 (leaf electric-layout
-  :doc "Automatically insert newlines around some chars"
-  :tag "builtin" "editing")
+      :doc "Automatically insert newlines around some chars"
+      :tag "builtin" "editing")
 
 (leaf electric-pair
-  :doc "Toggle automatic parens pairing (Electric Pair mode)"
-  :tag "builtin" "editing")
+      :doc "Toggle automatic parens pairing (Electric Pair mode)"
+      :tag "builtin" "editing")
 
 (leaf electric-quote
-  :doc "Toggle on-the-fly requoting (Electric Quote mode)"
-  :tag "builtin" "editing")
+      :doc "Toggle on-the-fly requoting (Electric Quote mode)"
+      :tag "builtin" "editing")
 
 (leaf elide-head
-  :doc "Toggle eliding (hiding) header material in the current buffer"
-  :tag "builtin" "convenience")
+      :doc "Toggle eliding (hiding) header material in the current buffer"
+      :tag "builtin" "convenience")
 
 (leaf emacs-lock
-  :doc "Toggle Emacs Lock mode in the current buffer"
-  :tag "builtin" "convenience")
+      :doc "Toggle Emacs Lock mode in the current buffer"
+      :tag "builtin" "convenience")
 
 (leaf enriched
-  :doc "Minor mode for editing text/enriched files"
-  :tag "builtin" "text")
+      :doc "Minor mode for editing text/enriched files"
+      :tag "builtin" "text")
 
 (leaf epa-global-mail
-  :doc "Minor mode to hook EasyPG into Mail mode"
-  :tag "builtin" "encryption")
+      :doc "Minor mode to hook EasyPG into Mail mode"
+      :tag "builtin" "encryption")
 
 (leaf epa-mail
-  :doc "A minor for composing encrypted/clearsigned mails"
-  :tag "builtin" "encryption")
+      :doc "A minor for composing encrypted/clearsigned mails"
+      :tag "builtin" "encryption")
 
 (leaf eshell-arg
-  :doc "Minor mode for the arg eshell module"
-  :tag "builtin" "eshell")
+      :doc "Minor mode for the arg eshell module"
+      :tag "builtin" "eshell")
 
 (leaf eshell-proc
-  :doc "Minor mode for the proc eshell module"
-  :tag "builtin" "eshell")
+      :doc "Minor mode for the proc eshell module"
+      :tag "builtin" "eshell")
 
 (leaf eshell-var
-  :doc "Minor mode for the esh-var module"
-  :tag "builtin" "eshell")
+      :doc "Minor mode for the esh-var module"
+      :tag "builtin" "eshell")
 
 (leaf etags-regen
-  :doc "Minor mode to automatically generate and update tags tables"
-  :tag "builtin" "tags")
+      :doc "Minor mode to automatically generate and update tags tables"
+      :tag "builtin" "tags")
 
 (leaf fido
-  :doc "An enhanced 'icomplete' that emulates 'ido'"
-  :tag "builtin" "completion")
+      :doc "An enhanced 'icomplete' that emulates 'ido'"
+      :tag "builtin" "completion")
 
 (leaf fido-vertical
-  :doc "Toggle vertical candidate display in 'fido'"
-  :tag "builtin" "completion")
+      :doc "Toggle vertical candidate display in 'fido'"
+      :tag "builtin" "completion")
 
 (leaf file-name-shadow
-  :doc "Toggle file-name shadowing in minibuffers (File-Name Shadow mode)"
-  :tag "builtin" "files")
+      :doc "Toggle file-name shadowing in minibuffers (File-Name Shadow mode)"
+      :tag "builtin" "files")
 
 (leaf flymake
-  :doc "Toggle Flymake mode on or off"
-  :tag "builtin" "syntax-checking")
+      :doc "Toggle Flymake mode on or off"
+      :tag "builtin" "syntax-checking")
 
 (leaf flyspell
-  :doc "Toggle on-the-fly spell checking (Flyspell mode)"
-  :tag "builtin" "spell-checking")
+      :doc "Toggle on-the-fly spell checking (Flyspell mode)"
+      :tag "builtin" "spell-checking")
 
 (leaf follow
-  :doc "Toggle Follow mode"
-  :tag "builtin" "windows")
+      :doc "Toggle Follow mode"
+      :tag "builtin" "windows")
 
 (leaf font-lock
-  :doc "Toggle syntax highlighting in this buffer (Font Lock mode)"
-  :tag "builtin" "syntax-highlighting")
+      :doc "Toggle syntax highlighting in this buffer (Font Lock mode)"
+      :tag "builtin" "syntax-highlighting")
 
 (leaf footnote
-  :doc "Toggle Footnote mode"
-  :tag "builtin" "text")
+      :doc "Toggle Footnote mode"
+      :tag "builtin" "text")
 
 (leaf glasses
-  :doc "Minor mode for making identifiers likeThis readable"
-  :tag "builtin" "programming")
+      :doc "Minor mode for making identifiers likeThis readable"
+      :tag "builtin" "programming")
 
 (leaf global-auto-revert
-  :doc "Toggle Global Auto-Revert Mode"
-  :tag "builtin" "files"
-  :global-minor-mode t)
+      :doc "Toggle Global Auto-Revert Mode"
+      :tag "builtin" "files"
+      :global-minor-mode t)
 
 (leaf global-completion-preview
-  :doc "Toggle Completion-Preview mode in all buffers"
-  :tag "builtin" "completion")
+      :doc "Toggle Completion-Preview mode in all buffers"
+      :tag "builtin" "completion")
 
 (leaf global-cwarn
-  :doc "Toggle Cwarn mode in all buffers"
-  :tag "builtin" "c")
+      :doc "Toggle Cwarn mode in all buffers"
+      :tag "builtin" "c")
 
 (leaf global-display-fill-column-indicator
-  :doc "Toggle Display-Fill-Column-Indicator mode in all buffers"
-  :tag "builtin" "display")
+      :doc "Toggle Display-Fill-Column-Indicator mode in all buffers"
+      :tag "builtin" "display")
 
 (leaf global-display-line-numbers
-  :doc "Toggle Display-Line-Numbers mode in all buffers"
-  :tag "builtin" "display")
+      :doc "Toggle Display-Line-Numbers mode in all buffers"
+      :tag "builtin" "display")
 
 (leaf global-ede
-  :doc "Toggle global EDE (Emacs Development Environment) mode"
-  :tag "builtin" "ede")
+      :doc "Toggle global EDE (Emacs Development Environment) mode"
+      :tag "builtin" "ede")
 
 (leaf global-eldoc
-  :doc "Toggle Eldoc mode in all buffers"
-  :tag "builtin" "documentation")
+      :doc "Toggle Eldoc mode in all buffers"
+      :tag "builtin" "documentation")
 
 (leaf global-font-lock
-  :doc "Toggle Font-Lock mode in all buffers"
-  :tag "builtin" "syntax-highlighting")
+      :doc "Toggle Font-Lock mode in all buffers"
+      :tag "builtin" "syntax-highlighting")
 
 (leaf global-goto-address
-  :doc "Toggle Goto-Address mode in all buffers"
-  :tag "builtin" "convenience")
+      :doc "Toggle Goto-Address mode in all buffers"
+      :tag "builtin" "convenience")
 
 (leaf global-hi-lock
-  :doc "Toggle Hi-Lock mode in all buffers"
-  :tag "builtin" "highlighting")
+      :doc "Toggle Hi-Lock mode in all buffers"
+      :tag "builtin" "highlighting")
 
 (leaf global-highlight-changes
-  :doc "Toggle Highlight-Changes mode in all buffers"
-  :tag "builtin" "highlighting")
+      :doc "Toggle Highlight-Changes mode in all buffers"
+      :tag "builtin" "highlighting")
 
 (leaf global-hl-line
-  :doc "Toggle line highlighting in all buffers (Global Hl-Line mode)"
-  :tag "builtin" "highlighting")
+      :doc "Toggle line highlighting in all buffers (Global Hl-Line mode)"
+      :tag "builtin" "highlighting")
 
 (leaf global-prettify-symbols
-  :doc "Toggle Prettify-Symbols mode in all buffers"
-  :tag "builtin" "display")
+      :doc "Toggle Prettify-Symbols mode in all buffers"
+      :tag "builtin" "display")
 
 (leaf global-reveal
-  :doc "Toggle Reveal mode in all buffers (Global Reveal mode)"
-  :tag "builtin" "display")
+      :doc "Toggle Reveal mode in all buffers (Global Reveal mode)"
+      :tag "builtin" "display")
 
 (leaf global-semantic-highlight-edits
-  :doc "Toggle global use of option 'semantic-highlight-edits'"
-  :tag "builtin" "semantic")
+      :doc "Toggle global use of option 'semantic-highlight-edits'"
+      :tag "builtin" "semantic")
 
 (leaf global-semantic-highlight-func
-  :doc "Toggle global use of option 'semantic-highlight-func'"
-  :tag "builtin" "semantic")
+      :doc "Toggle global use of option 'semantic-highlight-func'"
+      :tag "builtin" "semantic")
 
 (leaf global-semantic-show-parser-state
-  :doc "Toggle global use of option 'semantic-show-parser-state'"
-  :tag "builtin" "semantic")
+      :doc "Toggle global use of option 'semantic-show-parser-state'"
+      :tag "builtin" "semantic")
 
 (leaf global-semantic-show-unmatched-syntax
-  :doc "Toggle global use of option 'semantic-show-unmatched-syntax'"
-  :tag "builtin" "semantic")
+      :doc "Toggle global use of option 'semantic-show-unmatched-syntax'"
+      :tag "builtin" "semantic")
 
 (leaf global-semantic-stickyfunc
-  :doc "Toggle global use of option 'semantic-stickyfunc'"
-  :tag "builtin" "semantic")
+      :doc "Toggle global use of option 'semantic-stickyfunc'"
+      :tag "builtin" "semantic")
 
 (leaf global-semanticdb-minor
-  :doc "Toggle Semantic DB mode"
-  :tag "builtin" "semantic")
+      :doc "Toggle Semantic DB mode"
+      :tag "builtin" "semantic")
 
 (leaf global-so-long
-  :doc "Toggle automated performance mitigations for files with long lines"
-  :tag "builtin" "performance")
+      :doc "Toggle automated performance mitigations for files with long lines"
+      :tag "builtin" "performance")
 
 (leaf global-subword
-  :doc "Toggle Subword mode in all buffers"
-  :tag "builtin" "editing")
+      :doc "Toggle Subword mode in all buffers"
+      :tag "builtin" "editing")
 
 (leaf global-superword
-  :doc "Toggle Superword mode in all buffers"
-  :tag "builtin" "editing")
+      :doc "Toggle Superword mode in all buffers"
+      :tag "builtin" "editing")
 
 (leaf global-tab-line
-  :doc "Toggle Tab-Line mode in all buffers"
-  :tag "builtin" "tabs")
+      :doc "Toggle Tab-Line mode in all buffers"
+      :tag "builtin" "tabs")
 
 (leaf global-visual-line
-  :doc "Toggle Visual-Line mode in all buffers"
-  :tag "builtin" "text")
+      :doc "Toggle Visual-Line mode in all buffers"
+      :tag "builtin" "text")
 
 (leaf global-visual-wrap-prefix
-  :doc "Toggle Visual-Wrap-Prefix mode in all buffers"
-  :tag "builtin" "text")
+      :doc "Toggle Visual-Wrap-Prefix mode in all buffers"
+      :tag "builtin" "text")
 
 (leaf global-whitespace
-  :doc "Toggle Whitespace mode in all buffers"
-  :tag "builtin" "whitespace")
+      :doc "Toggle Whitespace mode in all buffers"
+      :tag "builtin" "whitespace")
 
 (leaf global-whitespace-newline
-  :doc "Toggle global newline visualization (Global Whitespace Newline mode)"
-  :tag "builtin" "whitespace")
+      :doc "Toggle global newline visualization (Global Whitespace Newline mode)"
+      :tag "builtin" "whitespace")
 
 (leaf global-window-tool-bar
-  :doc "Toggle Window-Tool-Bar mode in all buffers"
-  :tag "builtin" "toolbar")
+      :doc "Toggle Window-Tool-Bar mode in all buffers"
+      :tag "builtin" "toolbar")
 
 (leaf global-word-wrap-whitespace
-  :doc "Toggle Word-Wrap-Whitespace mode in all buffers"
-  :tag "builtin" "text")
+      :doc "Toggle Word-Wrap-Whitespace mode in all buffers"
+      :tag "builtin" "text")
 
 (leaf glyphless-display
-  :doc "Minor mode for displaying glyphless characters in the current buffer"
-  :tag "builtin" "display")
+      :doc "Minor mode for displaying glyphless characters in the current buffer"
+      :tag "builtin" "display")
 
 (leaf gnus-binary
-  :doc "Minor mode for providing a binary group interface in Gnus summary buffers"
-  :tag "builtin" "gnus")
+      :doc "Minor mode for providing a binary group interface in Gnus summary buffers"
+      :tag "builtin" "gnus")
 
 (leaf gnus-dead-summary
-  :doc "Minor mode for Gnus summary buffers"
-  :tag "builtin" "gnus")
+      :doc "Minor mode for Gnus summary buffers"
+      :tag "builtin" "gnus")
 
 (leaf gnus-dired
-  :doc "Minor mode for intersections of gnus and Dired"
-  :tag "builtin" "gnus")
+      :doc "Minor mode for intersections of gnus and Dired"
+      :tag "builtin" "gnus")
 
 (leaf gnus-draft
-  :doc "Minor mode for providing a draft summary buffers"
-  :tag "builtin" "gnus")
+      :doc "Minor mode for providing a draft summary buffers"
+      :tag "builtin" "gnus")
 
 (leaf gnus-mailing-list
-  :doc "Minor mode for providing mailing-list commands"
-  :tag "builtin" "gnus")
+      :doc "Minor mode for providing mailing-list commands"
+      :tag "builtin" "gnus")
 
 (leaf gnus-message-citation
-  :doc "Minor mode providing more font-lock support for nested citations"
-  :tag "builtin" "gnus")
+      :doc "Minor mode providing more font-lock support for nested citations"
+      :tag "builtin" "gnus")
 
 (leaf gnus-pick
-  :doc "Minor mode for providing a pick-and-read interface in Gnus summary buffers"
-  :tag "builtin" "gnus")
+      :doc "Minor mode for providing a pick-and-read interface in Gnus summary buffers"
+      :tag "builtin" "gnus")
 
 (leaf gnus-topic
-  :doc "Minor mode for topicsifying Gnus group buffers"
-  :tag "builtin" "gnus")
+      :doc "Minor mode for topicsifying Gnus group buffers"
+      :tag "builtin" "gnus")
 
 (leaf gnus-undo
-  :doc "Minor mode for providing 'undo' in Gnus buffers"
-  :tag "builtin" "gnus")
+      :doc "Minor mode for providing 'undo' in Gnus buffers"
+      :tag "builtin" "gnus")
 
 (leaf goto-address
-  :doc "Minor mode to buttonize URLs and e-mail addresses in the current buffer"
-  :tag "builtin" "convenience")
+      :doc "Minor mode to buttonize URLs and e-mail addresses in the current buffer"
+      :tag "builtin" "convenience")
 
 (leaf goto-address-prog
-  :doc "Like 'goto-address', but only for comments and strings"
-  :tag "builtin" "convenience")
+      :doc "Like 'goto-address', but only for comments and strings"
+      :tag "builtin" "convenience")
 
 (leaf gpm-mouse
-  :doc "Toggle mouse support in GNU/Linux consoles (GPM Mouse mode)"
-  :tag "builtin" "mouse")
+      :doc "Toggle mouse support in GNU/Linux consoles (GPM Mouse mode)"
+      :tag "builtin" "mouse")
 
 (leaf gud-tooltip
-  :doc "Toggle the display of GUD tooltips"
-  :tag "builtin" "debugging")
+      :doc "Toggle the display of GUD tooltips"
+      :tag "builtin" "debugging")
 
 (leaf header-line-indent
-  :doc "Minor mode to help with alignment of header line when line numbers are shown"
-  :tag "builtin" "display")
+      :doc "Minor mode to help with alignment of header line when line numbers are shown"
+      :tag "builtin" "display")
 
 (leaf hexl-follow-ascii
-  :doc "Minor mode to follow ASCII in current Hexl buffer"
-  :tag "builtin" "hex")
+      :doc "Minor mode to follow ASCII in current Hexl buffer"
+      :tag "builtin" "hex")
 
 (leaf hi-lock
-  :doc "Toggle selective highlighting of patterns (Hi Lock mode)"
-  :tag "builtin" "highlighting")
+      :doc "Toggle selective highlighting of patterns (Hi Lock mode)"
+      :tag "builtin" "highlighting")
 
 (leaf hide-ifdef
-  :doc "Toggle features to hide/show #ifdef blocks (Hide-Ifdef mode)"
-  :tag "builtin" "c")
+      :doc "Toggle features to hide/show #ifdef blocks (Hide-Ifdef mode)"
+      :tag "builtin" "c")
 
 (leaf highlight-changes
-  :doc "Toggle highlighting changes in this buffer (Highlight Changes mode)"
-  :tag "builtin" "highlighting")
+      :doc "Toggle highlighting changes in this buffer (Highlight Changes mode)"
+      :tag "builtin" "highlighting")
 
 (leaf highlight-changes-visible
-  :doc "Toggle visibility of highlighting due to Highlight Changes mode"
-  :tag "builtin" "highlighting")
+      :doc "Toggle visibility of highlighting due to Highlight Changes mode"
+      :tag "builtin" "highlighting")
 
 (leaf hl-line
-  :doc "Toggle highlighting of the current line (Hl-Line mode)"
-  :tag "builtin" "highlighting")
+      :doc "Toggle highlighting of the current line (Hl-Line mode)"
+      :tag "builtin" "highlighting")
 
 (leaf horizontal-scroll-bar
-  :doc "Toggle horizontal scroll bars on all frames (Horizontal Scroll Bar mode)"
-  :tag "builtin" "scrolling")
+      :doc "Toggle horizontal scroll bars on all frames (Horizontal Scroll Bar mode)"
+      :tag "builtin" "scrolling")
 
 (leaf hs-minor
-  :doc "Minor mode to selectively hide/show code and comment blocks"
-  :tag "builtin" "folding")
+      :doc "Minor mode to selectively hide/show code and comment blocks"
+      :tag "builtin" "folding")
 
 (leaf html-autoview
-  :doc "Toggle viewing of HTML files on save (HTML Autoview mode)"
-  :tag "builtin" "html")
+      :doc "Toggle viewing of HTML files on save (HTML Autoview mode)"
+      :tag "builtin" "html")
 
 (leaf icomplete
-  :doc "Toggle incremental minibuffer completion (Icomplete mode)"
-  :tag "builtin" "completion")
+      :doc "Toggle incremental minibuffer completion (Icomplete mode)"
+      :tag "builtin" "completion")
 
 (leaf icomplete-vertical
-  :doc "Toggle vertical candidate display in 'icomplete' or 'fido'"
-  :tag "builtin" "completion")
+      :doc "Toggle vertical candidate display in 'icomplete' or 'fido'"
+      :tag "builtin" "completion")
 
 (leaf iimage
-  :doc "Toggle Iimage mode on or off"
-  :tag "builtin" "image")
+      :doc "Toggle Iimage mode on or off"
+      :tag "builtin" "image")
 
 (leaf image-dired-minor
-  :doc "Setup easy-to-use keybindings for Image-Dired in Dired mode"
-  :tag "builtin" "image")
+      :doc "Setup easy-to-use keybindings for Image-Dired in Dired mode"
+      :tag "builtin" "image")
 
 (leaf image-minor
-  :doc "Toggle Image minor mode in this buffer"
-  :tag "builtin" "image")
+      :doc "Toggle Image minor mode in this buffer"
+      :tag "builtin" "image")
 
 (leaf indent-tabs
-  :doc "Toggle whether indentation can insert TAB characters"
-  :tag "builtin" "indentation")
+      :doc "Toggle whether indentation can insert TAB characters"
+      :tag "builtin" "indentation")
 
 (leaf isearch-fold-quotes
-  :doc "Minor mode to aid searching for ` characters in help modes"
-  :tag "builtin" "search")
+      :doc "Minor mode to aid searching for ` characters in help modes"
+      :tag "builtin" "search")
 
 (leaf ispell-minor
-  :doc "Toggle last-word spell checking (Ispell minor mode)"
-  :tag "builtin" "spell-checking")
+      :doc "Toggle last-word spell checking (Ispell minor mode)"
+      :tag "builtin" "spell-checking")
 
 (leaf iswitchb
-  :doc "Toggle Iswitchb mode"
-  :tag "builtin" "buffer-switching")
+      :doc "Toggle Iswitchb mode"
+      :tag "builtin" "buffer-switching")
 
 (leaf jit-lock-debug
-  :doc "Minor mode to help debug code run from jit-lock"
-  :tag "builtin" "debugging")
+      :doc "Minor mode to help debug code run from jit-lock"
+      :tag "builtin" "debugging")
 
 (leaf kill-ring-deindent
-  :doc "Toggle removal of indentation from text saved to the kill ring"
-  :tag "builtin" "editing")
+      :doc "Toggle removal of indentation from text saved to the kill ring"
+      :tag "builtin" "editing")
 
 (leaf latex-electric-env-pair
-  :doc "Toggle Latex Electric Env Pair mode"
-  :tag "builtin" "latex")
+      :doc "Toggle Latex Electric Env Pair mode"
+      :tag "builtin" "latex")
 
 (leaf line-number
-  :doc "Toggle line number display in the mode line (Line Number mode)"
-  :tag "builtin" "mode-line")
+      :doc "Toggle line number display in the mode line (Line Number mode)"
+      :tag "builtin" "mode-line")
 
 (leaf lock-file
-  :doc "Toggle file locking in the current buffer (Lock File mode)"
-  :tag "builtin" "files")
+      :doc "Toggle file locking in the current buffer (Lock File mode)"
+      :tag "builtin" "files")
 
 (leaf lost-selection
-  :doc "Toggle 'lost-selection'"
-  :tag "builtin" "selection")
+      :doc "Toggle 'lost-selection'"
+      :tag "builtin" "selection")
 
 (leaf mail-abbrevs
-  :doc "Toggle abbrev expansion of mail aliases (Mail Abbrevs mode)"
-  :tag "builtin" "mail")
+      :doc "Toggle abbrev expansion of mail aliases (Mail Abbrevs mode)"
+      :tag "builtin" "mail")
 
 (leaf master
-  :doc "Toggle Master mode"
-  :tag "builtin" "convenience")
+      :doc "Toggle Master mode"
+      :tag "builtin" "convenience")
 
 (leaf menu-bar
-  :doc "Toggle display of a menu bar on each frame (Menu Bar mode)"
-  :tag "builtin" "menu")
+      :doc "Toggle display of a menu bar on each frame (Menu Bar mode)"
+      :tag "builtin" "menu")
 
 (leaf mh-showing
-  :doc "Minor mode to show the message in a separate window"
-  :tag "builtin" "mail")
+      :doc "Minor mode to show the message in a separate window"
+      :tag "builtin" "mail")
 
 (leaf midnight
-  :doc "Non-nil means run 'midnight-hook' at midnight"
-  :tag "builtin" "convenience")
+      :doc "Non-nil means run 'midnight-hook' at midnight"
+      :tag "builtin" "convenience")
 
 (leaf minibuffer-depth-indicate
-  :doc "Toggle Minibuffer Depth Indication mode"
-  :tag "builtin" "minibuffer")
+      :doc "Toggle Minibuffer Depth Indication mode"
+      :tag "builtin" "minibuffer")
 
 (leaf minibuffer-electric-default
-  :doc "Toggle Minibuffer Electric Default mode"
-  :tag "builtin" "minibuffer")
+      :doc "Toggle Minibuffer Electric Default mode"
+      :tag "builtin" "minibuffer")
 
 (leaf minibuffer-regexp
-  :doc "Minor mode for editing regular expressions in the minibuffer"
-  :tag "builtin" "regexp")
+      :doc "Minor mode for editing regular expressions in the minibuffer"
+      :tag "builtin" "regexp")
 
 (leaf mml
-  :doc "Minor mode for editing MML"
-  :tag "builtin" "mail")
+      :doc "Minor mode for editing MML"
+      :tag "builtin" "mail")
 
 (leaf modifier-bar
-  :doc "Toggle display of the modifier bar"
-  :tag "builtin" "display")
+      :doc "Toggle display of the modifier bar"
+      :tag "builtin" "display")
 
 (leaf mouse-wheel
-  :doc "Toggle mouse wheel support (Mouse Wheel mode)"
-  :tag "builtin" "mouse"
-  :global-minor-mode t
-  :custom ((mouse-wheel-scroll-amount . '(3 ((shift) . 5) ((control) . nil)))
-           (mouse-wheel-progressive-speed . nil)))
+      :doc "Toggle mouse wheel support (Mouse Wheel mode)"
+      :tag "builtin" "mouse")
 
 (leaf msb
-  :doc "Toggle Msb mode"
-  :tag "builtin" "menu")
+      :doc "Toggle Msb mode"
+      :tag "builtin" "menu")
 
 (leaf next-error-follow-minor
-  :doc "Minor mode for compilation, occur and diff modes"
-  :tag "builtin" "navigation")
+      :doc "Minor mode for compilation, occur and diff modes"
+      :tag "builtin" "navigation")
 
 (leaf nroff-electric
-  :doc "Toggle automatic nroff request pairing (Nroff Electric mode)"
-  :tag "builtin" "nroff")
+      :doc "Toggle automatic nroff request pairing (Nroff Electric mode)"
+      :tag "builtin" "nroff")
 
 (leaf org-beamer
-  :doc "Support for editing Beamer oriented Org mode files"
-  :tag "builtin" "org")
+      :doc "Support for editing Beamer oriented Org mode files"
+      :tag "builtin" "org")
 
 (leaf org-cdlatex
-  :doc "Toggle the minor 'org-cdlatex'"
-  :tag "builtin" "org")
+      :doc "Toggle the minor 'org-cdlatex'"
+      :tag "builtin" "org")
 
 (leaf org-list-checkbox-radio
-  :doc "When turned on, use list checkboxes as radio buttons"
-  :tag "builtin" "org")
+      :doc "When turned on, use list checkboxes as radio buttons"
+      :tag "builtin" "org")
 
 (leaf org-src
-  :doc "Minor mode for language major mode buffers generated by Org"
-  :tag "builtin" "org")
+      :doc "Minor mode for language major mode buffers generated by Org"
+      :tag "builtin" "org")
 
 (leaf org-table-follow-field
-  :doc "Minor mode to make the table field editor window follow the cursor"
-  :tag "builtin" "org")
+      :doc "Minor mode to make the table field editor window follow the cursor"
+      :tag "builtin" "org")
 
 (leaf org-table-header-line
-  :doc "Display the first row of the table at point in the header line"
-  :tag "builtin" "org")
+      :doc "Display the first row of the table at point in the header line"
+      :tag "builtin" "org")
 
 (leaf orgtbl
-  :doc "The Org mode table editor as a minor mode for use in other modes"
-  :tag "builtin" "org")
+      :doc "The Org mode table editor as a minor mode for use in other modes"
+      :tag "builtin" "org")
 
 (leaf outline-minor
-  :doc "Toggle Outline minor mode"
-  :tag "builtin" "outline")
+      :doc "Toggle Outline minor mode"
+      :tag "builtin" "outline")
 
 (leaf overwrite
-  :doc "Toggle Overwrite mode"
-  :tag "builtin" "editing")
+      :doc "Toggle Overwrite mode"
+      :tag "builtin" "editing")
 
 (leaf paragraph-indent-minor
-  :doc "Minor mode for editing text, with leading spaces starting a paragraph"
-  :tag "builtin" "text")
+      :doc "Minor mode for editing text, with leading spaces starting a paragraph"
+      :tag "builtin" "text")
 
 (leaf pascal-outline
-  :doc "Outline-line minor mode for Pascal mode"
-  :tag "builtin" "pascal")
+      :doc "Outline-line minor mode for Pascal mode"
+      :tag "builtin" "pascal")
 
 (leaf pixel-scroll
-  :doc "A minor mode to scroll text pixel-by-pixel"
-  :tag "builtin" "scrolling")
+      :doc "A minor mode to scroll text pixel-by-pixel"
+      :tag "builtin" "scrolling")
 
 (leaf pixel-scroll-precision
-  :doc "Toggle pixel scrolling"
-  :tag "builtin" "scrolling")
+      :doc "Toggle pixel scrolling"
+      :tag "builtin" "scrolling")
 
 (leaf prettify-symbols
-  :doc "Toggle Prettify Symbols mode"
-  :tag "builtin" "display")
+      :doc "Toggle Prettify Symbols mode"
+      :tag "builtin" "display")
 
 (leaf rcirc-multiline-minor
-  :doc "Minor mode for editing multiple lines in rcirc"
-  :tag "builtin" "rcirc")
+      :doc "Minor mode for editing multiple lines in rcirc"
+      :tag "builtin" "rcirc")
 
 (leaf rcirc-omit
-  :doc "Toggle the hiding of \"uninteresting\" lines"
-  :tag "builtin" "rcirc")
+      :doc "Toggle the hiding of \"uninteresting\" lines"
+      :tag "builtin" "rcirc")
 
 (leaf rcirc-track-minor
-  :doc "Global minor mode for tracking activity in rcirc buffers"
-  :tag "builtin" "rcirc")
+      :doc "Global minor mode for tracking activity in rcirc buffers"
+      :tag "builtin" "rcirc")
 
 (leaf read-extended-command
-  :doc "Minor mode used for completion in 'read-extended-command'"
-  :tag "builtin" "commands")
+      :doc "Minor mode used for completion in 'read-extended-command'"
+      :tag "builtin" "commands")
 
 (leaf read-passwd
-  :doc "Toggle visibility of password in minibuffer"
-  :tag "builtin" "security")
+      :doc "Toggle visibility of password in minibuffer"
+      :tag "builtin" "security")
 
 (leaf recentf
-  :doc "Toggle keeping track of opened files (Recentf mode)"
-  :tag "builtin" "files"
-  :global-minor-mode t
-  :custom ((recentf-filename-handlers . '(substring-no-properties))
-            recentf-auto-cleanup . 'never))
+      :doc "Toggle keeping track of opened files (Recentf mode)"
+      :tag "builtin" "files"
+      :global-minor-mode t
+      :custom
+      (recentf-filename-handlers . '(substring-no-properties))
+      (recentf-auto-cleanup . 'never))
 
 (leaf rectangle-mark
-  :doc "Toggle the region as rectangular"
-  :tag "builtin" "editing")
+      :doc "Toggle the region as rectangular"
+      :tag "builtin" "editing")
 
 (leaf refill
-  :doc "Toggle automatic refilling (Refill mode)"
-  :tag "builtin" "text")
+      :doc "Toggle automatic refilling (Refill mode)"
+      :tag "builtin" "text")
 
 (leaf reftex-isearch-minor
-  :doc "When on, isearch searches the whole document, not only the current file"
-  :tag "builtin" "reftex")
+      :doc "When on, isearch searches the whole document, not only the current file"
+      :tag "builtin" "reftex")
 
 (leaf reftex
-  :doc "Minor mode with distinct support for \\label, \\ref and \\cite in LaTeX"
-  :tag "builtin" "reftex")
+      :doc "Minor mode with distinct support for \\label, \\ref and \\cite in LaTeX"
+      :tag "builtin" "reftex")
 
 (leaf repeat
-  :doc "Toggle Repeat mode"
-  :tag "builtin" "convenience")
+      :doc "Toggle Repeat mode"
+      :tag "builtin" "convenience")
 
 (leaf reveal
-  :doc "Toggle uncloaking of invisible text near point (Reveal mode)"
-  :tag "builtin" "display")
+      :doc "Toggle uncloaking of invisible text near point (Reveal mode)"
+      :tag "builtin" "display")
 
 (leaf rng-validate
-  :doc "Minor mode performing continual validation against a RELAX NG schema"
-  :tag "builtin" "xml")
+      :doc "Minor mode performing continual validation against a RELAX NG schema"
+      :tag "builtin" "xml")
 
 (leaf rst-minor
-  :doc "Toggle ReST minor mode"
-  :tag "builtin" "rst")
+      :doc "Toggle ReST minor mode"
+      :tag "builtin" "rst")
 
 (leaf ruler
-  :doc "Toggle display of ruler in header line (Ruler mode)"
-  :tag "builtin" "display")
+      :doc "Toggle display of ruler in header line (Ruler mode)"
+      :tag "builtin" "display")
 
 (leaf save-place
-  :doc "Non-nil means automatically save place in each file"
-  :tag "builtin" "files")
+      :doc "Non-nil means automatically save place in each file"
+      :tag "builtin" "files"
+      :global-minor-mode t)
 
 (leaf savehist
-  :doc "Toggle saving of minibuffer history (Savehist mode)"
-  :tag "builtin" "minibuffer"
-  :global-minor-mode t)
+      :doc "Toggle saving of minibuffer history (Savehist mode)"
+      :tag "builtin" "minibuffer"
+      :global-minor-mode t)
 
 (leaf scroll-all
-  :doc "Toggle shared scrolling in same-frame windows (Scroll-All mode)"
-  :tag "builtin" "scrolling")
+      :doc "Toggle shared scrolling in same-frame windows (Scroll-All mode)"
+      :tag "builtin" "scrolling")
 
 (leaf scroll-lock
-  :doc "Buffer-local minor mode for pager-like scrolling"
-  :tag "builtin" "scrolling")
+      :doc "Buffer-local minor mode for pager-like scrolling"
+      :tag "builtin" "scrolling")
 
 (leaf semantic-highlight-edits
-  :doc "Minor mode for highlighting changes made in a buffer"
-  :tag "builtin" "semantic")
+      :doc "Minor mode for highlighting changes made in a buffer"
+      :tag "builtin" "semantic")
 
 (leaf semantic-highlight-func
-  :doc "Minor mode to highlight the first line of the current tag"
-  :tag "builtin" "semantic")
+      :doc "Minor mode to highlight the first line of the current tag"
+      :tag "builtin" "semantic")
 
 (leaf semantic
-  :doc "Toggle parser features (Semantic mode)"
-  :tag "builtin" "semantic")
+      :doc "Toggle parser features (Semantic mode)"
+      :tag "builtin" "semantic")
 
 (leaf semantic-show-parser-state
-  :doc "Minor mode for displaying parser cache state in the modeline"
-  :tag "builtin" "semantic")
+      :doc "Minor mode for displaying parser cache state in the modeline"
+      :tag "builtin" "semantic")
 
 (leaf semantic-show-unmatched-syntax
-  :doc "Minor mode to highlight unmatched lexical syntax tokens"
-  :tag "builtin" "semantic")
+      :doc "Minor mode to highlight unmatched lexical syntax tokens"
+      :tag "builtin" "semantic")
 
 (leaf semantic-stickyfunc
-  :doc "Minor mode to show the title of a tag in the header line"
-  :tag "builtin" "semantic")
+      :doc "Minor mode to show the title of a tag in the header line"
+      :tag "builtin" "semantic")
 
 (leaf server
-  :doc "Toggle Server mode"
-  :tag "builtin" "server")
+      :doc "Toggle Server mode"
+      :tag "builtin" "server")
 
 (leaf sgml-electric-tag-pair
-  :doc "Toggle SGML Electric Tag Pair mode"
-  :tag "builtin" "sgml")
+      :doc "Toggle SGML Electric Tag Pair mode"
+      :tag "builtin" "sgml")
 
 (leaf sh-electric-here-document
-  :doc "Make << insert a here document skeleton"
-  :tag "builtin" "shell")
+      :doc "Make << insert a here document skeleton"
+      :tag "builtin" "shell")
 
 (leaf shell-dirtrack
-  :doc "Toggle directory tracking in this shell buffer (Shell Dirtrack mode)"
-  :tag "builtin" "shell")
+      :doc "Toggle directory tracking in this shell buffer (Shell Dirtrack mode)"
+      :tag "builtin" "shell")
 
 (leaf shell-highlight-undef
-  :doc "Highlight undefined shell commands and aliases"
-  :tag "builtin" "shell")
+      :doc "Highlight undefined shell commands and aliases"
+      :tag "builtin" "shell")
 
 (leaf show-paren
-  :doc "Toggle visualization of matching parens (Show Paren mode)"
-  :tag "builtin" "convenience"
-  :global-minor-mode t)
+      :doc "Toggle visualization of matching parens (Show Paren mode)"
+      :tag "builtin" "convenience")
 
 (leaf size-indication
-  :doc "Toggle buffer size display in the mode line (Size Indication mode)"
-  :tag "builtin" "mode-line")
+      :doc "Toggle buffer size display in the mode line (Size Indication mode)"
+      :tag "builtin" "mode-line")
 
 (leaf smerge
-  :doc "Minor mode to simplify editing output from the diff3 program"
-  :tag "builtin" "merge")
+      :doc "Minor mode to simplify editing output from the diff3 program"
+      :tag "builtin" "merge")
 
 (leaf so-long-minor
-  :doc "This is the minor mode equivalent of 'so-long'"
-  :tag "builtin" "performance")
+      :doc "This is the minor mode equivalent of 'so-long'"
+      :tag "builtin" "performance")
 
 (leaf strokes
-  :doc "Toggle Strokes mode, a global minor mode"
-  :tag "builtin" "strokes")
+      :doc "Toggle Strokes mode, a global minor mode"
+      :tag "builtin" "strokes")
 
 (leaf subword
-  :doc "Toggle subword movement and editing (Subword mode)"
-  :tag "builtin" "editing")
+      :doc "Toggle subword movement and editing (Subword mode)"
+      :tag "builtin" "editing")
 
 (leaf superword
-  :doc "Toggle superword movement and editing (Superword mode)"
-  :tag "builtin" "editing")
+      :doc "Toggle superword movement and editing (Superword mode)"
+      :tag "builtin" "editing")
 
 (leaf tab-bar-history
-  :doc "Toggle tab history mode for the tab bar"
-  :tag "builtin" "tabs")
+      :doc "Toggle tab history mode for the tab bar"
+      :tag "builtin" "tabs")
 
 (leaf tab-bar
-  :doc "Toggle the tab bar in all graphical frames (Tab Bar mode)"
-  :tag "builtin" "tabs")
+      :doc "Toggle the tab bar in all graphical frames (Tab Bar mode)"
+      :tag "builtin" "tabs")
 
 (leaf tab-line
-  :doc "Toggle display of tab line in the windows displaying the current buffer"
-  :tag "builtin" "tabs")
+      :doc "Toggle display of tab line in the windows displaying the current buffer"
+      :tag "builtin" "tabs")
 
 (leaf table-fixed-width
-  :doc "Cell width is fixed when this is non-nil"
-  :tag "builtin" "table")
+      :doc "Cell width is fixed when this is non-nil"
+      :tag "builtin" "table")
 
 (leaf tar-subfile
-  :doc "Minor mode for editing an element of a tar-file"
-  :tag "builtin" "tar")
+      :doc "Minor mode for editing an element of a tar-file"
+      :tag "builtin" "tar")
 
 (leaf temp-buffer-resize
-  :doc "Toggle auto-resizing temporary buffer windows (Temp Buffer Resize Mode)"
-  :tag "builtin" "windows")
+      :doc "Toggle auto-resizing temporary buffer windows (Temp Buffer Resize Mode)"
+      :tag "builtin" "windows")
 
 (leaf text-scale
-  :doc "Minor mode for displaying buffer text in a larger/smaller font"
-  :tag "builtin" "text")
+      :doc "Minor mode for displaying buffer text in a larger/smaller font"
+      :tag "builtin" "text")
 
 (leaf tildify
-  :doc "Adds electric behavior to space character"
-  :tag "builtin" "text")
+      :doc "Adds electric behavior to space character"
+      :tag "builtin" "text")
 
 (leaf tool-bar
-  :doc "Toggle the tool bar in all graphical frames (Tool Bar mode)"
-  :tag "builtin" "toolbar")
+      :doc "Toggle the tool bar in all graphical frames (Tool Bar mode)"
+      :tag "builtin" "toolbar")
 
 (leaf tooltip
-  :doc "Toggle Tooltip mode"
-  :tag "builtin" "tooltip")
+      :doc "Toggle Tooltip mode"
+      :tag "builtin" "tooltip")
 
 (leaf transient-mark
-  :doc "Toggle Transient Mark mode"
-  :tag "builtin" "editing"
-  :global-minor-mode t)
+      :doc "Toggle Transient Mark mode"
+      :tag "builtin" "editing")
 
 (leaf treesit-explore
-  :doc "Enable exploring the current buffer's syntax tree"
-  :tag "builtin" "treesit")
+      :doc "Enable exploring the current buffer's syntax tree"
+      :tag "builtin" "treesit")
 
 (leaf treesit-inspect
-  :doc "Minor mode that displays in the mode-line the node which starts at point"
-  :tag "builtin" "treesit")
+      :doc "Minor mode that displays in the mode-line the node which starts at point"
+      :tag "builtin" "treesit")
 
 (leaf type-break
-  :doc "Enable or disable typing-break mode"
-  :tag "builtin" "health")
+      :doc "Enable or disable typing-break mode"
+      :tag "builtin" "health")
 
 (leaf type-break-line-message
-  :doc "Toggle warnings about typing breaks in the mode line"
-  :tag "builtin" "health")
+      :doc "Toggle warnings about typing breaks in the mode line"
+      :tag "builtin" "health")
 
 (leaf type-break-query
-  :doc "Toggle typing break queries"
-  :tag "builtin" "health")
+      :doc "Toggle typing break queries"
+      :tag "builtin" "health")
 
 (leaf undelete-frame
-  :doc "Enable the 'undelete-frame' command"
-  :tag "builtin" "frames")
+      :doc "Enable the 'undelete-frame' command"
+      :tag "builtin" "frames")
 
 (leaf url-handler
-  :doc "Handle URLs as if they were file names throughout Emacs"
-  :tag "builtin" "url")
+      :doc "Handle URLs as if they were file names throughout Emacs"
+      :tag "builtin" "url")
 
 (leaf vhdl-electric
-  :doc "Toggle VHDL electric mode"
-  :tag "builtin" "vhdl")
+      :doc "Toggle VHDL electric mode"
+      :tag "builtin" "vhdl")
 
 (leaf vhdl-hs-minor
-  :doc "Toggle hideshow minor mode and update menu bar"
-  :tag "builtin" "vhdl")
+      :doc "Toggle hideshow minor mode and update menu bar"
+      :tag "builtin" "vhdl")
 
 (leaf vhdl-stutter
-  :doc "Toggle VHDL stuttering mode"
-  :tag "builtin" "vhdl")
+      :doc "Toggle VHDL stuttering mode"
+      :tag "builtin" "vhdl")
 
 (leaf view
-  :doc "Toggle View mode, a minor mode for viewing text but not editing it"
-  :tag "builtin" "viewing")
+      :doc "Toggle View mode, a minor mode for viewing text but not editing it"
+      :tag "builtin" "viewing")
 
 (leaf viper-harness-minor
-  :doc "Familiarize Viper with a minor mode defined in LOAD-FILE"
-  :tag "builtin" "viper")
+      :doc "Familiarize Viper with a minor mode defined in LOAD-FILE"
+      :tag "builtin" "viper")
 
 (leaf visible
-  :doc "Toggle making all invisible text temporarily visible (Visible mode)"
-  :tag "builtin" "display")
+      :doc "Toggle making all invisible text temporarily visible (Visible mode)"
+      :tag "builtin" "display")
 
 (leaf visual-line
-  :doc "Toggle visual line based editing (Visual Line mode) in the current buffer"
-  :tag "builtin" "text")
+      :doc "Toggle visual line based editing (Visual Line mode) in the current buffer"
+      :tag "builtin" "text")
 
 (leaf visual-wrap-prefix
-  :doc "Display continuation lines with prefixes from surrounding context"
-  :tag "builtin" "text")
+      :doc "Display continuation lines with prefixes from surrounding context"
+      :tag "builtin" "text")
 
 (leaf which-function
-  :doc "Toggle mode line display of current function (Which Function mode)"
-  :tag "builtin" "mode-line")
+      :doc "Toggle mode line display of current function (Which Function mode)"
+      :tag "builtin" "mode-line")
 
 (leaf which-key
-  :doc "Toggle 'which-key'"
-  :tag "external" "help"
-  :global-minor-mode t
-  :custom (which-key-idle-delay . 0.3))
+      :doc "Toggle 'which-key'"
+      :tag "external" "help"
+      :global-minor-mode t
+      :custom
+      (which-key-idle-delay . 0.3))
 
 (leaf whitespace
-  :doc "Toggle whitespace visualization (Whitespace mode)"
-  :tag "builtin" "whitespace")
+      :doc "Toggle whitespace visualization (Whitespace mode)"
+      :tag "builtin" "whitespace")
 
 (leaf whitespace-newline
-  :doc "Toggle newline visualization (Whitespace Newline mode)"
-  :tag "builtin" "whitespace")
+      :doc "Toggle newline visualization (Whitespace Newline mode)"
+      :tag "builtin" "whitespace")
 
 (leaf widget-minor
-  :doc "Minor mode for traversing widgets"
-  :tag "builtin" "widgets")
+      :doc "Minor mode for traversing widgets"
+      :tag "builtin" "widgets")
 
 (leaf windmove
-  :doc "Global minor mode for default windmove commands"
-  :tag "builtin" "windows")
+      :doc "Global minor mode for default windmove commands"
+      :tag "builtin" "windows")
 
 (leaf window-divider
-  :doc "Display dividers between windows (Window Divider mode)"
-  :tag "builtin" "windows")
+      :doc "Display dividers between windows (Window Divider mode)"
+      :tag "builtin" "windows")
 
 (leaf window-tool-bar
-  :doc "Toggle display of the tool bar in the tab line of the current buffer"
-  :tag "builtin" "toolbar")
+      :doc "Toggle display of the tool bar in the tab line of the current buffer"
+      :tag "builtin" "toolbar")
 
 (leaf winner
-  :doc "Restore old window configurations"
-  :tag "window" "layout" "workspace" "builtin" "navigation"
-  :global-minor-mode t)
+      :doc "Restore old window configurations"
+      :tag "window" "layout" "workspace" "builtin" "navigation")
 
 (leaf xref-etags
-  :doc "Minor mode to make xref use etags again"
-  :tag "builtin" "navigation")
+      :doc "Minor mode to make xref use etags again"
+      :tag "builtin" "navigation")
 
 (leaf xterm-mouse
-  :doc "Toggle XTerm mouse mode"
-  :tag "builtin" "mouse"
-  :unless (display-graphic-p)
-  :global-minor-mode t)
+      :doc "Toggle XTerm mouse mode"
+      :tag "builtin" "mouse"
+      :global-minor-mode t)
 
 ;;
 
 (leaf vertico
-  :doc "VERTical Interactive COmpletion"
-  :tag "completion" "ui" "backend"
-  :url "https://github.com/minad/vertico"
-  :elpaca t
-  :global-minor-mode t
-  :custom ((vertico-cycle . t)
-           (vertico-scroll-margin . 4)))
+      :doc "VERTical Interactive COmpletion"
+      :tag "completion" "ui" "backend"
+      :url "https://github.com/minad/vertico"
+      :elpaca (vertico :host github
+                       :repo "minad/vertico")
+      :global-minor-mode t
+      :custom
+      (vertico-cycle . t)
+      (vertico-scroll-margin . 4))
 
 (leaf vertico-buffer
-  :doc "Display Vertico like a regular buffer."
-  :tag "completion" "ui" "rendering"
-  :url "https://github.com/minad/vertico/blob/main/extensions/vertico-buffer.el"
-  :after vertico)
+      :doc "Display Vertico like a regular buffer"
+      :tag "completion" "ui" "rendering"
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-buffer.el"
+      :after vertico)
 
 (leaf vertico-directory
-  :doc "Commands for Ido-like directory navigation."
-  :tag "completion" "files" "navigation"
-  :url "https://github.com/minad/vertico/blob/main/extensions/vertico-directory.el"
-  :after vertico
-  :bind ((:vertico-map :package vertico
-         ("RET" . vertico-directory-enter)
-         ("DEL" . vertico-directory-delete-char)
-         ("C-DEL" . vertico-directory-delete-word))))
+      :doc "Commands for Ido-like directory navigation"
+      :tag "completion" "files" "navigation"
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-directory.el"
+      :after vertico
+      :bind (:vertico-map :package vertico
+                          ("RET" . vertico-directory-enter)
+                          ("DEL" . vertico-directory-delete-char)))
 
 (leaf vertico-flat
-  :doc "Enable a flat, horizontal display."
-  :tag "completion" "ui" "layout"
-  :url "https://github.com/minad/vertico/blob/main/extensions/vertico-flat.el"
-  :after vertico)
+      :doc "Enable a flat, horizontal display"
+      :tag "completion" "ui" "layout"
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-flat.el"
+      :after vertico)
 
 (leaf vertico-grid
-  :doc "Enable a grid display."
-  :tag "completion" "ui" "layout"
-  :url "https://github.com/minad/vertico/blob/main/extensions/vertico-grid.el"
-  :after vertico)
+      :doc "Enable a grid display"
+      :tag "completion" "ui" "layout"
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-grid.el"
+      :after vertico)
 
 (leaf vertico-indexed
-  :doc "Select indexed candidates with prefix arguments."
-  :tag "completion" "selection" "numeric"
-  :url "https://github.com/minad/vertico/blob/main/extensions/vertico-indexed.el"
-  :after vertico)
+      :doc "Select indexed candidates with prefix arguments"
+      :tag "completion" "selection" "numeric"
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-indexed.el"
+      :after vertico)
 
 (leaf vertico-mouse
-  :doc "Support mouse for scrolling and candidate selection."
-  :tag "completion" "ui" "mouse" "accessibility"
-  :url "https://github.com/minad/vertico/blob/main/extensions/vertico-mouse.el"
-  :after vertico
-  :hook (vertico-mode-hook . vertico-mouse-mode))
+      :doc "Support mouse for scrolling and candidate selection"
+      :tag "completion" "ui" "mouse" "accessibility"
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-mouse.el"
+      :after vertico)
 
 (leaf vertico-multiform
-  :doc "Configure Vertico modes per command or completion category."
-  :tag "completion" "ui" "config" "routing"
-  :url "https://github.com/minad/vertico/blob/main/extensions/vertico-multiform.el"
-  :after vertico)
+      :doc "Configure Vertico modes per command or completion category"
+      :tag "completion" "ui" "config" "routing"
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-multiform.el"
+      :after vertico
+      :global-minor-mode t
+      :custom
+      ;; Route specific commands to the 'buffer' display mode
+      (vertico-multiform-commands . '((consult-line buffer))))
 
 (leaf vertico-quick
-  :doc "Commands to select using Avy-style quick keys."
-  :tag "completion" "ui" "selection" "keyboard"
-  :url "https://github.com/minad/vertico/blob/main/extensions/vertico-quick.el"
-  :after vertico)
+      :doc "Commands to select using Avy-style quick keys"
+      :tag "completion" "ui" "selection" "keyboard"
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-quick.el"
+      :after vertico)
 
 (leaf vertico-repeat
-  :doc "Repeats the last completion session."
-  :tag "completion" "session" "persistence"
-  :url "https://github.com/minad/vertico/blob/main/extensions/vertico-repeat.el"
-  :after vertico)
+      :doc "Repeats the last completion session"
+      :tag "completion" "session" "persistence"
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-repeat.el"
+      :after vertico)
 
 (leaf vertico-reverse
-  :doc "Reverse the display."
-  :tag "completion" "ui" "layout"
-  :url "https://github.com/minad/vertico/blob/main/extensions/vertico-reverse.el"
-  :after vertico)
+      :doc "Reverse the display"
+      :tag "completion" "ui" "layout"
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-reverse.el"
+      :after vertico)
 
 (leaf vertico-suspend
-  :doc "Suspends and restores the current session."
-  :tag "completion" "session" "control"
-  :url "https://github.com/minad/vertico/blob/main/extensions/vertico-suspend.el"
-  :after vertico)
+      :doc "Suspends and restores the current session"
+      :tag "completion" "session" "control"
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-suspend.el"
+      :after vertico)
 
 (leaf vertico-unobtrusive
-  :doc "Displays only the topmost candidate."
-  :tag "completion" "minimal" "ui"
-  :url "https://github.com/minad/vertico/blob/main/extensions/vertico-unobtrusive.el"
-  :after vertico)
+      :doc "Displays only the topmost candidate"
+      :tag "completion" "minimal" "ui"
+      :url "https://github.com/minad/vertico/blob/main/extensions/vertico-unobtrusive.el"
+      :after vertico)
 
 ;;
 
 (leaf marginalia
-  :doc "Marginalia in the minibuffer"
-  :tag "completion" "ui" "annotation"
-  :url "https://github.com/minad/marginalia"
-  :elpaca t
-  :global-minor-mode t)
-
-(leaf orderless
-  :doc "Emacs completion style that matches multiple regexps in any order."
-  :tag "completion" "style" "matching" "regex"
-  :url "https://github.com/oantolin/orderless"
-  :elpaca t
-  :custom ((completion-styles . '(orderless basic))
-           (completion-category-defaults . nil)
-           (completion-category-overrides . '((file (styles partial-completion))))))
+      :doc "Marginalia in the minibuffer"
+      :tag "completion" "ui" "annotation"
+      :url "https://github.com/minad/marginalia"
+      :elpaca (marginalia :host github
+                          :repo "minad/marginalia")
+      :global-minor-mode t)
 
 (leaf consult
-  :doc "consult.el - Consulting completing-read"
-  :tag "completion" "ui" "command" "search" "navigation"
-  :url "https://github.com/minad/consult"
-  :elpaca t)
-
-(leaf embark
-  :doc "Emacs Mini-Buffer Actions Rooted in Keymaps."
-  :tag "minibuffer" "completion" "convenience"
-  :url "https://github.com/oantolin/embark"
-  :elpaca t)
-
-(leaf embark-consult
-  :doc "Emacs Mini-Buffer Actions Rooted in Keymaps."
-  :tag "minibuffer" "completion" "convenience"
-  :url "https://github.com/oantolin/embark"
-  :elpaca t)
-
-(leaf cape
-  :doc "Completion At Point Extensions."
-  :url "https://github.com/minad/cape"
-  :tag "completion", "editing" "extensions"
-  :elpaca t)
+      :doc "Consulting completing-read"
+      :tag "completion" "ui" "command" "search" "navigation"
+      :url "https://github.com/minad/consult"
+      :elpaca (consult :host github
+                       :repo "minad/consult"))
 
 (leaf corfu
-  :doc "COmpletion in Region FUnction"
-  :tag "text" "completion" "matching" "convenience"
-  :url "https://github.com/minad/corfu"
-  :elpaca t)
+      :doc "COmpletion in Region FUnction"
+      :tag "text" "completion" "matching" "convenience"
+      :url "https://github.com/minad/corfu"
+      :elpaca (corfu :host github
+                     :repo "minad/corfu")
+      :custom
+      (corfu-auto              . t)
+      (corfu-auto-delay        . 0)
+      (corfu-auto-prefix       . 3)
+      (corfu-quit-no-match     . 'separator)
+      (corfu-preselect         . 'first)
+      (corfu-preview-current   . nil)
+      :bind (:corfu-map ("TAB" . corfu-insert)))
 
-(leaf corfu-mouse
-  :doc "Mouse support for Corfu completion"
-  :tag "completion" "ui" "mouse" "convenience"
-  :url "https://codeberg.org/materus/emacs-corfu-mouse"
-  :elpaca (corfu-mouse :host codeberg :repo "materus/emacs-corfu-mouse"))
+
+(leaf cape
+      :doc "Completion At Point Extensions"
+      :url "https://github.com/minad/cape"
+      :tag "completion" "editing" "extensions"
+      :elpaca (cape :host github
+                    :repo "minad/cape"))
+
+;;
+
+(leaf orderless
+      :doc "Emacs completion style that matches multiple regexps in any order"
+      :tag "completion" "style" "matching" "regex"
+      :url "https://github.com/oantolin/orderless"
+      :elpaca (orderless :host github
+                         :repo "oantolin/orderless"))
+
+(leaf embark
+      :doc "Emacs Mini-Buffer Actions Rooted in Keymaps"
+      :tag "minibuffer" "completion" "convenience"
+      :url "https://github.com/oantolin/embark"
+      :elpaca (embark :host github
+                      :repo "oantolin/embark"))
+
+(leaf embark-consult
+      :doc "Consult integration for Embark"
+      :tag "actions" "completion" "integration"
+      :url "https://github.com/oantolin/embark"
+      :elpaca (embark-consult :host github
+                              :repo "oantolin/embark"))
 
 ;;
 
 (leaf magit
-  :doc "It's Magit! A Git porcelain inside Emacs."
-  :tag "vcs" "git" "tooling" "interface"
-  :url "https://github.com/magit/magit"
-  :elpaca t
-  :preface (defun magit-display-buffer-same-window (buffer)
-             "Display BUFFER in the selected window."
-             (display-buffer
-              buffer '(display-buffer-same-window)))
-  :custom (magit-bury-buffer-function . #'magit-restore-window-configuration)
-          (magit-display-buffer-function . 'magit-display-buffer-same-window)
-          (magit-popup-display-buffer-action . '((display-buffer-same-window)))
-          (magit-wip-mode . t)
-          (magit-save-repository-buffers . nil))
+      :doc "A Git porcelain inside Emacs"
+      :tag "git" "tools" "vc"
+      :url "https://github.com/magit/magit"
+      :elpaca (magit :host github
+                     :repo "magit/magit")
+      :custom (magit-save-repository-buffers . nil))
 
 (leaf forge
-  :doc "Work with Git forges from the comfort of Magit"
-  :tag "vcs" "git" "integration"
-  :url "https://github.com/magit/forge"
-  :elpaca t
-  :custom ((github.user . "wroyca")
-           (auth-sources . '("~/.config/forge/.github-authinfo"))))
+      :doc "Access Git forges from Magit"
+      :tag "git" "tools" "vc" "github"
+      :url "https://github.com/magit/forge"
+      :elpaca (forge :host github
+                     :repo "magit/forge"))
 
 (leaf transient
-  :doc "Transient commands"
-  :tag "ui" "keybinding" "command" "infrastructure"
-  :url "https://github.com/magit/transient"
-  :elpaca t)
+      :doc "Transient commands"
+      :tag "bindings" "keymaps" "ui"
+      :url "https://github.com/magit/transient"
+      :elpaca (transient :host github
+                         :repo "magit/transient"))
+
+(leaf ghub
+      :doc "Minuscule client for the Github API"
+      :tag "api" "tools" "github"
+      :url "https://github.com/magit/ghub"
+      :elpaca (ghub :host github
+                    :repo "magit/ghub"))
+
+(leaf emacsql
+      :doc "High-level SQL database front-end"
+      :tag "database" "sql"
+      :url "https://github.com/magit/emacsql"
+      :elpaca (emacsql :host github
+                       :repo "magit/emacsql"))
+
+;;
+
+(leaf lsp-mode
+      :doc "Language Server Protocol Support for Emacs"
+      :tag "lsp" "tools"
+      :url "https://github.com/emacs-lsp/lsp-mode"
+      :elpaca (lsp-mode :host github
+                        :repo "emacs-lsp/lsp-mode")
+      :custom
+      (lsp-eldoc-enable-hover . nil)
+      (lsp-enable-dap-auto-configure . nil)
+      (lsp-enable-folding . nil)
+      (lsp-enable-imenu . nil)
+      (lsp-enable-on-type-formatting . nil)
+      (lsp-enable-suggest-server-download . nil)
+      (lsp-enable-symbol-highlighting . nil)
+      (lsp-keep-workspace-alive . nil)
+      (lsp-log-max . nil)
+      (lsp-headerline-breadcrumb-enable . nil)
+      :init
+      (defvar dotemacs-lsp-config-dir (expand-file-name "lisp/lsp/" user-emacs-directory))
+      (add-to-list 'load-path dotemacs-lsp-config-dir)
+      (mapc (lambda (file)
+              (load (file-name-sans-extension file) nil t))
+            (directory-files dotemacs-lsp-config-dir t "^\\+.*\\.el$")))
+
+(leaf lsp-ui
+      :doc "UI modules for lsp-mode"
+      :tag "lsp" "ui" "tools"
+      :url "https://github.com/wroyca/lsp-ui"
+      :elpaca (lsp-ui :host github
+                      :repo "wroyca/lsp-ui")
+      :hook
+      (lsp-mode-hook . lsp-ui-mode)
+      :bind
+      (:evil-normal-state-map ("K" . lsp-ui-doc-glance))
+      :custom
+      (lsp-ui-doc-position . 'at-point)
+      :config
+      (defun dotemacs-filter-lsp-ui-doc-string (args)
+        "Remove markdown horizontal rules from the raw doc string."
+        (let ((str (car args))
+              (rest-args (cdr args)))
+          (when (stringp str)
+            (setq str (replace-regexp-in-string "\n+[ \t]*[-_*]\\{3,\\}[ \t]*\n+" "\n\n" str)))
+          (cons str rest-args)))
+      (advice-add 'lsp-ui-doc--render-buffer :filter-args #'dotemacs-filter-lsp-ui-doc-string))
 
 ;;
 
 (leaf xclip
-  :doc "Copy&paste GUI clipboard from terminal Emacs"
-  :tag "clipboard" "integration" "ux" "external"
-  :url "https://github.com/emacsmirror/xclip"
-  :elpaca t
-  :global-minor-mode t)
+      :doc "Copy and paste transparently through xclip, xsel, pbcopy, etc."
+      :tag "tools" "clipboard"
+      :url "https://elpa.gnu.org/packages/xclip.html"
+      :elpaca t
+      :global-minor-mode t)
 
 (leaf kkp
-  :doc "Emacs support for the Kitty Keyboard Protocol"
-  :tag "internal"
-  :url "https://github.com/benotn/kkp"
-  :elpaca t
-  :unless (display-graphic-p)
-  :global-minor-mode global-kkp-mode)
+      :doc "Kitty Keyboard Protocol for Emacs"
+      :tag "terminals" "keyboard" "tty"
+      :url "https://github.com/benotn/kkp"
+      :elpaca (kkp :host github
+                   :repo "benotn/kkp")
+      :global-minor-mode global-kkp-mode)
 
 (leaf gcmh
-  :doc "The GNU Emacs Garbage Collector Magic Hack"
-  :tag "internal"
-  :url "https://gitlab.com/koral/gcmh"
-  :elpaca t
-  :global-minor-mode t)
-
-(leaf hide-comnt
-  :doc "Hide/show comments in code."
-  :tag "comment" "hide" "show"
-  :url "https://www.emacswiki.org/emacs/download/hide-comnt.el"
-  :elpaca (hide-comnt :host github :repo "emacsmirror/hide-comnt"))
-
-;;
+      :doc "Garbage Collector Magic Hack"
+      :tag "performance" "memory" "core"
+      :url "https://gitlab.com/koral/gcmh"
+      :elpaca (gcmh :host gitlab
+                    :repo "koral/gcmh")
+      :global-minor-mode t
+      :custom
+      (gcmh-idle-delay . 'auto)
+      (gcmh-auto-idle-delay-factor . 10)
+      (gcmh-high-cons-threshold . (* 64 1024 1024)))
 
 ;; The problem we are solving here is in some sense mundane, yet
 ;; annoyingly subtle: making prefix keymaps both self-documenting
@@ -1356,41 +1420,116 @@
   "Define a prefix keymap VAR-NAME bound to PREFIX with DESCRIPTION shown in which-key.
 BINDINGS is a list of (key function description) or (key nested-description &rest nested-bindings)."
   (declare (indent defun))
+  ;; We need a unique symbol for the map construction during expansion to avoid
+  ;; variable capture, though eventually we will bind this to the user-provided
+  ;; VAR-NAME.
+  ;;
   (let ((map-name (make-symbol "map")))
     `(progn
        (defvar ,var-name nil ,(format "Keymap for %s" description))
        (let ((,map-name (make-sparse-keymap)))
          ,@(cl-loop for binding in bindings
-             collect
-             (pcase binding
-               (`(,key ,func ,desc)
-                 `(progn
-                    (define-key ,map-name (kbd ,key) ,func)
-                    (let ((full-key (concat ,prefix " " ,key)))
-                      (with-eval-after-load 'which-key
-                        (when (symbolp ,func)
-                          (push (cons (cons nil (symbol-name ,func))
-                                  (cons nil ,desc))
-                            which-key-replacement-alist))
-                        (which-key-add-key-based-replacements full-key ,desc)))))
-               (`(,key ,nested-desc . ,nested-bindings)
-                 (let ((nested-var (intern (format "%s-%s-keymap"
-                                             (symbol-name var-name)
-                                             (replace-regexp-in-string " " "-" key)))))
-                   `(progn
-                      (define-prefix-keymap ,nested-var
-                        ,(concat prefix " " key) ,nested-desc
-                        ,@nested-bindings)
-                      (define-key ,map-name (kbd ,key) ,nested-var))))))
+                    collect
+                    (pcase binding
+                      ;; Handle the leaf node (actual command binding).
+                      ;;
+                      ;; The complication here is normalizing the function
+                      ;; definition. We support both raw symbols (e.g., my-cmd)
+                      ;; and function lists (e.g., #'my-cmd or (lambda...)). We
+                      ;; need to handle them differently: `define-key` needs
+                      ;; the value (quoted if symbol), but our `which-key`
+                      ;; patch below specifically needs the naked symbol to
+                      ;; register the description against the command name.
+                      ;;
+                      (`(,key ,func ,desc)
+                       (let* ((is-func-list (listp func))
+                              (bind-val (if is-func-list func `',func))
+                              (fn-sym (if (and is-func-list (eq (car func) 'function))
+                                          (cadr func)
+                                        func)))
+                         `(progn
+                            (define-key ,map-name (kbd ,key) ,bind-val)
+                            (let ((full-key (concat ,prefix " " ,key)))
+                              (with-eval-after-load 'which-key
+                                ;; Register the standard key-based replacement.
+                                ;;
+                                (which-key-add-key-based-replacements full-key ,desc)
+                                ;; Also patch the replacement alist directly
+                                ;; for the command symbol.
+                                ;;
+                                (when (symbolp ',fn-sym)
+                                  (push (cons (cons nil (symbol-name ',fn-sym))
+                                              (cons nil ,desc))
+                                        which-key-replacement-alist)))))))
+
+                      ;; Handle nested keymaps.
+                      ;;
+                      ;; Derive a variable name from the parent name and the
+                      ;; key. This pollutes the obarray slightly but we want to
+                      ;; be able to inspect the resulting hierarchy in the
+                      ;; debugger and help buffers (e.g., `my-mode-c-keymap` is
+                      ;; better than `#<sparse keymap>`).
+                      ;;
+                      (`(,key ,nested-desc . ,nested-bindings)
+                       (let ((nested-var (intern (format "%s-%s-keymap"
+                                                         (symbol-name ',var-name)
+                                                         (replace-regexp-in-string " " "-" key)))))
+                         `(progn
+                            ;; Recurse to define the sub-map. This flattens the
+                            ;; logic, that is, the nested map is just another
+                            ;; top-level map with a longer prefix.
+                            ;;
+                            (define-prefix-keymap ,nested-var
+                              ,(concat prefix " " key) ,nested-desc
+                              ,@nested-bindings)
+                            ;; Bind the nested map by its symbol rather than
+                            ;; value.
+                            ;;
+                            ;; If we bind the value (the keymap object), `C-h
+                            ;; k` will dump the raw map structure. Binding the
+                            ;; symbol makes help buffers display the variable
+                            ;; name, which is much easier for us to read.
+                            ;;
+                            (define-key ,map-name (kbd ,key) ',nested-var)
+                            ;; Force which-key to recognize the nested map
+                            ;; symbol.
+                            ;;
+                            ;; Standard lookups often fail for nested maps
+                            ;; bound via symbols, so we push the
+                            ;; symbol-to-description mapping into the
+                            ;; replacement alist.
+                            ;;
+                            (with-eval-after-load 'which-key
+                              (push (cons (cons nil (symbol-name ',nested-var))
+                                          (cons nil ,nested-desc))
+                                    which-key-replacement-alist)))))))
          (setq ,var-name ,map-name)
+         ;; Dual-purpose the symbol: it holds the map in its value slot, but we
+         ;; also fset it to the map.
+         ;;
+         ;; This makes the symbol itself a valid command. `global-set-key` and
+         ;; other binding mechanisms prefer symbols with function definitions,
+         ;; and it solves the issue where the help system doesn't know what to
+         ;; call this object.
+         ;;
+         (fset ',var-name ,map-name)
          (global-set-key (kbd ,prefix) ,var-name)
+         ;; Final pass to document the top-level prefix.
+         ;;
+         ;; We need a shotgun approach here because `which-key` is inconsistent
+         ;; depending on how the map is accessed (e.g., via a "Leader" key vs.
+         ;; direct binding). We register against the key sequence, the global
+         ;; map, and finally the symbol itself to cover all edge cases.
+         ;;
          (with-eval-after-load 'which-key
            (which-key-add-key-based-replacements ,prefix ,description)
            (which-key-add-keymap-based-replacements global-map ,prefix ,description)
            (push (cons (cons nil (symbol-name ',var-name))
-                   (cons nil ,description))
-             which-key-replacement-alist))
+                       (cons nil ,description))
+                 which-key-replacement-alist))
          ,var-name))))
+
+;;
 
 (define-prefix-keymap dotemacs-consult-buffer-keymap "C-c c b" "Buffers"
   ("b" #'consult-buffer "Switch buffer")
@@ -1493,21 +1632,98 @@ BINDINGS is a list of (key function description) or (key nested-description &res
 
 ;;
 
-;; Remap C-x f to find-file to handle "fat-finger" errors.
-;;
-;; We frequently miss the Control modifier on the second keystroke when
-;; intending to type C-x C-f. Since the default binding for C-x f
-;; (set-fill-column) is rarely used interactively, it is safe for us to
-;; override it. This saves us the frustration of accidentally triggering
-;; column formatting when we just wanted to open a file.
-;;
-(global-set-key (kbd "C-x f") #'find-file)
+(leaf evil
+      :doc "Extensible vi layer for Emacs"
+      :tag "vim" "editor"
+      :elpaca t
+      :global-minor-mode t
+      :init
+      (define-prefix-command 'leader-map)
+      ;; https://github.com/emacs-evil/evil/pull/1087
+      ;;
+      (setq evil-want-keybinding nil)
+      (setq evil-want-integration t)
+      :custom
+      (evil-want-fine-undo . t)
+      (evil-undo-system . 'undo-fu)
+      :config
+      (with-eval-after-load 'which-key
+                            (which-key-add-key-based-replacements "SPC" "Leader"))
+      :bind
+      (:evil-motion-state-map ("SPC" . nil))
+      (:evil-normal-state-map ("SPC" . leader-map))
+      (:evil-visual-state-map ("SPC" . leader-map))
+      (:leader-map
+        ("p" . dotemacs-consult-keymap)
+        ("g" . dotemacs-magit-keymap)))
+
+(leaf undo-fu
+      :doc "Simple, stable undo with redo"
+      :tag "editing" "undo"
+      :elpaca t
+      :after evil
+      :bind (:evil-normal-state-map ("u"   . undo-fu-only-undo)
+                                    ("C-r" . undo-fu-only-redo)))
+
+(leaf evil-collection
+      :doc "Community maintained bindings for evil"
+      :tag "vim" "integration"
+      :elpaca t
+      :after evil
+      :custom
+      (evil-collection-setup-minibuffer . t)
+      :config
+      (evil-collection-init))
+
+(leaf evil-surround
+      :doc "Emulate surround.vim"
+      :tag "vim" "editing"
+      :elpaca t
+      :global-minor-mode t)
+
+(leaf evil-commentary
+      :doc "Emulate commentary.vim"
+      :tag "vim" "editing"
+      :elpaca t
+      :after evil
+      :global-minor-mode t)
+
+(leaf evil-goggles
+      :doc "Visual feedback for edits"
+      :tag "vim" "visual"
+      :elpaca t
+      :after evil
+      :global-minor-mode t
+      :custom
+      (evil-goggles-enable-yank       . t)
+      (evil-goggles-enable-delete     . nil)
+      (evil-goggles-enable-change     . nil)
+      (evil-goggles-enable-paste      . nil)
+      (evil-goggles-enable-join       . nil)
+      (evil-goggles-enable-fill       . nil)
+      (evil-goggles-enable-indent     . nil)
+      (evil-goggles-enable-shift      . nil)
+      (evil-goggles-enable-surround   . nil)
+      (evil-goggles-enable-commentary . nil)
+      (evil-goggles-enable-undo       . nil)
+      (evil-goggles-enable-redo       . nil))
+
+(leaf evil-terminal-cursor-changer
+      :doc "Change cursor shape in terminal (nw) mode"
+      :tag "terminal" "cursor"
+      :elpaca t
+      :after evil
+      :custom
+      (evil-motion-state-cursor . 'box)
+      (evil-visual-state-cursor . 'box)
+      (evil-normal-state-cursor . 'box)
+      (evil-insert-state-cursor . 'bar)
+      :config
+      (evil-terminal-cursor-changer-activate))
 
 ;;
 
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-
-(require 'dotemacs-persistent-regions)
+(elpaca-wait)
 
 ;;
 

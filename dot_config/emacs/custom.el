@@ -118,14 +118,7 @@
  ;; just adds an extra keystroke to the workflow. We know the file is
  ;; big; open it anyway.
  ;;
- '(large-file-warning-threshold nil)
-
- ;; Visuals.
- ;;
- ;; We need a high-contrast theme that remains legible during long
- ;; coding sessions. Modus Vivendi fits the bill.
- ;;
- '(custom-enabled-themes '(modus-vivendi)))
+ '(large-file-warning-threshold nil))
 
 ;; Hooks.
 ;;

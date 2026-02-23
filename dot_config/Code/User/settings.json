@@ -90,10 +90,6 @@
   "explorer.confirmUndo": "verbose",
   "explorer.decorations.colors": false,
   "explorer.enableUndo": false,
-  "explorer.fileNesting.enabled": true,
-  "explorer.fileNesting.patterns": {
-    "*.cxx": "${capture}.hxx"
-  },
   "explorer.incrementalNaming": "smart",
   "explorer.sortOrderLexicographicOptions": "upper",
 
@@ -159,7 +155,6 @@
 
   // Search
   //
-  "search.collapseResults": "auto",
   "search.decorations.badges": false,
   "search.decorations.colors": false,
   "search.maxResults": null,
@@ -187,7 +182,7 @@
     "fish",
     "starship"
   ],
-  "terminal.integrated.middleClickBehavior": "paste",
+  // "terminal.integrated.middleClickBehavior": "paste", // Bug: duplicate paste.
   "terminal.integrated.minimumContrastRatio": 7,
   "terminal.integrated.mouseWheelScrollSensitivity": 3,
   "terminal.integrated.mouseWheelZoom": true,
