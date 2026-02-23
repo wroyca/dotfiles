@@ -5,11 +5,8 @@
 
   // Chat
   //
-  "chat.agent.maxRequests": 999,
-  "chat.edits2.enabled": true,
-  "chat.implicitContext.enabled": {
-    "panel": "never"
-  },
+  "chat.agent.enabled": false,
+  "chat.disableAIFeatures": true,
 
   // Clangd
   //
@@ -42,18 +39,20 @@
   "editor.bracketPairColorization.enabled": false,
   "editor.codeLens": false,
   "editor.codeLensFontFamily": "MonoLisa",
+  "editor.comments.ignoreEmptyLines": false,
   "editor.cursorSurroundingLines": 4,
   "editor.cursorSurroundingLinesStyle": "all",
   "editor.fontFamily": "MonoLisa",
   "editor.fontLigatures": "'liga' off, 'calt' on, 'ss02' on",
   "editor.fontSize": 16,
   "editor.fontWeight": 400,
-  "editor.lineHeight": 1.6,
   "editor.formatOnType": false,
   "editor.hideCursorInOverviewRuler": true,
   "editor.inlayHints.enabled": "offUnlessPressed",
   "editor.inlineSuggest.enabled": false,
   "editor.inlineSuggest.syntaxHighlightingEnabled": false,
+  "editor.lightbulb.enabled": "off",
+  "editor.lineHeight": 1.6,
   "editor.linkedEditing": true,
   "editor.minimap.enabled": false,
   "editor.mouseWheelScrollSensitivity": 3,
@@ -62,11 +61,14 @@
   "editor.padding.bottom": 10,
   "editor.padding.top": 10,
   "editor.renderWhitespace": "trailing",
-  "editor.rulers": [80],
+  "editor.rulers": [
+    80
+  ],
   "editor.scrollbar.horizontal": "hidden",
   "editor.scrollbar.vertical": "hidden",
   "editor.scrollbar.verticalScrollbarSize": 0,
   "editor.smoothScrolling": true,
+  "editor.stablePeek": true,
   "editor.stickyScroll.enabled": false,
   "editor.suggest.showIcons": false,
   "editor.tabSize": 2,
@@ -83,10 +85,17 @@
 
   // Explorer
   //
-  "explorer.decorations.colors": false,
-  "explorer.sortOrderLexicographicOptions": "upper",
   "explorer.confirmDragAndDrop": false,
   "explorer.confirmPasteNative": false,
+  "explorer.confirmUndo": "verbose",
+  "explorer.decorations.colors": false,
+  "explorer.enableUndo": false,
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "*.cxx": "${capture}.hxx"
+  },
+  "explorer.incrementalNaming": "smart",
+  "explorer.sortOrderLexicographicOptions": "upper",
 
   // Extensions
   //
@@ -94,6 +103,7 @@
 
   // Files
   //
+  "files.autoGuessEncoding": true,
   "files.insertFinalNewline": true,
   "files.trimTrailingWhitespace": true,
 
@@ -104,9 +114,7 @@
 
   // Github Copilot
   //
-  "github.copilot.chat.codesearch.enabled": true,
-  "github.copilot.chat.editor.temporalContext.enabled": true,
-  "github.copilot.chat.edits.temporalContext.enabled": true,
+  "github.copilot.chat.codesearch.enabled": false,
   "github.copilot.nextEditSuggestions.enabled": false,
   "github.copilot.nextEditSuggestions.fixes": false,
   "github.copilot.chat.summarizeAgentConversationHistory.enabled": false,
@@ -114,6 +122,10 @@
   // GitHub Pull Requests
   //
   "githubPullRequests.assignCreated": "${user}",
+  "githubPullRequests.codingAgent.autoCommitAndPush": false,
+  "githubPullRequests.codingAgent.enabled": false,
+  "githubPullRequests.codingAgent.promptForConfirmation": false,
+  "githubPullRequests.codingAgent.uiIntegration": false,
   "githubPullRequests.defaultMergeMethod": "rebase",
   "githubPullRequests.experimental.chat": true,
   "githubPullRequests.experimental.useQuickChat": true,
@@ -142,10 +154,15 @@
   //
   "scm.alwaysShowRepositories": true,
   "scm.diffDecorations": "gutter",
+  "scm.repositories.selectionMode": "single",
+  "scm.showInputActionButton": false,
 
   // Search
   //
+  "search.collapseResults": "auto",
+  "search.decorations.badges": false,
   "search.decorations.colors": false,
+  "search.maxResults": null,
 
   // Security
   //
@@ -153,30 +170,38 @@
 
   // Terminal
   //
+  "terminal.external.linuxExec": "kitty",
   "terminal.integrated.confirmOnExit": "hasChildProcesses",
   "terminal.integrated.copyOnSelection": false, // Bug: some actions induce unwanted selection.
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.cursorStyle": "line",
   "terminal.integrated.defaultProfile.linux": "fish",
   "terminal.integrated.enableImages": true,
+  "terminal.integrated.enableKittyKeyboardProtocol": true,
   "terminal.integrated.enableMultiLinePasteWarning": "never",
   "terminal.integrated.fontLigatures.enabled": true,
   "terminal.integrated.gpuAcceleration": "on",
+  "terminal.integrated.hideOnStartup": "always",
   "terminal.integrated.ignoreProcessNames": [
     "bash",
     "fish",
     "starship"
   ],
+  "terminal.integrated.middleClickBehavior": "paste",
+  "terminal.integrated.minimumContrastRatio": 7,
   "terminal.integrated.mouseWheelScrollSensitivity": 3,
   "terminal.integrated.mouseWheelZoom": true,
   "terminal.integrated.scrollback": 10000,
+  "terminal.integrated.shellIntegration.decorationsEnabled": "never",
   "terminal.integrated.smoothScrolling": true,
   "terminal.integrated.stickyScroll.enabled": true,
   "terminal.integrated.suggest.enabled": false, // Trust me, you don't want this.
+  "terminal.integrated.tabStopWidth": 2,
 
   // Window
   //
   "window.autoDetectColorScheme": true,
   "window.controlsStyle": "hidden",
-  "window.customTitleBarVisibility": "never",
   "window.dialogStyle": "custom",
   "window.menuBarVisibility": "toggle",
   "window.titleBarStyle": "custom",
@@ -186,17 +211,25 @@
   //
   "workbench.colorTheme": "Visual Studio Dark",
   "workbench.commandPalette.experimental.suggestCommands": true,
+  "workbench.commandPalette.showAskInChat": false,
   "workbench.editor.decorations.colors": false,
+  "workbench.editor.empty.hint": "hidden",
   "workbench.iconTheme": "vs-minimal", // https://github.com/microsoft/vscode/issues/141428
+  "workbench.layoutControl.enabled": false,
   "workbench.list.mouseWheelScrollSensitivity": 3,
   "workbench.list.smoothScrolling": true,
   "workbench.localHistory.maxFileEntries": 1000,
   "workbench.localHistory.maxFileSize": 1024,
+  "workbench.navigationControl.enabled": false,
   "workbench.preferredDarkColorTheme": "Modus Vivendi",
   "workbench.preferredLightColorTheme": "Modus Operandi",
+  "workbench.secondarySideBar.defaultVisibility": "hidden",
+  "workbench.settings.alwaysShowAdvancedSettings": true,
+  "workbench.settings.showAISearchToggle": false,
   "workbench.startupEditor": "none",
   "workbench.statusBar.visible": true,
-  "workbench.editor.empty.hint": "hidden",
+  "workbench.tips.enabled": false,
+  "workbench.welcomePage.walkthroughs.openOnInstall": false,
 
   // ZenMode
   //
