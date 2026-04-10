@@ -209,6 +209,7 @@
   "workbench.commandPalette.showAskInChat": false,
   "workbench.editor.decorations.colors": false,
   "workbench.editor.empty.hint": "hidden",
+  "workbench.editor.useModal": "off",
   "workbench.iconTheme": "vs-minimal", // https://github.com/microsoft/vscode/issues/141428
   "workbench.layoutControl.enabled": false,
   "workbench.list.mouseWheelScrollSensitivity": 3,
