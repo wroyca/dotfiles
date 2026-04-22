@@ -2,50 +2,6 @@
 
 README.md
 
-{{- $isLinux   := eq .chezmoi.os "linux" }}
-{{- $isWindows := eq .chezmoi.os "windows" }}
-{{- $isDarwin  := eq .chezmoi.os "darwin" }}
-{{- $isFedora  := and $isLinux (contains "fedora" .chezmoi.osRelease.id) }}
-{{- $isGnome   := or (contains "GNOME" (env "XDG_CURRENT_DESKTOP")) (env "GNOME_DESKTOP_SESSION_ID") }}
-
-{{- if $isLinux }}
-Library/
-AppData/
-{{- end }}
-
-{{- if $isWindows }}
-.config/kitty/
-.local/share/fonts/
-Library/
-{{- end }}
-
-{{- if $isDarwin }}
-.local/share/fonts/
-AppData/
-{{- end }}
-
-{{- if not $isLinux }}
-.config/mimeapps.list
-.config/monitors.xml
-.config/gdb
-.config/fish
-.local/bin/xdg-open
-.local/share/firefoxpwa/
-.local/share/icons/
-{{- end }}
-
-{{- if not $isFedora }}
-{{- end }}
-
-{{- if not $isGnome }}
-.config/dconf/
-.config/gtk-3.0/
-.local/share/backgrounds/
-.local/share/gnome-background-properties/
-.mozilla/chrome/
-Templates/
-{{- end }}
-
 .etc/
 
 .config/emacs/auto-save-list
