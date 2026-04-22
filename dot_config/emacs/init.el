@@ -6,15 +6,15 @@
 
 ;;; Code:
 
-(defvar elpaca-installer-version 0.11)
+(defvar elpaca-installer-version 0.12)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
-(defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
+(defvar elpaca-sources-directory (expand-file-name "sources/" elpaca-directory))
 (defvar elpaca-order '(elpaca :repo "https://github.com/progfolio/elpaca.git"
                               :ref nil :depth 1 :inherit ignore
                               :files (:defaults "elpaca-test.el" (:exclude "extensions"))
-                              :build (:not elpaca--activate-package)))
-(let* ((repo  (expand-file-name "elpaca/" elpaca-repos-directory))
+                              :build (:not elpaca-activate)))
+(let* ((repo  (expand-file-name "elpaca/" elpaca-sources-directory))
        (build (expand-file-name "elpaca/" elpaca-builds-directory))
        (order (cdr elpaca-order))
        (default-directory repo))
@@ -1383,11 +1383,7 @@
       :url "https://gitlab.com/koral/gcmh"
       :elpaca (gcmh :host gitlab
                     :repo "koral/gcmh")
-      :global-minor-mode t
-      :custom
-      (gcmh-idle-delay . 'auto)
-      (gcmh-auto-idle-delay-factor . 10)
-      (gcmh-high-cons-threshold . (* 64 1024 1024)))
+      :global-minor-mode t)
 
 ;; The problem we are solving here is in some sense mundane, yet
 ;; annoyingly subtle: making prefix keymaps both self-documenting
