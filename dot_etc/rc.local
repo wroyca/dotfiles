@@ -2,22 +2,15 @@
 
 device=$(grep -l "Ergodox EZ" /sys/bus/usb/devices/*/product | sed 's|/product||')
 
-# Disable USB wakeup for the Ergodox EZ keyboard.
-#
-# By default, USB devices are allowed to wake the system from suspend. On the
-# Ergodox EZ this results in frequent, unnecessary wakeups that cause the
-# keyboard LEDs to flash repeatedly.
-#
-# We explicitly disable the wakeup trigger for this device. The keyboard is not
-# intended to be used as a wake source, and disabling it avoids the distracting
-# LED behavior while slightly reducing spurious power events.
-#
-# If the device is present, apply the setting unconditionally.
+# The Ergodox EZ has an annoying tendency to wake the system from suspend,
+# which results in its LEDs flashing repeatedly. Since we don't really intend
+# for this keyboard to act as a wake source anyway, we just explicitly disable
+# the wakeup trigger.
 #
 if [ -n "$device" ] && [ -f "$device/power/wakeup" ]; then
-  current_status=$(cat "$device/power/wakeup")
+  status=$(cat "$device/power/wakeup")
 
-  if [ "$current_status" != "disabled" ]; then
+  if [ "$status" != "disabled" ]; then
     echo "disabled" > "$device/power/wakeup"
   fi
 fi
