@@ -1,23 +1,35 @@
+# Suppress the default fish greeting. We do this by overriding the 
+# fish_greeting function with an empty definition, as the default 
+# message is mostly visual noise.
+#
 function fish_greeting
 end
 
-# User specific environment and startup programs.
+# Specify the location of the Starship configuration file. We prefer 
+# to keep it neatly tucked away in a dedicated subdirectory rather 
+# than cluttering the root config directory.
 #
 set -gx STARSHIP_CONFIG $HOME/.config/starship/starship.toml
 
-# GCM stopped honoring `credentialStore` from the git config.
+# It appears Git Credential Manager (GCM) stopped honoring the 
+# `credentialStore` setting directly from the git config.
 #
-# Rather than trying to debug why, we force the setting via the environment,
-# which is the only thing GCM seems to reliably listen to.
+# Rather than spending time trying to debug the exact cause of this 
+# regression, we force the setting via the environment variable. It 
+# turns out this is the only mechanism GCM still reliably respects.
 #
 set -gx GCM_CREDENTIAL_STORE cache
 
-# Silence wine and dxvk output.
+# Silence Wine and DXVK diagnostics. By default, both are notoriously 
+# noisy and will quickly pollute the terminal output, so we shut them 
+# up entirely.
 #
 set -gx WINEDEBUG -all
 set -gx DXVK_LOG_LEVEL none
 
-# Toggle wine debug output between silent and verbose.
+# Provide a convenience toggle for Wine debug output. Since we globally 
+# disable Wine diagnostics above, it is handy to have a quick way to flip 
+# them back on when troubleshooting specific prefix issues.
 #
 function toggle_wine_debug
   if test "$WINEDEBUG" = "-all"
@@ -29,10 +41,14 @@ function toggle_wine_debug
   end
 end
 
-# User specific aliases.
+# Load user-specific aliases. Note that we keep these in a separate 
+# file to prevent the main configuration from becoming unwieldy as the 
+# list of aliases grows.
 #
 source ~/.config/fish/alias.fish
 
-# Minimal cross-shell prompt. https://starship.rs/
+# Initialize the Starship cross-shell prompt (https://starship.rs/). 
+# Note that this needs to happen at the very end of the configuration 
+# so it can properly hook into the shell's prompt rendering mechanism.
 #
 starship init fish | source
