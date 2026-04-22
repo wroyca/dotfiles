@@ -1,4 +1,3 @@
-{{- if and (eq .chezmoi.os "linux") (contains "fedora" .chezmoi.osRelease.id) -}}
 #!/usr/bin/env bash
 
 set -x # Print commands and their arguments as they are executed.
@@ -13,4 +12,3 @@ fi
 sudo rm -rf dotnet-install.sh      || true
 sudo rm -rf install-from-source.sh || true
 sudo rm -rf git-credential-manager || true
-{{- end }}

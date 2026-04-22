@@ -1,4 +1,3 @@
-{{- if and (eq .chezmoi.os "linux") (contains "fedora" .chezmoi.osRelease.id) -}}
 #!/usr/bin/env bash
 
 set -x # Print commands and their arguments as they are executed.
@@ -18,4 +17,3 @@ sudo dnf install -y wine winetricks
 # 300% scaling → LogPixels = 288 (0x120)
 #
 wine reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v LogPixels /t REG_DWORD /d 0xC0 /f
-{{- end }}

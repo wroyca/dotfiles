@@ -26,6 +26,21 @@ sh -c "$(curl -fsLS get.chezmoi.io/lb)" -- init --apply wroyca
 After some times, the system should reflect the configuration defined in this
 repository.
 
+### If the above fails
+
+If the automated bootstrap script does not work, you can manually download the
+chezmoi executable, place it in the local binaries folder, and apply the
+dotfiles:
+
+```bash
+curl -LO https://github.com/twpayne/chezmoi/releases/latest/download/chezmoi-linux-amd64
+
+chmod +x chezmoi-linux-amd64
+mkdir -p ~/.local/bin && mv chezmoi-linux-amd64 ~/.local/bin/chezmoi
+
+~/.local/bin/chezmoi init --apply wroyca
+```
+
 ## One-shot setup for temporary environments
 
 If we're working in a transient or disposable environment, such as a container

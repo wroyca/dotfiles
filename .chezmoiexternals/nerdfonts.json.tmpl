@@ -3,42 +3,14 @@
 {{-   fail "Failed to retrieve Nerd Fonts release information from GitHub API" -}}
 {{- end -}}
 
-{{- $nerdFontsVersion := $latestRelease.TagName -}}
+{{- $nerdFontsVersion := $latestRelease.TagName | toString -}}
 {{- if not $nerdFontsVersion -}}
 {{-   fail "Invalid or missing version tag in GitHub release metadata" -}}
 {{- end -}}
 
-{{- $sanitizedVersion := $nerdFontsVersion | replace "v" "" -}}
-{{- if not $sanitizedVersion -}}
-{{-   fail "Version sanitization resulted in empty string" -}}
-{{- end -}}
+{{- $fontInstallPath := ".local/share/fonts/NerdFonts" -}}
+{{- $distributionUrl := printf "https://github.com/ryanoasis/nerd-fonts/releases/download/%s/NerdFontsSymbolsOnly.zip" $nerdFontsVersion -}}
 
-{{- $operatingSystem := .chezmoi.os -}}
-{{- if not $operatingSystem -}}
-{{-   fail "Operating system detection failed or returned empty value" -}}
-{{- end -}}
-
-{{- $supportedPlatforms := list "linux" "darwin" "windows" -}}
-{{- if not (has $operatingSystem $supportedPlatforms) -}}
-{{-   printf "Unsupported operating system: %s. Supported platforms: %s"
-      $operatingSystem (join ", " $supportedPlatforms) | fail -}}
-{{- end -}}
-
-{{- $fontInstallPath := "" -}}
-{{- if eq $operatingSystem "linux" -}}
-{{-   $fontInstallPath = ".local/share/fonts/NerdFonts" -}}
-{{- else if eq $operatingSystem "darwin" -}}
-{{-   $fontInstallPath = "Library/Fonts/NerdFonts" -}}
-{{- else if eq $operatingSystem "windows" -}}
-{{-   $fontInstallPath = "AppData/Local/Microsoft/Windows/Fonts/NerdFonts" -}}
-{{- else -}}
-{{-   printf "Font installation path undefined for platform: %s" $operatingSystem | fail -}}
-{{- end -}}
-
-{{- $distributionUrl := printf "https://github.com/ryanoasis/nerd-fonts/releases/download/%s/NerdFontsSymbolsOnly.zip"
-    (toString $nerdFontsVersion) -}}
-
-{{/* www.nerdfonts.com */}}
 {
   "{{ $fontInstallPath }}": {
     "url": "{{ $distributionUrl }}",

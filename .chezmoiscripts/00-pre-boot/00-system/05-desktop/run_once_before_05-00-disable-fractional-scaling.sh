@@ -1,4 +1,3 @@
-{{- if and (eq .chezmoi.os "linux") (contains "fedora" .chezmoi.osRelease.id) -}}
 #!/usr/bin/env bash
 
 set -x # Print commands and their arguments as they are executed.
@@ -24,4 +23,3 @@ set -e # Exit immediately if a command exits with a non-zero status.
 # enabling fractional scaling imposes unnecessary non-trivial overhead.
 #
 gsettings set org.gnome.mutter experimental-features "[]"
-{{- end }}

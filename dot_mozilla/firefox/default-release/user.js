@@ -68,4 +68,3 @@ user_pref("browser.tabs.hoverPreview.showThumbnails", false);
 // Don't trim https://
 //
 user_pref("browser.urlbar.trimURLs", false);
-{{- end -}}

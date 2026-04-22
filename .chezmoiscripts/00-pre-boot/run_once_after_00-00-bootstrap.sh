@@ -1,4 +1,3 @@
-{{- if and (eq .chezmoi.os "linux") (contains "fedora" .chezmoi.osRelease.id) -}}
 #!/usr/bin/env bash
 
 set -x # Print commands and their arguments as they are executed.
@@ -9,4 +8,3 @@ if [ -f ~/.no-reboot ]; then
 fi
 
 touch ~/.no-reboot && reboot
-{{- end }}
