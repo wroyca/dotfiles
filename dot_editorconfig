@@ -1,22 +1,19 @@
 # https://editorconfig.org
 #
-# EditorConfig does not officially support global configuration. Still, it will
-# searches upward through the directory tree from the current file's location
-# until it finds a file with root = true (if any). From that point, it applies
-# settings downward through the directory structure.
+# Note that EditorConfig does not have a formal concept of a global configuration.
+# Instead, it searches upward through the directory tree from the current file's
+# directory until it encounters a configuration file with root = true. From there,
+# it applies settings downwards. For background on this behavior, see
+# https://github.com/editorconfig/editorconfig/issues/465.
 #
-# For more context, see the discussion at:
-# https://github.com/editorconfig/editorconfig/issues/465
-
 root = true
 
-# Default to 2 spaces.
+# Default indentation to 2 spaces.
 #
-# 4 spaces eat up too much horizontal real estate, especially when we start
-# nesting lambdas or conditionals. 8 is out of the question.
-#
-# Also keep things tidy: trailing whitespace is just noise in diffs, and no
-# newline at EOF confuses some older tools (and cat).
+# Using 4 spaces consumes too much horizontal space, especially when nesting
+# lambdas or complex conditionals. Eight is obviously out of the question.
+# We also enforce general hygiene: trailing whitespace is just noise in diffs
+# and a missing trailing newline at EOF confuses older POSIX tools (like cat).
 #
 [*]
 indent_size = 2
@@ -24,25 +21,23 @@ indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-# Markdown hard breaks.
+# Disable trailing whitespace trimming for Markdown.
 #
-# Unlike code, Markdown relies on trailing whitespace (two spaces) to signify a
-# hard line break (<br>). If we strip them, we break the rendering.
-#
-# We could use explicit <br> tags, but that makes the raw text harder to read.
-# So we make an exception here and tolerate the invisible characters.
+# Unlike regular source code, Markdown relies on two trailing spaces to denote
+# a hard line break (<br>). Stripping them silently breaks the rendered document.
+# While we could use explicit <br> HTML tags, doing so degrades the readability
+# of the raw text. So we tolerate the invisible characters here.
 #
 [*.md]
 trim_trailing_whitespace = false
 
-# Windows Batch 512-byte boundary bug.
+# Force CRLF line endings for Windows Batch files to avoid the 512-byte boundary bug.
 #
-# The Batch label parser reads files in 512-byte chunks. If we use Unix (LF)
-# line endings, the parser can miscalculate the chunk boundary.
-#
-# If a label (:) straddles this boundary, the parser might miss the newline, or
-# worst, treat the label as part of the previous line. The workaround here is
-# to force CRLF, which aligns with the parser's 2-byte EOL assumption.
+# The cmd.exe parser reads batch files in 512-byte chunks and calculates offsets
+# assuming 2-byte (CRLF) line endings. If we use Unix (LF) line endings and a
+# label (:) straddles this block boundary, the parser miscalculates, misses the
+# newline, and either fails to jump or treats the label as part of the previous
+# command. The reliable workaround is to give the parser the CRLF it expects.
 #
 [*.bat]
 end_of_line = crlf
