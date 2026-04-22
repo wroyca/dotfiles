@@ -1,39 +1,21 @@
-// Auto-refresh via <meta http-equiv="refresh"> or the HTTP Refresh header is
-// one of those “legacy convenience” features that mostly just gets in the way
-// now. If you've ever been filling out a form only to have it wiped
-// mid-sentence, you've probably met it.
-//
-// It would be nice to turn it off entirely, and Firefox gives us that switch,
-// but the unfortunate bit is that the same plumbing seems to handle external
-// protocol launches. Block this, and suddenly protocol redirect wants a
-// confirmation dialog, every time.
-//
-// So we cave and leave it on. Not because we like it, but because getting
-// nagged 30 times a day is worse. Perhaps later we can figure out a way to
-// selectively allow only known-safe things (some sort of whitelist or policy
-// hook, maybe).
+// Note that ideally we would want to disable auto-refresh (via
+// <meta http-equiv="refresh"> or HTTP headers). The problem is that Firefox
+// uses the same machinery for external protocol launches. If we block it,
+// protocol redirects will prompt with a confirmation dialog every single
+// time. So we leave it on, as getting nagged constantly is worse than the
+// occasional wiped form.
 //
 user_pref("accessibility.blockautorefresh", false);
 
-// Around Firefox 89, someone decided that what the URL bar really needed
-// was tiny clickable buttons on each suggestion row. The result was that
-// keyboard navigation started skipping around unpredictably, getting stuck
-// on invisible menus you never asked for.
-//
-// This turns that off. Tabbing through the results works like it used to,
-// without second-guessing or surprise detours.
+// Prevent keyboard navigation in the URL bar from focusing the action buttons
+// on each suggestion row. Tabbing through results should iterate over the
+// items linearly, without getting stuck on secondary menus.
 //
 user_pref("browser.urlbar.resultMenu.keyboardAccessible", false);
 
-// The new tab page is a festival of sponsored links, algorithmic "top stories,"
-// and calls to action for Pocket, which itself is just a sponsored content
-// pipeline dressed in personal taste. None of this belongs in a browser, let
-// alone in a supposedly clean start page.
-//
-// These flip every switch we've found that disables Pocket, promotions,
-// recommendations, trending topics, highlight cards, and whatever else Mozilla
-// is trying to push into that space. It won't stay clean forever, but at least
-// we start that way.
+// Keep the new tab page clean. By default, it is populated with sponsored
+// links and Pocket recommendations. We disable all algorithmic
+// and promotional content to maintain a blank slate.
 //
 user_pref("browser.newtabpage.activity-stream.discoverystream.saveToPocketCard.enabled", false);
 user_pref("browser.newtabpage.activity-stream.discoverystream.sendToPocket.enabled", false);
@@ -44,29 +26,17 @@ user_pref("browser.newtabpage.activity-stream.showSponsored", false);
 user_pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);
 user_pref("extensions.pocket.enabled", false);
 
-// Keep the browser a browser.
-//
-// Recent Firefox builds have grown a full "ml/ai" stack: chat prompts, sidebar
-// panels, summary previews, assorted neural curiosities, ...
-//
-// None of this belongs on the critical path from request to response. Here we
-// disables the browser.ml.* machinery in one stroke. If later releases scatter
-// the knobs behind new flags, start from the root again; complexity has a way
-// of regrowing when left unattended.
+// Disable the browser.ml.* machinery. Recent versions bundle various ML/AI
+// features (chat prompts, summaries, etc.) that do not belong on the critical
+// path. Note that if future releases scatter these settings behind new flags,
+// we will have to track them down again.
 //
 user_pref("browser.ml.enable", false);
 
-{{- if eq .chezmoi.os "linux" -}}
-
-// Firefox has never quite looked right under GNOME. The default theme is close
-// enough to pass on a screenshot, but not close enough to feel native. This
-// pulls in the community GNOME theme, which corrects most of the obvious
-// mismatches and makes it feel like something that actually belongs on the
-// desktop.
-//
-// There are also a few layout nudges here: one-tab hiding, bookmark bar
-// placement, extension buttons ordered like they were before everything got
-// stuffed into a drawer.
+// Integrate with GNOME. The default theme does not quite feel native, so we
+// rely on the community GNOME theme to correct the mismatches. We also apply
+// a few layout adjustments, such as one-tab hiding and bookmark bar
+// placement.
 //
 user_pref("gnomeTheme.hideSingleTab", true);
 user_pref("gnomeTheme.bookmarksToolbarUnderTabs", true);
@@ -76,32 +46,26 @@ user_pref("svg.context-properties.content.enabled", true);
 user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
 user_pref("widget.gtk.rounded-bottom-corners.enabled", true);
 
-// Hardware decode on Linux has always been half-broken in Firefox, usually
-// because it prefers to err on the side of disabling support unless it's very
-// sure everything will work. That's sensible in theory, but the end result is
-// users with working VA-API setups getting software fallback unless they go
-// flipping prefs.
-//
-// These just force it on. If the stack isn't working, we'll know soon enough,
-// and if it is, we get low CPU usage and proper playback, which is kind of the
-// whole point of acceleration.
+// Force hardware video decoding (VA-API/dmabuf). Firefox
+// disables hardware decode on Linux unless it is absolutely sure the driver
+// stack works, which usually results in an unnecessary software fallback. We
+// force it on. If the stack is broken, it will fail visibly, but otherwise
+// we get actual hardware acceleration.
 //
 user_pref("widget.dmabuf.force-enabled", true);
 user_pref("media.ffmpeg.vaapi.enabled", true);
 user_pref("media.hardware-video-decoding.force-enabled", true);
 
-// Enables file dialogs via the XDG portal system. This is how modern sandboxed
-// apps are supposed to do things, especially under Flatpak or Wayland, where
-// direct GTK or Qt dialogs may not even work right.
-//
-// Without this, we get inconsistent styling or outright failure to access files
-// outside the sandbox. With it, things feel like part of the system again.
+// Use XDG desktop portals for file dialogs.
 //
 user_pref("widget.use-xdg-desktop-portal.file-picker", 1);
 
-// Disable tab hover previews. These add visual noise and incur rendering work
-// without providing meaningful navigation value.
+// Disable tab hover previews.
 //
 user_pref("browser.tabs.hoverPreview.enabled", false);
 user_pref("browser.tabs.hoverPreview.showThumbnails", false);
+
+// Don't trim https://
+//
+user_pref("browser.urlbar.trimURLs", false);
 {{- end -}}
