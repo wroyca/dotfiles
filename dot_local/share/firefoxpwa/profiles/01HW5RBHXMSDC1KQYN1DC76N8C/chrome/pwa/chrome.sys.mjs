@@ -18,7 +18,7 @@ class ChromeLoader {
   static MACOS_HIDDEN_WINDOW_SCRIPT = 'pwa/content/macosHiddenWindow.load.js';
 
   static DISTRIBUTION_ID = 'firefoxpwa';
-  static DISTRIBUTION_VERSION = '2.17.2';
+  static DISTRIBUTION_VERSION = '2.18.2';
   static DISTRIBUTION_ABOUT = 'With modifications by the PWAsForFirefox project';
 
   static PREF_LINKS_TARGET = 'firefoxpwa.linksTarget';
@@ -45,22 +45,17 @@ class ChromeLoader {
   static INITIALIZED_PREFERENCES = false;
 
   constructor () {
-    Services.obs.addObserver(this, 'chrome-document-global-created', false);
+    Services.obs.addObserver(this, 'chrome-document-global-created');
   }
 
   observe (window) {
-    window.ChromeLoader = ChromeLoader;
-    window.addEventListener('DOMContentLoaded', this, { once: true });
+    window.addEventListener('DOMContentLoaded', () => {
+      window.parent.ChromeLoader = ChromeLoader;
+      this.onDomContentLoaded(window);
+    }, { once: true });
   }
 
-  handleEvent (event) {
-    /**
-     * @type Document
-     * @property {Window} originalTarget
-     */
-    let document = event.originalTarget;
-
-    let window = document.defaultView;
+  onDomContentLoaded (window) {
     let location = window.location;
 
     if (window._gBrowser) window.gBrowser = window._gBrowser;

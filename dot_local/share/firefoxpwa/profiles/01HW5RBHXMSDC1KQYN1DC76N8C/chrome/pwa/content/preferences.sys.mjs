@@ -115,6 +115,7 @@ class PwaPreferences {
   <vbox id="allowedDomainsBox" style="padding-top: 1rem;">
     <label>
       <description data-l10n-id="allowed-domains-description"></description>
+      <description data-l10n-id="allowed-domains-format"></description>
     </label>
     <vbox>
       <html:input type="text" class="global-input" preference="${ChromeLoader.PREF_ALLOWED_DOMAINS}" data-l10n-id="allowed-domains-input" />
@@ -163,7 +164,13 @@ class PwaPreferences {
 
   handleTabsModePreferenceSwitch (onLoad = false) {
     function setTabsSectionDisabled (disabled) {
-      document.querySelector('[data-l10n-id="tabs-group-header"]').closest('groupbox').childNodes.forEach(elem => elem.disabled = disabled);
+      // Disable the original tabs section
+      document.querySelector('[data-l10n-id="tabs-group-header"]')?.closest('groupbox').childNodes.forEach(elem => elem.disabled = disabled);
+
+      // Disable the new declarative tabs section
+      document.querySelectorAll('setting-group[groupid="tabs"] moz-checkbox')?.forEach(elem => elem.disabled = disabled);
+
+      // Disable the new tab launch type option
       document.querySelector('#launchTypeNewTab').disabled = disabled;
     }
 
