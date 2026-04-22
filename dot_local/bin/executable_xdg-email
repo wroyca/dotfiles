@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
 # Normally, if we are running inside a Flatpak sandbox, we cannot just
-# spawn arbitrary subprocesses on the host to open URLs.
+# spawn arbitrary subprocesses on the host to compose emails.
 #
 # To work around this restriction, we have to rely on the D-Bus session
 # bus. The idea here is to talk to the xdg-desktop-portal service running
-# outside the container, and let it handle the actual opening on our
-# behalf.
+# outside the container, and let it handle the actual mail client
+# invocation on our behalf.
 
 if [[ -f "/run/.containerenv" ]]; then
-  ${TOOLBOX_PATH:+flatpak-spawn --host} /usr/bin/xdg-open "$@"
+  ${TOOLBOX_PATH:+flatpak-spawn --host} /usr/bin/xdg-email "$@"
 else
-  /usr/bin/xdg-open "$@"
+  /usr/bin/xdg-email "$@"
 fi
