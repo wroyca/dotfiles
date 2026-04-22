@@ -1,67 +1,70 @@
-# Disable confirmation prompts for commands that may have side effects. Useful
-# in workflows where the intent is already understood and interruptions are
-# unnecessary.
+# We are usually running this in workflows where we know exactly what we are
+# doing, so turn off confirmation prompts to avoid getting stuck waiting for
+# input.
 #
 set confirm off
 
-# Suppress verbose internal messages. Reduces noise while preserving relevant
-# output such as errors and explicit user interactions.
+# Suppress verbose internal noise. We only really care about actual errors or
+# output from things we explicitly asked for.
 #
 set verbose off
 
-# Configure persistent command history. Stores session history in a file under
-# the home directory for later recall.
+# Keep our history around across sessions. We put it in the standard home
+# directory location so it is easy to find later.
 #
 set history filename ~/.gdb_history
 
-# Deduplicate recent commands within a sliding window of 10 entries. Helps avoid
-# clutter from repeated invocations while retaining meaningful variation.
+# There is no point in cluttering the history with the exact same command over
+# and over. Deduping the last 10 entries gives us a good balance of retaining
+# variation without the noise.
 #
 set history remove-duplicates 10
 
-# Enable automatic history saving across sessions.
+# Actually save the history when we exit.
 #
 set history save
 
-# Disable printing of entire arrays by default. Prevents excessive output when
-# working with large data structures. Elements remain accessible via indexing.
+# Dumping huge data structures by default is a great way to lock up the
+# terminal. Turn off printing entire arrays. We can always inspect specific
+# elements via indexing if we actually need to see them.
 #
 set print array off
 
-# Show element indices when printing arrays. Important for interpreting
-# structure and identifying positions, particularly in multidimensional
-# contexts.
+# When we do print arrays, include the indices. It makes navigating
+# multidimensional structures or figuring out exactly where we are much
+# easier.
 #
 set print array-indexes on
 
-# Enable structured formatting of complex types. Improves readability through
-# indentation and line breaks.
+# Print complex types with proper indentation and line breaks. Life is too
+# short to parse single-line struct dumps.
 #
 set print pretty on
 
-# Remove output width limits. Avoids truncation and line wrapping on wide
-# displays.
+# Assume a modern, wide display and don't try to wrap or truncate lines
+# artificially.
 #
 set width unlimited
 
-# Remove output height limits. Allows uninterrupted printing of large data sets
-# without requiring user input.
+# Don't pause every screenful. If we are dumping a lot of data, we probably
+# just want to scroll through it in our terminal emulator anyway.
 #
 set height unlimited
 
-# Disable paging through output. Allows continuous scrolling without prompts.
+# Turn off paging entirely. As with the height limit, it is better to let the
+# terminal handle the scrolling rather than having GDB pause and ask us to
+# continue.
 #
 set pagination off
 
-# Set disassembly output to Intel syntax. Easier to read due to more
-# conventional operand ordering and syntax. Preferable to AT&T format in most
-# cases.
+# Default to the Intel syntax for disassembly. The operand ordering is just
+# more intuitive for most of us compared to the AT&T format.
 #
 set disassembly-flavor intel
 
-# Skip debugging into the C++ standard library. Reduces noise by avoiding
-# internal implementation details and focusing on user code. GDB requires
-# explicit wildcards for recursive matching, as '**/' is not supported.
+# Skip stepping into the standard library internals. We are almost always
+# debugging our own code, not the STL. Note that GDB doesn't support the '**/'
+# glob, so we have to unroll the wildcard matching manually here.
 #
 skip -gfi /usr/include/c++/*
 skip -gfi /usr/include/c++/*/*
