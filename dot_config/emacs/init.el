@@ -2,10 +2,13 @@
 
 ;;; Commentary:
 ;;
-
+;; Central Emacs configuration file.
+;;
 
 ;;; Code:
 
+;; Bootstrapping Elpaca.
+;;
 (defvar elpaca-installer-version 0.12)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
@@ -14,6 +17,7 @@
                               :ref nil :depth 1 :inherit ignore
                               :files (:defaults "elpaca-test.el" (:exclude "extensions"))
                               :build (:not elpaca-activate)))
+
 (let* ((repo  (expand-file-name "elpaca/" elpaca-sources-directory))
        (build (expand-file-name "elpaca/" elpaca-builds-directory))
        (order (cdr elpaca-order))
@@ -42,9 +46,15 @@
     (require 'elpaca)
     (elpaca-generate-autoloads "elpaca" repo)
     (let ((load-source-file-function nil)) (load "./elpaca-autoloads"))))
+
 (add-hook 'after-init-hook #'elpaca-process-queues)
+
+;; Keep customization variables in a separate file to avoid dirtying
+;; our declarative configuration.
+;;
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (add-hook 'elpaca-after-init-hook (lambda () (load custom-file 'noerror)))
+
 (elpaca `(,@elpaca-order))
 (elpaca (leaf))
 (elpaca (leaf-keywords)
@@ -54,6 +64,10 @@
 
 (elpaca-wait)
 
+;; Visual identity and themes.
+;;
+;; We define our theme dependencies here but rely on external minor modes
+;; to orchestrate switching between them based on system state.
 ;;
 
 (leaf ef-themes
@@ -78,11 +92,11 @@
                             :repo "protesilaos/doric-themes"))
 
 (leaf gnome-accent-theme-switcher
-      :doc "Match GNOME accent color and light/dark mode."
+      :doc "Match GNOME accent color and light/dark mode"
       :tag "theme" "faces" "minimalist"
       :url "https://github.com/protesilaos/gnome-accent-theme-switcher"
       :elpaca (gnome-accent-theme-switcher :host github
-                            :repo "protesilaos/gnome-accent-theme-switcher")
+                                           :repo "protesilaos/gnome-accent-theme-switcher")
       :global-minor-mode gnome-accent-theme-switcher-mode
       :custom
       (gnome-accent-theme-switcher-collection . '(("blue"   :light (modus-operandi) :dark (modus-vivendi))
@@ -95,7 +109,11 @@
                                                   ("purple" :light (modus-operandi) :dark (modus-vivendi))
                                                   ("slate"  :light (modus-operandi) :dark (modus-vivendi)))))
 
-
+;; Explicit capability index.
+;;
+;; Declare all built-in features we care about using leaf to create a
+;; centralized, greppable index of Emacs capabilities. Even if a leaf block is
+;; empty aside from metadata, it serves to document our awareness and intent.
 ;;
 
 (leaf abbrev
@@ -1119,6 +1137,7 @@
       :tag "builtin" "mouse"
       :global-minor-mode t)
 
+;; Vertico and friends.
 ;;
 
 (leaf vertico
@@ -1178,7 +1197,8 @@
       :after vertico
       :global-minor-mode t
       :custom
-      ;; Route specific commands to the 'buffer' display mode
+      ;; Route specific commands to the 'buffer' display mode.
+      ;;
       (vertico-multiform-commands . '((consult-line buffer))))
 
 (leaf vertico-quick
@@ -1211,6 +1231,7 @@
       :url "https://github.com/minad/vertico/blob/main/extensions/vertico-unobtrusive.el"
       :after vertico)
 
+;; Completion metadata and frontends.
 ;;
 
 (leaf marginalia
@@ -1235,13 +1256,14 @@
       :elpaca (corfu :host github
                      :repo "minad/corfu")
       :custom
-      (corfu-auto              . t)
-      (corfu-auto-delay        . 0)
-      (corfu-auto-prefix       . 3)
-      (corfu-quit-no-match     . 'separator)
-      (corfu-preselect         . 'first)
-      (corfu-preview-current   . nil)
-      :bind (:corfu-map ("TAB" . corfu-insert)))
+      (corfu-auto            . t)
+      (corfu-auto-delay      . 0)
+      (corfu-auto-prefix     . 3)
+      (corfu-quit-no-match   . 'separator)
+      (corfu-preselect       . 'first)
+      (corfu-preview-current . nil)
+      :bind (:corfu-map
+             ("TAB" . corfu-insert)))
 
 
 (leaf cape
@@ -1251,6 +1273,7 @@
       :elpaca (cape :host github
                     :repo "minad/cape"))
 
+;; Search matching and action frameworks.
 ;;
 
 (leaf orderless
@@ -1274,6 +1297,7 @@
       :elpaca (embark-consult :host github
                               :repo "oantolin/embark"))
 
+;; Version Control layer.
 ;;
 
 (leaf magit
@@ -1282,7 +1306,8 @@
       :url "https://github.com/magit/magit"
       :elpaca (magit :host github
                      :repo "magit/magit")
-      :custom (magit-save-repository-buffers . nil))
+      :custom
+      (magit-save-repository-buffers . nil))
 
 (leaf forge
       :doc "Access Git forges from Magit"
@@ -1312,54 +1337,7 @@
       :elpaca (emacsql :host github
                        :repo "magit/emacsql"))
 
-;;
-
-(leaf lsp-mode
-      :doc "Language Server Protocol Support for Emacs"
-      :tag "lsp" "tools"
-      :url "https://github.com/emacs-lsp/lsp-mode"
-      :elpaca (lsp-mode :host github
-                        :repo "emacs-lsp/lsp-mode")
-      :custom
-      (lsp-eldoc-enable-hover . nil)
-      (lsp-enable-dap-auto-configure . nil)
-      (lsp-enable-folding . nil)
-      (lsp-enable-imenu . nil)
-      (lsp-enable-on-type-formatting . nil)
-      (lsp-enable-suggest-server-download . nil)
-      (lsp-enable-symbol-highlighting . nil)
-      (lsp-keep-workspace-alive . nil)
-      (lsp-log-max . nil)
-      (lsp-headerline-breadcrumb-enable . nil)
-      :init
-      (defvar dotemacs-lsp-config-dir (expand-file-name "lisp/lsp/" user-emacs-directory))
-      (add-to-list 'load-path dotemacs-lsp-config-dir)
-      (mapc (lambda (file)
-              (load (file-name-sans-extension file) nil t))
-            (directory-files dotemacs-lsp-config-dir t "^\\+.*\\.el$")))
-
-(leaf lsp-ui
-      :doc "UI modules for lsp-mode"
-      :tag "lsp" "ui" "tools"
-      :url "https://github.com/wroyca/lsp-ui"
-      :elpaca (lsp-ui :host github
-                      :repo "wroyca/lsp-ui")
-      :hook
-      (lsp-mode-hook . lsp-ui-mode)
-      :bind
-      (:evil-normal-state-map ("K" . lsp-ui-doc-glance))
-      :custom
-      (lsp-ui-doc-position . 'at-point)
-      :config
-      (defun dotemacs-filter-lsp-ui-doc-string (args)
-        "Remove markdown horizontal rules from the raw doc string."
-        (let ((str (car args))
-              (rest-args (cdr args)))
-          (when (stringp str)
-            (setq str (replace-regexp-in-string "\n+[ \t]*[-_*]\\{3,\\}[ \t]*\n+" "\n\n" str)))
-          (cons str rest-args)))
-      (advice-add 'lsp-ui-doc--render-buffer :filter-args #'dotemacs-filter-lsp-ui-doc-string))
-
+;; System integrations and low-level performance hacks.
 ;;
 
 (leaf xclip
@@ -1525,6 +1503,7 @@ BINDINGS is a list of (key function description) or (key nested-description &res
                  which-key-replacement-alist))
          ,var-name))))
 
+;; Keymap configuration blocks.
 ;;
 
 (define-prefix-keymap dotemacs-consult-buffer-keymap "C-c c b" "Buffers"
@@ -1598,8 +1577,6 @@ BINDINGS is a list of (key function description) or (key nested-description &res
   ("H" dotemacs-consult-help-keymap "Help")
   ("M" dotemacs-consult-misc-keymap "Miscellaneous"))
 
-;;
-
 (define-prefix-keymap dotemacs-magit-status-keymap "C-c g s" "Status"
   ("s" #'magit-status "Open Magit status")
   ("l" #'magit-log "Show repository log")
@@ -1626,6 +1603,7 @@ BINDINGS is a list of (key function description) or (key nested-description &res
   ("z" dotemacs-magit-stash-keymap "Stash")
   ("d" #'magit-dispatch "Dispatch"))
 
+;; Evil environment mapping.
 ;;
 
 (leaf evil
@@ -1644,7 +1622,30 @@ BINDINGS is a list of (key function description) or (key nested-description &res
       (evil-undo-system . 'undo-fu)
       :config
       (with-eval-after-load 'which-key
-                            (which-key-add-key-based-replacements "SPC" "Leader"))
+        (which-key-add-key-based-replacements "SPC" "Leader"))
+      (evil-define-operator +evil-join-a (beg end)
+        "Join the selected lines.
+
+This advice improves on `evil-join' by removing comment delimiters when joining
+commented lines, by using `fill-region-as-paragraph'.
+
+From https://github.com/emacs-evil/evil/issues/606"
+        :motion evil-line
+        (let* ((count (count-lines beg end))
+               (count (if (> count 1) (1- count) count))
+               (fixup-mark (make-marker)))
+          (dotimes (var count)
+            (if (and (bolp) (eolp))
+                (join-line 1)
+              (let* ((end (line-beginning-position 3))
+                     (fill-column (1+ (- end beg))))
+                (set-marker fixup-mark (line-end-position))
+                (fill-region-as-paragraph beg end nil t)
+                (goto-char fixup-mark)
+                (fixup-whitespace))))
+          (set-marker fixup-mark nil)))
+      :advice
+      (:override evil-join +evil-join-a)
       :bind
       (:evil-motion-state-map ("SPC" . nil))
       (:evil-normal-state-map ("SPC" . leader-map))
@@ -1658,8 +1659,9 @@ BINDINGS is a list of (key function description) or (key nested-description &res
       :tag "editing" "undo"
       :elpaca t
       :after evil
-      :bind (:evil-normal-state-map ("u"   . undo-fu-only-undo)
-                                    ("C-r" . undo-fu-only-redo)))
+      :bind (:evil-normal-state-map
+             ("u"   . undo-fu-only-undo)
+             ("C-r" . undo-fu-only-redo)))
 
 (leaf evil-collection
       :doc "Community maintained bindings for evil"
@@ -1717,10 +1719,11 @@ BINDINGS is a list of (key function description) or (key nested-description &res
       :config
       (evil-terminal-cursor-changer-activate))
 
+;; Wait for Elpaca to finish all its asynchronous package resolutions
+;; before handing control fully back to Emacs.
 ;;
-
 (elpaca-wait)
 
-;;
-
 (provide 'init)
+
+;;; init.el ends here
