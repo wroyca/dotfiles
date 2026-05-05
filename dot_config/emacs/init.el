@@ -1306,8 +1306,18 @@
       :url "https://github.com/magit/magit"
       :elpaca (magit :host github
                      :repo "magit/magit")
+
+      :preface (defun magit-display-buffer-same-window (buffer)
+                 "Display BUFFER in the selected window."
+                 (display-buffer
+                   buffer '(display-buffer-same-window)))
       :custom
-      (magit-save-repository-buffers . nil))
+      (magit-save-repository-buffers . nil)
+      (magit-bury-buffer-function . #'magit-restore-window-configuration)
+      (magit-display-buffer-function . 'magit-display-buffer-same-window)
+      (magit-popup-display-buffer-action . '((display-buffer-same-window)))
+      (magit-wip-mode . t))
+
 
 (leaf forge
       :doc "Access Git forges from Magit"
