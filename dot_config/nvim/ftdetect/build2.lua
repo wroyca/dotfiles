@@ -9,5 +9,6 @@ vim.filetype.add ({
     ["packages%.manifest"] = "packages-manifest",
     ["repositories%.manifest"] = "repositories-manifest",
     ["buildfile"] = "buildfile",
+    ["testscript"] = "testscript",
   },
 })

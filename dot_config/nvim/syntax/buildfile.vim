@@ -199,14 +199,23 @@ syntax region buildfileTypeAnnotation start=/\[/ end=/\]/
 
 " Type keywords
 syntax match buildfileTypeKeyword /\[\s*\zs\<bool\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
+syntax match buildfileTypeKeyword /\[\s*\zs\<int64\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
+syntax match buildfileTypeKeyword /\[\s*\zs\<int64s\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
 syntax match buildfileTypeKeyword /\[\s*\zs\<uint64\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
 syntax match buildfileTypeKeyword /\[\s*\zs\<uint64s\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
 syntax match buildfileTypeKeyword /\[\s*\zs\<string\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
 syntax match buildfileTypeKeyword /\[\s*\zs\<strings\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
+syntax match buildfileTypeKeyword /\[\s*\zs\<string_set\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
+syntax match buildfileTypeKeyword /\[\s*\zs\<string_map\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
 syntax match buildfileTypeKeyword /\[\s*\zs\<path\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
 syntax match buildfileTypeKeyword /\[\s*\zs\<paths\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
 syntax match buildfileTypeKeyword /\[\s*\zs\<dir_path\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
 syntax match buildfileTypeKeyword /\[\s*\zs\<dir_paths\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
+syntax match buildfileTypeKeyword /\[\s*\zs\<json\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
+syntax match buildfileTypeKeyword /\[\s*\zs\<json_array\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
+syntax match buildfileTypeKeyword /\[\s*\zs\<json_object\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
+syntax match buildfileTypeKeyword /\[\s*\zs\<json_set\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
+syntax match buildfileTypeKeyword /\[\s*\zs\<json_map\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
 syntax match buildfileTypeKeyword /\[\s*\zs\<name\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
 syntax match buildfileTypeKeyword /\[\s*\zs\<names\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
 syntax match buildfileTypeKeyword /\[\s*\zs\<name_pair\>\ze\s*\]/ contained containedin=buildfileTypeAnnotation
@@ -332,10 +341,10 @@ syntax region buildfileBlockComment start=/^\s*#\\$/ end=/^\s*#\\$/ contains=bui
 
 " TODO/FIXME/XXX/NOTE markers in comments
 "
-" Note that only TODO is formally defined by the default highlight set; the
-" remaining markers are mapped to it for consistency. Dedicated pattern plugins
-" (for example, mini.hipatterns) can provide finer granularity if distinct
-" groups are desirable.
+" Note that only TODO is formally defined by the default highlight set. That
+" is, the remaining markers are mapped to it for consistency. Dedicated
+" pattern plugins (for example, mini.hipatterns) can provide granularity
+" if distinct groups are desirable.
 "
 syntax keyword buildfileTodo contained TODO FIXME XXX NOTE HACK COMBAK
 syntax match buildfileTodo /@@:/ contained
