@@ -9,7 +9,7 @@ local Spec = {
   end,
 
   keys = {
-    { "go", function() MiniDiff.toggle_overlay(0) end, mode = "n", desc = "Toggle hunks overlay" },
+    { "<leader>go", function() MiniDiff.toggle_overlay(0) end, mode = "n", desc = "Toggle hunks overlay" },
   },
 
   opts = {

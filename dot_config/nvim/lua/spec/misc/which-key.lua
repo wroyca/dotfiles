@@ -58,6 +58,7 @@ local Spec = {
       { "<leader>n", group = "Notify" },
       { "<leader>s", group = "Search" },
       { "<leader>l", group = "Lsp" },
+      { "<leader>g", group = "Git" },
     },
   },
 }
