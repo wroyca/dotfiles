@@ -2,7 +2,7 @@
 
 ---@type LazyPluginSpec
 local Spec = {
-  "kevinhwang91/nvim-fundo", event = "VeryLazy",
+  "kevinhwang91/nvim-fundo", event = "VeryLazy", dependencies = "kevinhwang91/promise-async",
 
   ---@type FundoConfig
   opts = {
