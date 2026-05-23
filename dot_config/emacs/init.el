@@ -356,7 +356,9 @@
 
 (leaf electric-indent
       :doc "Toggle on-the-fly reindentation of text lines (Electric Indent mode)"
-      :tag "builtin" "editing")
+      :tag "builtin" "editing"
+  		:config
+  		(electric-indent-mode -1))
 
 (leaf electric-layout
       :doc "Automatically insert newlines around some chars"
@@ -774,6 +776,11 @@
 (leaf nroff-electric
       :doc "Toggle automatic nroff request pairing (Nroff Electric mode)"
       :tag "builtin" "nroff")
+
+(leaf org
+  :doc "Major mode for keeping notes"
+  :tag "builtin" "org"
+  :elpaca t)
 
 (leaf org-beamer
       :doc "Support for editing Beamer oriented Org mode files"
@@ -1631,6 +1638,10 @@ BINDINGS is a list of (key function description) or (key nested-description &res
       (evil-want-fine-undo . t)
       (evil-undo-system . 'undo-fu)
       :config
+      (defun +evil-insert-literal-tab ()
+        "Insert a literal tab character."
+        (interactive)
+        (insert "\t"))
       (with-eval-after-load 'which-key
         (which-key-add-key-based-replacements "SPC" "Leader"))
       (evil-define-operator +evil-join-a (beg end)

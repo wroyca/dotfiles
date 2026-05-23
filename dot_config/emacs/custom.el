@@ -112,6 +112,22 @@
  '(scroll-conservatively 101)
  '(scroll-margin 4)
 
+ ;; Mouse wheel behavior.
+ ;;
+ ;; By default, Emacs
+ ;; applies progressive acceleration based on wheel speed, which yields
+ ;; non-deterministic viewport jumps. We disable this in favor of a strict
+ ;; input-to-movement ratio.
+ ;;
+ ;; The base scroll step is constrained to 3 lines to maintain visual
+ ;; continuity. Modifiers map as follows:
+ ;;   - unmodified : 3 lines
+ ;;   - shift      : 3 lines
+ ;;   - control    : nil (defer to default text-scaling behavior)
+ ;;
+ '(mouse-wheel-scroll-amount '(3 ((shift) . 3) ((control) . nil)))
+ '(mouse-wheel-progressive-speed nil)
+
  ;; Performance.
  ;;
  ;; We often inspect massive log files or build artifacts. The warning
