@@ -777,10 +777,10 @@
       :doc "Toggle automatic nroff request pairing (Nroff Electric mode)"
       :tag "builtin" "nroff")
 
-(leaf org
-  :doc "Major mode for keeping notes"
-  :tag "builtin" "org"
-  :elpaca t)
+; (leaf org
+;   :doc "Major mode for keeping notes"
+;   :tag "builtin" "org"
+;   :elpaca t)
 
 (leaf org-beamer
       :doc "Support for editing Beamer oriented Org mode files"
