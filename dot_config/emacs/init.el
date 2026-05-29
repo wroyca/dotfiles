@@ -357,8 +357,8 @@
 (leaf electric-indent
       :doc "Toggle on-the-fly reindentation of text lines (Electric Indent mode)"
       :tag "builtin" "editing"
-  		:config
-  		(electric-indent-mode -1))
+      :config
+      (electric-indent-mode -1))
 
 (leaf electric-layout
       :doc "Automatically insert newlines around some chars"
@@ -1620,6 +1620,16 @@ BINDINGS is a list of (key function description) or (key nested-description &res
   ("z" dotemacs-magit-stash-keymap "Stash")
   ("d" #'magit-dispatch "Dispatch"))
 
+(define-prefix-keymap dotemacs-project-keymap "C-c p" "Project"
+  ("p" #'project-switch-project "Switch project")
+  ("f" #'project-find-file "Find file in project")
+  ("b" #'project-switch-to-buffer "Switch project buffer")
+  ("d" #'project-dired "Open project root in Dired")
+  ("k" #'project-kill-buffers "Kill project buffers")
+  ("c" #'project-compile "Compile project")
+  ("r" #'project-query-replace-regexp "Project query replace")
+  ("s" #'consult-ripgrep "Search project (rg)"))
+
 ;; Evil environment mapping.
 ;;
 
@@ -1672,8 +1682,9 @@ From https://github.com/emacs-evil/evil/issues/606"
       (:evil-normal-state-map ("SPC" . leader-map))
       (:evil-visual-state-map ("SPC" . leader-map))
       (:leader-map
-        ("p" . dotemacs-consult-keymap)
-        ("g" . dotemacs-magit-keymap)))
+        ("c" . dotemacs-consult-keymap)
+        ("g" . dotemacs-magit-keymap)
+        ("p" . dotemacs-project-keymap)))
 
 (leaf undo-fu
       :doc "Simple, stable undo with redo"
