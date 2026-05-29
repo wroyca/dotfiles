@@ -1740,11 +1740,6 @@ From https://github.com/emacs-evil/evil/issues/606"
       :config
       (evil-terminal-cursor-changer-activate))
 
-;; Wait for Elpaca to finish all its asynchronous package resolutions
-;; before handing control fully back to Emacs.
-;;
-(elpaca-wait)
-
 (provide 'init)
 
 ;;; init.el ends here
