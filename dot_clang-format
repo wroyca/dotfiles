@@ -111,19 +111,24 @@ BraceWrapping:
   SplitEmptyNamespace: true
 BreakAdjacentStringLiterals: false
 BreakAfterAttributes: Never
+BreakAfterFunctionDeclarationSpecifiers: false
 BreakAfterJavaFieldAnnotations: false
 BreakAfterReturnType: All
+BreakAfterReturnTypeForFunctionDeclarationSpecifiers: true
+BreakAfterReturnTypeForQualifiedFunctionDefinition: false
 BreakArrays: true
 BreakBeforeBinaryOperators: None
-BreakBeforeConceptDeclarations: Always
 BreakBeforeBraces: Custom
+BreakBeforeConceptDeclarations: Always
 BreakBeforeInlineASMColon: Always
+BreakBeforeReturnType: None
 BreakBeforeTemplateCloser: true
 BreakBeforeTernaryOperators: true
 BreakBinaryOperations: Never
 BreakConstructorInitializers: BeforeColon
 BreakFunctionDefinitionParameters: false
 BreakInheritanceList: AfterComma
+BreakQualifiedFunctionDefinition: AfterNestedNameSpecifier
 BreakStringLiterals: true
 BreakTemplateDeclarations: Yes
 ColumnLimit: 80
@@ -211,7 +216,6 @@ PenaltyBreakString: 1000
 PenaltyBreakTemplateDeclaration: 10
 PenaltyExcessCharacter: 1000000
 PenaltyIndentedWhitespace: 0
-PenaltyReturnTypeOnItsOwnLine: 60
 PointerAlignment: Left
 PPIndentWidth: -1
 QualifierAlignment: Leave
@@ -257,6 +261,7 @@ SpaceBeforeParensOptions:
   BeforeNonEmptyParentheses: true
 SpaceBeforeRangeBasedForLoopColon: true
 SpaceBeforeSquareBrackets: false
+SpaceBeforeTemplateAngleBrackets: true
 SpaceInEmptyBlock: false
 SpacesBeforeTrailingComments: 1
 SpacesInAngles: Never
@@ -290,3 +295,4 @@ WhitespaceSensitiveMacros:
   - STRINGIZE
 WrapNamespaceBodyWithEmptyLines: Leave
 ...
+
