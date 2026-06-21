@@ -62,11 +62,27 @@ set pagination off
 #
 set disassembly-flavor intel
 
+# Don't let GDB pull host/runtime debuginfo opportunistically. Wine's dbghelp
+# can be fragile around some of that data, and for normal app debugging we want
+# to stay in project symbols anyway.
+#
+set debuginfod enabled off
+
 # Skip stepping into the standard library internals. We are almost always
 # debugging our own code, not the STL. Note that GDB doesn't support the '**/'
-# glob, so we have to unroll the wildcard matching manually here.
+# glob, so we either use broad suffix-style patterns or unroll the wildcard
+# matching manually here.
 #
+skip -gfi */libstdc++-v3/include/*
+skip -gfi */include/c++/*
 skip -gfi /usr/include/c++/*
 skip -gfi /usr/include/c++/*/*
 skip -gfi /usr/include/c++/*/*/*
 skip -gfi /usr/include/c++/*/*/*/*
+
+# Also skip common C++ runtime functions by name. This catches inline/template
+# symbols from MinGW/libstdc++ where the file path does not match a local system
+# include directory.
+#
+skip -rfu ^std::
+skip -rfu ^(__gnu_|__cxa_|_Unwind_|_ZSt|_ZNSt|_ZNSo|_ZNSi)
