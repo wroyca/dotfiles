@@ -1,8 +1,0 @@
-// https://code.visualstudio.com/docs/getstarted/keybindings
-
-[
-  {
-    "key": "ctrl+shift+b",
-    "command": "workbench.action.toggleActivityBarVisibility"
-  }
-]
