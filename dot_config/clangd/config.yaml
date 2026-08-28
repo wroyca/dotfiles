@@ -7,4 +7,6 @@ Diagnostics:
   UnusedIncludes: None
 Completion:
   AllScopes: true
+Documentation:
+  CommentFormat: Markdown
 ...
