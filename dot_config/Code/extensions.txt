@@ -24,3 +24,7 @@ ms-vscode.remote-explorer
 ms-vscode.remote-repositories
 ms-vscode.remote-server
 ms-vscode.vscode-github-issue-notebooks
+
+dnut.rewrap-revived
+
+wroyca.modus

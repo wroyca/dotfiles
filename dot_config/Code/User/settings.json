@@ -146,6 +146,10 @@
     "~/.local/share/chezmoi"
   ],
 
+  // Rewrap
+  //
+  "rewrap.wrappingColumn": 72,
+
   // Scm
   //
   "scm.alwaysShowRepositories": true,
@@ -217,8 +221,8 @@
   "workbench.localHistory.maxFileEntries": 1000,
   "workbench.localHistory.maxFileSize": 1024,
   "workbench.navigationControl.enabled": false,
-  "workbench.preferredDarkColorTheme": "Modus Vivendi",
-  "workbench.preferredLightColorTheme": "Modus Operandi",
+  "workbench.preferredDarkColorTheme": "modus-vivendi-quiet",
+  "workbench.preferredLightColorTheme": "modus-operandi-quiet",
   "workbench.secondarySideBar.defaultVisibility": "hidden",
   "workbench.settings.alwaysShowAdvancedSettings": true,
   "workbench.settings.showAISearchToggle": false,
@@ -226,6 +230,7 @@
   "workbench.statusBar.visible": true,
   "workbench.tips.enabled": false,
   "workbench.welcomePage.walkthroughs.openOnInstall": false,
+  "workbench.experimental.modernUI": false,
 
   // ZenMode
   //
