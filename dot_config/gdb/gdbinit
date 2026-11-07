@@ -24,9 +24,8 @@ set history remove-duplicates 10
 #
 set history save
 
-# Dumping huge data structures by default is a great way to lock up the
-# terminal. Turn off printing entire arrays. We can always inspect specific
-# elements via indexing if we actually need to see them.
+# Keep array output compact. The print elements limit controls how many
+# entries GDB displays.
 #
 set print array off
 
