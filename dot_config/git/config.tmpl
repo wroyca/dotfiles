@@ -23,7 +23,6 @@ changedPathsVersion = 2
 [core]
 editor = code --wait
 excludesFile = ~/.config/git/excludes
-attributesFile = ~/.config/git/attributes
 
 [credential]
 helper = /usr/bin/git-credential-manager
@@ -38,6 +37,9 @@ renames = copies
 manyFiles = true
 experimental = true
 
+[fetch]
+followRemoteHEAD = always
+
 [filter "lfs"]
 clean = git-lfs clean -- %f
 smudge = git-lfs smudge -- %f
@@ -45,21 +47,16 @@ process = git-lfs filter-process
 required = true
 
 [help]
-autoCorrect = 1
+autoCorrect = 10
 
 [init]
 defaultBranch = main
 defaultRefFormat = files
 
-; BLOCKED: https://github.com/orgs/community/discussions/12490
-;
-; defaultObjectFormat = sha256
-
 [merge]
 conflictStyle = zdiff3
 
 [pull]
-twohead = ort
 rebase = true
 
 [push]
@@ -68,11 +65,18 @@ followTags = true
 
 [rebase]
 abbreviateCommands = true
-instructionFormat = %s%nexec GIT_COMMITTER_DATE=\"%cI\" GIT_COMMITTER_NAME=\"%cN\" GIT_COMMITTER_EMAIL=\"%cE\" git commit --amend --no-edit%n
+instructionFormat = %s%nexec \
+  GIT_COMMITTER_DATE=\"$(git show -s --no-notes --no-show-signature --format=%%cI %H)\" \
+  GIT_COMMITTER_NAME=\"$(git show -s --no-notes --no-show-signature --format=%%cN %H)\" \
+  GIT_COMMITTER_EMAIL=\"$(git show -s --no-notes --no-show-signature --format=%%cE %H)\" \
+  git commit --amend --no-edit%n
 
 [rerere]
 enabled = true
 autoUpdate = true
+
+[status]
+compareBranches = @{upstream} @{push}
 
 [submodule]
 recurse = true
