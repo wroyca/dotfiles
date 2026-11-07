@@ -1,7 +1,5 @@
-file:///home/{{ .chezmoi.username }}/Documents
-file:///home/{{ .chezmoi.username }}/Music
-file:///home/{{ .chezmoi.username }}/Pictures
-file:///home/{{ .chezmoi.username }}/Videos
-file:///home/{{ .chezmoi.username }}/Downloads
-file:///home/{{ .chezmoi.username }}/Projects
-file:///home/{{ .chezmoi.username }}/.local/share/chezmoi Chezmoi
+{{- $home := .chezmoi.homeDir -}}
+{{- range list "Documents" "Music" "Pictures" "Videos" "Downloads" "Projects" -}}
+{{ urlJoin (dict "scheme" "file" "path" (joinPath $home .)) }}{{ "\n" -}}
+{{- end -}}
+{{ urlJoin (dict "scheme" "file" "path" .chezmoi.sourceDir) }} Chezmoi
