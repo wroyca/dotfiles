@@ -42,4 +42,6 @@ source "$__fish_config_dir/alias.fish"
 # Note that this needs to happen at the very end of the configuration 
 # so it can properly hook into the shell's prompt rendering mechanism.
 #
-starship init fish | source
+if status is-interactive; and command -q starship
+  starship init fish | source
+end
