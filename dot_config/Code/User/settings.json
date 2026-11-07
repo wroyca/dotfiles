@@ -128,10 +128,6 @@
   "githubPullRequests.showPullRequestNumberInTree": true,
   "githubPullRequests.terminalLinksHandler": "vscode",
 
-  // Inline Chat
-  //
-  "inlineChat.enableV2": true,
-
   // Outline
   //
   "outline.problems.colors": false,
