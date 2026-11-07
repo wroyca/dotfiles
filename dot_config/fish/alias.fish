@@ -37,7 +37,6 @@ alias diff='diff -u'
 # to list files first for a more logical visual grouping.
 #
 alias tree='tree --filesfirst -a -I ".git|.cache|.bdep"'
-alias tree='tree --filesfirst -a -I ".git|.cache|.bdep"'
 
 # Note that the standard clear command often just scrolls the terminal down
 # without actually clearing the scrollback buffer. We use these specific ANSI
