@@ -11,15 +11,6 @@ end
 #
 set -gx STARSHIP_CONFIG $HOME/.config/starship/starship.toml
 
-# It appears Git Credential Manager (GCM) stopped honoring the 
-# `credentialStore` setting directly from the git config.
-#
-# Rather than spending time trying to debug the exact cause of this 
-# regression, we force the setting via the environment variable. It 
-# turns out this is the only mechanism GCM still reliably respects.
-#
-set -gx GCM_CREDENTIAL_STORE cache
-
 # Silence Wine and DXVK diagnostics. By default, both are notoriously 
 # noisy and will quickly pollute the terminal output, so we shut them 
 # up entirely.
