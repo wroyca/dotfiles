@@ -9,7 +9,7 @@ end
 # to keep it neatly tucked away in a dedicated subdirectory rather 
 # than cluttering the root config directory.
 #
-set -gx STARSHIP_CONFIG $HOME/.config/starship/starship.toml
+set -gx STARSHIP_CONFIG (path dirname "$__fish_config_dir")/starship/starship.toml
 
 # Silence Wine and DXVK diagnostics. By default, both are notoriously 
 # noisy and will quickly pollute the terminal output, so we shut them 
@@ -36,7 +36,7 @@ end
 # file to prevent the main configuration from becoming unwieldy as the 
 # list of aliases grows.
 #
-source ~/.config/fish/alias.fish
+source "$__fish_config_dir/alias.fish"
 
 # Initialize the Starship cross-shell prompt (https://starship.rs/). 
 # Note that this needs to happen at the very end of the configuration 
