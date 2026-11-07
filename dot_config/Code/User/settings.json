@@ -8,6 +8,9 @@
   "chat.agent.enabled": false,
   "chat.disableAIFeatures": true,
 
+  // Use clangd for language features and keep cpptools for debugging.
+  "C_Cpp.intelliSenseEngine": "disabled",
+
   // Clangd
   //
   "clangd.arguments": [
